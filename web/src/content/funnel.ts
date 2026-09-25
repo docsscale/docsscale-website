@@ -84,3 +84,40 @@ export const FUNNELS = [
     img: '/free-system/images/funnel-review.jpg',
   },
 ] as const;
+
+/** /free-system/book-a-call/: the three points above the calendar. */
+export const BOOKING_POINTS = [
+  {
+    bg: '#DAEDE2',
+    path: 'M2 6.5l2.8 2.8 5.2-5.6',
+    stroke: '#1F5A40',
+    title: 'What you will walk away with',
+    rest: ' — clarity on exactly what is leaking in your patient pipeline.',
+    roundJoin: true,
+  },
+  {
+    bg: '#FBE7D6',
+    path: 'M3 3l6 6M9 3l-6 6',
+    stroke: '#8A4B1E',
+    title: 'What we will not do',
+    rest: ' — pitch you something you do not need.',
+    roundJoin: false,
+  },
+  {
+    bg: '#DDEEEE',
+    path: 'M6 2a3 3 0 100 6 3 3 0 000-6zM1 11c0-2.2 2.2-4 5-4s5 1.8 5 4',
+    stroke: '#0F5F63',
+    title: 'Who this is for',
+    rest: ' — clinic owners who want more booked patients, not more marketing reports.',
+    roundJoin: true,
+  },
+] as const;
+
+export const BOOKING_CHIPS = ['Free', '30 minutes', 'No obligation'] as const;
+
+/** Shown after booking (GoHighLevel redirects back with ?booked=1). */
+export const BOOKED_STEPS = [
+  { bg: '#DAEDE2', stroke: '#1F5A40', text: 'Check your email for the calendar invite' },
+  { bg: '#DDEEEE', stroke: '#0F5F63', text: 'Have your monthly new patient numbers ready' },
+  { bg: '#FBE7D6', stroke: '#8A4B1E', text: '30 minutes — we will lead the conversation' },
+] as const;

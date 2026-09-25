@@ -8,9 +8,10 @@ const ctaStyle = {
   boxShadow: '0 2px 12px rgba(15,95,99,.3)',
 } as const;
 
-// Funnel header: logo plus one call-to-action. The landing page scrolls to its
-// form; the thank-you page links to the booking page.
-type Props = { cta: { label: string; href: string } };
+// Funnel header: logo plus an optional call-to-action. The landing page scrolls
+// to its form, the thank-you page links to the booking page, the booking page
+// has none.
+type Props = { cta?: { label: string; href: string } };
 
 export function FunnelHeader({ cta }: Props) {
   return (
@@ -90,15 +91,16 @@ export function FunnelHeader({ cta }: Props) {
             DocsScale
           </span>
         </Link>
-        {cta.href.startsWith('#') ? (
-          <a href={cta.href} className="cta-btn" style={ctaStyle}>
-            {cta.label}
-          </a>
-        ) : (
-          <Link href={cta.href} className="cta-btn" style={ctaStyle}>
-            {cta.label}
-          </Link>
-        )}
+        {cta &&
+          (cta.href.startsWith('#') ? (
+            <a href={cta.href} className="cta-btn" style={ctaStyle}>
+              {cta.label}
+            </a>
+          ) : (
+            <Link href={cta.href} className="cta-btn" style={ctaStyle}>
+              {cta.label}
+            </Link>
+          ))}
       </div>
     </div>
   );
