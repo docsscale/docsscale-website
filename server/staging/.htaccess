@@ -1,0 +1,19 @@
+# staging.docsscale.com additions. scripts/deploy.mjs appends this file to a copy of
+# public_html/.htaccess (Hostinger does not apply the parent folder's rules to the
+# subdomain folder), so staging has every production rule plus:
+
+# 1. Password protection (login stored outside the web root).
+AuthType Basic
+AuthName "DocsScale staging"
+AuthUserFile /home/u145389112/domains/docsscale.com/private-staging/.htpasswd
+Require valid-user
+
+# 2. Never indexed, even if a link leaks.
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+# 3. Only reachable as staging.docsscale.com, not as docsscale.com/staging_html/.
+RewriteEngine On
+RewriteCond %{HTTP_HOST} !^staging\.docsscale\.com$ [NC]
+RewriteRule ^ - [R=404,L]

@@ -1,3 +1,4 @@
+import path from 'node:path';
 import type { NextConfig } from 'next';
 
 // Static export: `next build` writes plain files to out/, which are uploaded to
@@ -9,6 +10,8 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   reactStrictMode: true,
   poweredByHeader: false,
+  // The repo root has its own package.json (test tools); build from web/ only.
+  turbopack: { root: path.resolve(__dirname) },
 };
 
 export default nextConfig;

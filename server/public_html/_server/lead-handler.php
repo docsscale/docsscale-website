@@ -29,9 +29,21 @@ const LEAD_GENERIC_ERROR = 'Something went wrong. Please try again, or email inf
 
 function lead_private_dir(): string
 {
-    // public_html/_server/ → domains/docsscale.com/private
-    // (LEAD_PRIVATE_DIR overrides it for local tests only.)
-    return getenv('LEAD_PRIVATE_DIR') ?: dirname(__DIR__, 2) . '/private';
+    // Production: public_html/_server/ → domains/docsscale.com/private.
+    // Staging lives in public_html/staging_html/, so its deploy adds
+    // _server/environment.php naming its own private folder (never inside the
+    // web root). LEAD_PRIVATE_DIR overrides both for local tests.
+    if ($env = getenv('LEAD_PRIVATE_DIR')) {
+        return $env;
+    }
+    $environment = __DIR__ . '/environment.php';
+    if (is_file($environment)) {
+        $settings = require $environment;
+        if (is_array($settings) && !empty($settings['private_dir'])) {
+            return $settings['private_dir'];
+        }
+    }
+    return dirname(__DIR__, 2) . '/private';
 }
 
 function handle_lead_request(string $formKey): never
@@ -101,6 +113,9 @@ function handle_lead_request(string $formKey): never
 
     if ($config === null) {
         [$httpCode, $response, $curlError] = [0, false, 'not attempted: no config'];
+    } elseif ($config['test_mode']) {
+        lead_store($formKey, $ipHash, $values, false, 0);
+        lead_respond(200, ['ok' => true]);
     } else {
         $body = ($form['build'])($values, $config['ghl_location_id'], $form['source']);
         [$httpCode, $response, $curlError] = lead_send_to_ghl($body, $config);
@@ -141,7 +156,7 @@ function lead_split_name(string $name): array
     return [$parts[0], $parts[1] ?? ''];
 }
 
-/** @return array{ghl_token:string,ghl_location_id:string,allowed_origins:list<string>}|null */
+/** @return array{ghl_token?:string,ghl_location_id?:string,allowed_origins:list<string>,test_mode:bool}|null */
 function lead_load_config(): ?array
 {
     $file = lead_private_dir() . '/config.php';
@@ -149,7 +164,13 @@ function lead_load_config(): ?array
         return null;
     }
     $config = require $file;
-    if (!is_array($config) || empty($config['ghl_token']) || empty($config['ghl_location_id'])) {
+    if (!is_array($config)) {
+        return null;
+    }
+    // Test mode (staging): leads are validated and backed up but never sent to GHL,
+    // so no token is needed.
+    $config['test_mode'] = !empty($config['test_mode']);
+    if (!$config['test_mode'] && (empty($config['ghl_token']) || empty($config['ghl_location_id']))) {
         return null;
     }
     $config['allowed_origins'] ??= LEAD_DEFAULT_ORIGINS;

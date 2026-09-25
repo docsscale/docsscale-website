@@ -10,3 +10,4 @@ tests/visual/diff/
 test-results/
 playwright-report/
 tests/visual/interactions/
+release/

@@ -91,5 +91,23 @@ expect "no config: 502 generic" "$(post send-lead.php '{"clinicName":"C","email"
 expect "no config: lead backed up" "$(grep -c '"noconf@x.co"' "$PRIV"/leads/*.jsonl)" 1
 mv "$PRIV/config.off" "$PRIV/config.php"
 
+# --- staging: environment.php points at another private dir; test mode never calls GHL
+STAGE_PRIV="$TMP/private-staging"; mkdir -p "$STAGE_PRIV"
+cat > "$STAGE_PRIV/config.php" <<'PHP'
+<?php return ['test_mode' => true, 'allowed_origins' => ['http://127.0.0.1:8783']];
+PHP
+cp -R "$ROOT/server/public_html" "$TMP/staging_html"
+printf '<?php return ["private_dir" => "%s"];\n' "$STAGE_PRIV" > "$TMP/staging_html/_server/environment.php"
+php -S 127.0.0.1:8783 -t "$TMP/staging_html" >/dev/null 2>&1 & STAGE_PID=$!
+sleep 1
+rm -f "$TMP/ghl/last.json"
+stage_post() { curl -s -o "$TMP/resp" -w '%{http_code}' -X POST "http://127.0.0.1:8783/$1" -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:8783' --data "$2"; }
+expect "staging: test mode ok" "$(stage_post send-lead.php '{"clinicName":"C","email":"stage@x.co","specialty":"Dental"}')" 200
+expect "staging: GHL not called" "$([ -f "$TMP/ghl/last.json" ] && echo called || echo not-called)" not-called
+expect "staging: lead in staging dir" "$(grep -c '"stage@x.co"' "$STAGE_PRIV"/leads/*.jsonl)" 1
+expect "staging: nothing in prod dir" "$(grep -c '"stage@x.co"' "$PRIV"/leads/*.jsonl)" 0
+expect "staging: validation still runs" "$(stage_post send-lead.php '{"email":"a@b.co"}')" 400
+kill $STAGE_PID 2>/dev/null || true
+
 echo "passed: $pass  failed: $fail"
 [[ $fail -eq 0 ]]
