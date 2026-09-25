@@ -1,4 +1,6 @@
+# Never commit secrets or copies of the live server
 Backup/
 backups/
-.DS_Store
 private/config.php
+*.zip
+.DS_Store

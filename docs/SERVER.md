@@ -57,3 +57,9 @@ and delete months you no longer need (suggested retention: 12 months).
 
 `tests/lead-handler.sh` runs both endpoints locally against a fake GHL and checks
 responses, exact GHL payloads, backups and rate limiting. Needs PHP 8.1+ locally.
+
+## Where the originals and backups are
+
+`~/DocsScale-Secure/` (on the owner's Mac, not synced, not in git):
+the full hPanel backup from 25 Sep 2026, every original server file replaced during
+hardening (for rollback), and older deploy zips. All of these contain the GHL token.
