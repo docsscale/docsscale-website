@@ -43,7 +43,7 @@ expect() { # name got want
   if [[ "$2" == "$3" ]]; then pass=$((pass+1)); else fail=$((fail+1)); echo "FAIL $1: got [$2] want [$3]"; fi
 }
 body() { cat "$TMP/resp"; }
-ghl() { python3 -c "import json,sys;print(json.dumps(json.load(open('$TMP/ghl/last.json')),sort_keys=True))"; }
+ghl() { python3 -c "import json,sys;print(json.dumps(json.load(open('$TMP/ghl/last.json')),sort_keys=True,ensure_ascii=False))"; }
 
 # --- method / origin / input validation
 expect "GET 405" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8781/send-lead.php)" 405
