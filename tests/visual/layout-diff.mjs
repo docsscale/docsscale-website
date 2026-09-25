@@ -30,7 +30,7 @@ async function boxes(root) {
   return list;
 }
 const a = await boxes('reference/live-2026-09-25');
-const b = await boxes('web/out');
+const b = await boxes(process.env.CANDIDATE || 'web/out');
 console.log(`elements: live ${a.length}, rebuild ${b.length}`);
 let shown = 0;
 for (let i = 0; i < Math.min(a.length, b.length) && shown < 8; i++) {

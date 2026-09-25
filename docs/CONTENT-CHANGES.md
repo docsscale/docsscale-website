@@ -60,7 +60,7 @@ Found during the inventory. These are **visible to visitors today**:
 | B3 | /about/ team | "Team photo · [Name] · Paid media and funnels" and "Team photo · [Name] · Front-desk follow-up and scripts" | Real names/photos, or remove the two cards? |
 | B4 | /about/ facts | "Founded 2024 · Austin, Texas" | Change to Houston, Texas? And is 2024 correct? |
 | B5 | Homepage hero | "Clinic photo: real team, real rooms" (image placeholder) | Supply a photo, or keep the illustrated slot? |
-| B6 | /free-system/thank-you/ | "DELIVERY GRAPHIC — 800×500 / MOCKUP OF SYSTEM OR INBOX VISUAL" (image placeholder) | Found during the live form test |
+| B6 | /free-system/thank-you/ | "DELIVERY GRAPHIC — 800×500" placeholder | **Resolved in the rebuild.** The live HTML had been hand-edited to show the hero mockup, but visitors arriving from the form (client-side navigation) still saw the placeholder. The rebuild shows the image in both cases. |
 
 Client-clinic locations inside case studies ("Dental · Austin, TX", "Dr. Anita Patel … Austin, TX",
 "Dr. Marcus Reid, Chiropractic · Austin, TX") are the clients' own locations. Per your note that

@@ -7,24 +7,50 @@ type PageMeta = {
   /** Path with trailing slash, e.g. "/about/". Used for canonical and og:url. */
   path: string;
   /** Legal pages use plain "index,follow"; marketing pages allow large image previews. */
-  robots?: 'marketing' | 'plain' | 'noindex';
+  robots?: 'marketing' | 'plain' | 'noindex' | 'none' | 'noindex-nofollow';
+  /** Social-card wording when it differs from the page title/description (the funnel). */
+  social?: {
+    ogTitle?: string;
+    ogDescription?: string;
+    twitterCard?: 'summary' | 'summary_large_image';
+    twitterTitle?: string;
+    twitterDescription?: string;
+  };
 };
 
 const ROBOTS = {
   marketing: 'index,follow,max-image-preview:large',
   plain: 'index,follow',
   noindex: 'noindex',
+  'noindex-nofollow': 'noindex, nofollow',
+  none: undefined, // no robots tag at all (the funnel pages)
 } as const;
 
 /** Builds the same <head> tags every page had on the live site. */
-export function pageMetadata({ title, description, path, robots = 'marketing' }: PageMeta): Metadata {
+export function pageMetadata({
+  title,
+  description,
+  path,
+  robots = 'marketing',
+  social = {},
+}: PageMeta): Metadata {
   const url = `${SITE.url}${path}`;
   return {
     title,
     description,
     robots: ROBOTS[robots],
     alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: SITE.name, type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
+    openGraph: {
+      title: social.ogTitle ?? title,
+      description: social.ogDescription ?? description,
+      url,
+      siteName: SITE.name,
+      type: 'website',
+    },
+    twitter: {
+      card: social.twitterCard ?? 'summary_large_image',
+      title: social.twitterTitle ?? title,
+      description: social.twitterDescription ?? description,
+    },
   };
 }

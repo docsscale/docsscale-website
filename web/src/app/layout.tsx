@@ -7,7 +7,6 @@ import { SITE } from '@/content/site';
 // because the two were designed separately and define some classes differently.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  icons: { icon: '/favicon.png' },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
