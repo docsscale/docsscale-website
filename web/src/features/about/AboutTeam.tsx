@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
 
 export function AboutTeam() {
@@ -177,7 +178,7 @@ export function AboutTeam() {
                   letterSpacing: '-.02em',
                 }}
               >
-                [Name]
+                Ahmed Mustafa
               </span>
               <span
                 style={{
@@ -243,7 +244,7 @@ export function AboutTeam() {
                   letterSpacing: '-.02em',
                 }}
               >
-                [Name]
+                Abdul Samad
               </span>
               <span
                 style={{
@@ -287,14 +288,13 @@ export function AboutTeam() {
                 lineHeight: 1.5,
               }}
             >
-              <span>2100 S Lamar Blvd, Suite 210</span>
-              <span>Austin, TX 78704</span>
+              <span>{SITE.location}</span>
               <span
                 style={{
                   opacity: 0.75,
                 }}
               >
-                (512) 555-0148 · hello@docsscale.com
+                {SITE.email}
               </span>
             </div>
             <Link

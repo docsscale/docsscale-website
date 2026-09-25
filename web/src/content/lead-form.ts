@@ -18,8 +18,8 @@ export const LOCATION_OPTIONS = ['1', '2', '3–5', '6+'] as const;
 
 export const LEAD_FORM_MESSAGES = {
   sending: 'Sending…',
-  genericError: 'Something went wrong. Please call us instead.',
+  genericError: 'Something went wrong. Please email info@docsscale.com instead.',
   badResponse: 'Unexpected response from server.',
-  networkError: "Couldn't reach the server. Please call us instead.",
-  fallbackContact: 'Or call (512) 555-0148 · replies within one business day',
+  networkError: "Couldn't reach the server. Please email info@docsscale.com instead.",
+  fallbackContact: 'Or email info@docsscale.com · replies within one business day',
 } as const;

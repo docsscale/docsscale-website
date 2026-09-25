@@ -1,4 +1,5 @@
 import { FAQS } from '@/content/home';
+import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
 
 export function Faq() {
@@ -68,12 +69,12 @@ export function Faq() {
           >
             {'Something missing? Email '}
             <a
-              href="mailto:hello@docsscale.com"
+              href={`mailto:${SITE.email}`}
               style={{
                 fontWeight: 700,
               }}
             >
-              hello@docsscale.com
+              {SITE.email}
             </a>
             {' and a person answers.'}
           </p>

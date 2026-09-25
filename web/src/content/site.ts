@@ -7,15 +7,14 @@ export const SITE = {
   tagline:
     'Marketing agency for healthcare clinics. More patients on autopilot, from the first click to the booked appointment.',
   copyright: '© 2026 DocsScale · docsscale.com',
+  email: 'info@docsscale.com',
+  location: 'Houston, Texas, US',
+  founded: '2025',
 } as const;
 
-/** Contact block in the footer, one line per entry, shown in this order. */
-export const CONTACT_LINES = [
-  '2100 S Lamar Blvd, Suite 210',
-  'Austin, TX 78704',
-  '(512) 555-0148',
-  'hello@docsscale.com',
-] as const;
+/** Contact block in the footer, one line per entry, shown in this order.
+ *  No phone number or street address: DocsScale has neither publicly. */
+export const CONTACT_LINES = ['Houston, Texas, US', 'info@docsscale.com'] as const;
 
 /** Top navigation. `key` matches the `active` prop pages pass to <Nav>. */
 export const NAV_LINKS = [

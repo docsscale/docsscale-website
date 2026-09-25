@@ -12,3 +12,4 @@ playwright-report/
 tests/visual/interactions/
 release/
 tests/visual/ci-baseline/
+review/

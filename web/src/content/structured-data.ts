@@ -1,27 +1,24 @@
-// schema.org structured data per page, unchanged from the live site.
-// The Organization block repeats on every page; it is defined once and reused.
-// (Contact details inside it change with the approved contact update.)
+// schema.org structured data per page. The Organization block repeats on every
+// page; it is defined once and the Service blocks point to it by @id.
 
 export const ORGANIZATION = {
   '@context': 'https://schema.org',
-  '@type': ['MarketingAgency', 'LocalBusiness'],
+  // Organization, not LocalBusiness: DocsScale has no public street address.
+  '@type': 'Organization',
+  '@id': 'https://docsscale.com/#organization',
   name: 'DocsScale',
-  url: 'https://docsscale.com',
-  email: 'hello@docsscale.com',
-  telephone: '+1-512-555-0148',
+  url: 'https://docsscale.com/',
+  logo: 'https://docsscale.com/favicon.png',
+  email: 'info@docsscale.com',
   description:
     'Marketing agency for healthcare clinics. More patients on autopilot, from the first click to the booked appointment: ads, SEO, websites, funnels, follow-up and recall.',
-  areaServed: 'US',
-  priceRange: '$$',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '2100 S Lamar Blvd, Suite 210',
-    addressLocality: 'Austin',
+    addressLocality: 'Houston',
     addressRegion: 'TX',
-    postalCode: '78704',
     addressCountry: 'US',
   },
-  sameAs: ['https://docsscale.com', 'https://doctorsscalepartners.com'],
+  areaServed: { '@type': 'Country', name: 'United States' },
   knowsAbout: [
     'Healthcare marketing',
     'Patient acquisition',
@@ -45,10 +42,7 @@ export const STRUCTURED_DATA = {
       '@context': 'https://schema.org',
       '@type': 'Service',
       serviceType: 'Healthcare clinic marketing',
-      provider: {
-        '@type': 'Organization',
-        name: 'DocsScale',
-      },
+      provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
       audience: {
         '@type': 'Audience',
@@ -196,10 +190,7 @@ export const STRUCTURED_DATA = {
       '@context': 'https://schema.org',
       '@type': 'Service',
       serviceType: 'Healthcare clinic marketing',
-      provider: {
-        '@type': 'Organization',
-        name: 'DocsScale',
-      },
+      provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
       audience: {
         '@type': 'Audience',
@@ -293,10 +284,7 @@ export const STRUCTURED_DATA = {
       '@context': 'https://schema.org',
       '@type': 'Service',
       serviceType: 'Dental clinic marketing',
-      provider: {
-        '@type': 'Organization',
-        name: 'DocsScale',
-      },
+      provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
       audience: {
         '@type': 'Audience',
@@ -328,10 +316,7 @@ export const STRUCTURED_DATA = {
       '@context': 'https://schema.org',
       '@type': 'Service',
       serviceType: 'Chiropractic clinic marketing',
-      provider: {
-        '@type': 'Organization',
-        name: 'DocsScale',
-      },
+      provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
       audience: {
         '@type': 'Audience',
@@ -363,10 +348,7 @@ export const STRUCTURED_DATA = {
       '@context': 'https://schema.org',
       '@type': 'Service',
       serviceType: 'Physical Therapy clinic marketing',
-      provider: {
-        '@type': 'Organization',
-        name: 'DocsScale',
-      },
+      provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
       audience: {
         '@type': 'Audience',
@@ -398,10 +380,7 @@ export const STRUCTURED_DATA = {
       '@context': 'https://schema.org',
       '@type': 'Service',
       serviceType: 'Med Spa clinic marketing',
-      provider: {
-        '@type': 'Organization',
-        name: 'DocsScale',
-      },
+      provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
       audience: {
         '@type': 'Audience',
@@ -541,7 +520,7 @@ export const STRUCTURED_DATA = {
       '@graph': [
         {
           '@type': 'Organization',
-          '@id': 'https://docsscale.com/free-system/#organization',
+          '@id': 'https://docsscale.com/#organization',
           name: 'DocsScale',
           url: 'https://docsscale.com',
           description:
@@ -555,7 +534,7 @@ export const STRUCTURED_DATA = {
           description:
             'Download a complete GoHighLevel patient acquisition system at no cost. 6 pre-built conversion funnels, 17 done-for-you automations, and a full patient CRM for chiropractic, dental, med spa, and physical therapy clinics.',
           publisher: {
-            '@id': 'https://docsscale.com/free-system/#organization',
+            '@id': 'https://docsscale.com/#organization',
           },
         },
         {
@@ -564,7 +543,7 @@ export const STRUCTURED_DATA = {
           description:
             'A complete patient acquisition system built inside GoHighLevel, provided free to healthcare clinic owners. Includes 6 pre-built sales funnels covering new patient lead generation, service promotions, booking, applications, patient reactivation, and review collection. Also includes 17 automated workflows and a complete patient CRM.',
           provider: {
-            '@id': 'https://docsscale.com/free-system/#organization',
+            '@id': 'https://docsscale.com/#organization',
           },
           serviceType: 'Healthcare Marketing Automation',
           areaServed: 'United States',
@@ -667,7 +646,7 @@ export const STRUCTURED_DATA = {
       '@graph': [
         {
           '@type': 'Organization',
-          '@id': 'https://docsscale.com/free-system/#organization',
+          '@id': 'https://docsscale.com/#organization',
           name: 'DocsScale',
           url: 'https://docsscale.com',
           description:
@@ -681,7 +660,7 @@ export const STRUCTURED_DATA = {
           description:
             'Schedule a free 30-minute strategy call with DocsScale. Clinic owners get an honest review of their patient pipeline and a clear recommendation — no pitch.',
           publisher: {
-            '@id': 'https://docsscale.com/free-system/#organization',
+            '@id': 'https://docsscale.com/#organization',
           },
         },
         {
@@ -690,7 +669,7 @@ export const STRUCTURED_DATA = {
           description:
             'A free 30-minute strategy call for healthcare clinic owners. DocsScale reviews your current patient numbers, identifies your top growth opportunity, and gives an honest recommendation on whether we are the right fit.',
           provider: {
-            '@id': 'https://docsscale.com/free-system/#organization',
+            '@id': 'https://docsscale.com/#organization',
           },
           serviceType: 'Marketing Consultation',
           offers: {

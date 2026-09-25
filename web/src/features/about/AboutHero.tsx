@@ -1,3 +1,4 @@
+import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
 
 export function AboutHero() {
@@ -156,7 +157,7 @@ export function AboutHero() {
                 lineHeight: 1,
               }}
             >
-              2024
+              {SITE.founded}
             </div>
             <div
               style={{
@@ -165,7 +166,7 @@ export function AboutHero() {
                 marginTop: 6,
               }}
             >
-              Austin, Texas
+              Houston, Texas
             </div>
           </div>
         </div>

@@ -185,14 +185,6 @@ export function ResultsHero() {
               </b>
             </div>
           </div>
-          <span
-            style={{
-              fontSize: 12,
-              opacity: 0.6,
-            }}
-          >
-            Sample figures. Replace with verified numbers before launch.
-          </span>
         </div>
       </div>
     </div>

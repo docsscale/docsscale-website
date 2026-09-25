@@ -1,8 +1,8 @@
 import { SPECIALTY_LINKS } from '@/content/specialties';
 import { STRUCTURED_DATA } from '@/content/structured-data';
 import { LegalDraftNotice } from '@/features/legal/LegalDraftNotice';
-import { TermsHero } from '@/features/legal/TermsHero';
-import { TermsContent } from '@/features/legal/TermsContent';
+import { TERMS } from '@/content/legal';
+import { LegalPage } from '@/features/legal/LegalPage';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
@@ -22,8 +22,7 @@ export default function TermsPage() {
       ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <LegalDraftNotice />
-      <TermsHero />
-      <TermsContent />
+      <LegalPage doc={TERMS} />
     </>
   );
 }
