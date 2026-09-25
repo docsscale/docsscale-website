@@ -233,7 +233,6 @@ function lead_send_to_ghl(array $body, array $config): array
     $response = curl_exec($ch);
     $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
-    curl_close($ch);
     return [$httpCode, $response, $curlError];
 }
 
