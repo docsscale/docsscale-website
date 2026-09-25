@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Behaviour tests for site/_server/lead-handler.php.
+# Behaviour tests for server/public_html/_server/lead-handler.php.
 # Runs both endpoints on PHP's built-in server against a fake GHL API and
 # checks responses, the exact GHL payloads, lead backups and rate limiting.
 # Requires: php 8.1+ (local only), curl, python3.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'kill $SITE_PID $GHL_PID 2>/dev/null || true; rm -rf "$TMP"' EXIT
 
@@ -30,7 +30,7 @@ if (str_starts_with($email, 'fail')) { http_response_code(400); echo '{"message"
 http_response_code(201); echo '{"new":true}';
 PHP
 
-LEAD_PRIVATE_DIR="$PRIV" php -S 127.0.0.1:8781 -t "$ROOT/site" >/dev/null 2>&1 & SITE_PID=$!
+LEAD_PRIVATE_DIR="$PRIV" php -S 127.0.0.1:8781 -t "$ROOT/server/public_html" >/dev/null 2>&1 & SITE_PID=$!
 php -S 127.0.0.1:8782 -t "$TMP/ghl" "$TMP/ghl/index.php" >/dev/null 2>&1 & GHL_PID=$!
 sleep 1
 
