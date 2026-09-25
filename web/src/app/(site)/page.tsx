@@ -1,5 +1,5 @@
 import { SPECIALTY_LINKS } from '@/content/specialties';
-import { FAQ_LD, ORGANIZATION_LD, SERVICE_LD } from '@/content/structured-data';
+import { STRUCTURED_DATA } from '@/content/structured-data';
 import { Faq } from '@/features/home/Faq';
 import { FinalCta } from '@/features/home/FinalCta';
 import { Gaps } from '@/features/home/Gaps';
@@ -24,9 +24,9 @@ export const metadata = pageMetadata({
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={ORGANIZATION_LD} />
-      <JsonLd data={SERVICE_LD} />
-      <JsonLd data={FAQ_LD} />
+      {STRUCTURED_DATA.home.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <SpecialtyProvider>
         <Hero />

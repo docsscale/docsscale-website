@@ -120,7 +120,7 @@ async function run(siteKey, scenario, browser) {
   await page.evaluate(() => document.fonts.ready);
   await page.clock.runFor(2000);
   await scenario.steps(page);
-  await page.addStyleTag({ content: '*,*::before,*::after{animation-play-state:paused!important;transition:none!important;caret-color:transparent!important}' });
+  await page.addStyleTag({ content: '*,*::before,*::after{animation-play-state:paused!important;transition:none!important;caret-color:transparent!important}[data-lift]{will-change:auto!important}' });
   await page.clock.runFor(500);
   const opts = { animations: 'disabled' };
   let buf;

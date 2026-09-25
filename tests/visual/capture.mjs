@@ -46,7 +46,8 @@ for (const vp of VIEWPORTS) {
     await autoScroll(page);
     await page.clock.runFor(10_000);
     await page.addStyleTag({
-      content: '*,*::before,*::after{animation-play-state:paused!important;animation-delay:0s!important;transition:none!important;caret-color:transparent!important}',
+      // will-change:auto — composited layers (from [data-lift]) anti-alias non-deterministically.
+      content: '*,*::before,*::after{animation-play-state:paused!important;animation-delay:0s!important;transition:none!important;caret-color:transparent!important}[data-lift]{will-change:auto!important}',
     });
     await page.clock.runFor(1_000);
     const file = path.join(out, `${route.name}--${vp.name}.png`);
