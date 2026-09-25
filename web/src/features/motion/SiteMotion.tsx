@@ -58,7 +58,8 @@ export function SiteMotion({ skip = [] }: { skip?: string[] }) {
 
     const ctx = gsap.context(() => {
       const h1 = document.querySelector('h1');
-      if (h1) {
+      // Headings already split on the server animate with CSS (motion.css).
+      if (h1 && !h1.querySelector('.word-rise')) {
         gsap.from(splitWords(h1), {
           yPercent: 110,
           opacity: 0,
@@ -80,7 +81,7 @@ export function SiteMotion({ skip = [] }: { skip?: string[] }) {
       );
 
       const hero = document.querySelector('[data-screen-label="Hero"]');
-      if (hero?.firstElementChild) {
+      if (hero?.firstElementChild && !hero.firstElementChild.hasAttribute('data-hero-rise')) {
         gsap.from(hero.firstElementChild.children, {
           y: 30,
           opacity: 0,
