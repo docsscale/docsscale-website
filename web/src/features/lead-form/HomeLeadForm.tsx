@@ -3,19 +3,9 @@
 // Lead form in the homepage's final "Start here" section.
 import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/content/lead-form';
 import { T } from '@/styles/tokens';
+import { errorStyle, fieldStyle as field, textareaStyle } from './fieldStyles';
 import { useLeadSubmit } from './useLeadSubmit';
 
-const field = {
-  height: 50,
-  border: `1px solid ${T.hairline}`,
-  borderRadius: 14,
-  background: T.surface,
-  padding: '0 14px',
-  fontSize: 15,
-  color: T.ink,
-  width: '100%',
-  boxSizing: 'border-box',
-} as const;
 const row = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,140px),1fr))',
@@ -98,17 +88,7 @@ export function HomeLeadForm() {
         rows={3}
         name="message"
         placeholder="What's the biggest gap right now? (optional)"
-        style={{
-          border: `1px solid ${T.hairline}`,
-          borderRadius: 14,
-          background: T.surface,
-          padding: 14,
-          fontSize: 15,
-          color: T.ink,
-          resize: 'vertical',
-          width: '100%',
-          boxSizing: 'border-box',
-        }}
+        style={textareaStyle}
       />
       <button
         type="submit"
@@ -131,21 +111,7 @@ export function HomeLeadForm() {
       >
         {submitting ? LEAD_FORM_MESSAGES.sending : 'Book a strategy call'}
       </button>
-      {status === 'error' && (
-        <div
-          style={{
-            fontSize: 13,
-            color: T.peachFg,
-            textAlign: 'center',
-            fontWeight: 600,
-            background: T.peachBg,
-            borderRadius: 12,
-            padding: '10px 14px',
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {status === 'error' && <div style={errorStyle}>{error}</div>}
       <div style={{ fontSize: 13, color: T.teal, textAlign: 'center', fontWeight: 600 }}>
         {LEAD_FORM_MESSAGES.fallbackContact}
       </div>

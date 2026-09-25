@@ -25,7 +25,7 @@ export const NAV_LINKS = [
   { key: 'about', label: 'About', href: '/about' },
 ] as const;
 
-export type NavKey = (typeof NAV_LINKS)[number]['key'] | 'home' | 'book';
+export type NavKey = (typeof NAV_LINKS)[number]['key'] | 'home' | 'call';
 
 export const FOOTER_COLUMNS = [
   {

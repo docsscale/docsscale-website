@@ -100,6 +100,31 @@ export const SCENARIOS = [
     },
     shot: { selector: '#call' },
   },
+  {
+    name: 'book-form-success',
+    path: '/book-a-call/',
+    viewport: { width: 1440, height: 900 },
+    steps: async (p) => {
+      await fillMainForm(p, 'form');
+      await p.locator('form button[type=submit]').click();
+      await p.getByText('Check your inbox for a note from Sam').waitFor();
+    },
+    shot: { selector: 'form' },
+    captureLead: true,
+  },
+  {
+    name: 'book-form-error',
+    path: '/book-a-call/',
+    viewport: { width: 375, height: 812 },
+    leadResponse: { status: 502, body: '{"ok":false,"error":"Something went wrong. Please try again."}' },
+    steps: async (p) => {
+      await fillMainForm(p, 'form');
+      await p.locator('form button[type=submit]').click();
+      await p.getByText('Something went wrong. Please try again.').waitFor();
+    },
+    shot: { selector: 'form' },
+  },
+
 ];
 
 async function run(siteKey, scenario, browser) {

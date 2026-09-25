@@ -1,6 +1,5 @@
 // Minimal static server that mimics how Hostinger serves the export:
-// directory → index.html, "/about" → 301 "/about/", unknown paths → the
-// matching 404.html (funnel 404 under /free-system/). POSTs to send-lead.php
+// directory → index.html, "/about" → 301 "/about/", unknown paths → /404.html. POSTs to send-lead.php
 // are answered like the real handler so forms can be exercised offline.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -58,8 +57,9 @@ export function startServer(root, port = 0) {
       file = path.join(file, 'index.html');
     }
     if (!fs.existsSync(file)) {
-      const funnel404 = path.join(absRoot, 'free-system/404.html');
-      const page404 = pathname.startsWith('/free-system/') && fs.existsSync(funnel404) ? funnel404 : path.join(absRoot, '404.html');
+      // Like Hostinger (.htaccess: ErrorDocument 404 /404.html): every missing URL,
+      // including under /free-system/, gets the main 404 page.
+      const page404 = path.join(absRoot, '404.html');
       res.writeHead(404, { 'Content-Type': TYPES['.html'] });
       if (!fs.existsSync(page404)) return res.end('Not found');
       return fs.createReadStream(page404).pipe(res);
