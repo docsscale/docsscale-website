@@ -1,2 +1,4 @@
 Backup/
+backups/
 .DS_Store
+private/config.php
