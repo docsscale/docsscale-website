@@ -21,6 +21,13 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
+const REQUIRED_CHECKS = [
+  'Lint, types, format, build',
+  'Lead handler tests (PHP)',
+  'Dependency audit',
+  'Pixel + behaviour parity with the live build',
+];
+
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
 const option = (name) => args[args.indexOf(`--${name}`) + 1];
@@ -36,6 +43,16 @@ if (target === 'production' && !flag('dry-run')) {
   if (!flag('yes')) fail('Production deploy needs --yes (after checking staging).');
   if (git('status --porcelain')) fail('Working tree has uncommitted changes.');
   if (git('rev-parse --abbrev-ref HEAD') !== 'main') fail('Production deploys only from main.');
+  // GitHub's free plan can't enforce "checks must pass before merge" on a private
+  // repo, so the gate is here: this exact commit must be on GitHub with every
+  // CI job green.
+  const sha = git('rev-parse HEAD');
+  if (git('rev-parse origin/main') !== sha) fail('Push main to GitHub first (local main differs from origin/main).');
+  const runs = JSON.parse(
+    execSync(`gh api repos/docsscale/docsscale-website/commits/${sha}/check-runs --jq '[.check_runs[] | {name, status, conclusion}]'`).toString(),
+  );
+  const missing = REQUIRED_CHECKS.filter((name) => !runs.some((r) => r.name === name && r.conclusion === 'success'));
+  if (missing.length) fail(`CI is not green for ${sha.slice(0, 7)}: ${missing.join(', ')}`);
 }
 
 // 2. Build the site (static export → web/out).

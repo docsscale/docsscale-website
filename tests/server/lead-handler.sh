@@ -77,7 +77,7 @@ expect "ghl fail body" "$(body)" '{"ok":false,"error":"Something went wrong. Ple
 expect "failed lead backed up" "$(grep -c '"fail@x.co"' "$PRIV"/leads/*.jsonl)" 1
 expect "ghl detail logged" "$(grep -c 'internal GHL detail' "$PRIV/logs/errors.log")" 1
 expect "backup count (4 real leads)" "$(cat "$PRIV"/leads/*.jsonl | wc -l | tr -d ' ')" 4
-expect "backup perms" "$(stat -f '%Lp' "$PRIV"/leads/*.jsonl 2>/dev/null || stat -c '%a' "$PRIV"/leads/*.jsonl)" 600
+expect "backup perms" "$(php -r 'printf("%o", fileperms($argv[1]) & 0777);' "$PRIV"/leads/*.jsonl)" 600
 
 # --- rate limit: 5 sends per IP per 10 min (4 used above)
 expect "5th send ok" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental"}')" 200
