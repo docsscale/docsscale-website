@@ -1,1 +1,73 @@
+# docsscale.com — public_html/.htaccess
+# Server rules for the static Next.js export. The export itself is not
+# edited here; everything below is about how the server delivers it.
+# Hostinger note: a hPanel "deploy archive" overwrites public_html, so this
+# file and the lead endpoints must be re-uploaded after every deploy.
+
+# ---------------------------------------------------------------------------
+# 1. Error pages
+# ---------------------------------------------------------------------------
 ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------------
+# 2. Directory listing off
+# ---------------------------------------------------------------------------
+Options -Indexes
+
+# ---------------------------------------------------------------------------
+# 3. Block files that must never be served
+#    dotfiles, logs, backups, archives, dumps, env/config files, and anything
+#    with "debug" in its name. robots.txt, llms.txt, sitemap.xml and the
+#    index.txt RSC payloads are unaffected.
+# ---------------------------------------------------------------------------
+<FilesMatch "(^\.|~$|debug|\.(log|bak|backup|old|orig|save|swp|sql|sqlite|db|env|ini|conf|cfg|sh|zip|tar|gz|tgz|7z|rar|psd|md|lock|dist)$)">
+    Require all denied
+</FilesMatch>
+
+# Server-side lead code lives in /_server/ (it also has its own deny file).
+RedirectMatch 404 ^/_server(/|$)
+
+# ---------------------------------------------------------------------------
+# 4. Security headers
+#    CSP is limited to directives that cannot block any resource the site
+#    loads (framing, base URL, plugins, form targets). A resource-level CSP
+#    (script-src etc.) is planned with the source refactor, together with
+#    GA4, so it can be tested against the booking embed first.
+#    Permissions-Policy deliberately leaves out "payment": the funnel's
+#    booking iframe (booking.docsscale.com) is granted allow="payment".
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set Strict-Transport-Security "max-age=31536000"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), usb=()"
+    Header always set Content-Security-Policy "upgrade-insecure-requests; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'"
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 5. Caching
+#    /_next/static/ files are content-hashed, so they can be cached for a
+#    year. HTML keeps the server default so new deploys show up at once.
+# ---------------------------------------------------------------------------
+SetEnvIf Request_URI "^/(free-system/)?_next/static/" NEXT_STATIC_ASSET
+<IfModule mod_headers.c>
+    Header set Cache-Control "public, max-age=31536000, immutable" env=NEXT_STATIC_ASSET
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 6. Indexing
+#    index.txt files are Next.js RSC payloads that duplicate each page's
+#    text. They stay reachable (client-side navigation needs them) but
+#    search engines are told not to index them.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    <Files "index.txt">
+        Header set X-Robots-Tag "noindex"
+    </Files>
+    <Files "send-lead.php">
+        Header set X-Robots-Tag "noindex, nofollow"
+    </Files>
+</IfModule>
