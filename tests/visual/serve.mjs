@@ -58,9 +58,11 @@ export function startServer(root, port = 0) {
       file = path.join(file, 'index.html');
     }
     if (!fs.existsSync(file)) {
-      const in404 = pathname.startsWith('/free-system/') ? 'free-system/404.html' : '404.html';
+      const funnel404 = path.join(absRoot, 'free-system/404.html');
+      const page404 = pathname.startsWith('/free-system/') && fs.existsSync(funnel404) ? funnel404 : path.join(absRoot, '404.html');
       res.writeHead(404, { 'Content-Type': TYPES['.html'] });
-      return fs.createReadStream(path.join(absRoot, in404)).pipe(res);
+      if (!fs.existsSync(page404)) return res.end('Not found');
+      return fs.createReadStream(page404).pipe(res);
     }
     const type = TYPES[path.extname(file)] || 'application/octet-stream';
     // Compress text like Hostinger's CDN does, so performance runs are realistic.

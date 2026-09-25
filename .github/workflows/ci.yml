@@ -60,7 +60,7 @@ jobs:
         with: { name: web-out, path: web/out }
       # Both sides are captured on this runner, so OS font rendering cancels out.
       - run: node tests/visual/capture.mjs --site reference/live-2026-09-25 --out tests/visual/ci-baseline
-      - run: node tests/visual/capture.mjs --site web/out --out tests/visual/candidate --skip-missing
+      - run: node tests/visual/capture.mjs --site web/out --out tests/visual/candidate --rebuilt-only
       - run: node tests/visual/compare.mjs --baseline tests/visual/ci-baseline --allow-missing
       - run: node tests/visual/interactions.mjs
       - if: failure()

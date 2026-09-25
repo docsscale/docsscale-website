@@ -14,7 +14,14 @@ const args = Object.fromEntries(
 );
 const site = args.site ?? 'reference/live-2026-09-25';
 const out = args.out ?? 'tests/visual/baseline';
-const only = args.only ? new Set(args.only.split(',')) : null;
+// --rebuilt-only: capture just the pages listed in rebuilt.json (the page-by-page
+// rebuild in progress); the rest are reported as pending by compare.mjs.
+const rebuilt = JSON.parse(fs.readFileSync(new URL('./rebuilt.json', import.meta.url)));
+const only = args.only
+  ? new Set(args.only.split(','))
+  : process.argv.includes('--rebuilt-only')
+    ? new Set(rebuilt)
+    : null;
 
 const server = await startServer(site);
 const base = `http://127.0.0.1:${server.address().port}`;
@@ -34,9 +41,7 @@ for (const vp of VIEWPORTS) {
     // Fake clock: timers, requestAnimationFrame and Date are driven only by
     // clock.runFor(), so counters and rotators land on the same frame every run.
     await page.clock.install({ time: new Date('2026-09-25T12:00:00Z') });
-    const response = await page.goto(base + route.path, { waitUntil: 'load' });
-    // Skip pages the rebuild doesn't have yet (served as the 404 page instead).
-    if (process.argv.includes('--skip-missing') && response.status() === 404 && !route.name.includes('not-found')) continue;
+    await page.goto(base + route.path, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
     await autoScroll(page);
     await page.clock.runFor(10_000);
