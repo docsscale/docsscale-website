@@ -5,6 +5,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -61,7 +62,13 @@ export function startServer(root, port = 0) {
       res.writeHead(404, { 'Content-Type': TYPES['.html'] });
       return fs.createReadStream(path.join(absRoot, in404)).pipe(res);
     }
-    res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream' });
+    const type = TYPES[path.extname(file)] || 'application/octet-stream';
+    // Compress text like Hostinger's CDN does, so performance runs are realistic.
+    if (/gzip/.test(req.headers['accept-encoding'] || '') && /text|javascript|json|xml|svg/.test(type)) {
+      res.writeHead(200, { 'Content-Type': type, 'Content-Encoding': 'gzip', Vary: 'Accept-Encoding' });
+      return fs.createReadStream(file).pipe(zlib.createGzip()).pipe(res);
+    }
+    res.writeHead(200, { 'Content-Type': type });
     fs.createReadStream(file).pipe(res);
   });
   return new Promise((resolve) => server.listen(port, '127.0.0.1', () => resolve(server)));

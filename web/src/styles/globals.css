@@ -1,0 +1,220 @@
+/* Global styles carried over unchanged from the live site: design tokens as CSS
+   variables, base elements, keyframes, and the responsive rules keyed to element
+   ids (#hero-grid, #nav-burger …) that the inline-styled markup relies on. */
+:root {
+  --bg: #faf9f6;
+  --band: #f3f1ec;
+  --surface: #ffffff;
+  --ink: #1a1a1a;
+  --footer-bg: #1a1a1a;
+  --body: #5c5a55;
+  --caption: #8f8c85;
+  --hairline: #e6e3dc;
+  --hairline-hover: #d3cfc6;
+  --teal: #0f5f63;
+  --teal-hover: #0b4c4f;
+  --peach-bg: #fbe7d6;
+  --peach-fg: #8a4b1e;
+  --tealtint-bg: #ddeeee;
+  --tealtint-fg: #0f5f63;
+  --lavender-bg: #e5dff5;
+  --lavender-fg: #4a3d75;
+  --sage-bg: #daede2;
+  --sage-fg: #1f5a40;
+}
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  background: var(--bg);
+}
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: var(--teal);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--teal-hover);
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: 1px;
+}
+em.serif-accent {
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes pulse {
+  0%,
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  :after,
+  :before {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+@media (max-width: 900px) {
+  #nav-cta,
+  #nav-links {
+    display: none !important;
+  }
+  #nav-burger {
+    display: inline-flex !important;
+  }
+}
+.nav-link:hover {
+  background: var(--band);
+}
+#nav-cta:hover {
+  background: var(--teal-hover);
+}
+#nav-burger:hover {
+  border-color: var(--hairline-hover);
+}
+#hero-cta:hover {
+  background: var(--teal) !important;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+@media (max-width: 760px) {
+  #cta-grid,
+  #faq-grid,
+  #hero-grid,
+  #results-grid,
+  .two {
+    grid-template-columns: 1fr !important;
+  }
+  #cta-grid > *,
+  #faq-grid > *,
+  #hero-grid > *,
+  #results-grid > *,
+  .two > * {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    order: 0 !important;
+  }
+  #hero-photo-tile {
+    min-height: 300px !important;
+  }
+  #hero-photo-tile,
+  #sys-attract-text {
+    order: 1 !important;
+  }
+  #sys-attract-ui {
+    order: 2 !important;
+  }
+  #sys-capture-text {
+    order: 3 !important;
+  }
+  #sys-capture-ui {
+    order: 4 !important;
+  }
+  #sys-convert-text {
+    order: 5 !important;
+  }
+  #sys-convert-ui {
+    order: 6 !important;
+  }
+  #sys-retain-text {
+    order: 7 !important;
+  }
+  #sys-retain-ui {
+    order: 8 !important;
+  }
+}
+[data-lift] {
+  will-change: transform;
+}
+.btn-teal {
+  transition: background 0.2s;
+}
+.btn-teal:hover {
+  background: var(--teal-hover) !important;
+}
+.btn-dark-to-teal {
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+.btn-dark-to-teal:hover {
+  background: var(--teal) !important;
+  color: #ffffff !important;
+}
+.card-border-hover {
+  transition: border-color 0.25s;
+}
+.card-border-hover:hover {
+  border-color: var(--hairline-hover) !important;
+}
+.chip-btn {
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  cursor: pointer;
+}
+.filter-btn {
+  transition:
+    background 0.2s,
+    color 0.2s;
+  cursor: pointer;
+}
+.container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 48px);
+}
