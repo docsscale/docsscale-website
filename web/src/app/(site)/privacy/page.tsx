@@ -1,0 +1,29 @@
+import { SPECIALTY_LINKS } from '@/content/specialties';
+import { STRUCTURED_DATA } from '@/content/structured-data';
+import { LegalDraftNotice } from '@/features/legal/LegalDraftNotice';
+import { PrivacyHero } from '@/features/legal/PrivacyHero';
+import { PrivacyContent } from '@/features/legal/PrivacyContent';
+import { JsonLd } from '@/features/seo/JsonLd';
+import { pageMetadata } from '@/features/seo/metadata';
+import { Nav } from '@/features/site-chrome/Nav';
+
+export const metadata = pageMetadata({
+  title: 'Privacy Policy | DocsScale',
+  description: 'How DocsScale collects, uses, and protects information for clinics and website visitors.',
+  path: '/privacy/',
+  robots: 'plain',
+});
+
+export default function PrivacyPage() {
+  return (
+    <>
+      {STRUCTURED_DATA.privacy.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
+      <Nav active="home" specialties={SPECIALTY_LINKS} />
+      <LegalDraftNotice />
+      <PrivacyHero />
+      <PrivacyContent />
+    </>
+  );
+}
