@@ -34,7 +34,9 @@ for (const vp of VIEWPORTS) {
     // Fake clock: timers, requestAnimationFrame and Date are driven only by
     // clock.runFor(), so counters and rotators land on the same frame every run.
     await page.clock.install({ time: new Date('2026-09-25T12:00:00Z') });
-    await page.goto(base + route.path, { waitUntil: 'load' });
+    const response = await page.goto(base + route.path, { waitUntil: 'load' });
+    // Skip pages the rebuild doesn't have yet (served as the 404 page instead).
+    if (process.argv.includes('--skip-missing') && response.status() === 404 && !route.name.includes('not-found')) continue;
     await page.evaluate(() => document.fonts.ready);
     await autoScroll(page);
     await page.clock.runFor(10_000);

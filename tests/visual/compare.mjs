@@ -14,6 +14,9 @@ const baselineDir = args.baseline ?? 'tests/visual/baseline';
 const candidateDir = args.candidate ?? 'tests/visual/candidate';
 const diffDir = 'tests/visual/diff';
 const only = args.only ? new Set(args.only.split(',')) : null;
+// During the page-by-page rebuild, pages without a candidate screenshot are
+// reported as pending instead of failing. Remove the flag once all pages exist.
+const allowMissing = process.argv.includes('--allow-missing');
 fs.mkdirSync(diffDir, { recursive: true });
 
 const results = [];
@@ -22,7 +25,7 @@ for (const file of fs.readdirSync(baselineDir).filter((f) => f.endsWith('.png'))
   if (only && !only.has(route)) continue;
   const candidatePath = path.join(candidateDir, file);
   if (!fs.existsSync(candidatePath)) {
-    results.push({ file, status: 'missing' });
+    results.push({ file, status: allowMissing ? 'pending' : 'missing' });
     continue;
   }
   const a = PNG.sync.read(fs.readFileSync(path.join(baselineDir, file)));
@@ -39,10 +42,11 @@ for (const file of fs.readdirSync(baselineDir).filter((f) => f.endsWith('.png'))
 }
 
 fs.writeFileSync(path.join(diffDir, 'report.json'), JSON.stringify(results, null, 2));
-const bad = results.filter((r) => r.status !== 'identical');
+const bad = results.filter((r) => r.status !== 'identical' && r.status !== 'pending');
 for (const r of results) {
-  const mark = r.status === 'identical' ? 'PASS' : 'FAIL';
+  const mark = r.status === 'identical' ? 'PASS' : r.status === 'pending' ? 'TODO' : 'FAIL';
   console.log(`${mark}  ${r.file.padEnd(44)} ${r.status}${r.changedPixels ? ` (${r.changedPixels} px)` : ''}${r.baseline ? ` ${r.baseline} vs ${r.candidate}` : ''}`);
 }
-console.log(`\n${results.length - bad.length}/${results.length} identical`);
+const pending = results.filter((r) => r.status === 'pending').length;
+console.log(`\n${results.length - bad.length - pending}/${results.length} identical${pending ? `, ${pending} pending` : ''}`);
 process.exit(bad.length ? 1 : 0);
