@@ -4,3 +4,8 @@ backups/
 private/config.php
 *.zip
 .DS_Store
+node_modules/
+tests/visual/candidate/
+tests/visual/diff/
+test-results/
+playwright-report/
