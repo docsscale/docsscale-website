@@ -10,9 +10,13 @@
 ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
-# 2. Directory listing off
+# 2. Directory listing off; declare UTF-8
+#    Without a charset, browsers and some crawlers read llms.txt / robots.txt
+#    as Latin-1 and show "â€”" instead of "—".
 # ---------------------------------------------------------------------------
 Options -Indexes
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .txt .xml .json
 
 # ---------------------------------------------------------------------------
 # 3. Block files that must never be served
