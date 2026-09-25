@@ -28,9 +28,5 @@ DocsScale works only with healthcare clinics: dental, chiropractic, physical the
 - Book a call: https://docsscale.com/book-a-call
 
 ## Contact
-- Email: hello@docsscale.com
-- Phone: +1-512-555-0148
-- Location: 2100 S Lamar Blvd, Suite 210, Austin, TX 78704
-
-## Notes
-- Placeholder sample data on the site (client names, figures, contact details) must be replaced with verified information before launch.
+- Email: info@docsscale.com
+- Location: Houston, Texas, US
