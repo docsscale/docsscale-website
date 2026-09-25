@@ -24,6 +24,7 @@ const LEAD_MAX_BODY_BYTES = 16384;
 const LEAD_RATE_WINDOW_SECONDS = 600;
 const LEAD_RATE_MAX_PER_IP = 5;
 const LEAD_RATE_MAX_GLOBAL = 60;
+const LEAD_DEFAULT_ORIGINS = ['https://docsscale.com', 'https://www.docsscale.com'];
 const LEAD_GENERIC_ERROR = 'Something went wrong. Please try again, or email info@docsscale.com.';
 
 function lead_private_dir(): string
@@ -44,13 +45,18 @@ function handle_lead_request(string $formKey): never
 
     $forms = require __DIR__ . '/forms.php';
     $form = $forms[$formKey] ?? null;
-    $config = lead_load_config();
-    if ($form === null || $config === null) {
-        lead_log('errors', "config missing or unknown form '$formKey'");
+    if ($form === null) {
+        lead_log('errors', "unknown form '$formKey'");
         lead_respond(500, ['ok' => false, 'error' => LEAD_GENERIC_ERROR]);
     }
+    // A missing config must not lose leads: validate and back up the
+    // submission as usual, and only skip the GHL call.
+    $config = lead_load_config();
+    if ($config === null) {
+        lead_log('errors', 'private/config.php missing or incomplete; leads are backed up but not sent to GHL');
+    }
 
-    if (!lead_is_same_origin($config['allowed_origins'])) {
+    if (!lead_is_same_origin($config['allowed_origins'] ?? LEAD_DEFAULT_ORIGINS)) {
         lead_log('rejected', "$formKey: cross-origin or missing Origin/Referer");
         lead_respond(403, ['ok' => false, 'error' => 'Invalid submission.']);
     }
@@ -93,8 +99,12 @@ function handle_lead_request(string $formKey): never
         lead_respond(429, ['ok' => false, 'error' => 'Too many submissions. Please wait a few minutes and try again.']);
     }
 
-    $body = ($form['build'])($values, $config['ghl_location_id'], $form['source']);
-    [$httpCode, $response, $curlError] = lead_send_to_ghl($body, $config);
+    if ($config === null) {
+        [$httpCode, $response, $curlError] = [0, false, 'not attempted: no config'];
+    } else {
+        $body = ($form['build'])($values, $config['ghl_location_id'], $form['source']);
+        [$httpCode, $response, $curlError] = lead_send_to_ghl($body, $config);
+    }
     $ok = $response !== false && $httpCode >= 200 && $httpCode < 300;
 
     lead_store($formKey, $ipHash, $values, $ok, $httpCode);
@@ -142,7 +152,7 @@ function lead_load_config(): ?array
     if (!is_array($config) || empty($config['ghl_token']) || empty($config['ghl_location_id'])) {
         return null;
     }
-    $config['allowed_origins'] ??= ['https://docsscale.com'];
+    $config['allowed_origins'] ??= LEAD_DEFAULT_ORIGINS;
     return $config;
 }
 

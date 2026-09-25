@@ -83,5 +83,13 @@ expect "backup perms" "$(stat -f '%Lp' "$PRIV"/leads/*.jsonl 2>/dev/null || stat
 expect "5th send ok" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental"}')" 200
 expect "6th send limited" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental"}')" 429
 
+# --- missing config: lead still validated and backed up, GHL skipped
+rm -rf "$PRIV/ratelimit"; mv "$PRIV/config.php" "$PRIV/config.off"
+expect "no config: origin still enforced" "$(post send-lead.php '{}' https://evil.example)" 403
+expect "no config: validation still runs" "$(post send-lead.php '{"email":"a@b.co"}' https://docsscale.com)" 400
+expect "no config: 502 generic" "$(post send-lead.php '{"clinicName":"C","email":"noconf@x.co","specialty":"Dental"}' https://docsscale.com)" 502
+expect "no config: lead backed up" "$(grep -c '"noconf@x.co"' "$PRIV"/leads/*.jsonl)" 1
+mv "$PRIV/config.off" "$PRIV/config.php"
+
 echo "passed: $pass  failed: $fail"
 [[ $fail -eq 0 ]]
