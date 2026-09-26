@@ -30,7 +30,7 @@ export function FunnelInside() {
               fontWeight: 800,
               letterSpacing: '.1em',
               textTransform: 'uppercase',
-              color: '#8F8C85',
+              color: '#6C6962',
             }}
           >
             Here is exactly what you are getting

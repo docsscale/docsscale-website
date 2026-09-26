@@ -100,7 +100,7 @@ export function FunnelForm() {
         {status === 'submitting' ? 'Sending…' : FUNNEL_FORM.submit}
       </button>
       {status === 'error' && <span style={{ fontSize: 13, color: '#B4432F', fontWeight: 700 }}>{error}</span>}
-      <span style={{ fontSize: 13, color: '#8F8C85', fontWeight: 600 }}>{FUNNEL_FORM.footnote}</span>
+      <span style={{ fontSize: 13, color: '#6C6962', fontWeight: 600 }}>{FUNNEL_FORM.footnote}</span>
     </form>
   );
 }

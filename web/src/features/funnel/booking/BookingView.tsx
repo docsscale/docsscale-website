@@ -135,7 +135,7 @@ export function BookingView() {
             <BookingEmbed />
           </Reveal>
           <Reveal>
-            <p style={{ margin: 0, textAlign: 'center', fontSize: 14, color: '#8F8C85', fontWeight: 600 }}>
+            <p style={{ margin: 0, textAlign: 'center', fontSize: 14, color: '#6C6962', fontWeight: 600 }}>
               Replies within one business day if no slot fits.
             </p>
           </Reveal>

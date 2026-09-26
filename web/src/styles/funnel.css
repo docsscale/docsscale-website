@@ -161,7 +161,7 @@ select {
   box-shadow: 0 0 0 3px rgba(15, 95, 99, 0.12);
 }
 .field::placeholder {
-  color: #8f8c85;
+  color: #6c6962;
 }
 .acard {
   background: #ffffff;
@@ -258,7 +258,7 @@ select {
 }
 .rsub {
   font-size: 12px;
-  color: #8f8c85;
+  color: #6c6962;
 }
 .rcard.dark .rsub {
   color: rgba(250, 249, 246, 0.55);

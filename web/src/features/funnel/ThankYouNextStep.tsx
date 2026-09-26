@@ -78,7 +78,7 @@ export function ThankYouNextStep() {
             <span
               style={{
                 fontSize: 13,
-                color: 'rgba(250,249,246,.45)',
+                color: 'rgba(250,249,246,.5)',
                 fontWeight: 600,
               }}
             >
