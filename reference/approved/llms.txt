@@ -1,0 +1,32 @@
+# DocsScale
+
+> Marketing agency for healthcare clinics in the US. DocsScale runs the whole patient-acquisition journey for clinics and reports in booked appointments and patients who showed, never clicks.
+
+DocsScale works only with healthcare clinics: dental, chiropractic, physical therapy, med spa, dermatology, primary care, optometry, and mental health. The offer is one system with four stages: Attract, Capture, Convert, Retain. Engagements are month to month with 30 days' notice, and the clinic owns every ad account, page, phone number, and its data.
+
+## Services
+- Paid advertising (Meta and Google), one service line at a time — reported in booked appointments
+- SEO and Google Business Profile management — rank for treatments in the neighborhoods served
+- Social media management — planned a month ahead, in the clinic's voice
+- Website design — a clinic site built to book, fast on phones
+- Funnel design — landing pages, offers, and forms per service line
+- Follow-up & booking — every inquiry answered within minutes, missed-call text-back, reminders
+- Reputation & reviews — review requests after every visit
+- Reactivation & recall — past patients invited back, in the clinic's name, without discounts
+
+## How it works
+- Free 30-minute strategy call, then build (weeks 1–3), launch, and a weekly Monday report
+- Typical first booked patients from ads within 2–3 weeks; full pipeline by month three
+- The clinic approves all patient-facing content before launch
+
+## Pages
+- Home: https://docsscale.com/
+- Services: https://docsscale.com/services
+- How it works: https://docsscale.com/how-it-works
+- Results: https://docsscale.com/results
+- About: https://docsscale.com/about
+- Book a call: https://docsscale.com/book-a-call
+
+## Contact
+- Email: info@docsscale.com
+- Location: Houston, Texas, US
