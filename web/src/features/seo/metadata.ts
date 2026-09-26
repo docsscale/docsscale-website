@@ -18,6 +18,14 @@ type PageMeta = {
   };
 };
 
+// Link-preview image for every page (1200×630; source in brand/originals).
+const SOCIAL_IMAGE = {
+  url: '/og-image.jpg',
+  width: 1200,
+  height: 630,
+  alt: 'DocsScale — marketing agency for healthcare clinics',
+};
+
 const ROBOTS = {
   marketing: 'index,follow,max-image-preview:large',
   plain: 'index,follow',
@@ -46,11 +54,13 @@ export function pageMetadata({
       url,
       siteName: SITE.name,
       type: 'website',
+      images: [SOCIAL_IMAGE],
     },
     twitter: {
       card: social.twitterCard ?? 'summary_large_image',
       title: social.twitterTitle ?? title,
       description: social.twitterDescription ?? description,
+      images: [SOCIAL_IMAGE.url],
     },
   };
 }
