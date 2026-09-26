@@ -8,9 +8,10 @@
 //  - [data-lift] cards float up 5px on hover
 // Nothing runs when the visitor prefers reduced motion, so the static markup is
 // always the final, fully visible state.
+// GSAP is loaded only after the page has hydrated: the above-the-fold hero is
+// animated by CSS (motion.css), so GSAP only drives content further down and
+// needn't compete with the first paint for bandwidth.
 import { useEffect } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const EASE = 'power3.out';
 
@@ -54,88 +55,98 @@ function splitWords(heading: Element): HTMLElement[] {
 export function SiteMotion({ skip = [] }: { skip?: string[] }) {
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    gsap.registerPlugin(ScrollTrigger);
+    let cancelled = false;
+    let revert = () => {};
 
-    const ctx = gsap.context(() => {
-      const h1 = document.querySelector('h1');
-      // Headings already split on the server animate with CSS (motion.css).
-      if (h1 && !h1.querySelector('.word-rise')) {
-        gsap.from(splitWords(h1), {
-          yPercent: 110,
-          opacity: 0,
-          duration: 0.9,
-          ease: EASE,
-          stagger: 0.05,
-          delay: 0.1,
-        });
-      }
-      document.querySelectorAll('h2').forEach((h2) =>
-        gsap.from(splitWords(h2), {
-          yPercent: 110,
-          opacity: 0,
-          duration: 0.8,
-          ease: EASE,
-          stagger: 0.035,
-          scrollTrigger: { trigger: h2, start: 'top 88%', once: true },
-        }),
-      );
+    void Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{ gsap }, { ScrollTrigger }]) => {
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
 
-      const hero = document.querySelector('[data-screen-label="Hero"]');
-      if (hero?.firstElementChild && !hero.firstElementChild.hasAttribute('data-hero-rise')) {
-        gsap.from(hero.firstElementChild.children, {
-          y: 30,
-          opacity: 0,
-          duration: 0.9,
-          ease: EASE,
-          stagger: 0.07,
-          clearProps: 'opacity',
-        });
-      }
-
-      const skipped = new Set(['Nav', 'Hero', 'Footer', ...skip]);
-      document.querySelectorAll('[data-screen-label]').forEach((section) => {
-        if (skipped.has(section.getAttribute('data-screen-label') || '')) return;
-        const inner = section.firstElementChild;
-        if (!inner) return;
-        Array.from(inner.children).forEach((block) => {
-          // Small grids animate card by card; everything else as one block.
-          const targets =
-            getComputedStyle(block).display === 'grid' &&
-            block.children.length > 1 &&
-            block.children.length <= 12
-              ? Array.from(block.children)
-              : [block];
-          gsap.from(targets, {
-            y: 36,
+      const ctx = gsap.context(() => {
+        const h1 = document.querySelector('h1');
+        // Headings already split on the server animate with CSS (motion.css).
+        if (h1 && !h1.querySelector('.word-rise')) {
+          gsap.from(splitWords(h1), {
+            yPercent: 110,
             opacity: 0,
-            scale: 0.985,
             duration: 0.9,
             ease: EASE,
-            stagger: 0.09,
-            scrollTrigger: { trigger: block, start: 'top 86%', once: true },
+            stagger: 0.05,
+            delay: 0.1,
+          });
+        }
+        document.querySelectorAll('h2').forEach((h2) =>
+          gsap.from(splitWords(h2), {
+            yPercent: 110,
+            opacity: 0,
+            duration: 0.8,
+            ease: EASE,
+            stagger: 0.035,
+            scrollTrigger: { trigger: h2, start: 'top 88%', once: true },
+          }),
+        );
+
+        const hero = document.querySelector('[data-screen-label="Hero"]');
+        if (hero?.firstElementChild && !hero.firstElementChild.hasAttribute('data-hero-rise')) {
+          gsap.from(hero.firstElementChild.children, {
+            y: 30,
+            opacity: 0,
+            duration: 0.9,
+            ease: EASE,
+            stagger: 0.07,
+            clearProps: 'opacity',
+          });
+        }
+
+        const skipped = new Set(['Nav', 'Hero', 'Footer', ...skip]);
+        document.querySelectorAll('[data-screen-label]').forEach((section) => {
+          if (skipped.has(section.getAttribute('data-screen-label') || '')) return;
+          const inner = section.firstElementChild;
+          if (!inner) return;
+          Array.from(inner.children).forEach((block) => {
+            // Small grids animate card by card; everything else as one block.
+            const targets =
+              getComputedStyle(block).display === 'grid' &&
+              block.children.length > 1 &&
+              block.children.length <= 12
+                ? Array.from(block.children)
+                : [block];
+            gsap.from(targets, {
+              y: 36,
+              opacity: 0,
+              scale: 0.985,
+              duration: 0.9,
+              ease: EASE,
+              stagger: 0.09,
+              scrollTrigger: { trigger: block, start: 'top 86%', once: true },
+            });
           });
         });
-      });
 
-      document.querySelectorAll<HTMLElement>('[data-lift]').forEach((card) => {
-        card.addEventListener('pointerenter', () =>
-          gsap.to(card, { y: -5, duration: 0.3, ease: 'power2.out', overwrite: 'auto' }),
-        );
-        card.addEventListener('pointerleave', () =>
-          gsap.to(card, { y: 0, duration: 0.45, ease: EASE, overwrite: 'auto' }),
-        );
-      });
+        document.querySelectorAll<HTMLElement>('[data-lift]').forEach((card) => {
+          card.addEventListener('pointerenter', () =>
+            gsap.to(card, { y: -5, duration: 0.3, ease: 'power2.out', overwrite: 'auto' }),
+          );
+          card.addEventListener('pointerleave', () =>
+            gsap.to(card, { y: 0, duration: 0.45, ease: EASE, overwrite: 'auto' }),
+          );
+        });
 
-      // Layout can shift after fonts and images load; re-measure trigger points.
-      const refresh = () => ScrollTrigger.refresh();
-      window.addEventListener('load', refresh);
-      const timer = setTimeout(refresh, 1200);
-      return () => {
-        window.removeEventListener('load', refresh);
-        clearTimeout(timer);
-      };
+        // Layout can shift after fonts and images load; re-measure trigger points.
+        const refresh = () => ScrollTrigger.refresh();
+        window.addEventListener('load', refresh);
+        const timer = setTimeout(refresh, 1200);
+        return () => {
+          window.removeEventListener('load', refresh);
+          clearTimeout(timer);
+        };
+      });
+      revert = () => ctx.revert();
     });
-    return () => ctx.revert();
+    return () => {
+      cancelled = true;
+      revert();
+    };
     // `skip` is a static per-page list; re-running on identity change would replay animations.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
