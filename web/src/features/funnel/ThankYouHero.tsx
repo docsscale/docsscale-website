@@ -1,3 +1,4 @@
+import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
 import { T } from '@/styles/tokens';
 
 export function ThankYouHero() {
@@ -107,9 +108,10 @@ export function ThankYouHero() {
         >
           {/* The live HTML was hand-edited to show the hero mockup here instead of the
               "DELIVERY GRAPHIC" placeholder; the rebuild keeps the image everywhere. */}
-          {/* eslint-disable-next-line @next/next/no-img-element -- static export, same file as the landing hero */}
-          <img
+          <ResponsiveImage
             src="/free-system/images/hero-mockup.jpg"
+            sizes="(max-width: 1060px) calc(100vw - 32px), 980px"
+            priority
             alt="GoHighLevel funnels, CRM dashboard, and automations mockup"
             style={{
               width: '100%',

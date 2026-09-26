@@ -1,4 +1,5 @@
 import { StatsStrip } from '@/features/funnel/StatsStrip';
+import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
 import { T } from '@/styles/tokens';
 
 export function FunnelHero() {
@@ -75,9 +76,10 @@ export function FunnelHero() {
             maxWidth: 980,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element -- plain <img> kept for parity; optimised in the performance step */}
-          <img
+          <ResponsiveImage
             src="/free-system/images/hero-mockup.jpg"
+            sizes="(max-width: 1060px) calc(100vw - 32px), 980px"
+            priority
             alt="GoHighLevel funnels, CRM dashboard, and automations mockup"
             style={{
               width: '100%',

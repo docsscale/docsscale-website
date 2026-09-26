@@ -1,5 +1,7 @@
 // Compares candidate screenshots against the baseline, pixel by pixel.
-//   node tests/visual/compare.mjs [--baseline dir] [--candidate dir] [--only name,name]
+//   node tests/visual/compare.mjs [--baseline dir] [--candidate dir] [--only name,name] [--tolerance 0.1]
+// --tolerance: perceptual per-pixel threshold (pixelmatch), for proving that a
+// change such as an image re-encode is only compression noise. Default 0: exact.
 // Writes diff images to tests/visual/diff/ and a summary to
 // tests/visual/diff/report.json. Exit code 1 if any page differs.
 import fs from 'node:fs';
@@ -36,7 +38,7 @@ for (const file of fs.readdirSync(baselineDir).filter((f) => f.endsWith('.png'))
   }
   const diff = new PNG({ width: a.width, height: a.height });
   // threshold 0 + includeAA: any changed pixel counts, anti-aliasing included.
-  const changed = pixelmatch(a.data, b.data, diff.data, a.width, a.height, { threshold: 0, includeAA: true });
+  const changed = pixelmatch(a.data, b.data, diff.data, a.width, a.height, { threshold: Number(args.tolerance ?? 0), includeAA: true });
   if (changed > 0) fs.writeFileSync(path.join(diffDir, file), PNG.sync.write(diff));
   results.push({ file, status: changed === 0 ? 'identical' : 'different', changedPixels: changed, size: `${a.width}x${a.height}` });
 }

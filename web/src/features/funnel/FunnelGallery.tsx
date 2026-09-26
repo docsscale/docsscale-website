@@ -3,6 +3,7 @@
 // Grid of funnel thumbnails; clicking one opens it full-screen (click anywhere
 // to close). Everything around it is server-rendered by FunnelInside.
 import { useState } from 'react';
+import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
 import { FUNNELS } from '@/content/funnel';
 import { Reveal } from './Reveal';
 
@@ -42,9 +43,9 @@ export function FunnelGallery() {
                 }}
                 onClick={() => setOpen({ src: funnel.img, alt: funnel.title })}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- static export, images are pre-sized */}
-                <img
+                <ResponsiveImage
                   src={funnel.img}
+                  sizes="(max-width: 720px) calc(100vw - 32px), 360px"
                   alt={funnel.title}
                   loading="lazy"
                   style={{
@@ -116,9 +117,9 @@ export function FunnelGallery() {
             cursor: 'zoom-out',
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element -- same file as the thumbnail */}
-          <img
+          <ResponsiveImage
             src={open.src}
+            sizes="min(900px, 95vw)"
             alt={open.alt}
             style={{
               maxWidth: 'min(900px,95vw)',

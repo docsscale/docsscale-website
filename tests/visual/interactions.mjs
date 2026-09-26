@@ -136,8 +136,12 @@ export const SCENARIOS = [
       await p.clock.runFor(2500);
       await p.locator('.funnel-thumb').first().click();
       await p.locator('img[alt="Get New Patients"]').nth(1).waitFor();
+      await settle(p); // the enlarged image is a larger file than the thumbnail
     },
     shot: { fullViewport: true },
+    // The enlarged photo is an AVIF re-encode of the baseline's JPEG: allow
+    // compression noise (perceptual threshold 0.1), nothing more.
+    tolerance: 0.1,
   },
   {
     name: 'funnel-form-success',
@@ -240,7 +244,7 @@ for (const scenario of SCENARIOS) {
   else if (A.width !== B.width || A.height !== B.height) status = `size ${A.width}x${A.height} vs ${B.width}x${B.height}`;
   else {
     const diff = new PNG({ width: A.width, height: A.height });
-    const changed = pixelmatch(A.data, B.data, diff.data, A.width, A.height, { threshold: 0, includeAA: true });
+    const changed = pixelmatch(A.data, B.data, diff.data, A.width, A.height, { threshold: scenario.tolerance ?? 0, includeAA: true });
     status = changed === 0 ? 'identical' : `${changed} px differ`;
     if (changed) {
       fs.writeFileSync(`${OUT}/${scenario.name}--baseline.png`, a.png);
