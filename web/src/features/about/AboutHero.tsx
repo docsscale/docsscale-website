@@ -1,4 +1,4 @@
-import { SplitWords } from '@/features/motion/SplitWords';
+import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { TEAM } from '@/content/about';
 import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
@@ -45,7 +45,7 @@ export function AboutHero() {
           >
             About
           </span>
-          <h1
+          <AnimatedHeading
             style={{
               margin: 0,
               fontWeight: 800,
@@ -55,18 +55,16 @@ export function AboutHero() {
               textWrap: 'balance',
             }}
           >
-            <SplitWords>
-              {'We only work with clinics. '}
-              <em
-                className="serif-accent"
-                style={{
-                  color: T.teal,
-                }}
-              >
-                On purpose.
-              </em>
-            </SplitWords>
-          </h1>
+            {'We only work with clinics. '}
+            <em
+              className="serif-accent"
+              style={{
+                color: T.teal,
+              }}
+            >
+              On purpose.
+            </em>
+          </AnimatedHeading>
           <p
             style={{
               margin: 0,

@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import { startServer } from './serve.mjs';
+import { settle } from './settle.mjs';
 import { BASELINE_SITE } from './baseline-site.mjs';
 
 const args = Object.fromEntries(
@@ -213,6 +214,7 @@ async function run(siteKey, scenario, browser) {
   await page.evaluate(() => document.fonts.ready);
   await page.clock.runFor(2000);
   await scenario.steps(page);
+  await settle(page);
   await page.addStyleTag({ content: '*,*::before,*::after{animation-play-state:paused!important;transition:none!important;caret-color:transparent!important}[data-lift]{will-change:auto!important}' });
   await page.clock.runFor(500);
   const opts = { animations: 'disabled' };

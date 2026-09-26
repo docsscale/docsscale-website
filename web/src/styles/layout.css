@@ -1,0 +1,9 @@
+/* Small layout helpers that keep the rebuilt pages pixel-identical to the
+   original design after approved content removals. */
+
+/* /results/ stats card: reserves the exact height of the removed note, which
+   wrapped to one or two lines depending on width. Invisible and not page text. */
+.results-note-space::before {
+  content: 'Sample figures. Replace with verified numbers before launch.';
+  visibility: hidden;
+}

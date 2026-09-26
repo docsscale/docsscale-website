@@ -7,6 +7,7 @@ import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 import { startServer } from './serve.mjs';
+import { settle } from './settle.mjs';
 import { ROUTES, VIEWPORTS } from './routes.mjs';
 import { BASELINE_SITE } from './baseline-site.mjs';
 
@@ -49,8 +50,8 @@ for (const vp of VIEWPORTS) {
     await page.evaluate(() => document.fonts.ready);
     await autoScroll(page);
     await page.clock.runFor(10_000);
-    // CSS animations run on real time, not the fake clock: let them finish.
-    if (motion) await page.waitForTimeout(2500);
+    // CSS animations run on real time, not the fake clock: wait for them to finish.
+    await settle(page);
     await page.addStyleTag({
       // will-change:auto — composited layers (from [data-lift]) anti-alias non-deterministically.
       content: '*,*::before,*::after{animation-play-state:paused!important;animation-delay:0s!important;transition:none!important;caret-color:transparent!important}[data-lift]{will-change:auto!important}',

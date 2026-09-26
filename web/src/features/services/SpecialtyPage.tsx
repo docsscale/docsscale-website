@@ -1,6 +1,6 @@
 // Template for the four specialty pages (/services/dental/ …). All copy comes
 // from src/content/specialties.ts; each specialty has its own accent colour.
-import { SplitWords } from '@/features/motion/SplitWords';
+import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import Link from 'next/link';
 import { SPECIALTIES, type Specialty } from '@/content/specialties';
 import { T } from '@/styles/tokens';
@@ -73,7 +73,7 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
             {s.name}
             {' Practices'}
           </span>
-          <h1
+          <AnimatedHeading
             style={{
               margin: 0,
               fontWeight: 800,
@@ -83,18 +83,16 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
               textWrap: 'balance',
             }}
           >
-            <SplitWords>
-              {s.h1}{' '}
-              <em
-                className="serif-accent"
-                style={{
-                  color: s.accentFg,
-                }}
-              >
-                {s.h1Accent}
-              </em>
-            </SplitWords>
-          </h1>
+            {s.h1}{' '}
+            <em
+              className="serif-accent"
+              style={{
+                color: s.accentFg,
+              }}
+            >
+              {s.h1Accent}
+            </em>
+          </AnimatedHeading>
           <p
             style={{
               margin: 0,

@@ -70,20 +70,11 @@
   animation-delay: 0.77s;
 }
 
-/* Visitors who prefer reduced motion never see the animation, so the word
-   wrappers fall back to plain inline text and the headline lays out exactly
-   as unsplit text (no inline-block boxes, no clip padding). */
+/* Reduced motion: headline words are never split (see AnimatedHeading) and the
+   hero tiles don't animate or keep a transform, exactly like the static page. */
 @media (prefers-reduced-motion: reduce) {
-  .word-clip,
-  .word-rise {
-    display: inline !important;
-    overflow: visible !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    vertical-align: baseline !important;
-  }
-  /* …and hero tiles keep no transform, exactly like the live static page. */
   [data-hero-rise] > * {
     transform: none;
+    animation: none !important;
   }
 }

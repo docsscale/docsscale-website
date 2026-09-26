@@ -1,4 +1,4 @@
-import { SplitWords } from '@/features/motion/SplitWords';
+import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { T } from '@/styles/tokens';
 export function ServicesHero() {
   return (
@@ -43,7 +43,7 @@ export function ServicesHero() {
           >
             Services
           </span>
-          <h1
+          <AnimatedHeading
             style={{
               margin: 0,
               fontWeight: 800,
@@ -53,18 +53,16 @@ export function ServicesHero() {
               textWrap: 'balance',
             }}
           >
-            <SplitWords>
-              {'Eight services. One team accountable for '}
-              <em
-                className="serif-accent"
-                style={{
-                  color: T.teal,
-                }}
-              >
-                the number on your schedule.
-              </em>
-            </SplitWords>
-          </h1>
+            {'Eight services. One team accountable for '}
+            <em
+              className="serif-accent"
+              style={{
+                color: T.teal,
+              }}
+            >
+              the number on your schedule.
+            </em>
+          </AnimatedHeading>
           <p
             style={{
               margin: 0,

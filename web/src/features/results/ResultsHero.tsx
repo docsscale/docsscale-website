@@ -1,4 +1,4 @@
-import { SplitWords } from '@/features/motion/SplitWords';
+import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { T } from '@/styles/tokens';
 export function ResultsHero() {
   return (
@@ -43,7 +43,7 @@ export function ResultsHero() {
           >
             Results
           </span>
-          <h1
+          <AnimatedHeading
             style={{
               margin: 0,
               fontWeight: 800,
@@ -53,19 +53,17 @@ export function ResultsHero() {
               textWrap: 'balance',
             }}
           >
-            <SplitWords>
-              {'Every number here has '}
-              <em
-                className="serif-accent"
-                style={{
-                  color: T.peachFg,
-                }}
-              >
-                a clinic and a date
-              </em>
-              {' behind it.'}
-            </SplitWords>
-          </h1>
+            {'Every number here has '}
+            <em
+              className="serif-accent"
+              style={{
+                color: T.peachFg,
+              }}
+            >
+              a clinic and a date
+            </em>
+            {' behind it.'}
+          </AnimatedHeading>
           <p
             style={{
               margin: 0,
@@ -102,13 +100,11 @@ export function ResultsHero() {
           >
             Across current clients
           </span>
-          {/* Auto margins keep the stats vertically centred in the card below the label. */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               gap: 14,
-              margin: 'auto 0',
             }}
           >
             <div
@@ -190,6 +186,16 @@ export function ResultsHero() {
               </b>
             </div>
           </div>
+          {/* Holds the space of the removed "sample figures" note so the stats stay
+              exactly where they were at every width. Empty in the HTML; the space
+              comes from an invisible CSS placeholder (styles/layout.css). */}
+          <span
+            aria-hidden="true"
+            className="results-note-space"
+            style={{
+              fontSize: 12,
+            }}
+          />
         </div>
       </div>
     </div>

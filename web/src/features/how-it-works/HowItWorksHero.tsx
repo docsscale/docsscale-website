@@ -1,4 +1,4 @@
-import { SplitWords } from '@/features/motion/SplitWords';
+import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { T } from '@/styles/tokens';
 export function HowItWorksHero() {
   return (
@@ -43,7 +43,7 @@ export function HowItWorksHero() {
           >
             How it works
           </span>
-          <h1
+          <AnimatedHeading
             style={{
               margin: 0,
               fontWeight: 800,
@@ -53,18 +53,16 @@ export function HowItWorksHero() {
               textWrap: 'balance',
             }}
           >
-            <SplitWords>
-              {'From a 30-minute call to '}
-              <em
-                className="serif-accent"
-                style={{
-                  color: T.sageFg,
-                }}
-              >
-                a schedule that fills itself.
-              </em>
-            </SplitWords>
-          </h1>
+            {'From a 30-minute call to '}
+            <em
+              className="serif-accent"
+              style={{
+                color: T.sageFg,
+              }}
+            >
+              a schedule that fills itself.
+            </em>
+          </AnimatedHeading>
           <p
             style={{
               margin: 0,

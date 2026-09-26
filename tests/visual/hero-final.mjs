@@ -8,21 +8,30 @@ import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import fs from 'node:fs';
 import { startServer } from './serve.mjs';
+import { settle } from './settle.mjs';
 import { VIEWPORTS } from './routes.mjs';
 
 const [siteA, siteB] = process.argv.slice(2);
+// REDUCE=1: compare the static hero seen by reduced-motion visitors instead.
+const reduce = process.env.REDUCE === '1';
+const ONLY = process.env.PAGES ? process.env.PAGES.split(',') : null;
 const PAGES = ['/', '/services/', '/services/dental/', '/services/chiropractic/', '/services/physical-therapy/', '/services/med-spa/', '/how-it-works/', '/results/', '/about/', '/book-a-call/'];
 const browser = await chromium.launch();
 fs.mkdirSync('tests/visual/diff', { recursive: true });
 
 async function shoot(site, route, vp) {
   const server = await startServer(site);
-  const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({
+    viewport: { width: vp.width, height: vp.height },
+    deviceScaleFactor: 1,
+    reducedMotion: reduce ? 'reduce' : 'no-preference',
+  });
   await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
   await page.goto(`http://127.0.0.1:${server.address().port}${route}`, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
   await page.mouse.move(vp.width - 1, vp.height - 1); // away from any [data-lift] card
-  await page.waitForTimeout(3000); // longest entrance: 0.1s + 0.05s × words + 0.9s
+  await page.waitForTimeout(3000); // GSAP tweens are JS, not Web Animations: give them time (0.1s + 0.05s × words + 0.9s)
+  await settle(page);
   // GSAP leaves will-change:transform on each word; composited layers anti-alias
   // differently run to run, so drop the hint once the animations are done.
   await page.addStyleTag({ content: '*{will-change:auto!important}' });
@@ -35,7 +44,7 @@ async function shoot(site, route, vp) {
 }
 
 let fails = 0;
-for (const route of PAGES) {
+for (const route of ONLY ?? PAGES) {
   for (const vp of VIEWPORTS) {
     const a = await shoot(siteA, route, vp);
     const b = await shoot(siteB, route, vp);

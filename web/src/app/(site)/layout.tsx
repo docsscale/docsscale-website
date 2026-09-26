@@ -5,6 +5,7 @@ import { Footer } from '@/features/site-chrome/Footer';
 import '@/styles/fonts.css';
 import '@/styles/globals.css';
 import '@/styles/motion.css';
+import '@/styles/layout.css';
 
 // The funnel never had a favicon; the main site does.
 export const metadata: Metadata = { icons: { icon: '/favicon.png' } };

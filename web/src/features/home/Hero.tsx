@@ -3,10 +3,9 @@
 import { Placeholder } from '@/components/ui/Placeholder';
 import { HERO, INTEGRATIONS } from '@/content/home';
 import { STAGE_COLORS, T } from '@/styles/tokens';
-import { SplitWords } from '@/features/motion/SplitWords';
+import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { IntegrationChip } from './IntegrationChip';
 import { SpecialtyInquiries, SpecialtyPicker, SpecialtyText } from './specialty-context';
-
 const tileLabel = {
   fontSize: 12,
   fontWeight: 700,
@@ -21,10 +20,15 @@ const reportRow = {
   padding: '6px 0',
 } as const;
 const pillColors = Object.values(STAGE_COLORS);
-
 export function Hero() {
   return (
-    <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(24px,4vw,56px) 0 clamp(48px,6vw,80px)' }}>
+    <div
+      id="top"
+      data-screen-label="Hero"
+      style={{
+        padding: 'clamp(24px,4vw,56px) 0 clamp(48px,6vw,80px)',
+      }}
+    >
       <div
         id="hero-grid"
         data-hero-rise=""
@@ -51,7 +55,13 @@ export function Hero() {
             minHeight: 420,
           }}
         >
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              flexWrap: 'wrap',
+            }}
+          >
             {HERO.stagePills.map((label, i) => (
               <span
                 key={label}
@@ -71,7 +81,7 @@ export function Hero() {
               </span>
             ))}
           </div>
-          <h1
+          <AnimatedHeading
             style={{
               margin: 0,
               fontWeight: 800,
@@ -81,13 +91,16 @@ export function Hero() {
               textWrap: 'balance',
             }}
           >
-            <SplitWords>
-              {HERO.headline}
-              <em className="serif-accent" style={{ color: T.teal }}>
-                {HERO.headlineAccent}
-              </em>
-            </SplitWords>
-          </h1>
+            {HERO.headline}
+            <em
+              className="serif-accent"
+              style={{
+                color: T.teal,
+              }}
+            >
+              {HERO.headlineAccent}
+            </em>
+          </AnimatedHeading>
           <div
             style={{
               display: 'flex',
@@ -97,7 +110,15 @@ export function Hero() {
               flexWrap: 'wrap',
             }}
           >
-            <p style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: T.body, maxWidth: 440 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 17,
+                lineHeight: 1.5,
+                color: T.body,
+                maxWidth: 440,
+              }}
+            >
               {HERO.intro}
             </p>
             <a
@@ -208,7 +229,13 @@ export function Hero() {
             >
               <SpecialtyInquiries />
             </div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginTop: 6 }}>
+            <div
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                marginTop: 6,
+              }}
+            >
               {HERO.attract.suffix}
               <SpecialtyText field="service" />
             </div>
@@ -284,9 +311,24 @@ export function Hero() {
             gap: 16,
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: 12,
+              flexWrap: 'wrap',
+            }}
+          >
             <span style={tileLabel}>{HERO.picker.label}</span>
-            <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.75 }}>{HERO.picker.hint}</span>
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                opacity: 0.75,
+              }}
+            >
+              {HERO.picker.hint}
+            </span>
           </div>
           <SpecialtyPicker />
         </div>
@@ -307,13 +349,33 @@ export function Hero() {
           {HERO.report.rows.map((row, i, rows) => (
             <div
               key={row.label}
-              style={i < rows.length - 1 ? reportRow : { ...reportRow, borderBottom: undefined }}
+              style={
+                i < rows.length - 1
+                  ? reportRow
+                  : {
+                      ...reportRow,
+                      borderBottom: undefined,
+                    }
+              }
             >
               <span>{row.label}</span>
-              <b style={{ fontVariantNumeric: 'tabular-nums' }}>{row.value}</b>
+              <b
+                style={{
+                  fontVariantNumeric: 'tabular-nums',
+                }}
+              >
+                {row.value}
+              </b>
             </div>
           ))}
-          <span style={{ fontSize: 12, opacity: 0.8 }}>{HERO.report.footnote}</span>
+          <span
+            style={{
+              fontSize: 12,
+              opacity: 0.8,
+            }}
+          >
+            {HERO.report.footnote}
+          </span>
         </div>
 
         {/* Integrations marquee (list doubled so the loop is seamless) */}
@@ -358,8 +420,22 @@ export function Hero() {
             gap: 10,
           }}
         >
-          <span style={{ ...tileLabel, opacity: 0.7 }}>{HERO.ownership.label}</span>
-          <span style={{ fontWeight: 800, fontSize: 22, letterSpacing: '-.03em', lineHeight: 1.1 }}>
+          <span
+            style={{
+              ...tileLabel,
+              opacity: 0.7,
+            }}
+          >
+            {HERO.ownership.label}
+          </span>
+          <span
+            style={{
+              fontWeight: 800,
+              fontSize: 22,
+              letterSpacing: '-.03em',
+              lineHeight: 1.1,
+            }}
+          >
             {HERO.ownership.text}
           </span>
         </div>

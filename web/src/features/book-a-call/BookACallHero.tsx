@@ -1,4 +1,4 @@
-import { SplitWords } from '@/features/motion/SplitWords';
+import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { BookCallForm } from '@/features/lead-form/BookCallForm';
 import { T } from '@/styles/tokens';
 export function BookACallHero() {
@@ -49,7 +49,7 @@ export function BookACallHero() {
             >
               Book a strategy call
             </span>
-            <h1
+            <AnimatedHeading
               style={{
                 margin: 0,
                 fontWeight: 800,
@@ -59,18 +59,16 @@ export function BookACallHero() {
                 textWrap: 'balance',
               }}
             >
-              <SplitWords>
-                {'Thirty minutes. Your numbers. '}
-                <em
-                  className="serif-accent"
-                  style={{
-                    color: T.teal,
-                  }}
-                >
-                  A plan either way.
-                </em>
-              </SplitWords>
-            </h1>
+              {'Thirty minutes. Your numbers. '}
+              <em
+                className="serif-accent"
+                style={{
+                  color: T.teal,
+                }}
+              >
+                A plan either way.
+              </em>
+            </AnimatedHeading>
             <p
               style={{
                 margin: 0,
