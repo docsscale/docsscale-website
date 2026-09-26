@@ -1,3 +1,4 @@
+import { BrandLogo } from '@/features/site-chrome/BrandLogo';
 import { T } from '@/styles/tokens';
 
 export function FunnelFooter() {
@@ -26,50 +27,8 @@ export function FunnelFooter() {
             gap: 9,
           }}
         >
-          <span
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 2,
-              width: 16,
-              height: 16,
-            }}
-          >
-            <span
-              style={{
-                background: T.peachFg,
-                borderRadius: '50% 0 0 0',
-              }}
-            />
-            <span
-              style={{
-                background: T.teal,
-                borderRadius: '0 50% 0 0',
-              }}
-            />
-            <span
-              style={{
-                background: T.sageFg,
-                borderRadius: '0 0 0 50%',
-              }}
-            />
-            <span
-              style={{
-                background: T.lavenderFg,
-                borderRadius: '0 0 50% 0',
-              }}
-            />
-          </span>
-          <span
-            style={{
-              fontWeight: 800,
-              fontSize: 17,
-              letterSpacing: '-.03em',
-              color: T.bg,
-            }}
-          >
-            DocsScale
-          </span>
+          {/* Same width as the old logo: the three items here are spread out evenly. */}
+          <BrandLogo variant="light" width={109.297} rowHeight={22} lazy />
         </div>
         <span
           style={{

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BrandLogo } from '@/features/site-chrome/BrandLogo';
 import { T } from '@/styles/tokens';
 
 const ctaStyle = {
@@ -47,49 +48,7 @@ export function FunnelHeader({ cta }: Props) {
             color: T.ink,
           }}
         >
-          <span
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 2,
-              width: 18,
-              height: 18,
-            }}
-          >
-            <span
-              style={{
-                background: T.peachFg,
-                borderRadius: '50% 0 0 0',
-              }}
-            />
-            <span
-              style={{
-                background: T.teal,
-                borderRadius: '0 50% 0 0',
-              }}
-            />
-            <span
-              style={{
-                background: T.sageFg,
-                borderRadius: '0 0 0 50%',
-              }}
-            />
-            <span
-              style={{
-                background: T.lavenderFg,
-                borderRadius: '0 0 50% 0',
-              }}
-            />
-          </span>
-          <span
-            style={{
-              fontWeight: 800,
-              fontSize: 19,
-              letterSpacing: '-.03em',
-            }}
-          >
-            DocsScale
-          </span>
+          <BrandLogo variant="dark" height={28} />
         </Link>
         {cta &&
           (cta.href.startsWith('#') ? (

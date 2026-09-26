@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { NAV_LINKS, type NavKey } from '@/content/site';
 import { T } from '@/styles/tokens';
-import { LogoMark } from './LogoMark';
+import { BrandLogo } from './BrandLogo';
 
 type Props = {
   active: NavKey;
@@ -46,8 +46,8 @@ export function Nav({ active, specialties }: Props) {
         }}
       >
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, color: T.ink }}>
-          <LogoMark palette="strong" />
-          <span style={{ fontWeight: 800, fontSize: 21, letterSpacing: '-.03em' }}>DocsScale</span>
+          {/* Same width as the old mark + wordmark, so the centred links stay put. */}
+          <BrandLogo variant="dark" width={134.125} />
         </Link>
 
         <div

@@ -51,6 +51,9 @@ RedirectMatch 404 ^/_server(/|$)
     Header unset X-Powered-By
 </IfModule>
 
+# Web app manifest (favicon set): not in every Apache's MIME table.
+AddType application/manifest+json .webmanifest
+
 # ---------------------------------------------------------------------------
 # 5. Caching
 #    /_next/static/ files are content-hashed, so they can be cached for a

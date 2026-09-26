@@ -15,7 +15,6 @@ export const metadata: Metadata = {
   description:
     'DocsScale gets healthcare clinics more patients on autopilot, from the first click to the booked appointment: ads, SEO, websites, funnels, follow-up and recall. Counted in booked appointments, never clicks.',
   robots: 'noindex',
-  icons: { icon: '/favicon.png' },
 };
 
 export default function NotFoundPage() {
