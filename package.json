@@ -4,10 +4,11 @@
   "description": "DocsScale website: Next.js frontend (web/), PHP lead handler (server/), tests and docs.",
   "scripts": {
     "test:server": "bash tests/server/lead-handler.sh",
-    "visual:baseline": "node tests/visual/capture.mjs --site reference/live-2026-09-25 --out tests/visual/baseline",
+    "visual:baseline": "node tests/visual/capture.mjs --out tests/visual/baseline",
     "visual:candidate": "node tests/visual/capture.mjs --site web/out --out tests/visual/candidate",
     "visual:compare": "node tests/visual/compare.mjs",
-    "test:e2e": "playwright test -c tests/e2e/playwright.config.mjs"
+    "test:e2e": "playwright test -c tests/e2e/playwright.config.mjs",
+    "visual:approve": "node scripts/approve-visual.mjs"
   },
   "engines": {
     "node": ">=20.9.0"

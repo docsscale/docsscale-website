@@ -8,12 +8,13 @@ import fs from 'node:fs';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import { startServer } from './serve.mjs';
+import { BASELINE_SITE } from './baseline-site.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []),
 );
 const only = args.only ? new Set(args.only.split(',')) : null;
-const SITES = { baseline: 'reference/live-2026-09-25', candidate: 'web/out' };
+const SITES = { baseline: BASELINE_SITE, candidate: 'web/out' };
 const OUT = 'tests/visual/interactions';
 
 const fillMainForm = async (page, scope) => {

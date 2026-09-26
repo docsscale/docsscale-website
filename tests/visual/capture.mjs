@@ -8,11 +8,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { startServer } from './serve.mjs';
 import { ROUTES, VIEWPORTS } from './routes.mjs';
+import { BASELINE_SITE } from './baseline-site.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []),
 );
-const site = args.site ?? 'reference/live-2026-09-25';
+const site = args.site ?? BASELINE_SITE;
 const out = args.out ?? 'tests/visual/baseline';
 // --rebuilt-only: capture just the pages listed in rebuilt.json (the page-by-page
 // rebuild in progress); the rest are reported as pending by compare.mjs.
