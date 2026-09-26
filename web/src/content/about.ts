@@ -4,6 +4,7 @@
  * The team, in display order. To add a photo, put the file in
  * public/images/team/ and set `photo: '/images/team/<file>.jpg'`
  * (a portrait crop works best; it's shown 280px tall, cropped to fill).
+ * Without a photo the card shows the person's initials.
  */
 export type TeamMember = { name: string; role: string; photo?: string };
 

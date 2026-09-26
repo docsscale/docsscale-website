@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { Placeholder } from '@/components/ui/Placeholder';
 import { TEAM } from '@/content/about';
 import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
+import { TeamPhoto } from './TeamPhoto';
 
 export function AboutTeam() {
   return (
@@ -64,7 +64,7 @@ export function AboutTeam() {
             gap: 14,
           }}
         >
-          {TEAM.map((member) => (
+          {TEAM.map((member, index) => (
             <div
               key={member.name}
               data-lift="1"
@@ -78,16 +78,7 @@ export function AboutTeam() {
               }}
             >
               <div style={{ height: 280 }}>
-                {member.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- static export; photos are pre-sized
-                  <img
-                    src={member.photo}
-                    alt={member.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
-                ) : (
-                  <Placeholder placeholder="Team photo" />
-                )}
+                <TeamPhoto member={member} index={index} />
               </div>
               <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-.02em' }}>{member.name}</span>
