@@ -53,6 +53,7 @@ export function FunnelForm() {
         <input
           type="text"
           placeholder="Full name"
+          aria-label="Full name"
           required
           className="field"
           value={fields.name}
@@ -61,6 +62,7 @@ export function FunnelForm() {
         <input
           type="email"
           placeholder="Work email"
+          aria-label="Work email"
           required
           className="field"
           value={fields.email}
@@ -70,6 +72,7 @@ export function FunnelForm() {
       <input
         type="tel"
         placeholder="Mobile number"
+        aria-label="Mobile number"
         className="field"
         value={fields.phone}
         onChange={bind('phone')}
@@ -77,11 +80,12 @@ export function FunnelForm() {
       <input
         type="text"
         placeholder="Clinic name"
+        aria-label="Clinic name"
         className="field"
         value={fields.clinic}
         onChange={bind('clinic')}
       />
-      <select className="field" value={fields.type} onChange={bind('type')}>
+      <select className="field" aria-label="Clinic type" value={fields.type} onChange={bind('type')}>
         <option value="">Clinic type</option>
         {FUNNEL_FORM.clinicTypes.map((type) => (
           <option key={type}>{type}</option>

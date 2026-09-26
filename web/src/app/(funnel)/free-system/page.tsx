@@ -16,7 +16,7 @@ import { pageMetadata } from '@/features/seo/metadata';
 export const metadata = pageMetadata({
   title: 'Free GoHighLevel Patient-Getting System for Healthcare Clinics — DocsScale',
   description:
-    'Download a complete GoHighLevel patient acquisition system at no cost. 6 conversion funnels, 17 done-for-you automations, and a full patient CRM — built for chiropractic, dental, med spa, and physical therapy clinics.',
+    'Get a free, ready-to-use patient-getting system for your clinic: 6 funnels, 17 automations and a full patient CRM, built in GoHighLevel. Yours to keep.',
   path: '/free-system/',
   robots: 'none',
   social: {

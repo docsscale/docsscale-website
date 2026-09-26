@@ -9,7 +9,7 @@ import { pageMetadata } from '@/features/seo/metadata';
 export const metadata = pageMetadata({
   title: 'Check Your Email — Your System Is on Its Way | DocsScale',
   description:
-    'Your GoHighLevel patient-getting system is on its way. Check your inbox for the full system: 6 funnels, 17 automations, and a complete patient CRM. Want it installed for you? Book a free call.',
+    'Your patient-getting system is on its way: 6 funnels, 17 automations and a full patient CRM. Check your inbox, or book a free call to have it installed.',
   path: '/free-system/thank-you/',
   robots: 'noindex-nofollow',
   social: {

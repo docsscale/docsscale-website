@@ -61,15 +61,22 @@ export function HomeLeadForm() {
     <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       <Honeypot />
       <div style={row}>
-        <input required name="name" placeholder="Your name" style={field} />
-        <input required name="clinicName" placeholder="Clinic name" style={field} />
+        <input required name="name" placeholder="Your name" aria-label="Your name" style={field} />
+        <input required name="clinicName" placeholder="Clinic name" aria-label="Clinic name" style={field} />
       </div>
       <div style={row}>
-        <input required type="email" name="email" placeholder="Work email" style={field} />
-        <input type="tel" name="phone" placeholder="Mobile" style={field} />
+        <input
+          required
+          type="email"
+          name="email"
+          placeholder="Work email"
+          aria-label="Work email"
+          style={field}
+        />
+        <input type="tel" name="phone" placeholder="Mobile" aria-label="Mobile" style={field} />
       </div>
       <div style={row}>
-        <select required name="specialty" style={field} defaultValue="">
+        <select required name="specialty" aria-label="Specialty" style={field} defaultValue="">
           <option value="" disabled>
             Specialty
           </option>
@@ -77,7 +84,7 @@ export function HomeLeadForm() {
             <option key={option}>{option}</option>
           ))}
         </select>
-        <select name="locations" style={field} defaultValue="">
+        <select name="locations" aria-label="Number of locations" style={field} defaultValue="">
           <option value="" disabled>
             Locations
           </option>
@@ -90,6 +97,7 @@ export function HomeLeadForm() {
         rows={3}
         name="message"
         placeholder="What's the biggest gap right now? (optional)"
+        aria-label="What's the biggest gap right now? (optional)"
         style={textareaStyle}
       />
       <button

@@ -2,13 +2,38 @@
 
 // Grid of funnel thumbnails; clicking one opens it full-screen (click anywhere
 // to close). Everything around it is server-rendered by FunnelInside.
-import { useState } from 'react';
+// Keyboard: thumbnails open with Enter/Space; the enlarged view is a dialog that
+// closes with Escape, Enter/Space on the close button, or a click, and focus
+// returns to the thumbnail that opened it.
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
 import { FUNNELS } from '@/content/funnel';
 import { Reveal } from './Reveal';
 
 export function FunnelGallery() {
   const [open, setOpen] = useState<{ src: string; alt: string } | null>(null);
+  const opener = useRef<HTMLElement | null>(null);
+  const closeButton = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (open) closeButton.current?.focus({ preventScroll: true });
+  }, [open]);
+
+  function show(funnel: { img: string; title: string }, target: HTMLElement) {
+    opener.current = target;
+    setOpen({ src: funnel.img, alt: funnel.title });
+  }
+  function close() {
+    setOpen(null);
+    opener.current?.focus({ preventScroll: true });
+  }
+  function activate(e: KeyboardEvent, action: () => void) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  }
+
   return (
     <>
       <div
@@ -41,7 +66,14 @@ export function FunnelGallery() {
                   borderBottom: '1px solid #E6E3DC',
                   cursor: 'pointer',
                 }}
-                onClick={() => setOpen({ src: funnel.img, alt: funnel.title })}
+                role="button"
+                tabIndex={0}
+                aria-label={`Enlarge: ${funnel.title}`}
+                onClick={(e) => show(funnel, e.currentTarget)}
+                onKeyDown={(e) => {
+                  const target = e.currentTarget;
+                  activate(e, () => show(funnel, target));
+                }}
               >
                 <ResponsiveImage
                   src={funnel.img}
@@ -82,7 +114,7 @@ export function FunnelGallery() {
                       gap: 8,
                     }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                       <path
                         d="M1 1h5M1 1v5M15 1h-5M15 1v5M1 15h5M1 15v-5M15 15h-5M15 15v-5"
                         stroke="#fff"
@@ -104,7 +136,14 @@ export function FunnelGallery() {
       </div>
       {open && (
         <div
-          onClick={() => setOpen(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={open.alt}
+          onClick={close}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') close();
+            if (e.key === 'Tab') e.preventDefault(); // the close button is the only control
+          }}
           style={{
             position: 'fixed',
             inset: 0,
@@ -130,7 +169,12 @@ export function FunnelGallery() {
             }}
           />
           <div
-            onClick={() => setOpen(null)}
+            ref={closeButton}
+            role="button"
+            tabIndex={0}
+            aria-label="Close"
+            onClick={close}
+            onKeyDown={(e) => activate(e, close)}
             style={{
               position: 'absolute',
               top: 20,

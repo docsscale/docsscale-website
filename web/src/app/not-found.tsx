@@ -11,9 +11,9 @@ import '@/styles/globals.css';
 // missing URL, funnel included). It sits outside the (site) route group, so it
 // brings the main-site shell — styles, nav, footer — itself.
 export const metadata: Metadata = {
-  title: 'DocsScale — Marketing Agency for Healthcare Clinics',
+  title: 'Page Not Found | DocsScale',
   description:
-    'DocsScale gets healthcare clinics more patients on autopilot, from the first click to the booked appointment: ads, SEO, websites, funnels, follow-up and recall. Counted in booked appointments, never clicks.',
+    "This page doesn't exist or has moved. From here you can find DocsScale's services, client results, and how to book a free strategy call.",
   robots: 'noindex',
 };
 

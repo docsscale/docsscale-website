@@ -92,15 +92,34 @@ export function BookCallForm() {
             <span style={{ fontSize: 12, color: T.teal, fontWeight: 600 }}>2 minutes</span>
           </div>
           <div style={row}>
-            <input required name="name" placeholder="Your name" style={fieldStyle} />
-            <input required name="clinicName" placeholder="Clinic name" style={fieldStyle} />
+            <input required name="name" placeholder="Your name" aria-label="Your name" style={fieldStyle} />
+            <input
+              required
+              name="clinicName"
+              placeholder="Clinic name"
+              aria-label="Clinic name"
+              style={fieldStyle}
+            />
           </div>
           <div style={row}>
-            <input required type="email" name="email" placeholder="Work email" style={fieldStyle} />
-            <input type="tel" name="phone" placeholder="Phone (optional)" style={fieldStyle} />
+            <input
+              required
+              type="email"
+              name="email"
+              placeholder="Work email"
+              aria-label="Work email"
+              style={fieldStyle}
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone (optional)"
+              aria-label="Phone (optional)"
+              style={fieldStyle}
+            />
           </div>
           <div style={row}>
-            <select required name="specialty" style={fieldStyle} defaultValue="">
+            <select required name="specialty" aria-label="Specialty" style={fieldStyle} defaultValue="">
               <option value="" disabled>
                 Specialty
               </option>
@@ -108,7 +127,7 @@ export function BookCallForm() {
                 <option key={option}>{option}</option>
               ))}
             </select>
-            <select name="locations" style={fieldStyle} defaultValue="">
+            <select name="locations" aria-label="Number of locations" style={fieldStyle} defaultValue="">
               <option value="" disabled>
                 Locations
               </option>
@@ -121,6 +140,7 @@ export function BookCallForm() {
             rows={4}
             name="message"
             placeholder="What's the biggest gap right now? (optional)"
+            aria-label="What's the biggest gap right now? (optional)"
             style={textareaStyle}
           />
           <button

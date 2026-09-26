@@ -10,7 +10,7 @@ import { pageMetadata } from '@/features/seo/metadata';
 export const metadata = pageMetadata({
   title: 'Book a Free 30-Minute Strategy Call — DocsScale',
   description:
-    "Pick a slot for a free 30-minute strategy call. We review your clinic's patient numbers, identify your top growth lever, and give you an honest answer on fit. No pitch, no pressure.",
+    "Book a free 30-minute strategy call. We review your clinic's patient numbers, find your biggest growth lever and tell you honestly whether we're a fit.",
   path: '/free-system/book-a-call/',
   robots: 'none',
   social: {
