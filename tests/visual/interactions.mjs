@@ -107,7 +107,7 @@ export const SCENARIOS = [
     steps: async (p) => {
       await fillMainForm(p, 'form');
       await p.locator('form button[type=submit]').click();
-      await p.getByText('Check your inbox for a note from Sam').waitFor();
+      await p.getByText('Check your inbox for a note from').waitFor();
     },
     shot: { selector: 'form' },
     captureLead: true,

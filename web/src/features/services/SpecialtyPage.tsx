@@ -1,9 +1,9 @@
 // Template for the four specialty pages (/services/dental/ …). All copy comes
 // from src/content/specialties.ts; each specialty has its own accent colour.
+import { SplitWords } from '@/features/motion/SplitWords';
 import Link from 'next/link';
 import { SPECIALTIES, type Specialty } from '@/content/specialties';
 import { T } from '@/styles/tokens';
-
 const eyebrow = {
   fontSize: 12,
   fontWeight: 700,
@@ -18,7 +18,6 @@ const sectionH2 = {
   letterSpacing: '-.04em',
 } as const;
 const white = '#FFFFFF';
-
 export function SpecialtyPage({ specialty: s }: { specialty: Specialty }) {
   const lower = s.name.toLowerCase();
   return (
@@ -31,12 +30,18 @@ export function SpecialtyPage({ specialty: s }: { specialty: Specialty }) {
     </>
   );
 }
-
 function Hero({ specialty: s }: { specialty: Specialty }) {
   const others = SPECIALTIES.filter((o) => o.slug !== s.slug);
   return (
-    <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)' }}>
+    <div
+      id="top"
+      data-screen-label="Hero"
+      style={{
+        padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)',
+      }}
+    >
       <div
+        data-hero-rise=""
         className="two container"
         style={{
           display: 'grid',
@@ -58,7 +63,12 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
             minHeight: 360,
           }}
         >
-          <span style={{ ...eyebrow, color: T.caption }}>
+          <span
+            style={{
+              ...eyebrow,
+              color: T.caption,
+            }}
+          >
             {'For '}
             {s.name}
             {' Practices'}
@@ -73,12 +83,29 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
               textWrap: 'balance',
             }}
           >
-            {s.h1}{' '}
-            <em className="serif-accent" style={{ color: s.accentFg }}>
-              {s.h1Accent}
-            </em>
+            <SplitWords>
+              {s.h1}{' '}
+              <em
+                className="serif-accent"
+                style={{
+                  color: s.accentFg,
+                }}
+              >
+                {s.h1Accent}
+              </em>
+            </SplitWords>
           </h1>
-          <p style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: T.body, maxWidth: 560 }}>{s.intro}</p>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 17,
+              lineHeight: 1.5,
+              color: T.body,
+              maxWidth: 560,
+            }}
+          >
+            {s.intro}
+          </p>
         </div>
         <div
           style={{
@@ -93,7 +120,13 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
           }}
         >
           <span style={eyebrow}>Also serving</span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+            }}
+          >
             {others.map((o) => (
               <Link
                 key={o.slug}
@@ -118,7 +151,12 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
           </div>
           <Link
             href="/services"
-            style={{ fontSize: 13, fontWeight: 600, color: s.accentFg, textDecoration: 'underline' }}
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: s.accentFg,
+              textDecoration: 'underline',
+            }}
           >
             See all services
           </Link>
@@ -127,21 +165,42 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
     </div>
   );
 }
-
 function PainPoints({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
   const divider = `1px solid ${T.hairlineHover}`;
   return (
-    <div data-screen-label="Pain points" style={{ background: T.band, padding: 'clamp(56px,7vw,96px) 0' }}>
+    <div
+      data-screen-label="Pain points"
+      style={{
+        background: T.band,
+        padding: 'clamp(56px,7vw,96px) 0',
+      }}
+    >
       <div
         className="container"
-        style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(28px,3.5vw,40px)' }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'clamp(28px,3.5vw,40px)',
+        }}
       >
-        <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>
+        <h2
+          style={{
+            ...sectionH2,
+            maxWidth: 760,
+            textWrap: 'balance',
+          }}
+        >
           {'Why '}
           {lower}
           {' practices plateau.'}
         </h2>
-        <div style={{ display: 'flex', flexDirection: 'column', borderTop: divider }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            borderTop: divider,
+          }}
+        >
           {s.painPoints.map((point, i) => (
             <div
               key={point.title}
@@ -170,8 +229,24 @@ function PainPoints({ specialty: s, lower }: { specialty: Specialty; lower: stri
                 {i + 1}
               </span>
               <div>
-                <div style={{ fontWeight: 800, fontSize: 20, letterSpacing: '-.02em' }}>{point.title}</div>
-                <p style={{ margin: '6px 0 0', color: T.body, lineHeight: 1.55 }}>{point.body}</p>
+                <div
+                  style={{
+                    fontWeight: 800,
+                    fontSize: 20,
+                    letterSpacing: '-.02em',
+                  }}
+                >
+                  {point.title}
+                </div>
+                <p
+                  style={{
+                    margin: '6px 0 0',
+                    color: T.body,
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {point.body}
+                </p>
               </div>
             </div>
           ))}
@@ -180,15 +255,29 @@ function PainPoints({ specialty: s, lower }: { specialty: Specialty; lower: stri
     </div>
   );
 }
-
 function System({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
   return (
-    <div data-screen-label="System" style={{ padding: 'clamp(56px,7vw,96px) 0' }}>
+    <div
+      data-screen-label="System"
+      style={{
+        padding: 'clamp(56px,7vw,96px) 0',
+      }}
+    >
       <div
         className="container"
-        style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(28px,3.5vw,40px)' }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'clamp(28px,3.5vw,40px)',
+        }}
       >
-        <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>
+        <h2
+          style={{
+            ...sectionH2,
+            maxWidth: 760,
+            textWrap: 'balance',
+          }}
+        >
           {'The system, built for '}
           {lower}
           {'.'}
@@ -234,12 +323,33 @@ function System({ specialty: s, lower }: { specialty: Specialty; lower: string }
                 </span>
               </div>
               <div>
-                <div style={{ fontWeight: 800, fontSize: 19, letterSpacing: '-.02em', lineHeight: 1.2 }}>
+                <div
+                  style={{
+                    fontWeight: 800,
+                    fontSize: 19,
+                    letterSpacing: '-.02em',
+                    lineHeight: 1.2,
+                  }}
+                >
                   {stage.title}
                 </div>
-                <p style={{ margin: '8px 0 0', fontSize: 14, lineHeight: 1.5 }}>{stage.body}</p>
+                <p
+                  style={{
+                    margin: '8px 0 0',
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {stage.body}
+                </p>
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 6,
+                }}
+              >
                 {stage.tags.map((tag) => (
                   <span
                     key={tag}
@@ -262,13 +372,22 @@ function System({ specialty: s, lower }: { specialty: Specialty; lower: string }
     </div>
   );
 }
-
 function Services({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
   return (
-    <div data-screen-label="Services" style={{ background: T.band, padding: 'clamp(56px,7vw,96px) 0' }}>
+    <div
+      data-screen-label="Services"
+      style={{
+        background: T.band,
+        padding: 'clamp(56px,7vw,96px) 0',
+      }}
+    >
       <div
         className="container"
-        style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(28px,3.5vw,40px)' }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'clamp(28px,3.5vw,40px)',
+        }}
       >
         <div
           style={{
@@ -279,12 +398,24 @@ function Services({ specialty: s, lower }: { specialty: Specialty; lower: string
             flexWrap: 'wrap',
           }}
         >
-          <h2 style={{ ...sectionH2, maxWidth: 700 }}>
+          <h2
+            style={{
+              ...sectionH2,
+              maxWidth: 700,
+            }}
+          >
             {'Where '}
             {lower}
             {' clinics get the most out of the system.'}
           </h2>
-          <Link href="/services" style={{ fontSize: 15, fontWeight: 700, color: T.teal }}>
+          <Link
+            href="/services"
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: T.teal,
+            }}
+          >
             See all 8 services →
           </Link>
         </div>
@@ -309,8 +440,25 @@ function Services({ specialty: s, lower }: { specialty: Specialty; lower: string
                 gap: 10,
               }}
             >
-              <div style={{ fontWeight: 800, fontSize: 19, letterSpacing: '-.02em' }}>{service.title}</div>
-              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: T.body }}>{service.body}</p>
+              <div
+                style={{
+                  fontWeight: 800,
+                  fontSize: 19,
+                  letterSpacing: '-.02em',
+                }}
+              >
+                {service.title}
+              </div>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 14,
+                  lineHeight: 1.55,
+                  color: T.body,
+                }}
+              >
+                {service.body}
+              </p>
             </div>
           ))}
         </div>
@@ -318,10 +466,14 @@ function Services({ specialty: s, lower }: { specialty: Specialty; lower: string
     </div>
   );
 }
-
 function Cta({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
   return (
-    <div data-screen-label="CTA" style={{ padding: 'clamp(56px,7vw,96px) 0' }}>
+    <div
+      data-screen-label="CTA"
+      style={{
+        padding: 'clamp(56px,7vw,96px) 0',
+      }}
+    >
       <div className="container">
         <div
           style={{
@@ -336,7 +488,14 @@ function Cta({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
             flexWrap: 'wrap',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 640 }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+              maxWidth: 640,
+            }}
+          >
             <h2
               style={{
                 margin: 0,
@@ -350,7 +509,14 @@ function Cta({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
               {lower}
               {' numbers.'}
             </h2>
-            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.5, opacity: 0.75 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 16,
+                lineHeight: 1.5,
+                opacity: 0.75,
+              }}
+            >
               A free 30-minute strategy call. Bring your numbers, leave with a plan.
             </p>
           </div>

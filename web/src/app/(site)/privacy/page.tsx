@@ -1,6 +1,5 @@
 import { SPECIALTY_LINKS } from '@/content/specialties';
 import { STRUCTURED_DATA } from '@/content/structured-data';
-import { LegalDraftNotice } from '@/features/legal/LegalDraftNotice';
 import { PRIVACY } from '@/content/legal';
 import { LegalPage } from '@/features/legal/LegalPage';
 import { JsonLd } from '@/features/seo/JsonLd';
@@ -21,7 +20,6 @@ export default function PrivacyPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
-      <LegalDraftNotice />
       <LegalPage doc={PRIVACY} />
     </>
   );

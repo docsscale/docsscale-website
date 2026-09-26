@@ -32,7 +32,9 @@ PHP
 
 LEAD_PRIVATE_DIR="$PRIV" php -S 127.0.0.1:8781 -t "$ROOT/server/public_html" >/dev/null 2>&1 & SITE_PID=$!
 php -S 127.0.0.1:8782 -t "$TMP/ghl" "$TMP/ghl/index.php" >/dev/null 2>&1 & GHL_PID=$!
-sleep 1
+# Wait until both servers answer (a fixed sleep flakes on a busy machine).
+wait_for() { for _ in $(seq 1 50); do curl -s -o /dev/null "http://127.0.0.1:$1/" && return 0; sleep 0.1; done; echo "server on :$1 did not start"; exit 1; }
+wait_for 8781; wait_for 8782
 
 pass=0; fail=0
 post() { # endpoint json [origin]
@@ -99,7 +101,7 @@ PHP
 cp -R "$ROOT/server/public_html" "$TMP/staging_html"
 printf '<?php return ["private_dir" => "%s"];\n' "$STAGE_PRIV" > "$TMP/staging_html/_server/environment.php"
 php -S 127.0.0.1:8783 -t "$TMP/staging_html" >/dev/null 2>&1 & STAGE_PID=$!
-sleep 1
+wait_for 8783
 rm -f "$TMP/ghl/last.json"
 stage_post() { curl -s -o "$TMP/resp" -w '%{http_code}' -X POST "http://127.0.0.1:8783/$1" -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:8783' --data "$2"; }
 expect "staging: test mode ok" "$(stage_post send-lead.php '{"clinicName":"C","email":"stage@x.co","specialty":"Dental"}')" 200

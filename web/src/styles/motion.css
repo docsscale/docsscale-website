@@ -26,7 +26,11 @@
     opacity: 1;
   }
 }
+/* Resting transform identical to what GSAP left behind (translate(0,0)): it
+   changes how rounded corners are anti-aliased, so keeping it makes the final
+   frame pixel-identical. GSAP's hover lift sets an inline transform, which wins. */
 [data-hero-rise] > * {
+  transform: translate(0, 0);
   animation: tile-rise 0.9s cubic-bezier(0.215, 0.61, 0.355, 1) backwards;
 }
 [data-hero-rise] > :nth-child(1) {
@@ -64,4 +68,22 @@
 }
 [data-hero-rise] > :nth-child(12) {
   animation-delay: 0.77s;
+}
+
+/* Visitors who prefer reduced motion never see the animation, so the word
+   wrappers fall back to plain inline text and the headline lays out exactly
+   as unsplit text (no inline-block boxes, no clip padding). */
+@media (prefers-reduced-motion: reduce) {
+  .word-clip,
+  .word-rise {
+    display: inline !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    vertical-align: baseline !important;
+  }
+  /* …and hero tiles keep no transform, exactly like the live static page. */
+  [data-hero-rise] > * {
+    transform: none;
+  }
 }

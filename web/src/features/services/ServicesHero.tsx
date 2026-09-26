@@ -1,5 +1,5 @@
+import { SplitWords } from '@/features/motion/SplitWords';
 import { T } from '@/styles/tokens';
-
 export function ServicesHero() {
   return (
     <div
@@ -10,6 +10,7 @@ export function ServicesHero() {
       }}
     >
       <div
+        data-hero-rise=""
         className="two container"
         style={{
           display: 'grid',
@@ -52,15 +53,17 @@ export function ServicesHero() {
               textWrap: 'balance',
             }}
           >
-            {'Eight services. One team accountable for '}
-            <em
-              className="serif-accent"
-              style={{
-                color: T.teal,
-              }}
-            >
-              the number on your schedule.
-            </em>
+            <SplitWords>
+              {'Eight services. One team accountable for '}
+              <em
+                className="serif-accent"
+                style={{
+                  color: T.teal,
+                }}
+              >
+                the number on your schedule.
+              </em>
+            </SplitWords>
           </h1>
           <p
             style={{

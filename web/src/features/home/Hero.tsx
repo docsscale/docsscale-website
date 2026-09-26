@@ -3,7 +3,7 @@
 import { Placeholder } from '@/components/ui/Placeholder';
 import { HERO, INTEGRATIONS } from '@/content/home';
 import { STAGE_COLORS, T } from '@/styles/tokens';
-import { SplitWords, wordCount } from '@/features/motion/SplitWords';
+import { SplitWords } from '@/features/motion/SplitWords';
 import { IntegrationChip } from './IntegrationChip';
 import { SpecialtyInquiries, SpecialtyPicker, SpecialtyText } from './specialty-context';
 
@@ -81,10 +81,12 @@ export function Hero() {
               textWrap: 'balance',
             }}
           >
-            <SplitWords text={HERO.headline} />
-            <em className="serif-accent" style={{ color: T.teal }}>
-              <SplitWords text={HERO.headlineAccent} start={wordCount(HERO.headline)} />
-            </em>
+            <SplitWords>
+              {HERO.headline}
+              <em className="serif-accent" style={{ color: T.teal }}>
+                {HERO.headlineAccent}
+              </em>
+            </SplitWords>
           </h1>
           <div
             style={{

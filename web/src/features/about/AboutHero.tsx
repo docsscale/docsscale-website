@@ -1,6 +1,7 @@
+import { SplitWords } from '@/features/motion/SplitWords';
+import { TEAM } from '@/content/about';
 import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
-
 export function AboutHero() {
   return (
     <div
@@ -11,6 +12,7 @@ export function AboutHero() {
       }}
     >
       <div
+        data-hero-rise=""
         className="two container"
         style={{
           display: 'grid',
@@ -53,15 +55,17 @@ export function AboutHero() {
               textWrap: 'balance',
             }}
           >
-            {'We only work with clinics. '}
-            <em
-              className="serif-accent"
-              style={{
-                color: T.teal,
-              }}
-            >
-              On purpose.
-            </em>
+            <SplitWords>
+              {'We only work with clinics. '}
+              <em
+                className="serif-accent"
+                style={{
+                  color: T.teal,
+                }}
+              >
+                On purpose.
+              </em>
+            </SplitWords>
           </h1>
           <p
             style={{
@@ -121,7 +125,7 @@ export function AboutHero() {
               pointerEvents: 'none',
             }}
           >
-            Sam · Founder
+            {`${TEAM[0]!.name} · ${TEAM[0]!.role}`}
           </div>
         </div>
         <div

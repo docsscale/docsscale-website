@@ -1,6 +1,6 @@
+import { SplitWords } from '@/features/motion/SplitWords';
 import { BookCallForm } from '@/features/lead-form/BookCallForm';
 import { T } from '@/styles/tokens';
-
 export function BookACallHero() {
   return (
     <div
@@ -11,6 +11,7 @@ export function BookACallHero() {
       }}
     >
       <div
+        data-hero-rise=""
         className="two container"
         style={{
           display: 'grid',
@@ -58,15 +59,17 @@ export function BookACallHero() {
                 textWrap: 'balance',
               }}
             >
-              {'Thirty minutes. Your numbers. '}
-              <em
-                className="serif-accent"
-                style={{
-                  color: T.teal,
-                }}
-              >
-                A plan either way.
-              </em>
+              <SplitWords>
+                {'Thirty minutes. Your numbers. '}
+                <em
+                  className="serif-accent"
+                  style={{
+                    color: T.teal,
+                  }}
+                >
+                  A plan either way.
+                </em>
+              </SplitWords>
             </h1>
             <p
               style={{

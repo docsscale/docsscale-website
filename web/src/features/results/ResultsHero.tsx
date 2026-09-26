@@ -1,5 +1,5 @@
+import { SplitWords } from '@/features/motion/SplitWords';
 import { T } from '@/styles/tokens';
-
 export function ResultsHero() {
   return (
     <div
@@ -10,6 +10,7 @@ export function ResultsHero() {
       }}
     >
       <div
+        data-hero-rise=""
         className="two container"
         style={{
           display: 'grid',
@@ -52,16 +53,18 @@ export function ResultsHero() {
               textWrap: 'balance',
             }}
           >
-            {'Every number here has '}
-            <em
-              className="serif-accent"
-              style={{
-                color: T.peachFg,
-              }}
-            >
-              a clinic and a date
-            </em>
-            {' behind it.'}
+            <SplitWords>
+              {'Every number here has '}
+              <em
+                className="serif-accent"
+                style={{
+                  color: T.peachFg,
+                }}
+              >
+                a clinic and a date
+              </em>
+              {' behind it.'}
+            </SplitWords>
           </h1>
           <p
             style={{
@@ -99,11 +102,13 @@ export function ResultsHero() {
           >
             Across current clients
           </span>
+          {/* Auto margins keep the stats vertically centred in the card below the label. */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               gap: 14,
+              margin: 'auto 0',
             }}
           >
             <div

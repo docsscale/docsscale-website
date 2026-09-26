@@ -1,5 +1,5 @@
+import { SplitWords } from '@/features/motion/SplitWords';
 import { T } from '@/styles/tokens';
-
 export function HowItWorksHero() {
   return (
     <div
@@ -10,6 +10,7 @@ export function HowItWorksHero() {
       }}
     >
       <div
+        data-hero-rise=""
         className="two container"
         style={{
           display: 'grid',
@@ -52,15 +53,17 @@ export function HowItWorksHero() {
               textWrap: 'balance',
             }}
           >
-            {'From a 30-minute call to '}
-            <em
-              className="serif-accent"
-              style={{
-                color: T.sageFg,
-              }}
-            >
-              a schedule that fills itself.
-            </em>
+            <SplitWords>
+              {'From a 30-minute call to '}
+              <em
+                className="serif-accent"
+                style={{
+                  color: T.sageFg,
+                }}
+              >
+                a schedule that fills itself.
+              </em>
+            </SplitWords>
           </h1>
           <p
             style={{

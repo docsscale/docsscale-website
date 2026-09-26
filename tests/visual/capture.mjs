@@ -17,6 +17,9 @@ const out = args.out ?? 'tests/visual/baseline';
 // --rebuilt-only: capture just the pages listed in rebuilt.json (the page-by-page
 // rebuild in progress); the rest are reported as pending by compare.mjs.
 const rebuilt = JSON.parse(fs.readFileSync(new URL('./rebuilt.json', import.meta.url)));
+// --motion: animations ON and allowed to finish (compares final frames of
+// entrance animations) instead of the default reduced-motion capture.
+const motion = process.argv.includes('--motion');
 const only = args.only
   ? new Set(args.only.split(','))
   : process.argv.includes('--rebuilt-only')
@@ -32,7 +35,7 @@ for (const vp of VIEWPORTS) {
   const context = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
     deviceScaleFactor: 1,
-    reducedMotion: 'reduce',
+    reducedMotion: motion ? 'no-preference' : 'reduce',
   });
   await context.route(/^https?:\/\/(?!127\.0\.0\.1)/, (route) => route.abort());
   const page = await context.newPage();
@@ -45,6 +48,8 @@ for (const vp of VIEWPORTS) {
     await page.evaluate(() => document.fonts.ready);
     await autoScroll(page);
     await page.clock.runFor(10_000);
+    // CSS animations run on real time, not the fake clock: let them finish.
+    if (motion) await page.waitForTimeout(2500);
     await page.addStyleTag({
       // will-change:auto — composited layers (from [data-lift]) anti-alias non-deterministically.
       content: '*,*::before,*::after{animation-play-state:paused!important;animation-delay:0s!important;transition:none!important;caret-color:transparent!important}[data-lift]{will-change:auto!important}',

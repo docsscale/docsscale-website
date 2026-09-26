@@ -21,5 +21,7 @@ export const LEAD_FORM_MESSAGES = {
   genericError: 'Something went wrong. Please email info@docsscale.com instead.',
   badResponse: 'Unexpected response from server.',
   networkError: "Couldn't reach the server. Please email info@docsscale.com instead.",
+  /** Who the confirmation email comes from (book-a-call success message). */
+  replyFrom: 'Abdul',
   fallbackContact: 'Or email info@docsscale.com · replies within one business day',
 } as const;

@@ -62,7 +62,7 @@ export function BookCallForm() {
             Got it. We&apos;ll reply within one business day.
           </div>
           <p style={{ margin: 0, fontSize: 15, color: T.body, lineHeight: 1.5 }}>
-            Check your inbox for a note from Sam with two or three time options.
+            Check your inbox for a note from {LEAD_FORM_MESSAGES.replyFrom} with two or three time options.
           </p>
         </div>
       ) : (

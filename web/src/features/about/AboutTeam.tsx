@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { Placeholder } from '@/components/ui/Placeholder';
+import { TEAM } from '@/content/about';
 import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
 
@@ -51,213 +53,51 @@ export function AboutTeam() {
             Small by design. The person on your strategy call is the person who runs your account.
           </p>
         </div>
+        {/* Six people + the "Where" card spanning two columns: two full rows on
+            desktop (4 columns), a full-width last row on tablet (2 columns).
+            The existing .two class stacks everything to one column below 760px. */}
         <div
+          className="two"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))',
             gap: 14,
           }}
         >
-          <div
-            data-lift="1"
-            style={{
-              background: '#FFFFFF',
-              border: `1px solid ${T.hairline}`,
-              borderRadius: 28,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
+          {TEAM.map((member) => (
             <div
+              key={member.name}
+              data-lift="1"
               style={{
-                height: 280,
-              }}
-            >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  minHeight: 120,
-                  borderRadius: 20,
-                  background: T.band,
-                  border: `1px dashed ${T.hairlineHover}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  padding: 16,
-                  color: T.caption,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  lineHeight: 1.4,
-                  boxSizing: 'border-box',
-                }}
-              >
-                Team photo
-              </div>
-            </div>
-            <div
-              style={{
-                padding: 22,
+                background: '#FFFFFF',
+                border: `1px solid ${T.hairline}`,
+                borderRadius: 28,
+                overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 4,
               }}
             >
-              <span
-                style={{
-                  fontWeight: 800,
-                  fontSize: 18,
-                  letterSpacing: '-.02em',
-                }}
-              >
-                Sam
-              </span>
-              <span
-                style={{
-                  fontSize: 14,
-                  color: T.body,
-                }}
-              >
-                Founder · strategy and accounts
-              </span>
-            </div>
-          </div>
-          <div
-            data-lift="1"
-            style={{
-              background: '#FFFFFF',
-              border: `1px solid ${T.hairline}`,
-              borderRadius: 28,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <div
-              style={{
-                height: 280,
-              }}
-            >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  minHeight: 120,
-                  borderRadius: 20,
-                  background: T.band,
-                  border: `1px dashed ${T.hairlineHover}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  padding: 16,
-                  color: T.caption,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  lineHeight: 1.4,
-                  boxSizing: 'border-box',
-                }}
-              >
-                Team photo
+              <div style={{ height: 280 }}>
+                {member.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- static export; photos are pre-sized
+                  <img
+                    src={member.photo}
+                    alt={member.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                ) : (
+                  <Placeholder placeholder="Team photo" />
+                )}
+              </div>
+              <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-.02em' }}>{member.name}</span>
+                <span style={{ fontSize: 14, color: T.body }}>{member.role}</span>
               </div>
             </div>
-            <div
-              style={{
-                padding: 22,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-              }}
-            >
-              <span
-                style={{
-                  fontWeight: 800,
-                  fontSize: 18,
-                  letterSpacing: '-.02em',
-                }}
-              >
-                Ahmed Mustafa
-              </span>
-              <span
-                style={{
-                  fontSize: 14,
-                  color: T.body,
-                }}
-              >
-                Paid media and funnels
-              </span>
-            </div>
-          </div>
-          <div
-            data-lift="1"
-            style={{
-              background: '#FFFFFF',
-              border: `1px solid ${T.hairline}`,
-              borderRadius: 28,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <div
-              style={{
-                height: 280,
-              }}
-            >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  minHeight: 120,
-                  borderRadius: 20,
-                  background: T.band,
-                  border: `1px dashed ${T.hairlineHover}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  padding: 16,
-                  color: T.caption,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  lineHeight: 1.4,
-                  boxSizing: 'border-box',
-                }}
-              >
-                Team photo
-              </div>
-            </div>
-            <div
-              style={{
-                padding: 22,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-              }}
-            >
-              <span
-                style={{
-                  fontWeight: 800,
-                  fontSize: 18,
-                  letterSpacing: '-.02em',
-                }}
-              >
-                Abdul Samad
-              </span>
-              <span
-                style={{
-                  fontSize: 14,
-                  color: T.body,
-                }}
-              >
-                Front-desk follow-up and scripts
-              </span>
-            </div>
-          </div>
+          ))}
           <div
             style={{
+              gridColumn: 'span 2',
               background: T.ink,
               color: T.bg,
               borderRadius: 28,
