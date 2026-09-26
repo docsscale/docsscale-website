@@ -26,13 +26,15 @@ export default function ServicesPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="services" specialties={SPECIALTY_LINKS} />
-      <ServicesHero />
-      <ServicesSpecialtyLinks />
-      <ServicesAttract />
-      <ServicesCapture />
-      <ServicesConvert />
-      <ServicesRetain />
-      <ServicesCTA />
+      <main>
+        <ServicesHero />
+        <ServicesSpecialtyLinks />
+        <ServicesAttract />
+        <ServicesCapture />
+        <ServicesConvert />
+        <ServicesRetain />
+        <ServicesCTA />
+      </main>
       <SiteMotion />
     </>
   );

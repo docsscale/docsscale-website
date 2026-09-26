@@ -44,7 +44,9 @@ export default async function SpecialtyRoute({ params }: Props) {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="services" specialties={SPECIALTY_LINKS} />
-      <SpecialtyPage specialty={specialty} />
+      <main>
+        <SpecialtyPage specialty={specialty} />
+      </main>
       <SiteMotion />
     </>
   );

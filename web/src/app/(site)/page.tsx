@@ -28,16 +28,18 @@ export default function HomePage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
-      <SpecialtyProvider>
-        <Hero />
-        <Gaps />
-        <System />
-        <Services />
-        <HowItWorks />
-        <Results />
-        <Faq />
-        <FinalCta />
-      </SpecialtyProvider>
+      <main>
+        <SpecialtyProvider>
+          <Hero />
+          <Gaps />
+          <System />
+          <Services />
+          <HowItWorks />
+          <Results />
+          <Faq />
+          <FinalCta />
+        </SpecialtyProvider>
+      </main>
       <SiteMotion />
     </>
   );

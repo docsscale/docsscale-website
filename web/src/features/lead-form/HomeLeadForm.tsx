@@ -4,6 +4,7 @@
 import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/content/lead-form';
 import { T } from '@/styles/tokens';
 import { errorStyle, fieldStyle as field, textareaStyle } from './fieldStyles';
+import { Honeypot } from './Honeypot';
 import { useLeadSubmit } from './useLeadSubmit';
 
 const row = {
@@ -58,6 +59,7 @@ export function HomeLeadForm() {
 
   return (
     <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <Honeypot />
       <div style={row}>
         <input required name="name" placeholder="Your name" style={field} />
         <input required name="clinicName" placeholder="Clinic name" style={field} />

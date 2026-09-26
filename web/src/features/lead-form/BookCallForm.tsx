@@ -5,6 +5,7 @@
 import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/content/lead-form';
 import { T } from '@/styles/tokens';
 import { errorStyle, fieldStyle, textareaStyle } from './fieldStyles';
+import { Honeypot } from './Honeypot';
 import { useLeadSubmit } from './useLeadSubmit';
 
 const row = {
@@ -29,6 +30,7 @@ export function BookCallForm() {
         gap: 12,
       }}
     >
+      <Honeypot />
       {status === 'sent' ? (
         <div
           style={{

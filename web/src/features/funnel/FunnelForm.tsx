@@ -5,6 +5,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { FUNNEL_FORM } from '@/content/funnel';
+import { Honeypot, honeypotValue } from '@/features/lead-form/Honeypot';
 
 type Fields = { name: string; email: string; phone: string; clinic: string; type: string };
 
@@ -19,6 +20,7 @@ export function FunnelForm() {
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     if (!fields.name || !fields.email) return;
+    const website = honeypotValue(event.currentTarget as HTMLFormElement);
     setStatus('submitting');
     setError('');
     try {
@@ -32,6 +34,7 @@ export function FunnelForm() {
           clinicName: fields.clinic,
           clinicType: fields.type,
           source: 'Funnel - Free System',
+          ...(website && { website }),
         }),
       });
       const result = await response.json();
@@ -45,6 +48,7 @@ export function FunnelForm() {
 
   return (
     <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <Honeypot />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <input
           type="text"

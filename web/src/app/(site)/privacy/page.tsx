@@ -20,7 +20,9 @@ export default function PrivacyPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
-      <LegalPage doc={PRIVACY} />
+      <main>
+        <LegalPage doc={PRIVACY} />
+      </main>
     </>
   );
 }

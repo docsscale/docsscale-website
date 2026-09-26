@@ -29,7 +29,9 @@ export default function FunnelBookACallPage() {
         <JsonLd key={i} data={data} />
       ))}
       <FunnelHeader />
-      <BookingSwitch booking={<BookingView />} confirmation={<BookedConfirmation />} />
+      <main>
+        <BookingSwitch booking={<BookingView />} confirmation={<BookedConfirmation />} />
+      </main>
       <FunnelFooter />
     </>
   );

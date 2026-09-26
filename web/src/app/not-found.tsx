@@ -23,7 +23,9 @@ export default function NotFoundPage() {
   return (
     <>
       <Nav active="home" specialties={SPECIALTY_LINKS} />
-      <NotFound />
+      <main>
+        <NotFound />
+      </main>
       <Footer />
     </>
   );

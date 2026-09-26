@@ -36,14 +36,16 @@ export default function FreeSystemPage() {
         <JsonLd key={i} data={data} />
       ))}
       <FunnelHeader cta={{ label: 'Claim the free system', href: '#form' }} />
-      <FunnelHero />
-      <FunnelProblem />
-      <FunnelInside />
-      <FunnelAutomations />
-      <FunnelEligibility />
-      <FunnelProof />
-      <FunnelObjections />
-      <FunnelFormSection />
+      <main>
+        <FunnelHero />
+        <FunnelProblem />
+        <FunnelInside />
+        <FunnelAutomations />
+        <FunnelEligibility />
+        <FunnelProof />
+        <FunnelObjections />
+        <FunnelFormSection />
+      </main>
       <FunnelFooter />
     </>
   );

@@ -21,8 +21,10 @@ export default function BookACallPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="call" specialties={SPECIALTY_LINKS} />
-      <BookACallHero />
-      <BookACallReassurance />
+      <main>
+        <BookACallHero />
+        <BookACallReassurance />
+      </main>
       <SiteMotion />
     </>
   );

@@ -22,9 +22,11 @@ export default function ResultsPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="results" specialties={SPECIALTY_LINKS} />
-      <ResultsHero />
-      <ResultsCases />
-      <ResultsCTA />
+      <main>
+        <ResultsHero />
+        <ResultsCases />
+        <ResultsCTA />
+      </main>
       <SiteMotion />
     </>
   );

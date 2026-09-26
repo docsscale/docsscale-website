@@ -18,6 +18,8 @@ export function useLeadSubmit(endpoint = '/send-lead.php') {
     setStatus('submitting');
     setError('');
     const fields = Object.fromEntries(new FormData(event.currentTarget).entries());
+    // The honeypot is only sent when a bot filled it in (see Honeypot.tsx).
+    if (!fields.website) delete fields.website;
     try {
       const response = await fetch(endpoint, {
         method: 'POST',

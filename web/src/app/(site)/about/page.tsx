@@ -22,9 +22,11 @@ export default function AboutPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="about" specialties={SPECIALTY_LINKS} />
-      <AboutHero />
-      <AboutPrinciples />
-      <AboutTeam />
+      <main>
+        <AboutHero />
+        <AboutPrinciples />
+        <AboutTeam />
+      </main>
       <SiteMotion />
     </>
   );

@@ -28,9 +28,11 @@ export default function ThankYouPage() {
   return (
     <>
       <FunnelHeader cta={{ label: 'Book a free call', href: '/free-system/book-a-call/' }} />
-      <ThankYouHero />
-      <ThankYouNextStep />
-      <ThankYouOffer />
+      <main>
+        <ThankYouHero />
+        <ThankYouNextStep />
+        <ThankYouOffer />
+      </main>
       <FunnelFooter />
     </>
   );

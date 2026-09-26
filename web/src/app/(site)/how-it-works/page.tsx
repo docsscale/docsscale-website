@@ -23,10 +23,12 @@ export default function HowItWorksPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="how" specialties={SPECIALTY_LINKS} />
-      <HowItWorksHero />
-      <HowItWorksSteps />
-      <HowItWorksPromises />
-      <HowItWorksCTA />
+      <main>
+        <HowItWorksHero />
+        <HowItWorksSteps />
+        <HowItWorksPromises />
+        <HowItWorksCTA />
+      </main>
       <SiteMotion />
     </>
   );

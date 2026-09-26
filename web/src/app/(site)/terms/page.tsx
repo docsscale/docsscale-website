@@ -20,7 +20,9 @@ export default function TermsPage() {
         <JsonLd key={i} data={data} />
       ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
-      <LegalPage doc={TERMS} />
+      <main>
+        <LegalPage doc={TERMS} />
+      </main>
     </>
   );
 }
