@@ -34,7 +34,8 @@ export const PRIVACY: LegalDoc = {
       heading: 'How we use information',
       paragraphs: [
         'We use the information described above to: respond to your inquiry; schedule, prepare for and hold your strategy call; send you the free system if you request it; follow up with you about DocsScale’s services; keep the site secure and prevent spam and abuse; and comply with legal obligations.',
-        'If you give us your mobile number, we may contact you by phone or text message about your inquiry or call. Message and data rates may apply. You can reply STOP to any text to stop receiving texts, or email info@docsscale.com.',
+        'We contact people by email. We do not currently send text messages. If you give us a phone number, we may use it only to reach you about the call you requested.',
+        'Every marketing email we send includes an unsubscribe link, and we honour unsubscribe requests promptly, within 10 business days. You can also unsubscribe at any time by emailing info@docsscale.com. Replies to your own inquiry and messages about a call you booked are not marketing emails and are not affected.',
         'We do not sell your personal information, and we do not share it with other companies for their own marketing.',
       ],
     },
