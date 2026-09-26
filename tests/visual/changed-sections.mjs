@@ -7,6 +7,7 @@ import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import { startServer } from './serve.mjs';
 import { ROUTES } from './routes.mjs';
+import { isolate } from './isolate.mjs';
 
 const only = process.argv[2] ? new Set(process.argv[2].split(',')) : null;
 const browser = await chromium.launch();
@@ -15,7 +16,7 @@ async function shoot(root, path) {
   const server = await startServer(root);
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
   await page.clock.install({ time: new Date('2026-09-25T12:00:00Z') });
-  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
+  await isolate(page);
   await page.goto(`http://127.0.0.1:${server.address().port}${path}`, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));

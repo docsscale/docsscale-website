@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { startServer } from './serve.mjs';
 import { settle } from './settle.mjs';
+import { isolate } from './isolate.mjs';
 
 const OUT = process.argv[2] ?? 'review/before-after';
 // --only name1,name2 and --width N (default 1440) for focused reviews.
@@ -34,7 +35,7 @@ fs.mkdirSync(OUT, { recursive: true });
 async function capture(root, item) {
   const server = await startServer(root);
   const page = await browser.newPage({ viewport: { width: WIDTH, height: 900 }, reducedMotion: 'reduce' });
-  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
+  await isolate(page);
   await page.goto(`http://127.0.0.1:${server.address().port}${item.path}`, { waitUntil: 'load' });
   const el = page.locator(item.selector).first();
   await el.scrollIntoViewIfNeeded();

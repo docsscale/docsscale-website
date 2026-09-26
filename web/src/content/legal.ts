@@ -63,6 +63,7 @@ export const PRIVACY: LegalDoc = {
       ],
     },
     {
+      id: 'cookies',
       heading: 'Cookies and analytics',
       paragraphs: [
         'This site does not use advertising cookies. The booking calendar on our booking page is provided by GoHighLevel and may set its own cookies when you use it, as described in GoHighLevel’s privacy policy.',

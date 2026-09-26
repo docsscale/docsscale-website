@@ -5,6 +5,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { FUNNEL_FORM } from '@/content/funnel';
+import { trackLead } from '@/features/analytics/track';
 import { Honeypot, honeypotValue } from '@/features/lead-form/Honeypot';
 
 type Fields = { name: string; email: string; phone: string; clinic: string; type: string };
@@ -39,6 +40,7 @@ export function FunnelForm() {
       });
       const result = await response.json();
       if (!result.ok) throw new Error(result.error || FUNNEL_FORM.genericError);
+      trackLead('free-system');
       router.push('/free-system/thank-you/');
     } catch (e) {
       setStatus('error');

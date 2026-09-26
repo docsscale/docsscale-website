@@ -1,3 +1,4 @@
+import { TrackLeadMagnetView } from '@/features/analytics/TrackLeadMagnetView';
 import { preload } from 'react-dom';
 import { STRUCTURED_DATA } from '@/content/structured-data';
 import { FunnelAutomations } from '@/features/funnel/FunnelAutomations';
@@ -35,6 +36,7 @@ export default function FreeSystemPage() {
       {STRUCTURED_DATA.freeSystem.map((data, i) => (
         <JsonLd key={i} data={data} />
       ))}
+      <TrackLeadMagnetView leadMagnet="free-system" />
       <FunnelHeader cta={{ label: 'Claim the free system', href: '#form' }} />
       <main>
         <FunnelHero />

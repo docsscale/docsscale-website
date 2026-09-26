@@ -9,6 +9,7 @@ import pixelmatch from 'pixelmatch';
 import { startServer } from './serve.mjs';
 import { settle } from './settle.mjs';
 import { VIEWPORTS } from './routes.mjs';
+import { isolate } from './isolate.mjs';
 
 const [route, sectionSel, allowedSel] = process.argv.slice(2);
 const motion = process.argv.includes('--motion');
@@ -20,7 +21,7 @@ async function shoot(site, vp, withAllowed) {
     viewport: { width: vp.width, height: vp.height },
     reducedMotion: motion ? 'no-preference' : 'reduce',
   });
-  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
+  await isolate(page);
   await page.goto(`http://127.0.0.1:${server.address().port}${route}`, { waitUntil: 'load' });
   await page.mouse.move(vp.width - 1, vp.height - 1);
   if (motion) await page.waitForTimeout(3000); // GSAP (live) is JS-driven

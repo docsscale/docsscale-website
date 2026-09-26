@@ -14,7 +14,7 @@ const row = {
 } as const;
 
 export function HomeLeadForm() {
-  const { status, error, onSubmit } = useLeadSubmit();
+  const { status, error, onSubmit } = useLeadSubmit('home');
   const submitting = status === 'submitting';
 
   if (status === 'sent') {

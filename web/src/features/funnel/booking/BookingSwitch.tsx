@@ -4,13 +4,16 @@
 // visitor back with ?booked=1. The booking view is in the static HTML (the live
 // page rendered nothing until JavaScript ran); the check runs after load.
 import { useEffect, useState, type ReactNode } from 'react';
+import { trackCallBooked } from '@/features/analytics/track';
 
 export function BookingSwitch({ booking, confirmation }: { booking: ReactNode; confirmation: ReactNode }) {
   const [booked, setBooked] = useState(false);
   useEffect(() => {
     // Reading location in an effect keeps the server HTML and first render identical.
+    const isBooked = new URLSearchParams(window.location.search).get('booked') === '1';
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time read of an external value (the URL)
-    setBooked(new URLSearchParams(window.location.search).get('booked') === '1');
+    setBooked(isBooked);
+    if (isBooked) trackCallBooked('free-system');
   }, []);
   return <>{booked ? confirmation : booking}</>;
 }

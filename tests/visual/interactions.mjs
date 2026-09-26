@@ -10,6 +10,7 @@ import pixelmatch from 'pixelmatch';
 import { startServer } from './serve.mjs';
 import { settle } from './settle.mjs';
 import { BASELINE_SITE } from './baseline-site.mjs';
+import { isolate } from './isolate.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []),
@@ -206,7 +207,7 @@ async function run(siteKey, scenario, browser) {
   let lead = null;
   server.on('lead', (l) => (lead = l));
   const context = await browser.newContext({ viewport: scenario.viewport, deviceScaleFactor: 1, reducedMotion: 'reduce' });
-  await context.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
+  await isolate(context);
   if (scenario.leadResponse) {
     await context.route('**/send-lead.php', (r) =>
       r.fulfill({ status: scenario.leadResponse.status, contentType: 'application/json', body: scenario.leadResponse.body }),

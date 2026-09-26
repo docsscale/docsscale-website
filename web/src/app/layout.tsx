@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { SITE } from '@/content/site';
+import { GoogleAnalytics } from '@/features/analytics/GoogleAnalytics';
 
 // Root layout shared by the main site and the /free-system funnel. Each of those
 // has its own layout (route groups (site) and (funnel)) with its own stylesheet,
@@ -21,7 +22,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <GoogleAnalytics />
+      </body>
     </html>
   );
 }

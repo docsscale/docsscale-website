@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CONTACT_LINES, FOOTER_COLUMNS, FOOTER_LEGAL_LINKS, SITE } from '@/content/site';
+import { CookieSettingsLink } from '@/features/analytics/CookieSettingsLink';
 import { BrandLogo } from './BrandLogo';
 
 // Footer links keep the footer's light text colour instead of the global teal link colour.
@@ -62,12 +63,15 @@ export function Footer() {
           }}
         >
           <span>{SITE.copyright}</span>
-          <div style={{ display: 'flex', gap: 20 }}>
+          {/* Wraps whole links onto a new line when they don't fit (only happens
+              once "Cookie settings" is shown on small screens). */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: 20, rowGap: 8 }}>
             {FOOTER_LEGAL_LINKS.map((link) => (
               <Link key={link.label} href={link.href} style={linkStyle}>
                 {link.label}
               </Link>
             ))}
+            <CookieSettingsLink style={linkStyle} />
             <a href="#top" style={linkStyle}>
               Back to top ↑
             </a>

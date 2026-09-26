@@ -10,6 +10,7 @@ import fs from 'node:fs';
 import { startServer } from './serve.mjs';
 import { settle } from './settle.mjs';
 import { VIEWPORTS } from './routes.mjs';
+import { isolate } from './isolate.mjs';
 
 const [siteA, siteB] = process.argv.slice(2);
 // REDUCE=1: compare the static hero seen by reduced-motion visitors instead.
@@ -26,7 +27,7 @@ async function shoot(site, route, vp) {
     deviceScaleFactor: 1,
     reducedMotion: reduce ? 'reduce' : 'no-preference',
   });
-  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
+  await isolate(page);
   await page.goto(`http://127.0.0.1:${server.address().port}${route}`, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
   await page.mouse.move(vp.width - 1, vp.height - 1); // away from any [data-lift] card

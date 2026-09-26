@@ -10,6 +10,7 @@ import { startServer } from './serve.mjs';
 import { settle } from './settle.mjs';
 import { ROUTES, VIEWPORTS } from './routes.mjs';
 import { BASELINE_SITE } from './baseline-site.mjs';
+import { isolate } from './isolate.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []),
@@ -39,7 +40,7 @@ for (const vp of VIEWPORTS) {
     deviceScaleFactor: 1,
     reducedMotion: motion ? 'no-preference' : 'reduce',
   });
-  await context.route(/^https?:\/\/(?!127\.0\.0\.1)/, (route) => route.abort());
+  await isolate(context);
   const page = await context.newPage();
   for (const route of ROUTES) {
     if (only && !only.has(route.name)) continue;
