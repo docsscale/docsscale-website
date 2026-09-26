@@ -17,11 +17,15 @@ const ITEMS = [
   { name: '02-home-faq-email', path: '/', selector: '[data-screen-label="FAQ"]', title: 'Homepage FAQ: email address', clipHeight: 420 },
   { name: '03-home-form-fallback', path: '/', selector: '#call', title: 'Homepage form: "Or call" line → email' },
   { name: '04-book-a-call-form', path: '/book-a-call/', selector: 'form', title: 'Book a call form: "Or call" line → email' },
-  { name: '05-results-sample-note', path: '/results/', selector: '[data-screen-label="Hero"]', title: 'Results: "Sample figures" note removed' },
+  { name: '05-results-sample-note', path: '/results/', selector: '[data-screen-label="Hero"]', title: 'Results: "Sample figures" note removed (stats stay in place)' },
   { name: '06-about-hero-founded', path: '/about/', selector: '[data-screen-label="Hero"]', title: 'About: Founded 2025 · Houston, Texas' },
-  { name: '07-about-team', path: '/about/', selector: '[data-screen-label="Team"]', title: 'About: team names and "Where" block' },
-  { name: '08-privacy', path: '/privacy/', selector: '[data-screen-label="Content"]', title: 'Privacy Policy: rewritten text (draft banner kept)' },
-  { name: '09-terms', path: '/terms/', selector: '[data-screen-label="Content"]', title: 'Terms of Service: rewritten text (draft banner kept)' },
+  { name: '07-about-team', path: '/about/', selector: '[data-screen-label="Team"]', title: 'About: team (initials until photos are added) and "Where" block' },
+  { name: '08-privacy', path: '/privacy/', selector: '[data-screen-label="Content"]', title: 'Privacy Policy: final text (email only)' },
+  { name: '10-logo-nav', clipWidth: 710, path: '/', selector: '[data-screen-label="Nav"]', title: 'Header logo (every main-site page)', keepNav: true },
+  { name: '11-logo-footer', clipWidth: 710, path: '/', selector: '[data-screen-label="Footer"]', title: 'Footer logo (every main-site page)', clipHeight: 300 },
+  { name: '12-logo-funnel-header', clipWidth: 710, path: '/free-system/', selector: 'div[style*="position:sticky"]', title: 'Funnel header logo', keepNav: true },
+  { name: '13-logo-funnel-footer', clipWidth: 710, path: '/free-system/', selector: 'div:has(> div > span:text-is("© 2026 DocsScale"))', title: 'Funnel footer logo' },
+  { name: '09-terms', path: '/terms/', selector: '[data-screen-label="Content"]', title: 'Terms of Service: final text' },
 ];
 
 const browser = await chromium.launch();
@@ -36,11 +40,11 @@ async function capture(root, item) {
   await el.scrollIntoViewIfNeeded();
   await settle(page);
   // The sticky nav would cover the top of sections; hide it for these crops.
-  await page.addStyleTag({ content: '[data-screen-label="Nav"]{display:none!important}' });
+  if (!item.keepNav) await page.addStyleTag({ content: '[data-screen-label="Nav"]{display:none!important}' });
   const box = await el.boundingBox();
   const buf = await page.screenshot({
     fullPage: true,
-    clip: { x: 0, y: box.y + (await page.evaluate(() => scrollY)), width: WIDTH, height: Math.min(box.height, item.clipHeight ?? 4000) },
+    clip: { x: 0, y: box.y + (await page.evaluate(() => scrollY)), width: Math.min(WIDTH, item.clipWidth ?? WIDTH), height: Math.min(box.height, item.clipHeight ?? 4000) },
   });
   await page.close();
   server.close();
@@ -51,7 +55,7 @@ for (const item of ITEMS) {
   if (onlyArg && !onlyArg.has(item.name)) continue;
   const before = await capture('reference/live-2026-09-25', item);
   const after = await capture('web/out', item);
-  const page = await browser.newPage({ viewport: { width: 1480, height: 400 } });
+  const page = await browser.newPage({ viewport: { width: 1480, height: 100 } });
   await page.setContent(`<!doctype html><html><body style="margin:0;padding:20px;background:#fff;font:600 18px system-ui">
     <div style="margin-bottom:12px">${item.title}</div>
     <div style="display:flex;gap:20px;align-items:flex-start">
