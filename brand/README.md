@@ -23,9 +23,21 @@ Ready-to-use versions made from the originals.
 | `icon.svg` | Vector icon (traced), used as the browser favicon |
 | `social-share-1200x630.jpg` | Link-preview image: scaled to cover 1200×630 (no stretching; about 2 px trimmed from each side), 63 KB |
 
+## To do: request the original vector file from the designer
 The originals are raster images with soft shading, so no automatic trace can match
-them pixel for pixel. If you ever need a perfect vector (signage, print), ask the
-logo designer for the source file (AI, EPS, PDF or Figma) and replace the SVGs here.
+them pixel for pixel. **For print use (business cards, signage, merchandise,
+anything printed large), request the original vector logo file from the logo
+designer**: AI, EPS, SVG or PDF, plus the exact colour values (HEX, and CMYK/Pantone
+for print). When it arrives, store it in `originals/` and replace the traced SVGs in
+`files/`. Until then, use the PNGs for anything where quality matters.
+
+## Colours: optional brand refresh (later)
+The logo's teal (about `#277068`) is slightly greener than the site's button and
+accent teal (`#0F5F63`, `T.teal` in `web/src/styles/tokens.ts`). It isn't jarring, but
+side by side (for example the funnel header's logo next to its button) they read as
+two different teals. **Recommendation:** in a later, optional brand refresh, align
+the site's teal with the logo teal, ideally using the exact values from the
+designer's file. Kept as is for the v1.0 launch by decision (September 2026).
 
 ## Where they are used on the website
 - Header, footer and funnel: `web/public/brand/logo-*.webp` (96 px tall, sharp on 3× screens), rendered by `web/src/features/site-chrome/BrandLogo.tsx`.

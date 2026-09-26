@@ -95,7 +95,7 @@ export function BookCallForm() {
           </div>
           <div style={row}>
             <input required type="email" name="email" placeholder="Work email" style={fieldStyle} />
-            <input type="tel" name="phone" placeholder="Mobile (for texting times)" style={fieldStyle} />
+            <input type="tel" name="phone" placeholder="Phone (optional)" style={fieldStyle} />
           </div>
           <div style={row}>
             <select required name="specialty" style={fieldStyle} defaultValue="">
