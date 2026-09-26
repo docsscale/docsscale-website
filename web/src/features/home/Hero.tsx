@@ -3,6 +3,7 @@
 import { Placeholder } from '@/components/ui/Placeholder';
 import { HERO, INTEGRATIONS } from '@/content/home';
 import { STAGE_COLORS, T } from '@/styles/tokens';
+import { SplitWords, wordCount } from '@/features/motion/SplitWords';
 import { IntegrationChip } from './IntegrationChip';
 import { SpecialtyInquiries, SpecialtyPicker, SpecialtyText } from './specialty-context';
 
@@ -26,6 +27,7 @@ export function Hero() {
     <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(24px,4vw,56px) 0 clamp(48px,6vw,80px)' }}>
       <div
         id="hero-grid"
+        data-hero-rise=""
         className="container"
         style={{
           display: 'grid',
@@ -79,9 +81,9 @@ export function Hero() {
               textWrap: 'balance',
             }}
           >
-            {HERO.headline}
+            <SplitWords text={HERO.headline} />
             <em className="serif-accent" style={{ color: T.teal }}>
-              {HERO.headlineAccent}
+              <SplitWords text={HERO.headlineAccent} start={wordCount(HERO.headline)} />
             </em>
           </h1>
           <div
