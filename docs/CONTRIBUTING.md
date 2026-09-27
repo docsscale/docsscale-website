@@ -30,7 +30,7 @@ npm run test:server                   # if you touched server/ (needs PHP 8.1+)
 npm run visual:candidate && npm run visual:compare   # full pixel check
 ```
 
-**Known flake:** on the Linux CI runner, the homepage service-filter scenarios occasionally differ by a few pixels of anti-aliasing at a pill's edge (seen once, 27 Sep 2026: 29 px on the "All" pill, passed on re-run). If a parity job fails by a handful of edge pixels, re-run it once. If it repeats, investigate; never raise the tolerance to hide it.
+**Deterministic captures:** composited layers (from `will-change`, which GSAP leaves on revealed elements) can anti-alias an edge 1/255 differently between runs on the CI runner. The capture tools neutralise `will-change` before every screenshot; keep that when writing new capture code.
 
 ## Code conventions
 

@@ -220,7 +220,9 @@ async function run(siteKey, scenario, browser) {
   await page.clock.runFor(2000);
   await scenario.steps(page);
   await settle(page);
-  await page.addStyleTag({ content: '*,*::before,*::after{animation-play-state:paused!important;transition:none!important;caret-color:transparent!important}[data-lift]{will-change:auto!important}' });
+  await page.addStyleTag({ content: '*,*::before,*::after{animation-play-state:paused!important;transition:none!important;caret-color:transparent!important}*{will-change:auto!important}' });
+  // will-change (GSAP leaves it on revealed elements) makes composited layers whose
+  // anti-aliasing can differ by 1/255 between runs on the CI runner.
   await page.clock.runFor(500);
   const opts = { animations: 'disabled' };
   let buf;
