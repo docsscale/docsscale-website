@@ -92,7 +92,6 @@ export const HERO = {
   cta: { label: 'Book a strategy call', href: '/book-a-call' },
   photo: {
     placeholder: 'Clinic photo: real team, real rooms',
-    caption: 'A DocsScale client clinic · Austin, TX',
   },
   attract: { label: 'This week · Attract', suffix: 'new patient inquiries for ' },
   convert: {

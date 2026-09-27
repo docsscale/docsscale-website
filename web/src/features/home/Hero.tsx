@@ -172,33 +172,6 @@ export function Hero() {
           }}
         >
           <Placeholder placeholder={HERO.photo.placeholder} />
-          <div
-            style={{
-              position: 'absolute',
-              left: 16,
-              bottom: 16,
-              background: T.surface,
-              borderRadius: 14,
-              padding: '10px 14px',
-              fontSize: 13,
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              pointerEvents: 'none',
-            }}
-          >
-            <span
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: T.sageFg,
-                animation: 'pulse 1.8s ease-in-out infinite',
-              }}
-            />
-            {HERO.photo.caption}
-          </div>
         </div>
 
         {/* Attract: inquiries this week */}

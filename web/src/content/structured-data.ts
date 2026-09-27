@@ -1,5 +1,6 @@
 // schema.org structured data per page. The Organization block repeats on every
 // page; it is defined once and the Service blocks point to it by @id.
+import { SITE } from './site';
 
 export const ORGANIZATION = {
   '@context': 'https://schema.org',
@@ -8,8 +9,10 @@ export const ORGANIZATION = {
   '@id': 'https://docsscale.com/#organization',
   name: 'DocsScale',
   url: 'https://docsscale.com/',
-  logo: 'https://docsscale.com/favicon.png',
+  // Square icon, 512 px: Google wants a logo of at least 112×112.
+  logo: 'https://docsscale.com/android-chrome-512x512.png',
   email: 'info@docsscale.com',
+  foundingDate: SITE.founded,
   description:
     'Marketing agency for healthcare clinics. More patients on autopilot, from the first click to the booked appointment: ads, SEO, websites, funnels, follow-up and recall.',
   address: {

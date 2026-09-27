@@ -30,3 +30,4 @@ DocsScale works only with healthcare clinics: dental, chiropractic, physical the
 ## Contact
 - Email: info@docsscale.com
 - Location: Houston, Texas, US
+- Founded: 2023

@@ -9,7 +9,7 @@ export const SITE = {
   copyright: '© 2026 DocsScale · docsscale.com',
   email: 'info@docsscale.com',
   location: 'Houston, Texas, US',
-  founded: '2025',
+  founded: '2023',
 } as const;
 
 /** Contact block in the footer, one line per entry, shown in this order.
