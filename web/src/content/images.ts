@@ -2,6 +2,9 @@
 // (keep the widths there in sync). Each image is served as AVIF, then WebP, with
 // the original JPEG as the fallback for browsers that support neither.
 const HERO = [640, 980, 1280, 1600];
+
+/** Rendered width of the funnel hero mockup (landing and thank-you pages). */
+export const HERO_SIZES = '(max-width: 1060px) calc(100vw - 32px), 980px';
 const FUNNEL_SHOT = [400, 800, 1200];
 
 export const IMAGE_WIDTHS: Record<string, readonly number[]> = {

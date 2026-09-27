@@ -1,5 +1,6 @@
+import { preloadResponsiveImage } from '@/components/ui/ResponsiveImage';
+import { HERO_SIZES } from '@/content/images';
 import { TrackLeadMagnetView } from '@/features/analytics/TrackLeadMagnetView';
-import { preload } from 'react-dom';
 import { STRUCTURED_DATA } from '@/content/structured-data';
 import { FunnelAutomations } from '@/features/funnel/FunnelAutomations';
 import { FunnelEligibility } from '@/features/funnel/FunnelEligibility';
@@ -30,7 +31,7 @@ export const metadata = pageMetadata({
 });
 
 export default function FreeSystemPage() {
-  preload('/free-system/images/hero-mockup.jpg', { as: 'image' });
+  preloadResponsiveImage('/free-system/images/hero-mockup.jpg', HERO_SIZES);
   return (
     <>
       {STRUCTURED_DATA.freeSystem.map((data, i) => (

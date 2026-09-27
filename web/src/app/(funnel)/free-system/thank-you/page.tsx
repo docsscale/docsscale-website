@@ -1,4 +1,5 @@
-import { preload } from 'react-dom';
+import { preloadResponsiveImage } from '@/components/ui/ResponsiveImage';
+import { HERO_SIZES } from '@/content/images';
 import { FunnelFooter } from '@/features/funnel/FunnelFooter';
 import { FunnelHeader } from '@/features/funnel/FunnelHeader';
 import { ThankYouHero } from '@/features/funnel/ThankYouHero';
@@ -23,8 +24,7 @@ export const metadata = pageMetadata({
 });
 
 export default function ThankYouPage() {
-  // The live page preloads the hero mockup too (it reuses the landing page's head).
-  preload('/free-system/images/hero-mockup.jpg', { as: 'image' });
+  preloadResponsiveImage('/free-system/images/hero-mockup.jpg', HERO_SIZES);
   return (
     <>
       <FunnelHeader cta={{ label: 'Book a free call', href: '/free-system/book-a-call/' }} />

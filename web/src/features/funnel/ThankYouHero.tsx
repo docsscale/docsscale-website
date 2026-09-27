@@ -1,4 +1,5 @@
 import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
+import { HERO_SIZES } from '@/content/images';
 import { T } from '@/styles/tokens';
 
 export function ThankYouHero() {
@@ -110,7 +111,7 @@ export function ThankYouHero() {
               "DELIVERY GRAPHIC" placeholder; the rebuild keeps the image everywhere. */}
           <ResponsiveImage
             src="/free-system/images/hero-mockup.jpg"
-            sizes="(max-width: 1060px) calc(100vw - 32px), 980px"
+            sizes={HERO_SIZES}
             priority
             alt="GoHighLevel funnels, CRM dashboard, and automations mockup"
             style={{
