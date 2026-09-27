@@ -22,7 +22,7 @@ Every account and service the website depends on, where each credential is kept 
 
 1. **Delete the Claude Code session logs** in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/` once the project is finished. They contain the GoHighLevel token from the early audit.
 2. **Fix SSL for www.docsscale.com:** hPanel → Security → SSL → install for `www.docsscale.com`. `www` then redirects cleanly to the main domain.
-3. **Delete the old `lead-debug-log.txt`** from the original site, if it's still on the server (hPanel → File Manager; search for it). It predates the hardening and may contain lead data.
+3. **Check for old copies of `lead-debug-log.txt`.** The original site's debug log is no longer reachable (it returns 404, checked 27 Sep 2026). If a copy remains anywhere in hPanel → File Manager, delete it: it predates the hardening and may contain lead data.
 4. **Send the GA4 Measurement ID** (see [TRACKING.md](TRACKING.md)).
 5. **Photos:** send real photos for the three placeholders (homepage hero, homepage "Ad creative", About founder photo) and the team cards.
 6. **Replace the funnel images:** they contain garbled pseudo-text typical of generated images.
