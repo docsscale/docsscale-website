@@ -33,7 +33,7 @@ export function FunnelFooter() {
         <span
           style={{
             fontSize: 13,
-            color: 'rgba(250,249,246,.4)',
+            color: 'rgba(250,249,246,.5)',
           }}
         >
           Marketing agency for healthcare clinics
@@ -41,7 +41,7 @@ export function FunnelFooter() {
         <span
           style={{
             fontSize: 13,
-            color: 'rgba(250,249,246,.4)',
+            color: 'rgba(250,249,246,.5)',
           }}
         >
           © 2026 DocsScale

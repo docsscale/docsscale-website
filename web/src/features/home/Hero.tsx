@@ -324,7 +324,6 @@ export function Hero() {
               style={{
                 fontSize: 12,
                 fontWeight: 600,
-                opacity: 0.75,
               }}
             >
               {HERO.picker.hint}
@@ -371,7 +370,6 @@ export function Hero() {
           <span
             style={{
               fontSize: 12,
-              opacity: 0.8,
             }}
           >
             {HERO.report.footnote}

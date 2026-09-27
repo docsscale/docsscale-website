@@ -6,7 +6,7 @@ export const T = {
   surface: '#FFFFFF',
   ink: '#1A1A1A',
   body: '#5C5A55',
-  caption: '#8F8C85',
+  caption: '#6C6962', // was #8F8C85; darkened to pass WCAG AA (4.5:1) on every background it's used on
   hairline: '#E6E3DC',
   hairlineHover: '#D3CFC6',
   teal: '#0F5F63',
