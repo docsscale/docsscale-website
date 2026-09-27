@@ -4,6 +4,10 @@
 //   node scripts/deploy.mjs --target staging            (web build + server files → staging)
 //   node scripts/deploy.mjs --target production --yes   (same → docsscale.com; guarded)
 //   node scripts/deploy.mjs --target staging --dry-run  (assemble release/<target>/ only)
+//   node scripts/deploy.mjs --target production --rollback-original --yes
+//        (emergency: put back the site exactly as it was before v1.0: the static
+//         export in reference/live-2026-09-25/ plus the server code at tag
+//         pre-v1.0-live. No build, no CI gate. See docs/RELEASE.md.)
 //
 // Upload credentials come from Hostinger's "generate upload URL" endpoint and are
 // passed as environment variables (never committed):
@@ -38,8 +42,13 @@ const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const release = path.join(root, 'release', target);
 const git = (cmd) => execSync(`git ${cmd}`, { cwd: root }).toString().trim();
 
-// 1. Safety checks for production.
-if (target === 'production' && !flag('dry-run')) {
+const rollbackOriginal = flag('rollback-original');
+if (rollbackOriginal && target !== 'production') fail('--rollback-original is for production only.');
+if (rollbackOriginal && !flag('yes') && !flag('dry-run')) fail('Rollback needs --yes.');
+
+// 1. Safety checks for production (skipped for the emergency rollback, which
+//    must work even when main or CI is broken).
+if (target === 'production' && !flag('dry-run') && !rollbackOriginal) {
   if (!flag('yes')) fail('Production deploy needs --yes (after checking staging).');
   if (git('status --porcelain')) fail('Working tree has uncommitted changes.');
   if (git('rev-parse --abbrev-ref HEAD') !== 'main') fail('Production deploys only from main.');
@@ -56,12 +65,22 @@ if (target === 'production' && !flag('dry-run')) {
 }
 
 // 2. Build the site (static export → web/out).
-if (!flag('skip-build')) execSync('npm run build', { cwd: path.join(root, 'web'), stdio: 'inherit' });
+if (!flag('skip-build') && !rollbackOriginal) execSync('npm run build', { cwd: path.join(root, 'web'), stdio: 'inherit' });
 
 // 3. Assemble the release folder.
 fs.rmSync(release, { recursive: true, force: true });
-copyDir(path.join(root, 'web/out'), release);
-copyDir(path.join(root, 'server/public_html'), release);
+if (rollbackOriginal) {
+  copyDir(path.join(root, 'reference/live-2026-09-25'), release);
+  const serverFiles = git('ls-tree -r --name-only pre-v1.0-live -- server/public_html').split('\n');
+  for (const file of serverFiles) {
+    const dest = path.join(release, path.relative('server/public_html', file));
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.writeFileSync(dest, execSync(`git show pre-v1.0-live:${file}`, { cwd: root }));
+  }
+} else {
+  copyDir(path.join(root, 'web/out'), release);
+  copyDir(path.join(root, 'server/public_html'), release);
+}
 if (target === 'staging') {
   // Hostinger does not apply public_html/.htaccess to the subdomain folder, so
   // staging gets production's rules followed by the staging-only additions.
@@ -74,7 +93,7 @@ if (target === 'staging') {
   fs.copyFileSync(path.join(root, 'server/staging/robots.txt'), path.join(release, 'robots.txt'));
   fs.copyFileSync(path.join(root, 'server/staging/environment.php'), path.join(release, '_server/environment.php'));
 }
-const version = `${git('describe --tags --always --dirty')} (${new Date().toISOString()})`;
+const version = `${rollbackOriginal ? 'original site (pre-v1.0)' : git('describe --tags --always --dirty')} (${new Date().toISOString()})`;
 fs.writeFileSync(path.join(release, 'version.txt'), `${target} ${version}\n`);
 const files = listFiles(release);
 console.log(`Release ${target}: ${files.length} files, ${version}`);
