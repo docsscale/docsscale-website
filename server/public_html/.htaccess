@@ -51,8 +51,10 @@ RedirectMatch 404 ^/_server(/|$)
     Header unset X-Powered-By
 </IfModule>
 
-# Web app manifest (favicon set): not in every Apache's MIME table.
+# File types not in every Apache's MIME table: the web app manifest (favicon
+# set) and AVIF images (served as text/plain otherwise).
 AddType application/manifest+json .webmanifest
+AddType image/avif .avif
 
 # ---------------------------------------------------------------------------
 # 5. Caching
