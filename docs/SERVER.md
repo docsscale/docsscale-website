@@ -5,7 +5,7 @@
 ```
 /home/u145389112/domains/docsscale.com/
 ├── public_html/                 ← web root (Next.js static export + the files below)
-│   ├── .htaccess                ← headers, caching, file blocking (site/.htaccess)
+│   ├── .htaccess                ← headers, caching, file blocking
 │   ├── send-lead.php            ← 2-line shim → _server, form "main"
 │   ├── free-system/send-lead.php← 2-line shim → _server, form "free-system"
 │   └── _server/                 ← shared lead code, denied over HTTP
@@ -20,15 +20,17 @@
     └── ratelimit/               ← per-IP counters (safe to delete any time)
 ```
 
-In this repo, `site/` mirrors `public_html/` and `private/config.example.php` is the
-template for `private/config.php`.
+In this repo, `server/public_html/` holds the server files (the static site comes from
+`web/out/`), and `server/private/config.example.php` is the template for
+`private/config.php`. Staging uses `public_html/staging_html/` and a separate
+`private-staging/` folder (test mode; nothing is sent to GoHighLevel).
 
-## After every site deploy
+## Deploys
 
-A hPanel "deploy archive" replaces `public_html`. Until the Next.js source ships these
-files in its `public/` folder (Phase 2), re-upload after each deploy:
-`.htaccess`, `send-lead.php`, `free-system/send-lead.php`, `_server/` (all three files),
-`sitemap.xml`, `llms.txt`. The `private/` folder is not affected by deploys.
+`scripts/deploy.mjs` uploads the static export and these server files together (see
+[RELEASE.md](RELEASE.md)); nothing needs re-uploading by hand. Don't use hPanel's
+"deploy archive": it replaces `public_html` and would remove the lead endpoints and
+the staging folder. The `private/` folder is never touched by deploys.
 
 ## Rotating the GHL token
 
@@ -55,7 +57,7 @@ and delete months you no longer need (suggested retention: 12 months).
 
 ## Tests
 
-`tests/lead-handler.sh` runs both endpoints locally against a fake GHL and checks
+`tests/server/lead-handler.sh` (`npm run test:server`) runs both endpoints locally against a fake GHL and checks
 responses, exact GHL payloads, backups and rate limiting. Needs PHP 8.1+ locally.
 
 ## Where the originals and backups are
