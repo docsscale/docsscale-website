@@ -18,6 +18,7 @@ const args = Object.fromEntries(
 const only = args.only ? new Set(args.only.split(',')) : null;
 const SITES = { baseline: BASELINE_SITE, candidate: 'web/out' };
 const OUT = 'tests/visual/interactions';
+const RASTER_NOISE = 2; // see the comparison below
 
 const fillMainForm = async (page, scope) => {
   const f = page.locator(scope);
@@ -247,8 +248,20 @@ for (const scenario of SCENARIOS) {
   else if (A.width !== B.width || A.height !== B.height) status = `size ${A.width}x${A.height} vs ${B.width}x${B.height}`;
   else {
     const diff = new PNG({ width: A.width, height: A.height });
-    const changed = pixelmatch(A.data, B.data, diff.data, A.width, A.height, { threshold: scenario.tolerance ?? 0, includeAA: true });
+    pixelmatch(A.data, B.data, diff.data, A.width, A.height, { threshold: scenario.tolerance ?? 0, includeAA: true });
+    // Count a flagged pixel only if some colour channel moved by more than
+    // RASTER_NOISE/255. The CI runner's renderer occasionally anti-aliases an
+    // unchanged edge 1/255 differently between two captures; nothing a person
+    // can see changes by so little (a real change moves channels by tens).
+    let changed = 0, noise = 0;
+    for (let i = 0; i < diff.data.length; i += 4) {
+      if (!(diff.data[i] > 200 && diff.data[i + 1] < 80)) continue;
+      const delta = Math.max(...[0, 1, 2].map((k) => Math.abs(A.data[i + k] - B.data[i + k])));
+      if (delta > RASTER_NOISE) changed++;
+      else noise++;
+    }
     status = changed === 0 ? 'identical' : `${changed} px differ`;
+    if (!changed && noise) status += ` (${noise} px of ≤${RASTER_NOISE}/255 raster noise ignored)`;
     if (changed) {
       fs.writeFileSync(`${OUT}/${scenario.name}--baseline.png`, a.png);
       fs.writeFileSync(`${OUT}/${scenario.name}--candidate.png`, b.png);

@@ -30,7 +30,7 @@ npm run test:server                   # if you touched server/ (needs PHP 8.1+)
 npm run visual:candidate && npm run visual:compare   # full pixel check
 ```
 
-**Deterministic captures:** composited layers (from `will-change`, which GSAP leaves on revealed elements) can anti-alias an edge 1/255 differently between runs on the CI runner. The capture tools neutralise `will-change` before every screenshot; keep that when writing new capture code.
+**Deterministic captures:** the capture tools neutralise `will-change` before every screenshot. Even so, the CI runner's renderer occasionally anti-aliases an unchanged edge 1/255 differently between two captures, so the interaction tests ignore pixels whose colour moved by at most 2/255 (and say so in their output). Real changes move colours by tens or hundreds; never raise that limit to make a real change pass.
 
 ## Code conventions
 
