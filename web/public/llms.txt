@@ -2,7 +2,7 @@
 
 > Marketing agency for healthcare clinics in the US. DocsScale runs the whole patient-acquisition journey for clinics and reports in booked appointments and patients who showed, never clicks.
 
-DocsScale works only with healthcare clinics: dental, chiropractic, physical therapy, med spa, dermatology, primary care, optometry, and mental health. The offer is one system with four stages: Attract, Capture, Convert, Retain. Engagements are month to month with 30 days' notice, and the clinic owns every ad account, page, phone number, and its data.
+DocsScale works only with healthcare clinics: dental, chiropractic, physical therapy, med spa, weight loss, dermatology, primary care, optometry, and mental health. The offer is one system with four stages: Attract, Capture, Convert, Retain. Engagements are month to month with 30 days' notice, and the clinic owns every ad account, page, phone number, and its data.
 
 ## Services
 - Paid advertising (Meta and Google), one service line at a time — reported in booked appointments

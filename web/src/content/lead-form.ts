@@ -1,18 +1,9 @@
 // Copy and options shared by the main-site lead forms (homepage and /book-a-call/).
 // The field names (name, clinicName, email …) are what server/…/forms.php expects;
 // rename them in both places or not at all.
+import { SERVED_SPECIALTIES } from './served-specialties';
 
-export const SPECIALTY_OPTIONS = [
-  'Dental',
-  'Chiropractic',
-  'Physical therapy',
-  'Med spa',
-  'Dermatology',
-  'Primary care',
-  'Optometry',
-  'Mental health',
-  'Other',
-] as const;
+export const SPECIALTY_OPTIONS = [...SERVED_SPECIALTIES, 'Other'] as const;
 
 export const LOCATION_OPTIONS = ['1', '2', '3–5', '6+'] as const;
 

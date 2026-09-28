@@ -2,6 +2,12 @@ import { StatsStrip } from '@/features/funnel/StatsStrip';
 import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
 import { HERO_SIZES } from '@/content/images';
 import { T } from '@/styles/tokens';
+import { SERVED_SPECIALTIES, titleCase } from '@/content/served-specialties';
+
+// Specialties beyond the five chips drawn above, in the same neutral style as Weight Loss.
+const EXTRA_CHIPS = SERVED_SPECIALTIES.map(titleCase).filter(
+  (name) => !['Chiropractic', 'Dental', 'Med Spa', 'Physical Therapy', 'Weight Loss'].includes(name),
+);
 
 export function FunnelHero() {
   return (
@@ -163,6 +169,19 @@ export function FunnelHero() {
           >
             ✓ Weight Loss
           </span>
+          {EXTRA_CHIPS.map((name) => (
+            <span
+              key={name}
+              className="chip"
+              style={{
+                background: T.band,
+                color: T.body,
+                border: `1px solid ${T.hairline}`,
+              }}
+            >
+              ✓ {name}
+            </span>
+          ))}
         </div>
         <div
           style={{

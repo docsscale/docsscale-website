@@ -1,6 +1,7 @@
 // schema.org structured data per page. The Organization block repeats on every
 // page; it is defined once and the Service blocks point to it by @id.
 import { SITE } from './site';
+import { SERVED_SPECIALTIES, sentenceCase, specialtyList } from './served-specialties';
 
 export const ORGANIZATION = {
   '@context': 'https://schema.org',
@@ -25,10 +26,7 @@ export const ORGANIZATION = {
   knowsAbout: [
     'Healthcare marketing',
     'Patient acquisition',
-    'Dental marketing',
-    'Chiropractic marketing',
-    'Physical therapy marketing',
-    'Med spa marketing',
+    ...SERVED_SPECIALTIES.map((name) => `${name} marketing`),
     'Local SEO',
     'Paid advertising',
     'Funnel design',
@@ -123,7 +121,7 @@ export const STRUCTURED_DATA = {
           name: 'Do you only work with one kind of clinic?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'No. Dental, chiropractic, physical therapy, med spa, dermatology, primary care, optometry, and mental health. The system is the same; offers, timing, and compliance rules change by specialty.',
+            text: `No. ${sentenceCase(specialtyList())}. The system is the same; offers, timing, and compliance rules change by specialty.`,
           },
         },
         {
@@ -534,8 +532,7 @@ export const STRUCTURED_DATA = {
           '@id': 'https://docsscale.com/free-system/#webpage',
           url: 'https://docsscale.com/free-system/',
           name: 'Free Click-to-Chair System for Healthcare Clinics',
-          description:
-            'Get the complete Click-to-Chair System at no cost, built in GoHighLevel. 6 pre-built conversion funnels, 17 done-for-you automations, and a full patient CRM for chiropractic, dental, med spa, and physical therapy clinics.',
+          description: `Get the complete Click-to-Chair System at no cost, built in GoHighLevel. 6 pre-built conversion funnels, 17 done-for-you automations, and a full patient CRM for ${specialtyList()} clinics.`,
           publisher: {
             '@id': 'https://docsscale.com/#organization',
           },
@@ -552,8 +549,7 @@ export const STRUCTURED_DATA = {
           areaServed: 'United States',
           audience: {
             '@type': 'Audience',
-            audienceType:
-              'Healthcare clinic owners — chiropractic, dental, med spa, physical therapy, dermatology, optometry',
+            audienceType: `Healthcare clinic owners — ${specialtyList()}`,
           },
           offers: {
             '@type': 'Offer',
@@ -580,7 +576,7 @@ export const STRUCTURED_DATA = {
               name: 'What healthcare specialties does this patient system work for?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'The system works for any patient-based healthcare clinic: chiropractic, dental, med spa, physical therapy, dermatology, optometry, primary care, and mental health practices.',
+                text: `The system works for any patient-based healthcare clinic: ${specialtyList()} practices.`,
               },
             },
             {

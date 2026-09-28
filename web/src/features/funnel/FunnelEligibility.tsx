@@ -1,5 +1,6 @@
 import { Reveal } from '@/features/funnel/Reveal';
 import { T } from '@/styles/tokens';
+import { specialtyList } from '@/content/served-specialties';
 
 export function FunnelEligibility() {
   return (
@@ -304,7 +305,7 @@ export function FunnelEligibility() {
                   color: undefined,
                 }}
               >
-                Run a chiropractic, dental, med spa, physical therapy, or weight loss clinic
+                Run a {specialtyList('or')} clinic
               </p>
             </div>
           </Reveal>

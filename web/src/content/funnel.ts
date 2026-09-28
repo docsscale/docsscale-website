@@ -1,7 +1,15 @@
 // Copy and data for the /free-system/ funnel ("Claim the free system").
+import { SERVED_SPECIALTIES, titleCase } from './served-specialties';
 
 export const FUNNEL_FORM = {
-  clinicTypes: ['Chiropractic', 'Dental', 'Med Spa', 'Physical Therapy', 'Weight Loss'],
+  // The funnel's original five first (in their original order), then the rest, then Other.
+  clinicTypes: [
+    ...['Chiropractic', 'Dental', 'Med Spa', 'Physical Therapy', 'Weight Loss'],
+    ...SERVED_SPECIALTIES.map(titleCase).filter(
+      (name) => !['Chiropractic', 'Dental', 'Med Spa', 'Physical Therapy', 'Weight Loss'].includes(name),
+    ),
+    'Other',
+  ],
   submit: 'Send me the free system →',
   genericError: 'Something went wrong. Please try again.',
   footnote: 'No credit card. No trial. No catch. Yours to keep forever.',

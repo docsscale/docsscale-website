@@ -1,5 +1,6 @@
 // Homepage copy and demo data, section by section, in page order.
 // Text only: layout and colours live in src/features/home/.
+import { sentenceCase, specialtyList } from './served-specialties';
 
 /** Specialties for the hero picker. `n1` is the demo "inquiries this week" number. */
 export type HomeSpecialty = {
@@ -263,7 +264,7 @@ export const RESULT_STATS = [
 export const FAQS = [
   {
     q: 'Do you only work with one kind of clinic?',
-    a: 'No. Dental, chiropractic, physical therapy, med spa, dermatology, primary care, optometry, and mental health. The system is the same; offers, timing, and compliance rules change by specialty.',
+    a: `No. ${sentenceCase(specialtyList())}. The system is the same; offers, timing, and compliance rules change by specialty.`,
   },
   {
     q: 'We already have a website. Do we have to rebuild it?',
