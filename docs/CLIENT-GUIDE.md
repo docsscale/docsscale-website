@@ -5,7 +5,7 @@ For the DocsScale team. No coding knowledge is needed to read this. For changes,
 ## What you have
 
 - **docsscale.com**: the main website.
-- **docsscale.com/free-system/**: the free "patient-getting system" landing page, its thank-you page and its booking page.
+- **docsscale.com/free-system/**: the free **Click-to-Chair System** landing page, its thank-you page and its booking page.
 - **staging.docsscale.com**: a private copy where every change is checked first. It asks for a username and password (kept in `~/DocsScale-Secure/staging-login.txt`). Forms on staging are test-only and never reach GoHighLevel.
 
 ## Where leads go
@@ -25,7 +25,7 @@ For the DocsScale team. No coding knowledge is needed to read this. For changes,
 | Add a team photo | A square photo (at least 800×800 px) and the person's name | Minutes: one line in `about.ts` |
 | Replace a photo placeholder (homepage hero, homepage "Ad creative", About founder photo) | The photos (landscape, at least 1600 px wide) | Under an hour |
 | Update contact details | The new details. They appear in the footer, forms, structured data and `llms.txt`; your developer changes them in one place | Minutes |
-| Switch on Google Analytics | The GA4 Measurement ID (`G-…`) | Minutes: one line; see docs/TRACKING.md |
+| Replace photos or screenshots | The files, in the drop folder: see `incoming/README.md` for each slot's size and shape | Under an hour |
 | Add a new page | The copy and any images | Hours to days |
 | Change colours or layout | A description or mock-up | Needs a before/after for your approval |
 

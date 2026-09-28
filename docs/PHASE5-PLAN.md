@@ -1,6 +1,19 @@
 # Phase 5: Growth — plan
 
-Status: **draft for approval. Nothing here has been built.**
+Status: **approved in principle (27 Sep 2026); starts after v1.0 is live.** Nothing here has been built yet.
+
+## Decisions recorded (27–28 Sep 2026)
+
+| Topic | Decision |
+|---|---|
+| Services | Only services we can deliver today, grouped by the four stages (Attract, Capture, Convert, Retain). The final list with one-line descriptions goes to the owner before any service page is built. |
+| Industries | Keep the current four; add others only when we win clients in them. |
+| Region | Based in Houston. Website stays US-wide (industry and service pages any US clinic can find). Local layer: Google Business Profile, one Houston page, Texas mentions where natural. **No thin city pages**, only when there are real clients or case studies. |
+| Regional campaigns | Ads, cold email and lead-magnet campaigns. Phase 1: Texas (Houston, DFW, San Antonio, Austin). Phase 2: Florida, Arizona, Georgia, North Carolina. Not California or New York for now. UTM region codes per campaign; compare after 90 days ([TRACKING.md](TRACKING.md#region-codes-regional-campaigns)). |
+| Free system name | "Click-to-Chair System" (shipped in v1.1). GoHighLevel mentioned only in details buyers need. |
+| Blog publishing | Hostinger API token stored as a GitHub secret (steps given at 5E). |
+| Founding year | 2023. Never describe DocsScale as new, a startup or recently launched. |
+
 Starts after v1.0 is live on docsscale.com (v1.0 is waiting on the round-5 approvals and the final go-ahead).
 
 Same working rules as before:

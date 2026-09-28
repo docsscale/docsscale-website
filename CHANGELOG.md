@@ -3,6 +3,24 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [1.1.0] — unreleased (on staging; deploy pending owner go-ahead)
+
+### Visible changes (approved)
+- **Free system renamed** to the **Click-to-Chair System**: funnel headline, supporting line, thank-you page, titles, meta and social text, structured data, `llms.txt`. GoHighLevel is named only where buyers need it ("Runs in your GoHighLevel account").
+- **Founded 2023:** About page, Organization schema (`foundingDate`), `llms.txt`. v1.0 said 2025.
+- **Homepage hero:** the "A DocsScale client clinic · Austin, TX" caption is removed from the photo placeholder.
+- **Text contrast:** caption grey #8F8C85 → #6C6962, funnel footer text brighter, two faded homepage hints at full strength. Small text now meets WCAG AA.
+- **Consent banner** and footer **"Cookie settings"** link, now that analytics is on.
+
+### Analytics
+- **GA4 on** (`G-804589LNJW`) in Consent Mode v2 **basic mode**: nothing is loaded from Google before "Accept". The first page view is sent with consent. Withdrawing deletes the GA cookies.
+- **Events verified:** `page_view`, `generate_lead` (home, book-a-call, free-system), `view_lead_magnet`, `book_call`.
+
+### Other
+- Organization schema logo uses the 512 px icon (Google's minimum is 112 px).
+- Image specs and a drop folder for the real screenshots and photos (`incoming/README.md`).
+- UTM region codes for regional campaigns ([docs/TRACKING.md](docs/TRACKING.md)).
+
 ## [1.0.0] — 2026-09-27 (release candidate; deploy pending owner go-ahead)
 
 The site rebuilt from its lost source, hardened and made maintainable, looking the same as before except for the changes listed under "Visible changes", each approved by the owner.

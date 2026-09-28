@@ -12,7 +12,7 @@ Every account and service the website depends on, where each credential is kept 
 | **GoHighLevel** | CRM receiving every lead; booking calendar at booking.docsscale.com (CNAME to GHL) | The DocsScale sub-account (location) | Lead handler token (contacts.write only): **only** in `/home/u145389112/domains/docsscale.com/private/config.php` on the server |
 | **GitHub** | Source code and CI | Organization `docsscale`, private repo `docsscale-website` (free plan) | Owner's GitHub login; `gh` CLI on the owner's Mac |
 | **Staging** | staging.docsscale.com password gate | user `docsscale` | `~/DocsScale-Secure/staging-login.txt` (owner's Mac) |
-| **Google Analytics 4** | Analytics (ready, off until the ID is added) | Measurement ID goes in `web/src/content/analytics.ts` | Google account of the owner |
+| **Google Analytics 4** | Analytics (on from v1.1, consent-based) | Measurement ID `G-804589LNJW` in `web/src/content/analytics.ts` | Google account of the owner |
 | **Google Search Console** | Search performance | A `google-site-verification` record already exists in DNS; confirm which Google account owns it | — |
 
 - **Backups and originals:** `~/DocsScale-Secure/` on the owner's Mac: the full hPanel backup (25 Sep 2026) and every original server file replaced during hardening. It isn't synced and isn't in git. **It contains the GoHighLevel token; treat it as secret.**
@@ -23,11 +23,9 @@ Every account and service the website depends on, where each credential is kept 
 1. **Delete the Claude Code session logs** in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/` once the project is finished. They contain the GoHighLevel token from the early audit.
 2. **Fix SSL for www.docsscale.com:** hPanel → Security → SSL → install for `www.docsscale.com`. `www` then redirects cleanly to the main domain.
 3. **Check for old copies of `lead-debug-log.txt`.** The original site's debug log is no longer reachable (it returns 404, checked 27 Sep 2026). If a copy remains anywhere in hPanel → File Manager, delete it: it predates the hardening and may contain lead data.
-4. **Send the GA4 Measurement ID** (see [TRACKING.md](TRACKING.md)).
-5. **Photos:** send real photos for the three placeholders (homepage hero, homepage "Ad creative", About founder photo) and the team cards.
-6. **Replace the funnel images:** they contain garbled pseudo-text typical of generated images.
-7. **Ask the logo designer for the original vector file** (for print; [brand/README.md](../brand/README.md)).
-8. **Decide on the text-contrast proposal** (branch `proposal/contrast`), which makes small grey labels readable to WCAG AA.
+4. **GA4 admin setup:** create the custom dimensions and mark the key events ([TRACKING.md](TRACKING.md)).
+5. **Screenshots and photos:** the funnel images, the three homepage/About placeholders and the team photos, in the sizes listed in [incoming/README.md](../incoming/README.md).
+6. **Ask the logo designer for the original vector file** (for print; [brand/README.md](../brand/README.md)).
 
 ## When the team grows
 

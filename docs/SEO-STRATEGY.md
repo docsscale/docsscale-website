@@ -4,8 +4,16 @@ Where docsscale.com stands at v1.0, and what comes next. The detailed growth wor
 
 ## Positioning (decided September 2026)
 
-- **National first:** position for clinics **across the US**, targeting specific, lower-competition keywords a new site can win: long-tail, treatment- and specialty-specific, intent-rich.
-- **Plus a Houston/Texas local layer:** a local page and a Google Business Profile.
+- **Website positioning stays US-wide:** industry and service pages any US clinic owner can find, targeting specific, lower-competition keywords: long-tail, treatment- and specialty-specific, intent-rich.
+- **Local layer: Houston/Texas.** Based in Houston:
+  - a Google Business Profile;
+  - one Houston page;
+  - Texas mentions where they're natural.
+- **No thin city pages.** A city page is added only when there are real clients or case studies there.
+- **Regional targeting lives in campaigns, not pages:** ads, cold email and lead-magnet campaigns, with UTM region codes to compare results after 90 days ([TRACKING.md](TRACKING.md#region-codes-regional-campaigns)).
+  - Phase 1: Texas (Houston, Dallas–Fort Worth, San Antonio, Austin).
+  - Phase 2: Florida, Arizona, Georgia, North Carolina.
+  - Not for now: California, New York.
 - **Industries:** the current four (dental, chiropractic, physical therapy, med spa). Add others only when there are real clients in them.
 
 ## Technical SEO at v1.0

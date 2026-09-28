@@ -73,5 +73,5 @@ case studies are real, these stay unchanged.
   removal with a before/after screenshot.
 - **B2, B3, B5, B6 photo slots:** stay as they are; you'll upload the photos yourself
   (the rebuild keeps each slot as a clearly named image in `web/public/images/`).
-- **B4 About facts:** "Founded 2025 · Houston, Texas".
+- **B4 About facts:** "Founded 2023 · Houston, Texas" (v1.0 shipped "2025" by mistake; corrected in v1.1).
 - **A10 schema:** `Organization`, Houston, TX, US, no street address.
