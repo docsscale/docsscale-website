@@ -220,7 +220,7 @@ export function System() {
                 }}
               >
                 <SpecialtyText field="service" />
-                {' Austin'}
+                {' Houston'}
               </span>
             </div>
           </div>
@@ -533,7 +533,7 @@ export function System() {
                   lineHeight: 1.45,
                 }}
               >
-                Thursday 9:30 am with Dr. Patel is open. Want me to hold it for you?
+                Thursday 9:30 am with Dr. Hannah is open. Want me to hold it for you?
               </div>
               <div
                 style={{

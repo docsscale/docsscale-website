@@ -2,6 +2,7 @@ import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { TEAM } from '@/content/about';
 import { SITE } from '@/content/site';
 import { T } from '@/styles/tokens';
+import { SPECIALTIES } from '@/content/specialties';
 export function AboutHero() {
   return (
     <div
@@ -205,7 +206,8 @@ export function AboutHero() {
                 lineHeight: 1,
               }}
             >
-              8
+              {/* One per specialty page: dental, chiropractic, physical therapy, med spa. */}
+              {SPECIALTIES.length}
             </div>
             <div
               style={{

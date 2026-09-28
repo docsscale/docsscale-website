@@ -96,7 +96,7 @@ export const HERO = {
   attract: { label: 'This week · Attract', suffix: 'new patient inquiries for ' },
   convert: {
     label: 'Convert · replied in 2 min',
-    reply: 'Thursday 9:30 with Dr. Patel is open. Hold it for you?',
+    reply: 'Thursday 9:30 with Dr. Hannah is open. Hold it for you?',
     confirm: 'Yes please.',
   },
   picker: { label: 'Built for your kind of clinic', hint: 'Tap one, the page adapts' },

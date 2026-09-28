@@ -28,9 +28,11 @@ const ITEMS = [
   { name: '11-logo-footer', clipWidth: 710, path: '/', selector: '[data-screen-label="Footer"]', title: 'Footer logo (every main-site page)', clipHeight: 300 },
   { name: '12-logo-funnel-header', clipWidth: 710, path: '/free-system/', selector: 'div[style*="position:sticky"]', title: 'Funnel header logo', keepNav: true },
   { name: '13-logo-funnel-footer', clipWidth: 710, path: '/free-system/', selector: 'div:has(> div > span:text-is("© 2026 DocsScale"))', title: 'Funnel footer logo' },
-  { name: '14-funnel-hero', path: '/free-system/', selector: 'main > *:first-child', title: 'Funnel: Click-to-Chair System headline and supporting line', clipHeight: 1400 },
+  { name: '14-funnel-hero', path: '/free-system/', selector: 'main > *:first-child', title: 'Funnel: original headline kept; supporting line now says "set up in your GoHighLevel account"', clipHeight: 1400 },
   { name: '15-thank-you-hero', path: '/free-system/thank-you/', selector: 'main > *:first-child', title: 'Thank-you page: system name', clipHeight: 700 },
   { name: '16-home-hero', path: '/', selector: '[data-screen-label="Hero"]', title: 'Homepage hero: "Austin, TX" caption removed from the photo box' },
+  { name: '17-home-system', path: '/', selector: '[data-screen-label="System"]', title: 'Homepage illustrations: Austin → Houston, Dr. Patel → Dr. Hannah', clipHeight: 1400 },
+  { name: '18-about-focus', path: '/about/', selector: '[data-screen-label="Hero"]', title: 'About: Focus 8 → 4 clinic specialties; Founded 2023' },
   { name: '09-terms', path: '/terms/', selector: '[data-screen-label="Content"]', title: 'Terms of Service: final text' },
 ];
 
