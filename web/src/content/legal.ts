@@ -1,6 +1,7 @@
 // Privacy Policy and Terms of Service for docsscale.com (final, September 2026).
 // Each section is a heading plus paragraphs; `id` makes a section linkable
-// (the footer links to #patient-data). Keep the Privacy Policy in step with
+// (the footer links to #patient-data). Paragraphs may contain links written as
+// [text](url): an https:// URL opens the external page, #id jumps to a section. Keep the Privacy Policy in step with
 // reality: update it whenever a service provider, form field or analytics
 // setting changes, and change `updated`.
 
@@ -12,7 +13,7 @@ export type LegalDoc = {
 
 export const PRIVACY: LegalDoc = {
   title: 'Privacy Policy',
-  updated: 'September 2026',
+  updated: 'September 29, 2026',
   sections: [
     {
       heading: 'What this policy covers',
@@ -40,12 +41,22 @@ export const PRIVACY: LegalDoc = {
       ],
     },
     {
+      id: 'service-providers',
       heading: 'Service providers we share information with',
       paragraphs: [
         'GoHighLevel (LeadConnector). Every form submission is sent to our customer relationship management (CRM) system, operated by GoHighLevel, where we manage replies, follow-up and bookings. Calls booked through our calendar at booking.docsscale.com are handled by the same system.',
         'Hostinger. Our website and its server are hosted by Hostinger. So that no inquiry is lost if the CRM is unavailable, a backup copy of each form submission is kept in a private, access-restricted folder on that server. It is never publicly accessible.',
         'Google. We use, or may use, Google Analytics 4 as described under Cookies and analytics.',
         'These providers process information on our behalf to provide their services to us. We may also disclose information if required by law, to protect our rights or the safety of others, or as part of a merger, acquisition or sale of our business, in which case this policy continues to apply to the information transferred.',
+      ],
+    },
+    {
+      id: 'google-ads-api',
+      heading: 'Google Ads API access',
+      paragraphs: [
+        "Where DocsScale manages advertising on a clinic's behalf, we connect to that clinic's own Google Ads account using the Google Ads API, authorized through Google's sign-in (OAuth). This access lets us view and manage campaigns, ad groups, keywords, and performance data within the clinic's Google Ads account, on their instruction.",
+        'Any data we obtain through this access is used only to provide our advertising management services to that clinic, is stored and protected under the same security practices described in this policy, and is never sold, used for advertising to third parties, or shared beyond what is necessary to deliver our services (see [Service providers we share information with](#service-providers)). We retain this access only for as long as we manage the account, and a clinic can revoke it at any time through their own Google Account permissions (myaccount.google.com/permissions).',
+        'Our use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.',
       ],
     },
     {

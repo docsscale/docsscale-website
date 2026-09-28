@@ -2,6 +2,26 @@
 import type { LegalDoc } from '@/content/legal';
 import { T } from '@/styles/tokens';
 
+const linkStyle = { color: T.teal, fontWeight: 600, textDecoration: 'underline' } as const;
+
+/** Turns [text](url) in a paragraph into a link: external (https://…) or a #section on the page. */
+function withLinks(text: string) {
+  return text.split(/(\[[^\]]+\]\([^)]+\))/).map((part, i) => {
+    const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(part);
+    if (!link) return part;
+    const [, label, href = ''] = link;
+    return href.startsWith('#') ? (
+      <a key={i} href={href} style={linkStyle}>
+        {label}
+      </a>
+    ) : (
+      <a key={i} href={href} target="_blank" rel="noopener noreferrer" style={linkStyle}>
+        {label}
+      </a>
+    );
+  });
+}
+
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
     <>
@@ -54,7 +74,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
               </h2>
               {section.paragraphs.map((text) => (
                 <p key={text} style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: T.body }}>
-                  {text}
+                  {withLinks(text)}
                 </p>
               ))}
             </div>

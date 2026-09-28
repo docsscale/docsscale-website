@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [1.1.2] — 2026-09-29
+
+- **Privacy Policy: new "Google Ads API access" section** (for Google OAuth verification), between "Service providers we share information with" and "How long we keep information". It links to Google's API Services User Data Policy and to the "Service providers" section. "Last updated" is now September 29, 2026. Legal pages can now contain links (`[text](url)` in `web/src/content/legal.ts`). Approved by the owner.
+
 ## [1.1.1] — 2026-09-29
 
 - **Team visits can be excluded from GA4:** opening `docsscale.com/?team=on` once per browser marks that browser's visits as internal (`traffic_type=internal`), for GA4's Internal Traffic filter; `?team=off` undoes it. Nothing visible changes for visitors. Steps in [docs/TRACKING.md](docs/TRACKING.md#excluding-docsscale-team-visits).
