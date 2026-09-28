@@ -6,7 +6,9 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 ## [1.1.0] — unreleased (on staging; deploy pending owner go-ahead)
 
 ### Visible changes (approved)
-- **Free system renamed** to the **Click-to-Chair System**: funnel headline, supporting line, thank-you page, titles, meta and social text, structured data, `llms.txt`. GoHighLevel is named only where buyers need it ("Runs in your GoHighLevel account").
+- **Product name "Click-to-Chair System"** where a name helps: thank-you page, page titles, meta and social text, structured data, image alt text, `llms.txt`. The funnel keeps its original headline; its supporting line now says "set up in your GoHighLevel account".
+- **Illustrations:** the mock search says Houston, the mock chat says "Dr. Hannah" (not a client's name).
+- **About:** Focus shows the 4 specialties we work with (was 8).
 - **Founded 2023:** About page, Organization schema (`foundingDate`), `llms.txt`. v1.0 said 2025.
 - **Homepage hero:** the "A DocsScale client clinic · Austin, TX" caption is removed from the photo placeholder.
 - **Text contrast:** caption grey #8F8C85 → #6C6962, funnel footer text brighter, two faded homepage hints at full strength. Small text now meets WCAG AA.

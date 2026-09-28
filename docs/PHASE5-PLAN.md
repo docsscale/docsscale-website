@@ -6,7 +6,7 @@ Status: **approved in principle (27 Sep 2026); starts after v1.0 is live.** Noth
 
 | Topic | Decision |
 |---|---|
-| Services | Only services we can deliver today, grouped by the four stages (Attract, Capture, Convert, Retain). The final list with one-line descriptions goes to the owner before any service page is built. |
+| Services | **Confirmed:** the seven services below (5B), grouped by Attract, Capture, Convert, Retain. |
 | Industries | Keep the current four; add others only when we win clients in them. |
 | Region | Based in Houston. Website stays US-wide (industry and service pages any US clinic can find). Local layer: Google Business Profile, one Houston page, Texas mentions where natural. **No thin city pages**, only when there are real clients or case studies. |
 | Regional campaigns | Ads, cold email and lead-magnet campaigns. Phase 1: Texas (Houston, DFW, San Antonio, Austin). Phase 2: Florida, Arizona, Georgia, North Carolina. Not California or New York for now. UTM region codes per campaign; compare after 90 days ([TRACKING.md](TRACKING.md#region-codes-regional-campaigns)). |
@@ -129,24 +129,21 @@ Total build time is roughly **5–7 working weeks**, depending on review turnaro
 - **Services** = what we do. **Industries** = who we serve.
 - Today's `/services/dental/` and the other three are industry pages.
 
-**Our services, from the existing site content. Please confirm or edit:**
+**Our services (confirmed 28 Sep 2026): seven, grouped by the four stages.** Only services we deliver today.
 
-| # | Service | Proposed URL | Stage |
-|---|---|---|---|
-| 1 | Paid advertising (Meta and Google Ads) | /services/paid-advertising/ | Attract |
-| 2 | SEO (incl. Google Business Profile) | /services/seo/ | Attract |
-| 3 | Social media management | /services/social-media-management/ | Attract |
-| 4 | Website design | /services/website-design/ | Capture |
-| 5 | Funnel design | /services/funnel-design/ | Capture |
-| 6 | Follow-up & booking | /services/follow-up-and-booking/ | Convert |
-| 7 | Reputation & reviews | /services/reputation-management/ | Retain |
-| 8 | Reactivation & recall | /services/patient-reactivation/ | Retain |
+| # | Stage | Service | One line | URL |
+|---|---|---|---|---|
+| 1 | Attract | Paid ads (Meta & Google) | Campaigns around one service line at a time, reported in booked appointments. | /services/paid-ads/ |
+| 2 | Attract | Local SEO & Google Business Profile | Rank for the treatments you want more of, in the areas you serve. | /services/local-seo/ |
+| 3 | Attract | Social media management | A month of posts planned in your voice, approved in ten minutes. | /services/social-media-management/ |
+| 4 | Capture | Websites & landing pages | Fast, mobile-first pages built to turn a click into a booked request. | /services/websites-and-landing-pages/ |
+| 5 | Convert | Lead follow-up & booking | Every inquiry answered in minutes (missed-call text-back, reminders) and moved onto the schedule. | /services/lead-follow-up-and-booking/ |
+| 6 | Retain | Reviews & reputation | Review requests after every visit, replies handled. | /services/reviews-and-reputation/ |
+| 7 | Retain | Reactivation & recall | Past patients invited back at the right time, in your name, without discounts. | /services/patient-reactivation/ |
 
-**Questions:**
-- Should any be merged, for example website and funnel design into one page? Is anything missing?
-- **Industries:** four have pages (dental, chiropractic, physical therapy, med spa). The site also says you serve dermatology, primary care, optometry and mental health.
-  - Add pages for those four?
-  - I'd only add pages where you have (or will soon have) real clients or examples. A thin page hurts more than no page.
+Website design and funnel design are merged into one service (#4). URLs are proposals and follow the keyword map (5C).
+
+**Industries:** the four with pages today (dental, chiropractic, physical therapy, med spa). Others only when there are real clients there.
 
 ### Full structure
 
