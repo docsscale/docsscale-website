@@ -3,7 +3,7 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [1.1.0] — unreleased (on staging; deploy pending owner go-ahead)
+## [1.1.0] — 2026-09-28
 
 ### Visible changes (approved)
 - **Product name "Click-to-Chair System"** where a name helps: thank-you page, page titles, meta and social text, structured data, image alt text, `llms.txt`. The funnel keeps its original headline; its supporting line now says "set up in your GoHighLevel account".
