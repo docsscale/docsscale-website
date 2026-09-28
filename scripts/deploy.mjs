@@ -108,21 +108,36 @@ const headers = { 'X-Auth': auth, 'X-Auth-Rest': rest, 'Tus-Resumable': '1.0.0' 
 // .htaccess first on staging so the password is in place before content lands.
 files.sort((a, b) => (a === '.htaccess' ? -1 : b === '.htaccess' ? 1 : a.localeCompare(b)));
 let done = 0;
-for (const rel of files) {
+// Each file is retried up to 4 times (network blips happen, e.g. a connect
+// timeout on 28 Sep 2026 stopped a production deploy halfway). Uploads only
+// overwrite, so retrying a file, or re-running the whole deploy, is safe.
+async function upload(rel) {
   const body = fs.readFileSync(path.join(release, rel));
   const dest = `${base}/${rel.split(path.sep).map(encodeURIComponent).join('/')}?override=true`;
   const created = await fetch(dest, {
     method: 'POST',
     headers: { ...headers, 'Upload-Length': String(body.length), 'Upload-Offset': '0' },
   });
-  if (created.status !== 201) fail(`${rel}: create failed (${created.status})`);
+  if (created.status !== 201) throw new Error(`create failed (${created.status})`);
   if (body.length) {
     const patched = await fetch(dest, {
       method: 'PATCH',
       headers: { ...headers, 'Content-Type': 'application/offset+octet-stream', 'Upload-Offset': '0' },
       body,
     });
-    if (patched.status !== 204) fail(`${rel}: upload failed (${patched.status})`);
+    if (patched.status !== 204) throw new Error(`upload failed (${patched.status})`);
+  }
+}
+for (const rel of files) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await upload(rel);
+      break;
+    } catch (error) {
+      if (attempt === 4) fail(`${rel}: ${error.message} (after 4 attempts; re-run the deploy to finish)`);
+      console.log(`  retrying ${rel} (${error.message})`);
+      await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
+    }
   }
   done++;
   if (done % 25 === 0 || done === files.length) console.log(`  uploaded ${done}/${files.length}`);
