@@ -7,7 +7,7 @@ Status: **approved in principle (27 Sep 2026); starts after v1.0 is live.** Noth
 | Topic | Decision |
 |---|---|
 | Services | **Confirmed:** the seven services below (5B), grouped by Attract, Capture, Convert, Retain. |
-| Industries | Keep the current four; add others only when we win clients in them. |
+| Industries | We work with 9 specialties (dental, chiropractic, physical therapy, med spa, weight loss, dermatology, primary care, optometry, mental health), listed consistently site-wide. Dedicated industry pages only where we have real clients and results. |
 | Region | Based in Houston. Website stays US-wide (industry and service pages any US clinic can find). Local layer: Google Business Profile, one Houston page, Texas mentions where natural. **No thin city pages**, only when there are real clients or case studies. |
 | Regional campaigns | Ads, cold email and lead-magnet campaigns. Phase 1: Texas (Houston, DFW, San Antonio, Austin). Phase 2: Florida, Arizona, Georgia, North Carolina. Not California or New York for now. UTM region codes per campaign; compare after 90 days ([TRACKING.md](TRACKING.md#region-codes-regional-campaigns)). |
 | Free system name | "Click-to-Chair System" (shipped in v1.1). GoHighLevel mentioned only in details buyers need. |
