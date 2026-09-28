@@ -3,7 +3,11 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [1.0.0] — 2026-09-27 (release candidate; deploy pending owner go-ahead)
+## [1.0.1] — 2026-09-28
+
+- **www.docsscale.com works and redirects:** the certificate now covers www (reissued through the Hostinger API), and `www` sends a 301 to `https://docsscale.com`, keeping the path and query string.
+
+## [1.0.0] — 2026-09-28 (deployed to docsscale.com)
 
 The site rebuilt from its lost source, hardened and made maintainable, looking the same as before except for the changes listed under "Visible changes", each approved by the owner.
 
