@@ -21,6 +21,7 @@ When the ID is empty, the site renders no analytics code and no banner.
 
 - **Before a choice, nothing is loaded from Google** (verified 28 Sep 2026: zero requests, zero cookies). The page only keeps a local queue; if the visitor accepts, the queued page view is sent with consent.
 - **Withdrawing** ("Cookie settings" → Decline after accepting) stops storage and deletes the `_ga` cookies.
+- **Only the live site sends data.** On staging and local builds the banner works, but GA is never loaded, so test visits don't reach your reports. (Automated tests opt in with `window.dsAnalyticsTest = true`, with every hit intercepted.)
 - **Advertising signals are always denied.** The site uses no advertising cookies; the Privacy Policy says so.
 - **Where the choice is kept:** in `localStorage` (`ds-consent`), in that browser only. A returning visitor's choice is applied before GA starts.
 - **Global Privacy Control:** browsers that send it are treated as "Decline", with no banner.
