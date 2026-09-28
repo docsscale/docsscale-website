@@ -8,7 +8,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 ### Visible changes (approved)
 - **Product name "Click-to-Chair System"** where a name helps: thank-you page, page titles, meta and social text, structured data, image alt text, `llms.txt`. The funnel keeps its original headline; its supporting line now says "set up in your GoHighLevel account".
 - **Illustrations:** the mock search says Houston, the mock chat says "Dr. Hannah" (not a client's name).
-- **Specialties, one consistent list of 9:** dental, chiropractic, physical therapy, med spa, weight loss, dermatology, primary care, optometry, mental health. The About count shows 9 (was 8), and the same list is in the forms (with "Other"; the funnel form gains Weight loss's siblings and "Other"), funnel chips and "who it's for" line, the FAQ, structured data and `llms.txt`.
+- **Specialties, one consistent list of 9:** dental, chiropractic, physical therapy, med spa, weight loss, dermatology, primary care, optometry, mental health. The About count shows 9 (was 8), and the same list is in every form (the main forms add Weight loss; the funnel form adds the four it lacked plus "Other"), the funnel chips and "who it's for" line, the FAQ, structured data and `llms.txt`.
 - **Testimonials and case studies** show the real clients' names, specialties and cities (each row confirmed). Quotes and figures are unchanged.
 - **Founded 2023:** About page, Organization schema (`foundingDate`), `llms.txt`. v1.0 said 2025.
 - **Homepage hero:** the "A DocsScale client clinic · Austin, TX" caption is removed from the photo placeholder.
