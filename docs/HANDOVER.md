@@ -22,7 +22,7 @@ Every account and service the website depends on, where each credential is kept 
 
 1. **Delete the Claude Code session logs** in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/` once the project is finished. They contain the GoHighLevel token from the early audit.
 2. **Check for old copies of `lead-debug-log.txt`.** The original site's debug log is no longer reachable (it returns 404, checked 27 Sep 2026). If a copy remains anywhere in hPanel → File Manager, delete it: it predates the hardening and may contain lead data.
-3. **GA4 admin setup:** create the custom dimensions and mark the key events ([TRACKING.md](TRACKING.md)).
+3. **GA4 admin setup:** mark the key events `generate_lead` and `book_call`, create the custom dimensions, and switch on the Internal Traffic filter after the team has opened `docsscale.com/?team=on` ([TRACKING.md](TRACKING.md)).
 4. **Screenshots and photos:** the funnel images, the three homepage/About placeholders and the team photos, in the sizes listed in [incoming/README.md](../incoming/README.md).
 5. **Ask the logo designer for the original vector file** (for print; [brand/README.md](../brand/README.md)).
 

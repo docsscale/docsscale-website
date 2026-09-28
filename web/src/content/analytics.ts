@@ -3,6 +3,18 @@
 // whole site and the funnel. Empty = no analytics script and no consent banner.
 export const GA_MEASUREMENT_ID = 'G-804589LNJW';
 
+/**
+ * Team visits: opening https://docsscale.com/?team=on once in a browser marks
+ * all its later visits as internal (GA4 parameter traffic_type=internal), so
+ * GA4's "Internal Traffic" data filter can exclude them. ?team=off undoes it.
+ * Remembered in this browser only; see docs/TRACKING.md.
+ */
+export const TEAM_STORAGE_KEY = 'ds-team';
+export const TEAM_MESSAGES = {
+  on: 'This browser is now marked as DocsScale team traffic. Your visits will be excluded from Google Analytics reports. Open docsscale.com/?team=off to undo.',
+  off: 'This browser is no longer marked as DocsScale team traffic.',
+} as const;
+
 /** Where the visitor's consent choice is remembered (this browser only). */
 export const CONSENT_STORAGE_KEY = 'ds-consent';
 

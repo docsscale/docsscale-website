@@ -28,6 +28,23 @@ When the ID is empty, the site renders no analytics code and no banner.
 - **Changing your mind:** "Cookie settings" in the footer reopens the banner.
 - **Code:** `web/src/features/analytics/`. Banner text: `web/src/content/analytics.ts`.
 
+## Excluding DocsScale team visits
+
+**For each team member, once per browser** (desktop and phone, every browser they use):
+1. Open **https://docsscale.com/?team=on**.
+2. A message confirms: "This browser is now marked as DocsScale team traffic…". The `?team=on` disappears from the address bar.
+3. From then on, that browser's visits are sent with `traffic_type=internal`, which GA4 excludes once the filter below is active.
+
+To undo it, open **https://docsscale.com/?team=off**. The mark lives in that browser's storage, so it doesn't survive private windows or clearing site data; reopen the link if that happens. Nothing is sent to Google before "Accept" either way.
+
+**One-time GA4 setup (owner):**
+1. analytics.google.com → **Admin** (gear, bottom left) → **Data collection and modification** → **Data filters**.
+2. If a filter called **Internal Traffic** is listed, click it. If not, click **Create filter** → **Internal traffic**, name it `Internal Traffic`.
+3. Check it reads: Filter operation **Exclude**, parameter value **internal** (`traffic_type` equals `internal`). You don't need an IP rule under "Define internal traffic"; the site sets the parameter itself.
+4. Leave **Filter state: Testing** for a day after the team has marked their browsers. In Testing, GA4 only labels the data; nothing is excluded yet.
+5. Then set **Filter state: Active** and **Save**. From then on, team visits are left out of all reports.
+   - Active filters are permanent for new data: excluded visits can't be recovered later.
+
 ## Events
 
 | Event | When | Parameters |

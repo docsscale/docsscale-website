@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [1.1.1] — unreleased (on staging; deploy pending owner go-ahead)
+
+- **Team visits can be excluded from GA4:** opening `docsscale.com/?team=on` once per browser marks that browser's visits as internal (`traffic_type=internal`), for GA4's Internal Traffic filter; `?team=off` undoes it. Nothing visible changes for visitors. Steps in [docs/TRACKING.md](docs/TRACKING.md#excluding-docsscale-team-visits).
+
 ## [1.1.0] — 2026-09-28
 
 ### Visible changes (approved)
