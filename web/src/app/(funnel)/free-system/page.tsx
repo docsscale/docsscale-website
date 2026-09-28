@@ -16,15 +16,15 @@ import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 
 export const metadata = pageMetadata({
-  title: 'Free GoHighLevel Patient-Getting System for Healthcare Clinics — DocsScale',
+  title: 'Free Click-to-Chair System for Healthcare Clinics — DocsScale',
   description:
-    'Get a free, ready-to-use patient-getting system for your clinic: 6 funnels, 17 automations and a full patient CRM, built in GoHighLevel. Yours to keep.',
+    'Get the free Click-to-Chair System: 6 funnels, 17 automations and a full patient CRM that take a patient from first click to booked visit. Yours to keep.',
   path: '/free-system/',
   robots: 'none',
   social: {
     ogDescription:
       '6 pre-built funnels, 17 automations, and a full patient CRM — free to download and keep. Built for clinics that want more patients without more manual work.',
-    twitterTitle: 'Free GoHighLevel Patient-Getting System — DocsScale',
+    twitterTitle: 'Free Click-to-Chair System — DocsScale',
     twitterDescription:
       '6 funnels, 17 automations, full patient CRM — free for healthcare clinics. No credit card, no strings.',
   },

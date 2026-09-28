@@ -10,16 +10,16 @@ import { pageMetadata } from '@/features/seo/metadata';
 export const metadata = pageMetadata({
   title: 'Check Your Email — Your System Is on Its Way | DocsScale',
   description:
-    'Your patient-getting system is on its way: 6 funnels, 17 automations and a full patient CRM. Check your inbox, or book a free call to have it installed.',
+    'Your Click-to-Chair System is on its way: 6 funnels, 17 automations and a full patient CRM. Check your inbox, or book a free call to have it installed.',
   path: '/free-system/thank-you/',
   robots: 'noindex-nofollow',
   social: {
     ogTitle: "You're in — Check Your Email | DocsScale",
     ogDescription:
-      'Your free GoHighLevel patient-getting system is on its way. 6 funnels, 17 automations, full CRM — all yours. Want it installed? Book a free call.',
+      'Your free Click-to-Chair System is on its way. 6 funnels, 17 automations, full CRM — all yours. Want it installed? Book a free call.',
     twitterCard: 'summary',
     twitterTitle: "You're in — DocsScale",
-    twitterDescription: 'Your free GoHighLevel patient-getting system is on its way. Check your inbox.',
+    twitterDescription: 'Your free Click-to-Chair System is on its way. Check your inbox.',
   },
 });
 

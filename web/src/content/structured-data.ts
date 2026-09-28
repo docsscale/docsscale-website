@@ -533,18 +533,18 @@ export const STRUCTURED_DATA = {
           '@type': 'WebPage',
           '@id': 'https://docsscale.com/free-system/#webpage',
           url: 'https://docsscale.com/free-system/',
-          name: 'Free GoHighLevel Patient-Getting System for Healthcare Clinics',
+          name: 'Free Click-to-Chair System for Healthcare Clinics',
           description:
-            'Download a complete GoHighLevel patient acquisition system at no cost. 6 pre-built conversion funnels, 17 done-for-you automations, and a full patient CRM for chiropractic, dental, med spa, and physical therapy clinics.',
+            'Get the complete Click-to-Chair System at no cost, built in GoHighLevel. 6 pre-built conversion funnels, 17 done-for-you automations, and a full patient CRM for chiropractic, dental, med spa, and physical therapy clinics.',
           publisher: {
             '@id': 'https://docsscale.com/#organization',
           },
         },
         {
           '@type': 'Service',
-          name: 'Free GoHighLevel Patient-Getting System',
+          name: 'Click-to-Chair System',
           description:
-            'A complete patient acquisition system built inside GoHighLevel, provided free to healthcare clinic owners. Includes 6 pre-built sales funnels covering new patient lead generation, service promotions, booking, applications, patient reactivation, and review collection. Also includes 17 automated workflows and a complete patient CRM.',
+            'The Click-to-Chair System: a complete patient acquisition system built inside GoHighLevel, provided free to healthcare clinic owners. Includes 6 pre-built sales funnels covering new patient lead generation, service promotions, booking, applications, patient reactivation, and review collection. Also includes 17 automated workflows and a complete patient CRM.',
           provider: {
             '@id': 'https://docsscale.com/#organization',
           },
@@ -561,7 +561,7 @@ export const STRUCTURED_DATA = {
             priceCurrency: 'USD',
             availability: 'https://schema.org/InStock',
             description:
-              'Complete GoHighLevel patient-getting system, free to download and keep. No trial, no credit card, no obligation.',
+              'The complete Click-to-Chair System, free to download and keep. No trial, no credit card, no obligation.',
           },
         },
         {
@@ -569,7 +569,7 @@ export const STRUCTURED_DATA = {
           mainEntity: [
             {
               '@type': 'Question',
-              name: 'Is the GoHighLevel patient-getting system actually free?',
+              name: 'Is the Click-to-Chair System actually free?',
               acceptedAnswer: {
                 '@type': 'Answer',
                 text: "Yes. The complete system — 6 conversion funnels, 17 automations, and a full patient CRM — is free to download and keep. No trial period, no credit card, no obligation to use DocsScale's paid services.",
@@ -593,7 +593,7 @@ export const STRUCTURED_DATA = {
             },
             {
               '@type': 'Question',
-              name: 'What is included in the free patient-getting system?',
+              name: 'What is included in the free Click-to-Chair System?',
               acceptedAnswer: {
                 '@type': 'Answer',
                 text: 'The system includes 6 pre-built sales funnels (new patient lead, service promotion, booking and appointment, application, reactivation, and review and reputation), 17 automations covering the full patient journey from first inquiry to long-term retention, and a complete patient CRM built in GoHighLevel.',
@@ -611,8 +611,8 @@ export const STRUCTURED_DATA = {
         },
         {
           '@type': 'HowTo',
-          name: 'How to claim the free GoHighLevel patient-getting system',
-          description: 'Three steps to receive the complete free patient acquisition system from DocsScale.',
+          name: 'How to claim the free Click-to-Chair System',
+          description: 'Three steps to receive the free Click-to-Chair System from DocsScale.',
           estimatedCost: {
             '@type': 'MonetaryAmount',
             currency: 'USD',
@@ -630,7 +630,7 @@ export const STRUCTURED_DATA = {
               '@type': 'HowToStep',
               position: '2',
               name: 'Check your inbox',
-              text: 'The full GoHighLevel system — 6 funnels, 17 automations, and the complete patient CRM — is delivered directly to your email.',
+              text: 'The full Click-to-Chair System — 6 funnels, 17 automations, and the complete patient CRM — is delivered directly to your email.',
             },
             {
               '@type': 'HowToStep',

@@ -98,8 +98,8 @@ export function ThankYouHero() {
             textWrap: 'pretty',
           }}
         >
-          We have sent the full GoHighLevel system to your inbox. 6 funnels, 17 automations, full CRM setup —
-          all yours.
+          We have sent the full Click-to-Chair System to your inbox. 6 funnels, 17 automations, full CRM setup
+          — all yours.
         </p>
         <div
           style={{
@@ -113,7 +113,7 @@ export function ThankYouHero() {
             src="/free-system/images/hero-mockup.jpg"
             sizes={HERO_SIZES}
             priority
-            alt="GoHighLevel funnels, CRM dashboard, and automations mockup"
+            alt="Click-to-Chair System: funnels, patient CRM dashboard and automations"
             style={{
               width: '100%',
               aspectRatio: '16/10',

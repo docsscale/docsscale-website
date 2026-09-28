@@ -59,7 +59,7 @@ export function FunnelHero() {
             textWrap: 'balance',
           }}
         >
-          The complete patient-getting system,
+          The Click-to-Chair System,
           <br />
           <em
             className="serif-em"
@@ -81,7 +81,7 @@ export function FunnelHero() {
             src="/free-system/images/hero-mockup.jpg"
             sizes={HERO_SIZES}
             priority
-            alt="GoHighLevel funnels, CRM dashboard, and automations mockup"
+            alt="Click-to-Chair System: funnels, patient CRM dashboard and automations"
             style={{
               width: '100%',
               aspectRatio: '16/10',
@@ -101,9 +101,8 @@ export function FunnelHero() {
             textWrap: 'pretty',
           }}
         >
-          6 pre-built sales funnels. A full patient CRM. 17 done-for-you automations that run the entire
-          patient journey hands-free — packaged in GoHighLevel, set up for your clinic, and handed to you
-          today at no cost.
+          6 funnels, 17 automations and a full patient CRM that take a patient from first click to booked
+          visit. Runs in your GoHighLevel account.
         </p>
         <div
           style={{

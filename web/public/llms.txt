@@ -26,6 +26,7 @@ DocsScale works only with healthcare clinics: dental, chiropractic, physical the
 - Results: https://docsscale.com/results
 - About: https://docsscale.com/about
 - Book a call: https://docsscale.com/book-a-call
+- Click-to-Chair System (free for clinics: 6 funnels, 17 automations and a patient CRM; runs in GoHighLevel): https://docsscale.com/free-system/
 
 ## Contact
 - Email: info@docsscale.com
