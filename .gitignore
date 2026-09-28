@@ -13,3 +13,7 @@ tests/visual/interactions/
 release/
 tests/visual/ci-baseline/
 review/
+
+# Image drop folder (originals, may contain unreviewed screenshots); see incoming/README.md
+incoming/*
+!incoming/README.md
