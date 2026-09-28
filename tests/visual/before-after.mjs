@@ -13,6 +13,8 @@ const OUT = process.argv[2] ?? 'review/before-after';
 const argv = process.argv.slice(3);
 const onlyArg = argv.includes('--only') ? new Set(argv[argv.indexOf('--only') + 1].split(',')) : null;
 const WIDTH = argv.includes('--width') ? Number(argv[argv.indexOf('--width') + 1]) : 1440;
+// --before <dir>: the build to compare against (default: the original live snapshot).
+const BEFORE = argv.includes('--before') ? argv[argv.indexOf('--before') + 1] : 'reference/live-2026-09-25';
 const ITEMS = [
   { name: '01-footer-contact', path: '/', selector: '[data-screen-label="Footer"]', title: 'Footer (every page): contact block' },
   { name: '02-home-faq-email', path: '/', selector: '[data-screen-label="FAQ"]', title: 'Homepage FAQ: email address', clipHeight: 420 },
@@ -26,6 +28,9 @@ const ITEMS = [
   { name: '11-logo-footer', clipWidth: 710, path: '/', selector: '[data-screen-label="Footer"]', title: 'Footer logo (every main-site page)', clipHeight: 300 },
   { name: '12-logo-funnel-header', clipWidth: 710, path: '/free-system/', selector: 'div[style*="position:sticky"]', title: 'Funnel header logo', keepNav: true },
   { name: '13-logo-funnel-footer', clipWidth: 710, path: '/free-system/', selector: 'div:has(> div > span:text-is("© 2026 DocsScale"))', title: 'Funnel footer logo' },
+  { name: '14-funnel-hero', path: '/free-system/', selector: 'main > *:first-child', title: 'Funnel: Click-to-Chair System headline and supporting line', clipHeight: 1400 },
+  { name: '15-thank-you-hero', path: '/free-system/thank-you/', selector: 'main > *:first-child', title: 'Thank-you page: system name', clipHeight: 700 },
+  { name: '16-home-hero', path: '/', selector: '[data-screen-label="Hero"]', title: 'Homepage hero: "Austin, TX" caption removed from the photo box' },
   { name: '09-terms', path: '/terms/', selector: '[data-screen-label="Content"]', title: 'Terms of Service: final text' },
 ];
 
@@ -37,8 +42,15 @@ async function capture(root, item) {
   const page = await browser.newPage({ viewport: { width: WIDTH, height: 900 }, reducedMotion: 'reduce' });
   await isolate(page);
   await page.goto(`http://127.0.0.1:${server.address().port}${item.path}`, { waitUntil: 'load' });
+  // Scroll the whole page once so scroll-triggered content (counters, reveals)
+  // runs to its final state before the capture.
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  for (let y = 0; y < height; y += 400) await page.evaluate((top) => window.scrollTo(0, top), y), await page.waitForTimeout(60);
   const el = page.locator(item.selector).first();
   await el.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1500); // counters take 1 s
+  // Back to the top: sticky headers would otherwise sit over the captured area.
+  if (!item.keepNav) await page.evaluate(() => window.scrollTo(0, 0)), await page.waitForTimeout(200);
   await settle(page);
   // The sticky nav would cover the top of sections; hide it for these crops.
   if (!item.keepNav) await page.addStyleTag({ content: '[data-screen-label="Nav"]{display:none!important}' });
@@ -54,13 +66,13 @@ async function capture(root, item) {
 
 for (const item of ITEMS) {
   if (onlyArg && !onlyArg.has(item.name)) continue;
-  const before = await capture('reference/live-2026-09-25', item);
+  const before = await capture(BEFORE, item);
   const after = await capture('web/out', item);
   const page = await browser.newPage({ viewport: { width: 1480, height: 100 } });
   await page.setContent(`<!doctype html><html><body style="margin:0;padding:20px;background:#fff;font:600 18px system-ui">
     <div style="margin-bottom:12px">${item.title}</div>
     <div style="display:flex;gap:20px;align-items:flex-start">
-      <figure style="margin:0;width:${Math.min(710, WIDTH)}px"><figcaption style="color:#B4432F;margin-bottom:6px">BEFORE (live)</figcaption>
+      <figure style="margin:0;width:${Math.min(710, WIDTH)}px"><figcaption style="color:#B4432F;margin-bottom:6px">BEFORE (${BEFORE.includes('approved') ? 'v1.0' : 'live'})</figcaption>
         <img style="width:${Math.min(710, WIDTH)}px;border:1px solid #ddd" src="data:image/png;base64,${before}"></figure>
       <figure style="margin:0;width:${Math.min(710, WIDTH)}px"><figcaption style="color:#1F5A40;margin-bottom:6px">AFTER (staging)</figcaption>
         <img style="width:${Math.min(710, WIDTH)}px;border:1px solid #ddd" src="data:image/png;base64,${after}"></figure>

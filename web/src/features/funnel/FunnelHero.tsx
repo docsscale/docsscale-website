@@ -59,7 +59,7 @@ export function FunnelHero() {
             textWrap: 'balance',
           }}
         >
-          The Click-to-Chair System,
+          The <span style={{ whiteSpace: 'nowrap' }}>Click-to-Chair</span> System,
           <br />
           <em
             className="serif-em"
