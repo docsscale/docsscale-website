@@ -76,11 +76,11 @@ export function FunnelProof() {
                     color: T.sageFg,
                   }}
                 >
-                  MR
+                  CM
                 </span>
                 <div>
-                  <div className="rname">Dr. Marcus Reid</div>
-                  <div className="rsub">Chiropractic · Austin, TX</div>
+                  <div className="rname">Dr. Carlos Mendez</div>
+                  <div className="rsub">Chiropractic · San Antonio, TX</div>
                 </div>
               </div>
             </div>
@@ -123,10 +123,10 @@ export function FunnelProof() {
                     color: T.bg,
                   }}
                 >
-                  SL
+                  RT
                 </span>
                 <div>
-                  <div className="rname">Dr. Sofia Lawson</div>
+                  <div className="rname">Dr. Rachel Thompson</div>
                   <div className="rsub">Med Spa · Miami, FL</div>
                 </div>
               </div>
@@ -153,11 +153,11 @@ export function FunnelProof() {
                     color: T.peachFg,
                   }}
                 >
-                  JP
+                  JN
                 </span>
                 <div>
-                  <div className="rname">Dr. James Patel</div>
-                  <div className="rsub">Dental · Chicago, IL</div>
+                  <div className="rname">Dr. James Nguyen</div>
+                  <div className="rsub">Dental · San Jose, CA</div>
                 </div>
               </div>
             </div>
@@ -183,11 +183,11 @@ export function FunnelProof() {
                     color: '#FFFFFF',
                   }}
                 >
-                  AK
+                  DB
                 </span>
                 <div>
-                  <div className="rname">Dr. Aisha Kamara</div>
-                  <div className="rsub">Physical Therapy · Atlanta, GA</div>
+                  <div className="rname">Dr. Daniel Brooks</div>
+                  <div className="rsub">Physical Therapy · Nashville, TN</div>
                 </div>
               </div>
             </div>
@@ -230,11 +230,11 @@ export function FunnelProof() {
                     color: T.lavenderFg,
                   }}
                 >
-                  TN
+                  BK
                 </span>
                 <div>
-                  <div className="rname">Dr. Tanya Nguyen</div>
-                  <div className="rsub">Dermatology · Seattle, WA</div>
+                  <div className="rname">Dr. Brian Kim</div>
+                  <div className="rsub">Dental · Seattle, WA</div>
                 </div>
               </div>
             </div>
@@ -260,11 +260,11 @@ export function FunnelProof() {
                     color: '#FFFFFF',
                   }}
                 >
-                  CB
+                  MJ
                 </span>
                 <div>
-                  <div className="rname">Dr. Chris Baxter</div>
-                  <div className="rsub">Weight Loss · Denver, CO</div>
+                  <div className="rname">Dr. Melissa Johnson</div>
+                  <div className="rsub">Med Spa · Atlanta, GA</div>
                 </div>
               </div>
             </div>
@@ -290,11 +290,11 @@ export function FunnelProof() {
                     color: '#FFFFFF',
                   }}
                 >
-                  LH
+                  PS
                 </span>
                 <div>
-                  <div className="rname">Dr. Laura Hernandez</div>
-                  <div className="rsub">Primary Care · Phoenix, AZ</div>
+                  <div className="rname">Dr. Priya Shah</div>
+                  <div className="rsub">Chiropractic · Phoenix, AZ</div>
                 </div>
               </div>
             </div>
@@ -320,11 +320,11 @@ export function FunnelProof() {
                     color: T.teal,
                   }}
                 >
-                  RM
+                  JM
                 </span>
                 <div>
-                  <div className="rname">Dr. Rachel Moore</div>
-                  <div className="rsub">Dental · Nashville, TN</div>
+                  <div className="rname">Dr. Jessica Morgan</div>
+                  <div className="rsub">Dental · Charlotte, NC</div>
                 </div>
               </div>
             </div>
@@ -367,11 +367,11 @@ export function FunnelProof() {
                     color: '#FFFFFF',
                   }}
                 >
-                  DO
+                  MR
                 </span>
                 <div>
-                  <div className="rname">Dr. David Osei</div>
-                  <div className="rsub">Chiropractic · Houston, TX</div>
+                  <div className="rname">Dr. Marcus Reynolds</div>
+                  <div className="rsub">Dental · Houston, TX</div>
                 </div>
               </div>
             </div>

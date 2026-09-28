@@ -127,7 +127,7 @@ export function Results() {
                   alignItems: 'center',
                 }}
               >
-                Featured · Dental · Austin, TX
+                Featured · Dental · Dallas, TX
               </span>
               <span
                 style={{
@@ -210,7 +210,7 @@ export function Results() {
                         fontWeight: 700,
                       }}
                     >
-                      Dr. Anita Patel
+                      Dr. Kevin Patel
                     </span>
                     <span
                       style={{
@@ -218,7 +218,7 @@ export function Results() {
                         color: T.caption,
                       }}
                     >
-                      Owner, dental practice · Austin, TX
+                      Owner, dental practice · Dallas, TX
                     </span>
                   </div>
                 </div>

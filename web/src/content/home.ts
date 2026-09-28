@@ -243,7 +243,7 @@ export const PROCESS_STEPS = [
 export const RESULT_STATS = [
   {
     stage: 'convert',
-    tag: 'Med spa · Scottsdale',
+    tag: 'Med spa · Las Vegas',
     n: '62',
     body: 'booked consults from one injectables campaign · Q1 2026',
   },

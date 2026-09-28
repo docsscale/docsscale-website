@@ -50,7 +50,7 @@ export function ResultsCases() {
                 letterSpacing: '.08em',
               }}
             >
-              <span>Dental · Austin, TX</span>
+              <span>Dental · Dallas, TX</span>
               <span>Jan–Jun 2026</span>
             </div>
             <div>
@@ -268,7 +268,7 @@ export function ResultsCases() {
                       fontWeight: 700,
                     }}
                   >
-                    Dr. Anita Patel
+                    Dr. Kevin Patel
                   </span>
                   <span
                     style={{
@@ -276,7 +276,7 @@ export function ResultsCases() {
                       color: T.caption,
                     }}
                   >
-                    Owner, dental practice · Austin, TX
+                    Owner, dental practice · Dallas, TX
                   </span>
                 </div>
               </div>
@@ -463,7 +463,7 @@ export function ResultsCases() {
                       fontWeight: 700,
                     }}
                   >
-                    Lauren Ortiz, RN
+                    Dr. Nicole Ramirez
                   </span>
                   <span
                     style={{
@@ -471,7 +471,7 @@ export function ResultsCases() {
                       color: T.caption,
                     }}
                   >
-                    Owner, med spa · Scottsdale, AZ
+                    Owner, med spa · Las Vegas, NV
                   </span>
                 </div>
               </div>
@@ -514,7 +514,7 @@ export function ResultsCases() {
                 letterSpacing: '.08em',
               }}
             >
-              <span>Med spa · Scottsdale, AZ</span>
+              <span>Med spa · Las Vegas, NV</span>
               <span>Q1 2026</span>
             </div>
             <div>
@@ -821,7 +821,7 @@ export function ResultsCases() {
                       fontWeight: 700,
                     }}
                   >
-                    Marcus Lee, DPT
+                    Dr. Emily Foster
                   </span>
                   <span
                     style={{
@@ -1016,7 +1016,7 @@ export function ResultsCases() {
                       fontWeight: 700,
                     }}
                   >
-                    Dr. Sam Whitfield, DC
+                    Dr. Stephanie Carter
                   </span>
                   <span
                     style={{
