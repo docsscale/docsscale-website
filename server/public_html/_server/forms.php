@@ -5,6 +5,10 @@
 //   fields    — accepted JSON keys => max length (longer input is rejected)
 //   required  — keys that must be non-empty
 //   source    — GHL "source" value, pinned server-side
+//   tag       — GHL tag added to the contact after every successful upsert
+//               (via the Add Tags API, so existing tags are kept). GHL workflows
+//               trigger on it, because API-created contacts never count as a
+//               GHL "form submission".
 //   build     — maps the cleaned values to the GHL /contacts/upsert body
 //
 // The two builders reproduce the payloads the original per-folder
@@ -27,6 +31,7 @@ return [
         ],
         'required' => ['clinicName', 'email', 'specialty'],
         'source' => 'Website form',
+        'tag' => 'website-lead',
         'build' => static function (array $v, string $locationId, string $source): array {
             $body = [
                 'locationId' => $locationId,
@@ -75,6 +80,7 @@ return [
         ],
         'required' => ['name', 'email'],
         'source' => 'Funnel - Free System',
+        'tag' => 'free-system-lead',
         'build' => static function (array $v, string $locationId, string $source): array {
             [$first, $last] = lead_split_name($v['name']);
             $body = [

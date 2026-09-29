@@ -18,16 +18,30 @@ cat > "$PRIV/config.php" <<'PHP'
 ];
 PHP
 
-# Fake GHL: records each request body; replies 201, or 400 when email starts with "fail".
+# Fake GHL:
+#  POST /contacts/upsert  records the body in last.json; 400 when the email starts
+#    with "fail"; otherwise 201 with a contact id (none when the email starts with
+#    "noid"; id TAGFAIL when it starts with "tagfail").
+#  POST /contacts/{id}/tags  records path + body in tag.txt/tag.json; 422 for TAGFAIL.
 mkdir -p "$TMP/ghl"
 cat > "$TMP/ghl/index.php" <<'PHP'
 <?php
 $body = file_get_contents('php://input');
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+if (preg_match('#^/contacts/([^/]+)/tags$#', $path, $m)) {
+  file_put_contents(__DIR__ . '/tag.json', $body);
+  file_put_contents(__DIR__ . '/tag.txt', $path . ' ' . ($_SERVER['HTTP_AUTHORIZATION'] ?? ''));
+  if ($m[1] === 'TAGFAIL') { http_response_code(422); echo '{"message":"tag detail"}'; exit; }
+  http_response_code(201); echo '{"tags":' . json_encode(json_decode($body, true)['tags']) . '}'; exit;
+}
 file_put_contents(__DIR__ . '/last.json', $body);
 file_put_contents(__DIR__ . '/auth.txt', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $email = json_decode($body, true)['email'] ?? '';
 if (str_starts_with($email, 'fail')) { http_response_code(400); echo '{"message":"internal GHL detail"}'; exit; }
-http_response_code(201); echo '{"new":true}';
+http_response_code(201);
+if (str_starts_with($email, 'noid')) { echo '{"new":true}'; exit; }
+$id = str_starts_with($email, 'tagfail') ? 'TAGFAIL' : 'C-' . substr(md5($email), 0, 6);
+echo json_encode(['contact' => ['id' => $id], 'new' => true]);
 PHP
 
 LEAD_PRIVATE_DIR="$PRIV" php -S 127.0.0.1:8781 -t "$ROOT/server/public_html" >/dev/null 2>&1 & SITE_PID=$!
@@ -46,6 +60,10 @@ expect() { # name got want
 }
 body() { cat "$TMP/resp"; }
 ghl() { python3 -c "import json,sys;print(json.dumps(json.load(open('$TMP/ghl/last.json')),sort_keys=True,ensure_ascii=False))"; }
+tag() { python3 -c "import json;print(json.dumps(json.load(open('$TMP/ghl/tag.json'))))"; }
+tagpath() { cut -d' ' -f1 "$TMP/ghl/tag.txt"; }
+cid() { python3 -c "import hashlib;print('C-'+hashlib.md5(b'$1').hexdigest()[:6])"; }
+backup() { python3 -c "import json,glob;r=[json.loads(l) for f in glob.glob('$PRIV/leads/*.jsonl') for l in open(f) if '\"$1\"' in l][-1];print(r['$2'])"; }
 
 # --- method / origin / input validation
 expect "GET 405" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8781/send-lead.php)" 405
@@ -64,6 +82,12 @@ expect "main ok" "$(post send-lead.php '{"name":"Jane Q Doe","clinicName":"Brigh
 expect "main ok body" "$(body)" '{"ok":true}'
 expect "main payload" "$(ghl)" '{"companyName": "Bright Dental", "customFields": [{"field_value": "Recall", "key": "biggest_gap"}, {"field_value": "3–5", "key": "locations"}, {"field_value": "Dental", "key": "specialty"}], "email": "jane@bright.co", "firstName": "Jane", "lastName": "Q Doe", "locationId": "LOC123", "name": "Jane Q Doe", "phone": "+1 713 555 0100", "source": "Website form"}'
 expect "auth header" "$(cat "$TMP/ghl/auth.txt")" "Bearer pit-test"
+# tag added through the Add Tags API (never in the upsert body, which would replace all tags)
+expect "main tag body" "$(tag)" '{"tags": ["website-lead"]}'
+expect "main tag contact" "$(tagpath)" "/contacts/$(cid jane@bright.co)/tags"
+expect "tag call authorised" "$(cut -d' ' -f2- "$TMP/ghl/tag.txt")" "Bearer pit-test"
+expect "upsert has no tags" "$(ghl | grep -c '"tags"')" 0
+expect "backup records tag" "$(backup jane@bright.co ghl_tagged)" True
 
 expect "main no name" "$(post send-lead.php '{"clinicName":"C","email":"c@c.co","specialty":"Med spa"}')" 200
 expect "main no-name payload" "$(ghl)" '{"companyName": "C", "customFields": [{"field_value": "Med spa", "key": "specialty"}], "email": "c@c.co", "locationId": "LOC123", "source": "Website form"}'
@@ -71,6 +95,8 @@ expect "main no-name payload" "$(ghl)" '{"companyName": "C", "customFields": [{"
 # --- funnel form: exact payload, source pinned server-side
 expect "funnel ok" "$(post free-system/send-lead.php '{"name":"Sam","email":"sam@x.co","phone":"","clinicName":"","clinicType":"Chiropractic","source":"hacked"}')" 200
 expect "funnel payload" "$(ghl)" '{"customFields": [{"field_value": "Chiropractic", "key": "clinic_type"}], "email": "sam@x.co", "firstName": "Sam", "lastName": "", "locationId": "LOC123", "name": "Sam", "source": "Funnel - Free System"}'
+expect "funnel tag body" "$(tag)" '{"tags": ["free-system-lead"]}'
+expect "funnel tag contact" "$(tagpath)" "/contacts/$(cid sam@x.co)/tags"
 expect "funnel requires name" "$(post free-system/send-lead.php '{"email":"sam@x.co"}')" 400
 
 # --- GHL failure: generic message, no upstream detail, lead still backed up
@@ -78,12 +104,23 @@ expect "ghl fail" "$(post free-system/send-lead.php '{"name":"F","email":"fail@x
 expect "ghl fail body" "$(body)" '{"ok":false,"error":"Something went wrong. Please try again, or email info@docsscale.com."}'
 expect "failed lead backed up" "$(grep -c '"fail@x.co"' "$PRIV"/leads/*.jsonl)" 1
 expect "ghl detail logged" "$(grep -c 'internal GHL detail' "$PRIV/logs/errors.log")" 1
+expect "failed upsert: no tag attempted" "$(backup fail@x.co ghl_tagged)" None
 expect "backup count (4 real leads)" "$(cat "$PRIV"/leads/*.jsonl | wc -l | tr -d ' ')" 4
 expect "backup perms" "$(php -r 'printf("%o", fileperms($argv[1]) & 0777);' "$PRIV"/leads/*.jsonl)" 600
 
 # --- rate limit: 5 sends per IP per 10 min (4 used above)
 expect "5th send ok" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental"}')" 200
 expect "6th send limited" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental"}')" 429
+
+# --- tagging problems never fail the visitor's submission (the contact is saved)
+rm -rf "$PRIV/ratelimit"
+expect "tag fails: still ok" "$(post send-lead.php '{"clinicName":"C","email":"tagfail@x.co","specialty":"Dental"}')" 200
+expect "tag fails: body ok" "$(body)" '{"ok":true}'
+expect "tag fails: logged" "$(grep -c "add tag 'website-lead' to TAGFAIL: HTTP 422 tag detail" "$PRIV/logs/errors.log")" 1
+expect "tag fails: backup says untagged" "$(backup tagfail@x.co ghl_tagged)" False
+expect "no contact id: still ok" "$(post free-system/send-lead.php '{"name":"N","email":"noid@x.co"}')" 200
+expect "no contact id: logged" "$(grep -c "returned no contact id; tag 'free-system-lead' not added" "$PRIV/logs/errors.log")" 1
+expect "no contact id: backup says untagged" "$(backup noid@x.co ghl_tagged)" False
 
 # --- missing config: lead still validated and backed up, GHL skipped
 rm -rf "$PRIV/ratelimit"; mv "$PRIV/config.php" "$PRIV/config.off"

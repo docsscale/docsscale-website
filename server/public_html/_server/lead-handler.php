@@ -4,7 +4,8 @@
 // Request flow:
 //   method check → config → same-origin check → size/JSON check → honeypot
 //   → required/length/email validation → rate limit → GHL upsert
-//   → lead backup (always) → JSON response
+//   → GHL add tag (the form's tag; existing tags kept) → lead backup (always)
+//   → JSON response
 //
 // Secrets and data live OUTSIDE public_html, next to it:
 //   ../private/config.php      GHL token + settings (created by hand, see docs)
@@ -122,7 +123,16 @@ function handle_lead_request(string $formKey): never
     }
     $ok = $response !== false && $httpCode >= 200 && $httpCode < 300;
 
-    lead_store($formKey, $ipHash, $values, $ok, $httpCode);
+    // Tag the contact so GHL workflows can start. Upsert's own `tags` field would
+    // replace all existing tags, so the separate Add Tags call is used. A tagging
+    // failure doesn't fail the visitor's submission (the contact is saved); it is
+    // logged and recorded in the backup so the tag can be added by hand.
+    $tagged = null;
+    if ($ok && !empty($form['tag'])) {
+        $tagged = lead_add_tag((string) $response, $form['tag'], $config, $formKey);
+    }
+
+    lead_store($formKey, $ipHash, $values, $ok, $httpCode, $tagged);
 
     if ($ok) {
         lead_respond(200, ['ok' => true]);
@@ -245,9 +255,9 @@ function lead_rate_bucket_hit(string $file, int $max, int $now): bool
 }
 
 /** @return array{0:int,1:string|false,2:string} */
-function lead_send_to_ghl(array $body, array $config): array
+function lead_send_to_ghl(array $body, array $config, ?string $url = null): array
 {
-    $ch = curl_init($config['ghl_api_url'] ?? LEAD_GHL_API_URL);
+    $ch = curl_init($url ?? $config['ghl_api_url'] ?? LEAD_GHL_API_URL);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
@@ -267,6 +277,32 @@ function lead_send_to_ghl(array $body, array $config): array
     return [$httpCode, $response, $curlError];
 }
 
+/** Adds $tag to the contact the upsert returned; true when GHL confirms it. */
+function lead_add_tag(string $upsertResponse, string $tag, array $config, string $formKey): bool
+{
+    $decoded = json_decode($upsertResponse, true);
+    $contactId = is_array($decoded) ? (string) ($decoded['contact']['id'] ?? '') : '';
+    if ($contactId === '') {
+        lead_log('errors', "$formKey: GHL upsert returned no contact id; tag '$tag' not added");
+        return false;
+    }
+    $upsertUrl = $config['ghl_api_url'] ?? LEAD_GHL_API_URL;
+    $url = preg_replace('#/contacts/upsert$#', '/contacts/' . rawurlencode($contactId) . '/tags', $upsertUrl);
+    [$httpCode, $response, $curlError] = lead_send_to_ghl(['tags' => [$tag]], $config, $url);
+    if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
+        return true;
+    }
+    lead_log('errors', sprintf(
+        "%s: GHL add tag '%s' to %s: HTTP %d %s",
+        $formKey,
+        $tag,
+        $contactId,
+        $httpCode,
+        $response === false ? "curl: $curlError" : lead_ghl_message($response)
+    ));
+    return false;
+}
+
 function lead_ghl_message(string $response): string
 {
     $decoded = json_decode($response, true);
@@ -277,8 +313,11 @@ function lead_ghl_message(string $response): string
     return substr((string) ($message ?: $response), 0, 500);
 }
 
-/** Append the submission to ../private/leads/YYYY-MM.jsonl, whatever GHL said. */
-function lead_store(string $formKey, string $ipHash, array $values, bool $sentToGhl, int $httpCode): void
+/**
+ * Append the submission to ../private/leads/YYYY-MM.jsonl, whatever GHL said.
+ * `ghl_tagged`: true/false when tagging was attempted, null when it wasn't.
+ */
+function lead_store(string $formKey, string $ipHash, array $values, bool $sentToGhl, int $httpCode, ?bool $tagged = null): void
 {
     $dir = lead_ensure_dir('leads');
     if ($dir === null) {
@@ -291,6 +330,7 @@ function lead_store(string $formKey, string $ipHash, array $values, bool $sentTo
         'form' => $formKey,
         'sent_to_ghl' => $sentToGhl,
         'ghl_http' => $httpCode,
+        'ghl_tagged' => $tagged,
         'ip_hash' => substr($ipHash, 0, 16),
         'fields' => $values,
     ];
