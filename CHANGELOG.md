@@ -3,7 +3,7 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [1.1.3] — unreleased (on staging; deploy pending owner go-ahead)
+## [1.1.3] — 2026-09-29
 
 - **GoHighLevel workflows can now trigger on website leads:** every contact the lead handler creates or updates gets a tag: `free-system-lead` (funnel) or `website-lead` (homepage and Book a Call). It's added through GHL's Add Tags API, so existing tags are kept. Source labels and all other fields are unchanged. Nothing visible changes on the site.
 
