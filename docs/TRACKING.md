@@ -57,6 +57,22 @@ To undo it, open **https://docsscale.com/?team=off**. The mark lives in that bro
 - **Useful report:** Explore → Free form. Rows: `lead_magnet` × Session source / medium. Values: event count of `generate_lead`.
 - **What's never sent to GA:** personal data (names, emails, phone numbers).
 
+## GoHighLevel tags (workflow triggers)
+
+Website leads reach GoHighLevel through its API, so GHL never records a "form submission", and workflows using the **Form Submitted** trigger never fire for them. Instead, the lead handler tags every contact it creates or updates:
+
+| Form | Page | GHL tag | GHL source (unchanged) |
+|---|---|---|---|
+| Free system funnel | `/free-system/` | **`free-system-lead`** | `Funnel - Free System` |
+| Homepage form | `/` | **`website-lead`** | `Website form` |
+| Book a Call form | `/book-a-call/` | **`website-lead`** | `Website form` |
+
+- **In GHL workflows,** use the trigger **Contact Tag → Tag Added → `free-system-lead`** (or `website-lead`) instead of Form Submitted.
+- **Existing tags are kept.** The tag is added with GHL's Add Tags API after the contact is saved. Upsert's own `tags` field would replace all existing tags, so it isn't used.
+- **The tag is added on every submission,** including repeat submissions by an existing contact. If a contact already has the tag, GHL doesn't fire "Tag Added" again. For repeat leads to re-trigger, the workflow (or a team member) must remove the tag at the end.
+- **If tagging ever fails,** the visitor still sees success, since the contact is saved. The failure is logged in `private/logs/errors.log`, and the lead backup records `"ghl_tagged": false`, so the tag can be added by hand.
+- **Code:** `server/public_html/_server/forms.php` (`tag`) and `lead-handler.php` (`lead_add_tag`).
+
 ## UTM naming standard
 
 Every link we control in ads, emails and posts carries UTM tags. Use lowercase words and hyphens only, and never a tool or vendor name.

@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [1.1.3] — unreleased (on staging; deploy pending owner go-ahead)
+
+- **GoHighLevel workflows can now trigger on website leads:** every contact the lead handler creates or updates gets a tag: `free-system-lead` (funnel) or `website-lead` (homepage and Book a Call). It's added through GHL's Add Tags API, so existing tags are kept. Source labels and all other fields are unchanged. Nothing visible changes on the site.
+
 ## [1.1.2] — 2026-09-29
 
 - **Privacy Policy: new "Google Ads API access" section** (for Google OAuth verification), between "Service providers we share information with" and "How long we keep information". It links to Google's API Services User Data Policy and to the "Service providers" section. "Last updated" is now September 29, 2026. Legal pages can now contain links (`[text](url)` in `web/src/content/legal.ts`). Approved by the owner.
