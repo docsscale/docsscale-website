@@ -8,7 +8,7 @@ Every account and service the website depends on, where each credential is kept 
 |---|---|---|---|
 | **Hostinger** | Hosting, CDN, DNS, email for docsscale.com | hPanel account; hosting user `u145389112` | Owner's password manager |
 | **Domain DNS** | docsscale.com records | Hostinger nameservers (`*.dns-parking.com`) | hPanel → Domains → DNS |
-| **Email** | info@docsscale.com (Hostinger Mail; SPF, DKIM and DMARC `p=none` in DNS) | hPanel → Emails | Owner's password manager |
+| **Email** | info@docsscale.com (Hostinger Mail); GoHighLevel sends from mail.docsscale.com and marketing.docsscale.com. See [Email authentication](#email-authentication-spf-dkim-dmarc) | hPanel → Emails | Owner's password manager |
 | **GoHighLevel** | CRM receiving every lead; booking calendar at booking.docsscale.com (CNAME to GHL) | The DocsScale sub-account (location) | Lead handler token (contacts.write only): **only** in `/home/u145389112/domains/docsscale.com/private/config.php` on the server |
 | **GitHub** | Source code and CI | Organization `docsscale`, private repo `docsscale-website` (free plan) | Owner's GitHub login; `gh` CLI on the owner's Mac |
 | **Staging** | staging.docsscale.com password gate | user `docsscale` | `~/DocsScale-Secure/staging-login.txt` (owner's Mac) |
@@ -17,6 +17,31 @@ Every account and service the website depends on, where each credential is kept 
 
 - **Backups and originals:** `~/DocsScale-Secure/` on the owner's Mac: the full hPanel backup (25 Sep 2026) and every original server file replaced during hardening. It isn't synced and isn't in git. **It contains the GoHighLevel token; treat it as secret.**
 - **Rotating the GoHighLevel token:** see [SERVER.md](SERVER.md#rotating-the-ghl-token).
+
+## Email authentication (SPF, DKIM, DMARC)
+
+State on 29 Sep 2026 (checked record by record; all SPF and DKIM pass basic validation):
+
+| Domain | Sends | SPF | DKIM | DMARC |
+|---|---|---|---|---|
+| docsscale.com | Hostinger Mail (info@ and team mailboxes) | `include:_spf.mail.hostinger.com ~all` (3 of 10 lookups) | `hostingermail-a` (2048-bit); `-b`/`-c` are Hostinger's empty standby keys | `v=DMARC1; p=none; rua=mailto:dmarc@docsscale.com; fo=1` |
+| mail.docsscale.com | GoHighLevel (Mailgun) | `include:spf.leadconnectorhq.com include:mailgun.org ~all` (6 of 10) | `mailo` (1024-bit) | own record, same as above |
+| marketing.docsscale.com | GoHighLevel (Mailgun) | same as mail. | `mx` (1024-bit) | none of its own: inherits docsscale.com's policy |
+
+- **DMARC reports** go to **dmarc@docsscale.com**, an alias delivering to the **info@docsscale.com** inbox (created 29 Sep 2026). They're zipped XML files from mailbox providers, usually a few a day. Collect them weekly and ask your developer for a pass/fail summary per sender.
+- **Rollback:** the zone before this change is saved in `~/DocsScale-Secure/dns-docsscale.com-2026-09-29-before-dmarc.json`. In Hostinger, DNS snapshot **183232919** (25 Sep 2026) is the zone before the change; restoring it undoes it. Only the two `_dmarc` TXT records changed.
+- **GoHighLevel's DKIM keys are 1024-bit.** They're accepted everywhere; moving to 2048-bit is optional and done inside GoHighLevel, not in DNS.
+
+**DMARC tightening schedule.** Always change `_dmarc` and `_dmarc.mail` together; `marketing.` follows `_dmarc` automatically.
+
+| When | Policy | Condition to move on |
+|---|---|---|
+| 29 Sep 2026 → ~20 Oct 2026 | `p=none` with reports | Reports show every legitimate sender passing DMARC: Hostinger Mail, GoHighLevel on mail. and marketing., and any other tool that sends as docsscale.com |
+| after that, ~1 week | `p=quarantine; pct=25` | No legitimate mail failing in reports; no delivery complaints |
+| then ~4 weeks | `p=quarantine` (100%) | Four clean weeks of reports |
+| after that | `p=reject` | Full protection against anyone spoofing docsscale.com |
+
+Record to set at each step (both names), for example: `v=DMARC1; p=quarantine; pct=25; rua=mailto:dmarc@docsscale.com; fo=1`. If a legitimate sender fails, fix its SPF or DKIM first; never loosen the policy to hide it.
 
 ## Owner to-dos (in priority order)
 
