@@ -77,6 +77,12 @@ expect "new error: old lines not repeated" "$(grep -c 'main: GHL HTTP 500 intern
 echo "2026-09-30T13:00:00+00:00 main: after rotation" > "$PRIV/logs/errors.log"
 expect "rotated log: new line reported" "$(digest)" "lead-digest: emailed owner@example.com (0 lead problem(s), 1 log line(s))"
 
+# --- --mark-seen: no email, everything so far counts as reported
+echo "2026-09-30T14:00:00+00:00 main: seen before go-live" >> "$PRIV/logs/errors.log"
+expect "mark-seen: says what it skipped" "$(digest --mark-seen)" "lead-digest: marked as seen without emailing: 0 lead problem(s), 1 log line(s)"
+expect "mark-seen: no email" "$(mails)" 3
+expect "mark-seen: next run quiet" "$(digest)" "lead-digest: nothing to report"
+
 # --- never runs over HTTP
 LEAD_PRIVATE_DIR="$PRIV" php -S 127.0.0.1:8785 -t "$ROOT/server/public_html" >/dev/null 2>&1 & SITE_PID=$!
 for _ in $(seq 1 50); do curl -s -o /dev/null http://127.0.0.1:8785/ && break; sleep 0.1; done

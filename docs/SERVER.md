@@ -65,6 +65,7 @@ With nothing to report, no email is sent. Each problem is reported once: the las
 - **Cron job** (hPanel → Advanced → Cron Jobs): daily at 13:00 UTC (08:00 in Houston in summer, 07:00 in winter), command `/usr/bin/php /home/u145389112/domains/docsscale.com/public_html/_server/lead-digest.php`.
 - **Recipient:** `digest_to` in `private/config.php` (default info@docsscale.com).
 - **Preview without sending:** add `--dry-run` to the command.
+- **Start clean:** `--mark-seen` marks everything up to now as reported without emailing (used once at setup, 1 Oct 2026).
 - It never runs over the web: `_server/` is denied, and the script refuses anything but the command line.
 - Sent with PHP `mail()` from info@docsscale.com. If the emails land in spam, switch to sending through the info@ mailbox over SMTP (needs its password in `private/config.php`).
 

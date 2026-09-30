@@ -14,6 +14,8 @@
 //
 //   php _server/lead-digest.php           (cron)
 //   php _server/lead-digest.php --dry-run (prints the email, sends nothing, keeps state)
+//   php _server/lead-digest.php --mark-seen (sends nothing; marks everything up to
+//                                            now as reported, to start clean)
 
 declare(strict_types=1);
 
@@ -28,9 +30,9 @@ const DIGEST_IN_FLIGHT_SECONDS = 900; // a lead younger than this may still be r
 const DIGEST_FIRST_RUN_SECONDS = 86400;
 const DIGEST_DEFAULT_TO = 'info@docsscale.com';
 
-exit(digest_run(in_array('--dry-run', $argv, true)));
+exit(digest_run(in_array('--dry-run', $argv, true), in_array('--mark-seen', $argv, true)));
 
-function digest_run(bool $dryRun): int
+function digest_run(bool $dryRun, bool $markSeen = false): int
 {
     $dir = lead_private_dir();
     $stateFile = "$dir/digest-state.json";
@@ -42,7 +44,9 @@ function digest_run(bool $dryRun): int
     [$errorLines, $errorsOffset] = digest_new_error_lines("$dir/logs/errors.log", (int) ($state['errors_offset'] ?? 0));
     $leadProblems = digest_lead_problems("$dir/leads", $since, $until);
 
-    if ($errorLines || $leadProblems) {
+    if ($markSeen) {
+        echo 'lead-digest: marked as seen without emailing: ' . count($leadProblems) . ' lead problem(s), ' . count($errorLines) . " log line(s)\n";
+    } elseif ($errorLines || $leadProblems) {
         $config = lead_load_config() ?? [];
         $to = $config['digest_to'] ?? DIGEST_DEFAULT_TO;
         [$subject, $body] = digest_message($leadProblems, $errorLines, $now);
