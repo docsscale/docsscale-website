@@ -14,6 +14,7 @@ Every account and service the website depends on, where each credential is kept 
 | **Staging** | staging.docsscale.com password gate | user `docsscale` | `~/DocsScale-Secure/staging-login.txt` (owner's Mac) |
 | **Google Analytics 4** | Analytics (on from v1.1, consent-based) | Measurement ID `G-804589LNJW` in `web/src/content/analytics.ts` | Google account of the owner |
 | **Google Search Console** | Search performance | Domain property `sc-domain:docsscale.com` (verified; owner: Abdul). **Sitemap `https://docsscale.com/sitemap.xml` submitted on 29 Sep 2026** (14 URLs, all returning 200) | Owner's Google account |
+| **UptimeRobot** | Uptime monitoring and email alerts. See [Uptime monitoring](#uptime-monitoring) | Free plan, account info@docsscale.com (created 30 Sep 2026) | Owner's password manager; API key **only** in `~/DocsScale-Secure/uptimerobot-api-key.txt` (owner-only permissions) |
 | **Bing Webmaster Tools** | Bing search data (read-only use). See [Bing Webmaster API](#bing-webmaster-api) | Site `https://docsscale.com/` (verified; imported from Search Console on 29 Sep 2026). **Sitemap `https://docsscale.com/sitemap.xml` submitted on 30 Sep 2026** | API key: **only** in `~/DocsScale-Secure/bing-webmaster-api-key.txt` (owner's Mac, owner-only permissions) |
 
 - **Backups and originals:** `~/DocsScale-Secure/` on the owner's Mac: the full hPanel backup (25 Sep 2026) and every original server file replaced during hardening. It isn't synced and isn't in git. **It contains the GoHighLevel token; treat it as secret.**
@@ -33,6 +34,21 @@ Set up on 30 Sep 2026 for **reading** Bing data about docsscale.com. It's accoun
   - Sitemap `https://docsscale.com/sitemap.xml` submitted to Bing on 30 Sep 2026 (basic setup, like Search Console); status "Pending" until Bing fetches it.
   - A read-only check of the data and sitemap status is scheduled for 7 Oct 2026.
 - **Rotating the key:** Bing Webmaster Tools → gear icon (Settings) → **API access** → **API key** → generate a new key, then replace the one line in the file above. The old key stops working immediately.
+
+## Uptime monitoring
+
+UptimeRobot (free plan) checks four addresses every **5 minutes** from North America and emails **info@docsscale.com** when one goes down and when it recovers. Set up 30 Sep 2026; all four were UP on creation.
+
+| Monitor | Address | Counts as up |
+|---|---|---|
+| docsscale.com | `https://docsscale.com` | 2xx/3xx |
+| Free system funnel | `https://docsscale.com/free-system/` | 2xx/3xx |
+| Lead endpoint (send-lead.php) | `https://docsscale.com/send-lead.php` | 2xx/3xx **or 405**: the endpoint only accepts form posts, so a plain check gets "405 Method not allowed" when PHP is working. Anything else (500, timeout) means the lead handler is broken. |
+| Booking calendar (booking.docsscale.com) | `https://booking.docsscale.com/` | 2xx/3xx |
+
+- **Dashboard:** uptimerobot.com, log in as info@docsscale.com.
+- **API key:** in `~/DocsScale-Secure/uptimerobot-api-key.txt`. Never put it in the repo or a ticket. To replace it: Integrations & API → Main API key → reset, then update the file.
+- **Planned deploys:** a deploy takes 1–2 minutes and doesn't take the site down, so no pause is needed.
 
 ## Email authentication (SPF, DKIM, DMARC)
 
@@ -61,7 +77,7 @@ Record to set at each step (both names), for example: `v=DMARC1; p=quarantine; p
 
 ## Owner to-dos (in priority order)
 
-1. **Delete the Claude Code session logs** in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/` once the project is finished. They contain the GoHighLevel token from the early audit, and the Bing API key. At the same time, **generate a fresh Bing API key** and update `~/DocsScale-Secure/bing-webmaster-api-key.txt` ([how](#bing-webmaster-api)).
+1. **Delete the Claude Code session logs** in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/` once the project is finished. They contain the GoHighLevel token from the early audit, the Bing API key and the UptimeRobot API key. At the same time, **generate a fresh Bing API key** and update `~/DocsScale-Secure/bing-webmaster-api-key.txt` ([how](#bing-webmaster-api)), and **reset the UptimeRobot API key** and update `~/DocsScale-Secure/uptimerobot-api-key.txt` ([how](#uptime-monitoring)).
 2. **Check for old copies of `lead-debug-log.txt`.** The original site's debug log is no longer reachable (it returns 404, checked 27 Sep 2026). If a copy remains anywhere in hPanel → File Manager, delete it: it predates the hardening and may contain lead data.
 3. **GA4 admin setup:** mark the key events `generate_lead` and `book_call`, create the custom dimensions, and switch on the Internal Traffic filter after the team has opened `docsscale.com/?team=on` ([TRACKING.md](TRACKING.md)).
 4. **Screenshots and photos:** the funnel images, the three homepage/About placeholders and the team photos, in the sizes listed in [incoming/README.md](../incoming/README.md).
