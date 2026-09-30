@@ -3,7 +3,7 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [Unreleased]
+## [1.2.2] — 2026-10-01
 
 - **Daily failure email** (agency review BE-2): a daily cron job emails info@docsscale.com when the lead handler logged errors, when a lead didn't reach GoHighLevel or wasn't tagged or noted, or when a request was cut off before its outcome was recorded. No email when there's nothing to report; each problem is reported once. Nothing visible changes on the site.
 
