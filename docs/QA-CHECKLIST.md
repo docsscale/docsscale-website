@@ -5,7 +5,7 @@ Run this on **staging** before every production release, and on **production** r
 ## Automated (must all be green)
 
 - [ ] CI on the release commit: lint/types/format/build, PHP lead-handler tests, dependency audit, pixel + behaviour parity.
-- [ ] `npm run test:e2e` locally: 19/19 PASS, form payloads identical; nav behaviour all passed.
+- [ ] `npm run test:e2e` locally: 19/19 PASS, form payloads identical; nav behaviour and form accessibility all passed.
 - [ ] `npm run visual:compare`: every route identical to `reference/approved/`, or every difference approved.
 
 ## Pages (desktop ~1440px and a real phone)

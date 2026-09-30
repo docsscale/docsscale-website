@@ -4,6 +4,7 @@
 // different layout and wording.
 import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/content/lead-form';
 import { T } from '@/styles/tokens';
+import { StatusAnnouncer, useFocusOnMount } from './a11y';
 import { errorStyle, fieldStyle, textareaStyle } from './fieldStyles';
 import { Honeypot } from './Honeypot';
 import { useLeadSubmit } from './useLeadSubmit';
@@ -32,41 +33,7 @@ export function BookCallForm() {
     >
       <Honeypot />
       {status === 'sent' ? (
-        <div
-          style={{
-            background: T.surface,
-            borderRadius: 20,
-            padding: 32,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 12,
-            textAlign: 'center',
-          }}
-        >
-          <span
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: '50%',
-              background: T.sageBg,
-              color: T.sageFg,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 800,
-              fontSize: 22,
-              margin: '0 auto',
-            }}
-          >
-            ✓
-          </span>
-          <div style={{ fontWeight: 800, fontSize: 24, letterSpacing: '-.03em' }}>
-            Got it. We&apos;ll reply within one business day.
-          </div>
-          <p style={{ margin: 0, fontSize: 15, color: T.body, lineHeight: 1.5 }}>
-            Check your inbox for a note from {LEAD_FORM_MESSAGES.replyFrom} with two or three time options.
-          </p>
-        </div>
+        <BookCallSuccess />
       ) : (
         <>
           <div
@@ -161,7 +128,12 @@ export function BookCallForm() {
           >
             {submitting ? LEAD_FORM_MESSAGES.sending : 'Request my strategy call'}
           </button>
-          {status === 'error' && <div style={errorStyle}>{error}</div>}
+          {status === 'error' && (
+            <div role="alert" style={errorStyle}>
+              {error}
+            </div>
+          )}
+          <StatusAnnouncer message={submitting ? LEAD_FORM_MESSAGES.sending : ''} />
           <div style={{ fontSize: 13, color: T.teal, textAlign: 'center', fontWeight: 600 }}>
             {LEAD_FORM_MESSAGES.fallbackContact}
           </div>
@@ -171,5 +143,51 @@ export function BookCallForm() {
         </>
       )}
     </form>
+  );
+}
+
+/** Shown in place of the form after a successful send; focus moves to its message. */
+function BookCallSuccess() {
+  const headingRef = useFocusOnMount<HTMLDivElement>();
+  return (
+    <div
+      style={{
+        background: T.surface,
+        borderRadius: 20,
+        padding: 32,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 12,
+        textAlign: 'center',
+      }}
+    >
+      <span
+        style={{
+          width: 52,
+          height: 52,
+          borderRadius: '50%',
+          background: T.sageBg,
+          color: T.sageFg,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 800,
+          fontSize: 22,
+          margin: '0 auto',
+        }}
+      >
+        ✓
+      </span>
+      <div
+        ref={headingRef}
+        tabIndex={-1}
+        style={{ fontWeight: 800, fontSize: 24, letterSpacing: '-.03em', outline: 'none' }}
+      >
+        Got it. We&apos;ll reply within one business day.
+      </div>
+      <p style={{ margin: 0, fontSize: 15, color: T.body, lineHeight: 1.5 }}>
+        Check your inbox for a note from {LEAD_FORM_MESSAGES.replyFrom} with two or three time options.
+      </p>
+    </div>
   );
 }
