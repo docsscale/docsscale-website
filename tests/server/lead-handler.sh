@@ -238,18 +238,29 @@ expect "note fails: logged" "$(grep -c 'add note to NOTEFAIL: HTTP 500 note deta
 expect "note fails: backup" "$(backup oldnotefail@x.co ghl_noted) $(backup oldnotefail@x.co ghl_tagged)" "False True"
 
 # --- time budget: a slow GHL can't hold the request; the save always runs,
-#     the tag is skipped (and logged) once the budget is spent
-rm -rf "$PRIV/ratelimit"
-cp "$PRIV/config.php" "$PRIV/config.full"
-sed -i.bak "s#'ghl_api_url'#'time_budget' => 3.5, 'ghl_api_url'#" "$PRIV/config.php"
+#     the tag is skipped (and logged) once the budget is spent. Own server and
+#     config (editing config.php under a running server can hit PHP's opcode cache).
+BUDGET_PRIV="$TMP/private-budget"; mkdir -p "$BUDGET_PRIV"
+cat > "$BUDGET_PRIV/config.php" <<'PHP'
+<?php return [
+  'ghl_token' => 'pit-test', 'ghl_location_id' => 'LOC123',
+  'allowed_origins' => ['http://127.0.0.1:8784'],
+  'ghl_api_url' => 'http://127.0.0.1:8782/contacts/upsert',
+  'time_budget' => 3.5,
+];
+PHP
+LEAD_PRIVATE_DIR="$BUDGET_PRIV" php -S 127.0.0.1:8784 -t "$ROOT/server/public_html" >/dev/null 2>&1 & BUDGET_PID=$!
+wait_for 8784
 start=$(date +%s)
-expect "slow GHL: still ok" "$(post send-lead.php '{"clinicName":"S","email":"slowupsert@x.co","specialty":"Dental"}')" 200
+code=$(curl -s -o "$TMP/resp" -w '%{http_code}' -X POST http://127.0.0.1:8784/send-lead.php -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:8784' --data '{"clinicName":"S","email":"slowupsert@x.co","specialty":"Dental"}')
+expect "slow GHL: still ok" "$code" 200
 expect "slow GHL: finished within the budget" "$(( $(date +%s) - start <= 6 ))" 1
-expect "slow GHL: lookup skipped to leave time for the save" "$(grep -c 'contact lookup skipped: time budget used' "$PRIV/logs/errors.log")" 1
-expect "slow GHL: contact saved" "$(backup slowupsert@x.co sent_to_ghl)" True
-expect "slow GHL: tag skipped" "$(backup slowupsert@x.co ghl_tagged)" False
-expect "slow GHL: skip logged" "$(grep -c "add tag 'website-lead' to .*skipped: time budget used" "$PRIV/logs/errors.log")" 1
-mv "$PRIV/config.full" "$PRIV/config.php"; rm -f "$PRIV/config.php.bak"
+budget_out() { python3 -c "import json,glob;r=[json.loads(l) for f in glob.glob('$BUDGET_PRIV/leads/*.jsonl') for l in open(f)];print(r[-1]['$1'])"; }
+expect "slow GHL: lookup skipped to leave time for the save" "$(grep -c 'contact lookup skipped: time budget used' "$BUDGET_PRIV/logs/errors.log")" 1
+expect "slow GHL: contact saved" "$(budget_out sent_to_ghl)" True
+expect "slow GHL: tag skipped" "$(budget_out ghl_tagged)" False
+expect "slow GHL: skip logged" "$(grep -c "add tag 'website-lead' to .*skipped: time budget used" "$BUDGET_PRIV/logs/errors.log")" 1
+kill $BUDGET_PID 2>/dev/null || true
 
 # --- missing config: lead still validated and backed up, GHL skipped
 rm -rf "$PRIV/ratelimit"; mv "$PRIV/config.php" "$PRIV/config.off"
