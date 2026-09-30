@@ -23,11 +23,55 @@ PHP
 #    with "fail"; otherwise 201 with a contact id (none when the email starts with
 #    "noid"; id TAGFAIL when it starts with "tagfail").
 #  POST /contacts/{id}/tags  records path + body in tag.txt/tag.json; 422 for TAGFAIL.
+#  GET /contacts/search/duplicate  appends the query to dup.txt; returns one of the
+#    existing contacts below (by email, else by number), 500 for "lookupfail…",
+#    otherwise no contact.
+#  GET /locations/LOC123/customFields  counts calls in cf.count; 500 while cf.fail exists.
+#  POST /contacts/{id}/notes  records path + body in note.txt/note.json; 500 for NOTEFAIL.
+# The upsert returns an existing contact's id when its email or phone matches one.
 mkdir -p "$TMP/ghl"
 cat > "$TMP/ghl/index.php" <<'PHP'
 <?php
 $body = file_get_contents('php://input');
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$existing = [
+  // name, company, specialty set; phone, locations, biggest gap empty
+  ['id' => 'C-OLD', 'email' => 'old@x.co', 'firstName' => 'Olga', 'companyName' => 'Old Clinic', 'source' => 'Website form',
+   'customFields' => [['id' => 'ID-SPEC', 'value' => ['Dental']]]],
+  // everything the main form can send is already set
+  ['id' => 'C-FULL', 'email' => 'oldfull@x.co', 'firstName' => 'Fay', 'companyName' => 'Full Clinic', 'phone' => '+1 713 555 0102',
+   'customFields' => [['id' => 'ID-SPEC', 'value' => ['Dental']], ['id' => 'ID-LOC', 'value' => '1'], ['id' => 'ID-GAP', 'value' => 'Old gap']]],
+  // found by phone; has a different email
+  ['id' => 'C-PH', 'email' => 'orig@x.co', 'phone' => '+1 555 0199', 'customFields' => []],
+  // found by phone; no email yet
+  ['id' => 'C-NOEMAIL', 'email' => '', 'phone' => '+1 555 0177'],
+  ['id' => 'C-OLD2', 'email' => 'old2@x.co', 'firstName' => 'Otto'],
+  ['id' => 'NOTEFAIL', 'email' => 'oldnotefail@x.co', 'firstName' => 'Nia'],
+];
+$match = static function (string $email, string $phone) use ($existing): ?array {
+  foreach ($existing as $c) { if ($email !== '' && $c['email'] === $email) return $c; }
+  foreach ($existing as $c) { if ($phone !== '' && ($c['phone'] ?? '') === $phone) return $c; }
+  return null;
+};
+if ($path === '/contacts/search/duplicate') {
+  file_put_contents(__DIR__ . '/dup.txt', $_SERVER['QUERY_STRING'] . "\n", FILE_APPEND);
+  if (str_starts_with($_GET['email'] ?? '', 'lookupfail')) { http_response_code(500); echo '{"message":"lookup detail"}'; exit; }
+  echo json_encode(['contact' => $match($_GET['email'] ?? '', $_GET['number'] ?? '')]); exit;
+}
+if ($path === '/locations/LOC123/customFields') {
+  file_put_contents(__DIR__ . '/cf.count', (string) ((int) @file_get_contents(__DIR__ . '/cf.count') + 1));
+  if (file_exists(__DIR__ . '/cf.fail')) { http_response_code(500); echo '{"message":"cf detail"}'; exit; }
+  echo json_encode(['customFields' => [
+    ['id' => 'ID-GAP', 'fieldKey' => 'contact.biggest_gap'], ['id' => 'ID-LOC', 'fieldKey' => 'contact.locations'],
+    ['id' => 'ID-SPEC', 'fieldKey' => 'contact.specialty'], ['id' => 'ID-CT', 'fieldKey' => 'contact.clinic_type'],
+  ]]); exit;
+}
+if (preg_match('#^/contacts/([^/]+)/notes$#', $path, $m)) {
+  file_put_contents(__DIR__ . '/note.json', $body);
+  file_put_contents(__DIR__ . '/note.txt', $path);
+  if ($m[1] === 'NOTEFAIL') { http_response_code(500); echo '{"message":"note detail"}'; exit; }
+  http_response_code(201); echo '{"note":{"id":"N1"}}'; exit;
+}
 if (preg_match('#^/contacts/([^/]+)/tags$#', $path, $m)) {
   file_put_contents(__DIR__ . '/tag.json', $body);
   file_put_contents(__DIR__ . '/tag.txt', $path . ' ' . ($_SERVER['HTTP_AUTHORIZATION'] ?? ''));
@@ -37,6 +81,8 @@ if (preg_match('#^/contacts/([^/]+)/tags$#', $path, $m)) {
 file_put_contents(__DIR__ . '/last.json', $body);
 file_put_contents(__DIR__ . '/auth.txt', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $email = json_decode($body, true)['email'] ?? '';
+$found = $match($email, json_decode($body, true)['phone'] ?? '');
+if ($found) { http_response_code(200); echo json_encode(['contact' => ['id' => $found['id']], 'new' => false]); exit; }
 if (str_starts_with($email, 'fail')) { http_response_code(400); echo '{"message":"internal GHL detail"}'; exit; }
 http_response_code(201);
 if (str_starts_with($email, 'noid')) { echo '{"new":true}'; exit; }
@@ -63,6 +109,7 @@ ghl() { python3 -c "import json,sys;print(json.dumps(json.load(open('$TMP/ghl/la
 tag() { python3 -c "import json;print(json.dumps(json.load(open('$TMP/ghl/tag.json'))))"; }
 tagpath() { cut -d' ' -f1 "$TMP/ghl/tag.txt"; }
 cid() { python3 -c "import hashlib;print('C-'+hashlib.md5(b'$1').hexdigest()[:6])"; }
+note() { python3 -c "import json;print(json.load(open('$TMP/ghl/note.json'))['body'])"; }
 backup() { python3 -c "import json,glob;r=[json.loads(l) for f in glob.glob('$PRIV/leads/*.jsonl') for l in open(f) if '\"$1\"' in l][-1];print(r['$2'])"; }
 
 # --- method / origin / input validation
@@ -121,6 +168,56 @@ expect "tag fails: backup says untagged" "$(backup tagfail@x.co ghl_tagged)" Fal
 expect "no contact id: still ok" "$(post free-system/send-lead.php '{"name":"N","email":"noid@x.co"}')" 200
 expect "no contact id: logged" "$(grep -c "returned no contact id; tag 'free-system-lead' not added" "$PRIV/logs/errors.log")" 1
 expect "no contact id: backup says untagged" "$(backup noid@x.co ghl_tagged)" False
+
+# --- existing contacts: only empty fields are filled (never name or source);
+#     the submission goes into a note; the tag is always added
+rm -rf "$PRIV/ratelimit"
+expect "existing: ok" "$(post send-lead.php '{"name":"New Name","clinicName":"New Clinic","email":"old@x.co","phone":"+1 713 555 0101","specialty":"Weight loss","locations":"1","message":"Hi again"}')" 200
+expect "existing: lookup query" "$(tail -1 "$TMP/ghl/dup.txt")" "locationId=LOC123&email=old%40x.co&number=%2B1+713+555+0101"
+expect "existing: only empty fields sent" "$(ghl)" '{"customFields": [{"field_value": "Hi again", "key": "biggest_gap"}, {"field_value": "1", "key": "locations"}], "email": "old@x.co", "locationId": "LOC123", "phone": "+1 713 555 0101"}'
+expect "existing: note on the contact" "$(cat "$TMP/ghl/note.txt")" "/contacts/C-OLD/notes"
+expect "existing: note has the whole submission" "$(note | tail -n +2)" "Name: New Name
+Clinic: New Clinic
+Email: old@x.co
+Phone: +1 713 555 0101
+Specialty: Weight loss
+Locations: 1
+Biggest gap: Hi again"
+expect "existing: note heading" "$(note | head -1 | cut -d, -f1)" "New website submission: Website form"
+expect "existing: tagged" "$(tagpath)" "/contacts/C-OLD/tags"
+expect "existing: backup" "$(backup old@x.co ghl_existing) $(backup old@x.co ghl_noted) $(backup old@x.co ghl_tagged)" "True True True"
+expect "new contact: backup" "$(backup jane@bright.co ghl_existing) $(backup jane@bright.co ghl_noted)" "False None"
+
+rm -f "$TMP/ghl/last.json"
+expect "nothing to fill: ok" "$(post send-lead.php '{"clinicName":"Other","email":"oldfull@x.co","phone":"+1 713 555 0199","specialty":"Med spa","locations":"2","message":"New gap"}')" 200
+expect "nothing to fill: no upsert" "$([ -f "$TMP/ghl/last.json" ] && echo called || echo not-called)" not-called
+expect "nothing to fill: note + tag" "$(cat "$TMP/ghl/note.txt") $(tagpath)" "/contacts/C-FULL/notes /contacts/C-FULL/tags"
+
+expect "found by phone: ok" "$(post free-system/send-lead.php '{"name":"Pat","email":"new@x.co","phone":"+1 555 0199","clinicName":"PH Clinic","clinicType":"Dental"}')" 200
+expect "found by phone: email kept, matched on it" "$(ghl)" '{"companyName": "PH Clinic", "customFields": [{"field_value": "Dental", "key": "clinic_type"}], "email": "orig@x.co", "locationId": "LOC123"}'
+expect "found by phone: new email in note" "$(note | grep -c '^Email: new@x.co$')" 1
+expect "found by phone: funnel tag" "$(tag) $(tagpath)" '{"tags": ["free-system-lead"]} /contacts/C-PH/tags'
+
+expect "no email yet: ok" "$(post free-system/send-lead.php '{"name":"Ned","email":"ne@x.co","phone":"+1 555 0177"}')" 200
+expect "no email yet: email filled, matched on phone" "$(ghl)" '{"email": "ne@x.co", "locationId": "LOC123", "phone": "+1 555 0177"}'
+expect "field list fetched once (cached)" "$(cat "$TMP/ghl/cf.count")" 1
+
+rm -rf "$PRIV/ratelimit"
+rm -f "$PRIV/cache/custom-fields.json"; touch "$TMP/ghl/cf.fail"
+expect "field list fails: ok" "$(post send-lead.php '{"clinicName":"C2","email":"old2@x.co","specialty":"Dental","message":"Gap two"}')" 200
+expect "field list fails: no custom fields sent" "$(ghl)" '{"companyName": "C2", "email": "old2@x.co", "locationId": "LOC123"}'
+expect "field list fails: values in note" "$(note | grep -c '^Biggest gap: Gap two$')" 1
+expect "field list fails: logged" "$(grep -c 'custom field list failed: HTTP 500 cf detail' "$PRIV/logs/errors.log")" 1
+rm -f "$TMP/ghl/cf.fail"
+
+expect "lookup fails: ok" "$(post send-lead.php '{"name":"Liz","clinicName":"L","email":"lookupfail@x.co","specialty":"Dental"}')" 200
+expect "lookup fails: full upsert" "$(ghl)" '{"companyName": "L", "customFields": [{"field_value": "Dental", "key": "specialty"}], "email": "lookupfail@x.co", "firstName": "Liz", "lastName": "", "locationId": "LOC123", "name": "Liz", "source": "Website form"}'
+expect "lookup fails: logged" "$(grep -c 'contact lookup failed: HTTP 500 lookup detail' "$PRIV/logs/errors.log")" 1
+expect "lookup fails: no note" "$(backup lookupfail@x.co ghl_noted)" None
+
+expect "note fails: still ok" "$(post free-system/send-lead.php '{"name":"Nia","email":"oldnotefail@x.co","clinicName":"NF"}')" 200
+expect "note fails: logged" "$(grep -c 'add note to NOTEFAIL: HTTP 500 note detail' "$PRIV/logs/errors.log")" 1
+expect "note fails: backup" "$(backup oldnotefail@x.co ghl_noted) $(backup oldnotefail@x.co ghl_tagged)" "False True"
 
 # --- missing config: lead still validated and backed up, GHL skipped
 rm -rf "$PRIV/ratelimit"; mv "$PRIV/config.php" "$PRIV/config.off"
