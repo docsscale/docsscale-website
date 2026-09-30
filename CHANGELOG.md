@@ -3,7 +3,7 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [Unreleased]
+## [1.1.4] — 2026-09-30
 
 - **Repeat leads no longer overwrite GoHighLevel contacts:** the lead handler looks each person up first. For an existing contact it never changes the name, source or email, fills only empty fields (clinic, phone, custom fields), adds a note with the whole submission, and adds the tag as before. New contacts are saved exactly as before. If the lookup fails, it falls back to the previous full upsert and logs it. Needs the token scopes `contacts.readonly` and `locations/customFields.readonly`.
 - **Locations option "3–5" is now "3-5"** (plain hyphen) in the homepage and Book a Call forms, matching the GoHighLevel field's option, so the answer is saved on the contact. The lead handler also converts the old en dash from cached pages. Approved by the owner; the only visible change.
