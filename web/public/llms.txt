@@ -5,13 +5,12 @@
 DocsScale works only with healthcare clinics: dental, chiropractic, physical therapy, med spa, weight loss, dermatology, primary care, optometry, and mental health. The offer is one system with four stages: Attract, Capture, Convert, Retain. Engagements are month to month with 30 days' notice, and the clinic owns every ad account, page, phone number, and its data.
 
 ## Services
-- Paid advertising (Meta and Google), one service line at a time — reported in booked appointments
-- SEO and Google Business Profile management — rank for treatments in the neighborhoods served
+- Paid ads (Meta & Google), one service line at a time — reported in booked appointments
+- Local SEO & Google Business Profile — rank for treatments in the neighborhoods served
 - Social media management — planned a month ahead, in the clinic's voice
-- Website design — a clinic site built to book, fast on phones
-- Funnel design — landing pages, offers, and forms per service line
-- Follow-up & booking — every inquiry answered within minutes, missed-call text-back, reminders
-- Reputation & reviews — review requests after every visit
+- Websites & landing pages — a clinic site and per-service landing pages built to book, fast on phones
+- Lead follow-up & booking — every inquiry answered within minutes, missed-call text-back, reminders
+- Reviews & reputation — review requests after every visit
 - Reactivation & recall — past patients invited back, in the clinic's name, without discounts
 
 ## How it works
@@ -22,6 +21,11 @@ DocsScale works only with healthcare clinics: dental, chiropractic, physical the
 ## Pages
 - Home: https://docsscale.com/
 - Services: https://docsscale.com/services
+- Industries: https://docsscale.com/industries/
+  - Dental: https://docsscale.com/industries/dental/
+  - Chiropractic: https://docsscale.com/industries/chiropractic/
+  - Physical therapy: https://docsscale.com/industries/physical-therapy/
+  - Med spa: https://docsscale.com/industries/med-spa/
 - How it works: https://docsscale.com/how-it-works
 - Results: https://docsscale.com/results
 - About: https://docsscale.com/about

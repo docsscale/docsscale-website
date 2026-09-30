@@ -1,5 +1,6 @@
-// The four specialty landing pages (/services/<slug>/). Each entry holds all of
-// that page's copy; the nav and footer only use slug + name.
+// The four industry pages (/industries/<slug>/; until v1.2 they were at
+// /services/<slug>/, which now 301s here). Each entry holds all of that page's
+// copy; the nav and footer only use slug + name.
 import { T } from '@/styles/tokens';
 
 export type Specialty = {
@@ -289,3 +290,5 @@ export const SPECIALTIES: Specialty[] = [
 ];
 
 export const SPECIALTY_LINKS = SPECIALTIES.map(({ slug, name }) => ({ slug, name }));
+
+export const industryHref = (slug: string) => `/industries/${slug}`;

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CONTACT_LINES, FOOTER_COLUMNS, FOOTER_LEGAL_LINKS, SITE } from '@/content/site';
+import { industryHref, SPECIALTY_LINKS } from '@/content/specialties';
 import { CookieSettingsLink } from '@/features/analytics/CookieSettingsLink';
 import { BrandLogo } from './BrandLogo';
 
@@ -13,6 +14,19 @@ const headingStyle = {
   textTransform: 'uppercase',
   marginBottom: 4,
 } as const;
+
+// Services, then Industries (from content/specialties.ts), then Company.
+const COLUMNS = [
+  FOOTER_COLUMNS[0],
+  {
+    heading: 'Industries',
+    links: [
+      ...SPECIALTY_LINKS.map(({ slug, name }) => ({ label: name, href: industryHref(slug) })),
+      { label: 'All industries', href: '/industries' },
+    ],
+  },
+  ...FOOTER_COLUMNS.slice(1),
+];
 
 export function Footer() {
   return (
@@ -34,7 +48,7 @@ export function Footer() {
             </div>
             <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, maxWidth: 300 }}>{SITE.tagline}</p>
           </div>
-          {FOOTER_COLUMNS.map((column) => (
+          {COLUMNS.map((column) => (
             <div key={column.heading} style={columnStyle}>
               <div style={headingStyle}>{column.heading}</div>
               {column.links.map((link) => (

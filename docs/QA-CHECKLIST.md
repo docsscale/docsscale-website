@@ -5,19 +5,19 @@ Run this on **staging** before every production release, and on **production** r
 ## Automated (must all be green)
 
 - [ ] CI on the release commit: lint/types/format/build, PHP lead-handler tests, dependency audit, pixel + behaviour parity.
-- [ ] `npm run test:e2e` locally: 19/19 PASS, form payloads identical.
+- [ ] `npm run test:e2e` locally: 19/19 PASS, form payloads identical; nav behaviour all passed.
 - [ ] `npm run visual:compare`: every route identical to `reference/approved/`, or every difference approved.
 
 ## Pages (desktop ~1440px and a real phone)
 
 - [ ] Every page loads without console errors:
-  - Home, Services, the 4 specialty pages, How it works, Results, About, Book a call, Privacy, Terms;
+  - Home, Services, Industries and the 4 industry pages, How it works, Results, About, Book a call, Privacy, Terms;
   - the funnel landing, thank-you and booking pages;
   - a made-up URL, which should show the 404.
 - [ ] Header:
   - the logo links home;
-  - the Services dropdown opens and its links work;
-  - the phone menu opens, scrolls and closes.
+  - the Services and Industries dropdowns open on hover and on click/tap, stay open while the mouse moves into them, close on Escape, on a click elsewhere and when Tab leaves them, and their links work;
+  - the phone menu opens full height, its Services and Industries sections expand, the page behind doesn't scroll, and it closes on Escape or after tapping a link.
 - [ ] Footer: every link works; "Back to top" works; "Cookie settings" reopens the banner (only when GA4 is on).
 - [ ] Headline entrance animation plays once. With "reduce motion" turned on (macOS: Accessibility → Display), every headline is complete and static.
 - [ ] The homepage specialty picker changes the page text; the service filter tabs work.
@@ -40,6 +40,7 @@ Run this on **staging** before every production release, and on **production** r
 ## After deploying to production
 
 - [ ] `https://docsscale.com/version.txt` shows the new version.
+- [ ] `npm run test:redirects`: the old `/services/<industry>/` URLs 301 in one hop to `/industries/<industry>/`. (On staging: `bash tests/server/redirects.sh https://staging.docsscale.com user:password`.)
 - [ ] Purge the CDN cache (hPanel → Websites → docsscale.com → Performance → CDN → Purge all), then hard-reload.
 - [ ] Submit **one real test lead** from the homepage with a recognisable name (e.g. "QA Test <date>"). Confirm it appears in GoHighLevel, then delete the contact there.
 - [ ] Book-a-call funnel page: the GoHighLevel calendar loads in the iframe.

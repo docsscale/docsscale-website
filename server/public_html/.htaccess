@@ -13,8 +13,16 @@ ErrorDocument 404 /404.html
 # 1b. One canonical host: www.docsscale.com → https://docsscale.com (301),
 #     path and query string kept. (The certificate covers both names.)
 # ---------------------------------------------------------------------------
+# 1c. The industry pages moved in v1.2: /services/<industry>/ → /industries/<industry>/
+#     (301, with or without the trailing slash, query string kept). Before the
+#     www rule so www + old URL is still one hop; the host is kept (minus www.)
+#     so staging redirects within staging.
+# ---------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+    RewriteRule ^services/(dental|chiropractic|physical-therapy|med-spa)/?$ https://%1/industries/$1/ [R=301,L]
+
     RewriteCond %{HTTP_HOST} ^www\.docsscale\.com$ [NC]
     RewriteRule ^ https://docsscale.com%{REQUEST_URI} [R=301,L]
 </IfModule>

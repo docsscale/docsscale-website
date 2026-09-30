@@ -3,6 +3,18 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+### Visible changes (approved plan; before/after pending approval)
+- **New header:** a **Services** dropdown with the seven confirmed services grouped by stage (each with a one-line description, linking to its stage on /services), and a new **Industries** dropdown with the four industry pages. Mobile menu: full height, with Services and Industries sections.
+- **Industry pages moved** from `/services/<industry>/` to `/industries/<industry>/` (301 redirects, one hop, query strings kept), plus a new overview page at **/industries/**.
+- **Footer:** the Services column shows the seven confirmed service names; a new Industries column.
+- **Dropdown bug fixed:** no gap between the button and the menu (it no longer closes on the way down), a tap opens it once instead of open-then-close, Escape and Tab work, one menu at a time.
+
+### Not visible
+- Sitemap, canonical URLs, breadcrumbs (Home › Industries › …), service names in structured data and `llms.txt` updated to match.
+- Behaviour tests for the header (`tests/visual/nav-behaviour.mjs`, in CI) and a redirect check (`npm run test:redirects`).
+
 ## [1.1.4] — 2026-09-30
 
 - **Repeat leads no longer overwrite GoHighLevel contacts:** the lead handler looks each person up first. For an existing contact it never changes the name, source or email, fills only empty fields (clinic, phone, custom fields), adds a note with the whole submission, and adds the tag as before. New contacts are saved exactly as before. If the lookup fails, it falls back to the previous full upsert and logs it. Needs the token scopes `contacts.readonly` and `locations/customFields.readonly`.
