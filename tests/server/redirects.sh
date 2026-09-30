@@ -11,10 +11,10 @@ HOST="${BASE#https://}"; HOST="${HOST#www.}"
 pass=0; fail=0
 check() { # url expected-location
   local out code loc
-  out=$(curl -s "${AUTH[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$1")
+  out=$(curl -s ${AUTH[@]+"${AUTH[@]}"} -o /dev/null -w '%{http_code} %{redirect_url}' "$1")
   code=${out%% *}; loc=${out#* }
   if [[ "$code" == 301 && "$loc" == "$2" ]]; then
-    final=$(curl -s "${AUTH[@]}" -o /dev/null -w '%{http_code}' "$loc")
+    final=$(curl -s ${AUTH[@]+"${AUTH[@]}"} -o /dev/null -w '%{http_code}' "$loc")
     if [[ "$final" == 200 ]]; then pass=$((pass+1)); return; fi
     echo "FAIL $1 → $loc returned $final"; fail=$((fail+1)); return
   fi
@@ -29,10 +29,11 @@ done
 if [[ "$HOST" == docsscale.com ]]; then
   check "https://www.docsscale.com/services/dental/" "https://docsscale.com/industries/dental/"
 fi
-# untouched URLs
+# untouched URLs: 200 (on www: the usual 301 to the bare domain)
+want=200; [[ "$BASE" == https://www.* ]] && want=301
 for path in /services/ /industries/ /; do
-  code=$(curl -s "${AUTH[@]}" -o /dev/null -w '%{http_code}' "$BASE$path")
-  if [[ "$code" == 200 ]]; then pass=$((pass+1)); else echo "FAIL $path: $code"; fail=$((fail+1)); fi
+  code=$(curl -s ${AUTH[@]+"${AUTH[@]}"} -o /dev/null -w '%{http_code}' "$BASE$path")
+  if [[ "$code" == "$want" ]]; then pass=$((pass+1)); else echo "FAIL $path: $code, want $want"; fail=$((fail+1)); fi
 done
 echo "redirects: $pass passed, $fail failed"
 [[ $fail -eq 0 ]]
