@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Lead backup before GoHighLevel** (agency review BE-1): each lead is written to the backup as soon as it passes validation, before any GHL call, with the GHL outcome added as a second line. A slow or failing GHL can no longer lose a lead. All GHL calls of one submission share a 20-second budget with shorter per-call timeouts; the contact save always runs, and the tag and note are skipped (and logged) if time runs out. The visitor gets their reply as soon as the contact is saved. Nothing visible changes.
+
 ## [1.2.0] — 2026-09-30
 
 ### Visible changes (approved by the owner, before/after reviewed)

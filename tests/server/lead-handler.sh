@@ -79,6 +79,11 @@ if (preg_match('#^/contacts/([^/]+)/tags$#', $path, $m)) {
   http_response_code(201); echo '{"tags":' . json_encode(json_decode($body, true)['tags']) . '}'; exit;
 }
 file_put_contents(__DIR__ . '/last.json', $body);
+// Was the lead already in the backup when GHL was called? (backup-first check)
+$leadFiles = glob(getenv('LEAD_PRIVATE_DIR') . '/leads/*.jsonl') ?: [];
+$em = json_decode($body, true)['email'] ?? '';
+file_put_contents(__DIR__ . '/backup_seen.txt', $em !== '' && array_filter($leadFiles, fn ($f) => str_contains(file_get_contents($f), '"' . $em . '"')) ? 'yes' : 'no');
+if (str_starts_with($em, 'slowupsert')) { sleep(3); }
 file_put_contents(__DIR__ . '/auth.txt', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
 $email = json_decode($body, true)['email'] ?? '';
 $found = $match($email, json_decode($body, true)['phone'] ?? '');
@@ -91,7 +96,7 @@ echo json_encode(['contact' => ['id' => $id], 'new' => true]);
 PHP
 
 LEAD_PRIVATE_DIR="$PRIV" php -S 127.0.0.1:8781 -t "$ROOT/server/public_html" >/dev/null 2>&1 & SITE_PID=$!
-php -S 127.0.0.1:8782 -t "$TMP/ghl" "$TMP/ghl/index.php" >/dev/null 2>&1 & GHL_PID=$!
+LEAD_PRIVATE_DIR="$PRIV" php -S 127.0.0.1:8782 -t "$TMP/ghl" "$TMP/ghl/index.php" >/dev/null 2>&1 & GHL_PID=$!
 # Wait until both servers answer (a fixed sleep flakes on a busy machine).
 wait_for() { for _ in $(seq 1 50); do curl -s -o /dev/null "http://127.0.0.1:$1/" && return 0; sleep 0.1; done; echo "server on :$1 did not start"; exit 1; }
 wait_for 8781; wait_for 8782
@@ -110,7 +115,13 @@ tag() { python3 -c "import json;print(json.dumps(json.load(open('$TMP/ghl/tag.js
 tagpath() { cut -d' ' -f1 "$TMP/ghl/tag.txt"; }
 cid() { python3 -c "import hashlib;print('C-'+hashlib.md5(b'$1').hexdigest()[:6])"; }
 note() { python3 -c "import json;print(json.load(open('$TMP/ghl/note.json'))['body'])"; }
-backup() { python3 -c "import json,glob;r=[json.loads(l) for f in glob.glob('$PRIV/leads/*.jsonl') for l in open(f) if '\"$1\"' in l][-1];print(r['$2'])"; }
+# backup email key: the lead's received line merged with its outcome line (same id).
+backup() { python3 -c "
+import json,glob
+rows=[json.loads(l) for f in sorted(glob.glob('$PRIV/leads/*.jsonl')) for l in open(f)]
+rec=[r for r in rows if r['status']=='received' and r['fields'].get('email')=='$1'][-1]
+out=[r for r in rows if r['status']=='outcome' and r['id']==rec['id']]
+print({**rec, **(out[-1] if out else {})}.get('$2', 'MISSING'))"; }
 
 # --- method / origin / input validation
 expect "GET 405" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8781/send-lead.php)" 405
@@ -129,6 +140,7 @@ expect "main ok" "$(post send-lead.php '{"name":"Jane Q Doe","clinicName":"Brigh
 expect "main ok body" "$(body)" '{"ok":true}'
 expect "main payload" "$(ghl)" '{"companyName": "Bright Dental", "customFields": [{"field_value": "Recall", "key": "biggest_gap"}, {"field_value": "3-5", "key": "locations"}, {"field_value": "Dental", "key": "specialty"}], "email": "jane@bright.co", "firstName": "Jane", "lastName": "Q Doe", "locationId": "LOC123", "name": "Jane Q Doe", "phone": "+1 713 555 0100", "source": "Website form"}'
 expect "auth header" "$(cat "$TMP/ghl/auth.txt")" "Bearer pit-test"
+expect "backup written before GHL is called" "$(cat "$TMP/ghl/backup_seen.txt")" yes
 # tag added through the Add Tags API (never in the upsert body, which would replace all tags)
 expect "main tag body" "$(tag)" '{"tags": ["website-lead"]}'
 expect "main tag contact" "$(tagpath)" "/contacts/$(cid jane@bright.co)/tags"
@@ -152,7 +164,8 @@ expect "ghl fail body" "$(body)" '{"ok":false,"error":"Something went wrong. Ple
 expect "failed lead backed up" "$(grep -c '"fail@x.co"' "$PRIV"/leads/*.jsonl)" 1
 expect "ghl detail logged" "$(grep -c 'internal GHL detail' "$PRIV/logs/errors.log")" 1
 expect "failed upsert: no tag attempted" "$(backup fail@x.co ghl_tagged)" None
-expect "backup count (4 real leads)" "$(cat "$PRIV"/leads/*.jsonl | wc -l | tr -d ' ')" 4
+expect "backup count (4 real leads)" "$(grep -c '"status":"received"' "$PRIV"/leads/*.jsonl)" 4
+expect "every lead has an outcome line" "$(grep -c '"status":"outcome"' "$PRIV"/leads/*.jsonl)" 4
 expect "backup perms" "$(php -r 'printf("%o", fileperms($argv[1]) & 0777);' "$PRIV"/leads/*.jsonl)" 600
 
 # --- rate limit: 5 sends per IP per 10 min (4 used above)
@@ -223,6 +236,20 @@ expect "lookup fails: no note" "$(backup lookupfail@x.co ghl_noted)" None
 expect "note fails: still ok" "$(post free-system/send-lead.php '{"name":"Nia","email":"oldnotefail@x.co","clinicName":"NF"}')" 200
 expect "note fails: logged" "$(grep -c 'add note to NOTEFAIL: HTTP 500 note detail' "$PRIV/logs/errors.log")" 1
 expect "note fails: backup" "$(backup oldnotefail@x.co ghl_noted) $(backup oldnotefail@x.co ghl_tagged)" "False True"
+
+# --- time budget: a slow GHL can't hold the request; the save always runs,
+#     the tag is skipped (and logged) once the budget is spent
+rm -rf "$PRIV/ratelimit"
+cp "$PRIV/config.php" "$PRIV/config.full"
+sed -i.bak "s#'ghl_api_url'#'time_budget' => 3.5, 'ghl_api_url'#" "$PRIV/config.php"
+start=$(date +%s)
+expect "slow GHL: still ok" "$(post send-lead.php '{"clinicName":"S","email":"slowupsert@x.co","specialty":"Dental"}')" 200
+expect "slow GHL: finished within the budget" "$(( $(date +%s) - start <= 6 ))" 1
+expect "slow GHL: lookup skipped to leave time for the save" "$(grep -c 'contact lookup skipped: time budget used' "$PRIV/logs/errors.log")" 1
+expect "slow GHL: contact saved" "$(backup slowupsert@x.co sent_to_ghl)" True
+expect "slow GHL: tag skipped" "$(backup slowupsert@x.co ghl_tagged)" False
+expect "slow GHL: skip logged" "$(grep -c "add tag 'website-lead' to .*skipped: time budget used" "$PRIV/logs/errors.log")" 1
+mv "$PRIV/config.full" "$PRIV/config.php"; rm -f "$PRIV/config.php.bak"
 
 # --- missing config: lead still validated and backed up, GHL skipped
 rm -rf "$PRIV/ratelimit"; mv "$PRIV/config.php" "$PRIV/config.off"

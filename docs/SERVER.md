@@ -41,14 +41,17 @@ the staging folder. The `private/` folder is never touched by deploys.
 
 ## Lead backups
 
-`private/leads/2026-09.jsonl` etc. One JSON object per line:
-`time, form, sent_to_ghl, ghl_http, ghl_tagged, ghl_existing, ghl_noted, ip_hash, fields`.
-If `sent_to_ghl` is `false`, the lead did not reach GHL; re-enter it by hand. `ghl_existing`
-is `true` when the contact already existed (then only its empty fields were filled, and
-`ghl_noted` says whether the submission note was added). `false`/`null` in `ghl_tagged` or
-`ghl_noted` means the tag or note was not added: add it by hand. `private/cache/custom-fields.json`
-holds GHL's custom field ids (refreshed daily); deleting it is harmless. Contains personal data: download only when needed,
-and delete months you no longer need (suggested retention: 12 months).
+`private/leads/2026-09.jsonl` etc. Two lines per submission, sharing an `id`:
+- **`"status":"received"`**: `time, id, form, ip_hash, fields`. It's written as soon as the form passes validation, **before any GoHighLevel call**, so a lead is kept even if the request is cut off.
+- **`"status":"outcome"`**: `sent_to_ghl, ghl_http, ghl_tagged, ghl_existing, ghl_noted` (or `test_mode` on staging).
+  - If `sent_to_ghl` is `false`, the lead did not reach GHL; re-enter it by hand.
+  - `ghl_existing` is `true` when the contact already existed: only its empty fields were filled, and `ghl_noted` says whether the submission note was added.
+  - `false` in `ghl_tagged` or `ghl_noted` means the tag or note was not added: add it by hand.
+- **A received line with no outcome line** means the request stopped partway. Check GHL for the contact and add it, its tag and note by hand if missing.
+
+`private/cache/custom-fields.json` holds GHL's custom field ids (refreshed daily). Deleting it is harmless; delete it after adding or renaming a custom field in GHL. The backup contains personal data: download it only when needed, and delete months you no longer need (suggested retention: 12 months).
+
+**Reply timing.** Where the server supports it (PHP-FPM or LiteSpeed), the visitor gets their success reply as soon as the contact is saved; the tag and note are added after that. The script keeps running if the visitor closes the page.
 
 ## Limits (lead-handler.php constants)
 
@@ -57,7 +60,7 @@ and delete months you no longer need (suggested retention: 12 months).
 | Sends per IP | 5 per 10 minutes |
 | Sends overall | 60 per 10 minutes |
 | Request body | 16 KB |
-| GHL timeout | 5 s connect, 15 s total |
+| GHL time budget | 20 s for all calls of one submission; per call: lookup 5 s, field list 5 s, save 8 s (at least 3 s), tag 4 s, note 4 s; 3 s connect |
 
 ## Tests
 

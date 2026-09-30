@@ -4,14 +4,17 @@
 // Request flow:
 //   method check → config → same-origin check → size/JSON check → honeypot
 //   → required/length/email validation → rate limit
-//   → GHL: look up the contact by email/phone
+//   → lead backup, "received" line (before any GHL call, so nothing is lost if
+//     the request is cut off)
+//   → GHL, within a 20 s time budget: look up the contact by email/phone
 //       new contact      → upsert with every field (as before)
 //       existing contact → upsert only fields that are empty on the contact
 //                          (never name or source), matched by the contact's
 //                          own email/phone; then add a note with the whole
 //                          submission
-//     → add the form's tag (existing tags kept)
-//   → lead backup (always) → JSON response
+//     → reply to the visitor as soon as the contact is saved (where the server
+//       allows it) → add the form's tag (existing tags kept) → note
+//   → lead backup, "outcome" line (same id) → JSON response if not sent yet
 //
 // Secrets and data live OUTSIDE public_html, next to it:
 //   ../private/config.php      GHL token + settings (created by hand, see docs)
@@ -33,6 +36,14 @@ const LEAD_RATE_MAX_PER_IP = 5;
 const LEAD_RATE_MAX_GLOBAL = 60;
 const LEAD_DEFAULT_ORIGINS = ['https://docsscale.com', 'https://www.docsscale.com'];
 const LEAD_GENERIC_ERROR = 'Something went wrong. Please try again, or email info@docsscale.com.';
+// Time budget for all GHL calls of one submission, and each call's own cap.
+// The contact save always gets at least LEAD_UPSERT_MIN_SECONDS; the lookup and
+// field list leave room for it, and the tag and note are skipped (and logged)
+// once the budget is spent.
+const LEAD_TIME_BUDGET_SECONDS = 20;
+const LEAD_CONNECT_TIMEOUT_SECONDS = 3;
+const LEAD_UPSERT_MIN_SECONDS = 3;
+const LEAD_CALL_CAPS = ['lookup' => 5, 'fields' => 5, 'upsert' => 8, 'tag' => 4, 'note' => 4];
 
 function lead_private_dir(): string
 {
@@ -118,12 +129,19 @@ function handle_lead_request(string $formKey): never
         lead_respond(429, ['ok' => false, 'error' => 'Too many submissions. Please wait a few minutes and try again.']);
     }
 
+    // Back the lead up before anything can go wrong with GHL; the outcome is
+    // appended under the same id at the end.
+    $leadId = lead_store_received($formKey, $ipHash, $values);
+    ignore_user_abort(true);
+    @set_time_limit(LEAD_TIME_BUDGET_SECONDS + 15);
+    lead_deadline((float) ($config['time_budget'] ?? LEAD_TIME_BUDGET_SECONDS));
+
     $existing = null;
     $lookedUp = false;
     if ($config === null) {
         [$httpCode, $response, $curlError] = [0, false, 'not attempted: no config'];
     } elseif ($config['test_mode']) {
-        lead_store($formKey, $ipHash, $values, false, 0);
+        lead_store_outcome($leadId, $formKey, ['sent_to_ghl' => false, 'ghl_http' => 0, 'test_mode' => true]);
         lead_respond(200, ['ok' => true]);
     } else {
         $body = ($form['build'])($values, $config['ghl_location_id'], $form['source']);
@@ -132,7 +150,7 @@ function handle_lead_request(string $formKey): never
         $existing = lead_find_contact($values, $config, $formKey);
         $lookedUp = true;
         if ($existing === null) {
-            [$httpCode, $response, $curlError] = lead_send_to_ghl($body, $config);
+            [$httpCode, $response, $curlError] = lead_send_to_ghl($body, $config, null, 'upsert');
             $contactId = lead_contact_id($response);
         } else {
             $contactId = (string) $existing['id'];
@@ -140,7 +158,7 @@ function handle_lead_request(string $formKey): never
             if ($update === null) {
                 [$httpCode, $response, $curlError] = [200, '{}', '']; // nothing empty to fill
             } else {
-                [$httpCode, $response, $curlError] = lead_send_to_ghl($update, $config);
+                [$httpCode, $response, $curlError] = lead_send_to_ghl($update, $config, null, 'upsert');
                 $updatedId = lead_contact_id($response);
                 if ($updatedId !== '' && $updatedId !== $contactId) {
                     lead_log('errors', "$formKey: GHL upsert updated $updatedId, lookup found $contactId; note and tag go to $updatedId");
@@ -151,11 +169,9 @@ function handle_lead_request(string $formKey): never
     }
     $ok = $response !== false && $httpCode >= 200 && $httpCode < 300;
 
-    // A repeat submission's details go into a note, so nothing the person wrote
-    // is lost even though their existing fields weren't overwritten.
-    $noted = null;
-    if ($ok && $existing !== null) {
-        $noted = lead_add_note($contactId, lead_note_text($form, $values), $config, $formKey);
+    // The contact is saved: the visitor needn't wait for the tag and note.
+    if ($ok) {
+        lead_reply_early(['ok' => true]);
     }
 
     // Tag the contact so GHL workflows can start. Upsert's own `tags` field would
@@ -167,7 +183,20 @@ function handle_lead_request(string $formKey): never
         $tagged = lead_add_tag($contactId ?? '', $form['tag'], $config, $formKey);
     }
 
-    lead_store($formKey, $ipHash, $values, $ok, $httpCode, $tagged, $lookedUp ? $existing !== null : null, $noted);
+    // A repeat submission's details go into a note, so nothing the person wrote
+    // is lost even though their existing fields weren't overwritten.
+    $noted = null;
+    if ($ok && $existing !== null) {
+        $noted = lead_add_note($contactId, lead_note_text($form, $values), $config, $formKey);
+    }
+
+    lead_store_outcome($leadId, $formKey, [
+        'sent_to_ghl' => $ok,
+        'ghl_http' => $httpCode,
+        'ghl_tagged' => $tagged,
+        'ghl_existing' => $lookedUp ? $existing !== null : null,
+        'ghl_noted' => $noted,
+    ]);
 
     if ($ok) {
         lead_respond(200, ['ok' => true]);
@@ -184,9 +213,63 @@ function handle_lead_request(string $formKey): never
 
 function lead_respond(int $status, array $payload): never
 {
-    http_response_code($status);
-    echo json_encode($payload);
+    if (!lead_reply_early()) {
+        http_response_code($status);
+        echo json_encode($payload);
+    }
     exit;
+}
+
+/**
+ * Sends the visitor's 200 reply now and lets the script carry on (PHP-FPM or
+ * LiteSpeed). Where the server can't do that, nothing is sent here and the
+ * reply goes out at the end as before. Called without a payload, it only says
+ * whether a reply has already gone out.
+ */
+function lead_reply_early(?array $payload = null): bool
+{
+    static $sent = false;
+    if ($payload === null || $sent) {
+        return $sent;
+    }
+    $finish = function_exists('fastcgi_finish_request') ? 'fastcgi_finish_request'
+        : (function_exists('litespeed_finish_request') ? 'litespeed_finish_request' : null);
+    if ($finish === null) {
+        return false;
+    }
+    http_response_code(200);
+    echo json_encode($payload);
+    $finish();
+    return $sent = true;
+}
+
+/** Starts the GHL time budget (with $seconds) or returns seconds left in it. */
+function lead_deadline(?float $seconds = null): float
+{
+    static $deadline = null;
+    if ($seconds !== null) {
+        $deadline = microtime(true) + $seconds;
+    }
+    return $deadline === null ? PHP_FLOAT_MAX : $deadline - microtime(true);
+}
+
+/**
+ * Timeout in seconds for one GHL call of kind $kind ('lookup', 'fields',
+ * 'upsert', 'tag', 'note'), or null to skip the call because the budget is
+ * spent. The lookup and field list keep room for the save; the save always runs.
+ */
+function lead_call_timeout(string $kind): ?float
+{
+    $left = lead_deadline();
+    $cap = LEAD_CALL_CAPS[$kind] ?? 5;
+    if ($kind === 'upsert') {
+        return max(LEAD_UPSERT_MIN_SECONDS, min($cap, $left));
+    }
+    if ($kind === 'lookup' || $kind === 'fields') {
+        $left -= LEAD_CALL_CAPS['upsert'];
+    }
+    $timeout = min($cap, $left);
+    return $timeout >= 1 ? $timeout : null;
 }
 
 function lead_field(array $input, string $key): string
@@ -290,8 +373,12 @@ function lead_rate_bucket_hit(string $file, int $max, int $now): bool
 }
 
 /** @return array{0:int,1:string|false,2:string} */
-function lead_send_to_ghl(array $body, array $config, ?string $url = null): array
+function lead_send_to_ghl(array $body, array $config, ?string $url = null, string $kind = 'upsert'): array
 {
+    $timeout = lead_call_timeout($kind);
+    if ($timeout === null) {
+        return [0, false, 'skipped: time budget used'];
+    }
     $ch = curl_init($url ?? $config['ghl_api_url'] ?? LEAD_GHL_API_URL);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -303,8 +390,9 @@ function lead_send_to_ghl(array $body, array $config, ?string $url = null): arra
             'Content-Type: application/json',
             'Accept: application/json',
         ],
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_TIMEOUT => 15,
+        CURLOPT_CONNECTTIMEOUT_MS => (int) (min(LEAD_CONNECT_TIMEOUT_SECONDS, $timeout) * 1000),
+        CURLOPT_TIMEOUT_MS => (int) ($timeout * 1000),
+        CURLOPT_NOSIGNAL => true,
     ]);
     $response = curl_exec($ch);
     $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -319,8 +407,13 @@ function lead_ghl_base(array $config): string
 }
 
 /** GET a GHL API path; returns the decoded JSON, or null on any failure. */
-function lead_ghl_get(string $path, array $query, array $config, string $formKey, string $what): ?array
+function lead_ghl_get(string $path, array $query, array $config, string $formKey, string $what, string $kind): ?array
 {
+    $timeout = lead_call_timeout($kind);
+    if ($timeout === null) {
+        lead_log('errors', "$formKey: GHL $what skipped: time budget used");
+        return null;
+    }
     $ch = curl_init(lead_ghl_base($config) . $path . '?' . http_build_query($query));
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -329,8 +422,9 @@ function lead_ghl_get(string $path, array $query, array $config, string $formKey
             'Version: ' . LEAD_GHL_API_VERSION,
             'Accept: application/json',
         ],
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_TIMEOUT => 10,
+        CURLOPT_CONNECTTIMEOUT_MS => (int) (min(LEAD_CONNECT_TIMEOUT_SECONDS, $timeout) * 1000),
+        CURLOPT_TIMEOUT_MS => (int) ($timeout * 1000),
+        CURLOPT_NOSIGNAL => true,
     ]);
     $response = curl_exec($ch);
     $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -359,7 +453,7 @@ function lead_find_contact(array $values, array $config, string $formKey): ?arra
     if (($values['phone'] ?? '') !== '') {
         $query['number'] = $values['phone'];
     }
-    $found = lead_ghl_get('/contacts/search/duplicate', $query, $config, $formKey, 'contact lookup');
+    $found = lead_ghl_get('/contacts/search/duplicate', $query, $config, $formKey, 'contact lookup', 'lookup');
     $contact = $found['contact'] ?? null;
     return is_array($contact) && !empty($contact['id']) ? $contact : null;
 }
@@ -380,7 +474,7 @@ function lead_custom_field_ids(array $config, string $formKey): ?array
         }
     }
     $path = '/locations/' . rawurlencode($config['ghl_location_id']) . '/customFields';
-    $list = lead_ghl_get($path, ['model' => 'contact'], $config, $formKey, 'custom field list');
+    $list = lead_ghl_get($path, ['model' => 'contact'], $config, $formKey, 'custom field list', 'fields');
     if ($list === null || !isset($list['customFields']) || !is_array($list['customFields'])) {
         return null;
     }
@@ -468,7 +562,7 @@ function lead_contact_id(string|false $upsertResponse): string
 function lead_add_note(string $contactId, string $text, array $config, string $formKey): bool
 {
     $url = lead_ghl_base($config) . '/contacts/' . rawurlencode($contactId) . '/notes';
-    [$httpCode, $response, $curlError] = lead_send_to_ghl(['body' => $text], $config, $url);
+    [$httpCode, $response, $curlError] = lead_send_to_ghl(['body' => $text], $config, $url, 'note');
     if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
         return true;
     }
@@ -490,7 +584,7 @@ function lead_add_tag(string $contactId, string $tag, array $config, string $for
         return false;
     }
     $url = lead_ghl_base($config) . '/contacts/' . rawurlencode($contactId) . '/tags';
-    [$httpCode, $response, $curlError] = lead_send_to_ghl(['tags' => [$tag]], $config, $url);
+    [$httpCode, $response, $curlError] = lead_send_to_ghl(['tags' => [$tag]], $config, $url, 'tag');
     if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
         return true;
     }
@@ -516,20 +610,34 @@ function lead_ghl_message(string $response): string
 }
 
 /**
- * Append the submission to ../private/leads/YYYY-MM.jsonl, whatever GHL said.
- * `ghl_tagged` / `ghl_noted`: true/false when attempted, null when not.
- * `ghl_existing`: whether the contact already existed (null: not looked up).
+ * Lead backup: ../private/leads/YYYY-MM.jsonl, two lines per submission with the
+ * same `id`. The "received" line (the form's fields) is written before any GHL
+ * call; the "outcome" line records what GHL did. A received line with no outcome
+ * means the request was cut off: check GHL and re-enter the lead if it's missing.
+ * Outcome fields: `sent_to_ghl`, `ghl_http`; `ghl_tagged` / `ghl_noted` true/false
+ * when attempted, null when not; `ghl_existing` whether the contact already
+ * existed (null: not looked up).
  */
-function lead_store(
-    string $formKey,
-    string $ipHash,
-    array $values,
-    bool $sentToGhl,
-    int $httpCode,
-    ?bool $tagged = null,
-    ?bool $existing = null,
-    ?bool $noted = null,
-): void
+function lead_store_received(string $formKey, string $ipHash, array $values): string
+{
+    $id = bin2hex(random_bytes(6));
+    lead_append_backup($formKey, [
+        'time' => gmdate('c'),
+        'id' => $id,
+        'form' => $formKey,
+        'status' => 'received',
+        'ip_hash' => substr($ipHash, 0, 16),
+        'fields' => $values,
+    ]);
+    return $id;
+}
+
+function lead_store_outcome(string $id, string $formKey, array $outcome): void
+{
+    lead_append_backup($formKey, ['time' => gmdate('c'), 'id' => $id, 'form' => $formKey, 'status' => 'outcome'] + $outcome);
+}
+
+function lead_append_backup(string $formKey, array $record): void
 {
     $dir = lead_ensure_dir('leads');
     if ($dir === null) {
@@ -537,17 +645,6 @@ function lead_store(
         return;
     }
     $file = "$dir/" . gmdate('Y-m') . '.jsonl';
-    $record = [
-        'time' => gmdate('c'),
-        'form' => $formKey,
-        'sent_to_ghl' => $sentToGhl,
-        'ghl_http' => $httpCode,
-        'ghl_tagged' => $tagged,
-        'ghl_existing' => $existing,
-        'ghl_noted' => $noted,
-        'ip_hash' => substr($ipHash, 0, 16),
-        'fields' => $values,
-    ];
     file_put_contents($file, json_encode($record, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND | LOCK_EX);
     @chmod($file, 0600);
 }
