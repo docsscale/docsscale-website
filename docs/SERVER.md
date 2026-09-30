@@ -53,6 +53,22 @@ the staging folder. The `private/` folder is never touched by deploys.
 
 **Reply timing.** Where the server supports it (PHP-FPM or LiteSpeed), the visitor gets their success reply as soon as the contact is saved; the tag and note are added after that. The script keeps running if the visitor closes the page.
 
+## Daily failure email
+
+`_server/lead-digest.php` runs once a day from a Hostinger cron job and emails **info@docsscale.com** only when something needs attention since the last run:
+- new lines in `private/logs/errors.log`;
+- leads whose outcome says they didn't reach GHL, weren't tagged, or didn't get their note;
+- leads received more than 15 minutes earlier with no outcome line (the request was cut off).
+
+With nothing to report, no email is sent. Each problem is reported once: the last run and the position in `errors.log` are kept in `private/digest-state.json`. Deleting that file makes the next run report the last 24 hours of leads and the whole `errors.log` again. The email lists each lead's time, form, email address and the manual step needed in GHL.
+
+- **Cron job** (hPanel → Advanced → Cron Jobs): daily at 13:00 UTC (08:00 in Houston in summer, 07:00 in winter), command `/usr/bin/php /home/u145389112/domains/docsscale.com/public_html/_server/lead-digest.php`.
+- **Recipient:** `digest_to` in `private/config.php` (default info@docsscale.com).
+- **Preview without sending:** add `--dry-run` to the command.
+- **Start clean:** `--mark-seen` marks everything up to now as reported without emailing (used once at setup, 1 Oct 2026).
+- It never runs over the web: `_server/` is denied, and the script refuses anything but the command line.
+- Sent with PHP `mail()` from info@docsscale.com. If the emails land in spam, switch to sending through the info@ mailbox over SMTP (needs its password in `private/config.php`).
+
 ## Limits (lead-handler.php constants)
 
 | Setting | Value |

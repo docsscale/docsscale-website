@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Daily failure email** (agency review BE-2): a daily cron job emails info@docsscale.com when the lead handler logged errors, when a lead didn't reach GoHighLevel or wasn't tagged or noted, or when a request was cut off before its outcome was recorded. No email when there's nothing to report; each problem is reported once. Nothing visible changes on the site.
+
 ## [1.2.1] — 2026-09-30
 
 - **Lead backup before GoHighLevel** (agency review BE-1): each lead is written to the backup as soon as it passes validation, before any GHL call, with the GHL outcome added as a second line. A slow or failing GHL can no longer lose a lead. All GHL calls of one submission share a 20-second budget with shorter per-call timeouts; the contact save always runs, and the tag and note are skipped (and logged) if time runs out. The visitor gets their reply as soon as the contact is saved. Nothing visible changes.

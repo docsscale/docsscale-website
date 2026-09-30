@@ -3,7 +3,7 @@
   "private": true,
   "description": "DocsScale website: Next.js frontend (web/), PHP lead handler (server/), tests and docs.",
   "scripts": {
-    "test:server": "bash tests/server/lead-handler.sh",
+    "test:server": "bash tests/server/lead-handler.sh && bash tests/server/lead-digest.sh",
     "visual:baseline": "node tests/visual/capture.mjs --out tests/visual/baseline",
     "visual:candidate": "node tests/visual/capture.mjs --site web/out --out tests/visual/candidate",
     "visual:compare": "node tests/visual/compare.mjs",
