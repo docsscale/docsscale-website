@@ -72,6 +72,16 @@ Record to set at each step (both names), for example: `v=DMARC1; p=quarantine; p
   - **When other developers join:** upgrade the organization to GitHub Team and enable branch protection on `main`. Required checks: the four CI jobs, no force-push, no deletion, at least one review.
 - **Access:** give each person their own logins (Hostinger team access, GoHighLevel user, GitHub member), never shared ones. Remove access when someone leaves.
 
+## Change process
+
+- **Every push goes through a branch and a pull request,** docs-only changes included, with no exceptions. Nothing is merged to `main` without the owner's explicit go-ahead for that merge, and nothing is deployed to production without the owner's explicit approval.
+
+**Process log**
+
+| Date | What happened | Outcome |
+|---|---|---|
+| 30 Sep 2026 | One-off slip: the HANDOVER commit documenting the Bing Webmaster API (`9ae40fc`) was pushed straight to `main`, with no pull request or review. It was flagged by the developer right after. Docs only; nothing deployed; no secrets in it. | The owner reviewed it and kept it on `main` as is. The branch + pull request rule above was confirmed. |
+
 ## Where to read next
 
 - [README.md](../README.md): the repository layout and commands.
