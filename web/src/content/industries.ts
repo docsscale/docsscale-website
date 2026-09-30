@@ -1,13 +1,4 @@
 // Copy for the /industries/ overview. The industry cards come from specialties.ts.
-import { SERVED_SPECIALTIES } from './served-specialties';
-import { SPECIALTIES } from './specialties';
-
-const withPage = new Set(SPECIALTIES.map((s) => s.name.toLowerCase()));
-const withoutPage = SERVED_SPECIALTIES.map((name) => name.toLowerCase()).filter(
-  (name) => !withPage.has(name),
-);
-const others = `${withoutPage.slice(0, -1).join(', ')} and ${withoutPage.at(-1)}`;
-
 export const INDUSTRIES_PAGE = {
   title: 'Industries We Serve: Dental, Chiropractic, Physical Therapy, Med Spa | DocsScale',
   metaDescription:
@@ -18,5 +9,7 @@ export const INDUSTRIES_PAGE = {
   intro:
     'The same four stages, built around the treatments, patients and questions your clinic actually gets. Pick your specialty to see what we run for it.',
   cardLink: 'See',
-  others: `We also work with ${others} clinics. The system is the same; book a call and we'll show you how it fits yours.`,
+  // Owner-approved wording (30 Sep 2026). Keep in step with served-specialties.ts by hand.
+  others:
+    'We also work with weight loss, dermatology, primary care, optometry, and mental health practices — ask us how the system adapts to your specialty.',
 } as const;

@@ -222,7 +222,7 @@ export function Nav({ active, specialties }: Props) {
         }}
       >
         <span style={{ fontSize: 12.5, color: T.caption }}>
-          Seven services, one system: Attract → Capture → Convert → Retain
+          One system: Attract → Capture → Convert → Retain
         </span>
         <Link href="/services" onClick={closeAll} className="nav-link" style={allLink}>
           All services →
