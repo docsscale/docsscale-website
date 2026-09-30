@@ -1,6 +1,6 @@
 // schema.org structured data per page. The Organization block repeats on every
 // page; it is defined once and the Service blocks point to it by @id.
-import { SITE } from './site';
+import { SERVICE_STAGES, SITE } from './site';
 import { SERVED_SPECIALTIES, sentenceCase, specialtyList } from './served-specialties';
 
 export const ORGANIZATION = {
@@ -52,64 +52,10 @@ export const STRUCTURED_DATA = {
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Services',
-        itemListElement: [
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Paid advertising',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'SEO',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Social media management',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Website design',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Funnel design',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Follow-up & booking',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Reputation & reviews',
-            },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Reactivation & recall',
-            },
-          },
-        ],
+        // The seven confirmed services (content/site.ts), same names as the nav and footer.
+        itemListElement: SERVICE_STAGES.flatMap(({ services }) =>
+          services.map(({ name }) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
+        ),
       },
     },
     {
@@ -261,7 +207,7 @@ export const STRUCTURED_DATA = {
       },
     },
   ],
-  servicesDental: [
+  industries: [
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -275,8 +221,35 @@ export const STRUCTURED_DATA = {
         {
           '@type': 'ListItem',
           position: 2,
+          name: 'Industries',
+          item: 'https://docsscale.com/industries/',
+        },
+      ],
+    },
+    ORGANIZATION,
+  ],
+  industryDental: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://docsscale.com/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Industries',
+          item: 'https://docsscale.com/industries/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
           name: 'Dental Marketing',
-          item: 'https://docsscale.com/services/dental',
+          item: 'https://docsscale.com/industries/dental/',
         },
       ],
     },
@@ -293,7 +266,7 @@ export const STRUCTURED_DATA = {
       },
     },
   ],
-  servicesChiropractic: [
+  industryChiropractic: [
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -307,8 +280,14 @@ export const STRUCTURED_DATA = {
         {
           '@type': 'ListItem',
           position: 2,
+          name: 'Industries',
+          item: 'https://docsscale.com/industries/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
           name: 'Chiropractic Marketing',
-          item: 'https://docsscale.com/services/chiropractic',
+          item: 'https://docsscale.com/industries/chiropractic/',
         },
       ],
     },
@@ -325,7 +304,7 @@ export const STRUCTURED_DATA = {
       },
     },
   ],
-  servicesPhysicalTherapy: [
+  industryPhysicalTherapy: [
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -339,8 +318,14 @@ export const STRUCTURED_DATA = {
         {
           '@type': 'ListItem',
           position: 2,
+          name: 'Industries',
+          item: 'https://docsscale.com/industries/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
           name: 'Physical Therapy Marketing',
-          item: 'https://docsscale.com/services/physical-therapy',
+          item: 'https://docsscale.com/industries/physical-therapy/',
         },
       ],
     },
@@ -357,7 +342,7 @@ export const STRUCTURED_DATA = {
       },
     },
   ],
-  servicesMedSpa: [
+  industryMedSpa: [
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -371,8 +356,14 @@ export const STRUCTURED_DATA = {
         {
           '@type': 'ListItem',
           position: 2,
+          name: 'Industries',
+          item: 'https://docsscale.com/industries/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
           name: 'Med Spa Marketing',
-          item: 'https://docsscale.com/services/med-spa',
+          item: 'https://docsscale.com/industries/med-spa/',
         },
       ],
     },

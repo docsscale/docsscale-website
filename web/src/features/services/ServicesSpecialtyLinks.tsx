@@ -36,7 +36,7 @@ export function ServicesSpecialtyLinks() {
           }}
         >
           <Link
-            href="/services/dental"
+            href="/industries/dental"
             data-lift="1"
             style={{
               display: 'inline-flex',
@@ -62,7 +62,7 @@ export function ServicesSpecialtyLinks() {
             </span>
           </Link>
           <Link
-            href="/services/chiropractic"
+            href="/industries/chiropractic"
             data-lift="1"
             style={{
               display: 'inline-flex',
@@ -88,7 +88,7 @@ export function ServicesSpecialtyLinks() {
             </span>
           </Link>
           <Link
-            href="/services/physical-therapy"
+            href="/industries/physical-therapy"
             data-lift="1"
             style={{
               display: 'inline-flex',
@@ -114,7 +114,7 @@ export function ServicesSpecialtyLinks() {
             </span>
           </Link>
           <Link
-            href="/services/med-spa"
+            href="/industries/med-spa"
             data-lift="1"
             style={{
               display: 'inline-flex',

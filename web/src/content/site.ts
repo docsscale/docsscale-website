@@ -16,27 +16,61 @@ export const SITE = {
  *  No phone number or street address: DocsScale has neither publicly. */
 export const CONTACT_LINES = ['Houston, Texas, US', 'info@docsscale.com'] as const;
 
-/** Top navigation. `key` matches the `active` prop pages pass to <Nav>. */
+/** Top navigation. `key` matches the `active` prop pages pass to <Nav>.
+ *  `menu` items open a dropdown (Services, Industries) instead of linking directly. */
 export const NAV_LINKS = [
   { key: 'how', label: 'How it works', href: '/how-it-works' },
-  { key: 'services', label: 'Services', href: '/services' },
+  { key: 'services', label: 'Services', href: '/services', menu: true },
+  { key: 'industries', label: 'Industries', href: '/industries', menu: true },
   { key: 'results', label: 'Results', href: '/results' },
   { key: 'about', label: 'About', href: '/about' },
 ] as const;
 
+/** The seven services (confirmed 28 Sep 2026), by stage. Until each has its own
+ *  page (with the SEO work, 5C), they link to their stage's section on /services. */
+export const SERVICE_STAGES = [
+  {
+    stage: 'attract',
+    label: 'Attract',
+    services: [
+      { name: 'Paid ads (Meta & Google)', blurb: 'Campaigns reported in booked appointments.' },
+      { name: 'Local SEO & Google Business Profile', blurb: 'Rank for the treatments you want more of.' },
+      { name: 'Social media management', blurb: 'A month of posts, approved in ten minutes.' },
+    ],
+  },
+  {
+    stage: 'capture',
+    label: 'Capture',
+    services: [
+      { name: 'Websites & landing pages', blurb: 'Mobile-first pages that turn a click into a request.' },
+    ],
+  },
+  {
+    stage: 'convert',
+    label: 'Convert',
+    services: [{ name: 'Lead follow-up & booking', blurb: 'Every inquiry answered in minutes.' }],
+  },
+  {
+    stage: 'retain',
+    label: 'Retain',
+    services: [
+      { name: 'Reviews & reputation', blurb: 'Review requests after every visit.' },
+      { name: 'Reactivation & recall', blurb: 'Past patients invited back at the right time.' },
+    ],
+  },
+] as const;
+
+export const serviceHref = (stage: string) => `/services#${stage}`;
+
 export type NavKey = (typeof NAV_LINKS)[number]['key'] | 'home' | 'call';
 
+/** Footer columns. Industries are added by the footer from content/specialties.ts. */
 export const FOOTER_COLUMNS = [
   {
     heading: 'Services',
-    links: [
-      { label: 'Paid advertising', href: '/services#attract' },
-      { label: 'SEO', href: '/services#attract' },
-      { label: 'Social media management', href: '/services#attract' },
-      { label: 'Website & funnel design', href: '/services#capture' },
-      { label: 'Follow-up & booking', href: '/services#convert' },
-      { label: 'Reviews & reactivation', href: '/services#retain' },
-    ],
+    links: SERVICE_STAGES.flatMap(({ stage, services }) =>
+      services.map(({ name }) => ({ label: name, href: serviceHref(stage) })),
+    ),
   },
   {
     heading: 'Company',

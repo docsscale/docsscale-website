@@ -38,7 +38,7 @@ export const SCENARIOS = [
     name: 'nav-services-dropdown',
     path: '/',
     viewport: { width: 1440, height: 900 },
-    steps: async (p) => p.getByRole('button', { name: 'Toggle services menu' }).click(),
+    steps: async (p) => p.getByRole('button', { name: 'Services' }).click(),
     shot: { clip: { x: 0, y: 0, width: 1440, height: 420 } },
   },
   {
@@ -47,7 +47,7 @@ export const SCENARIOS = [
     viewport: { width: 375, height: 812 },
     steps: async (p) => {
       await p.getByRole('button', { name: 'Menu' }).click();
-      await p.getByRole('button', { name: 'Toggle services submenu' }).click();
+      await p.locator('#nav-mobile').getByRole('button', { name: 'Services' }).click();
     },
     shot: { fullViewport: true },
   },
@@ -194,7 +194,7 @@ export const SCENARIOS = [
   },
   {
     name: 'specialty-nav-mobile',
-    path: '/services/dental/',
+    path: '/industries/dental/',
     viewport: { width: 375, height: 812 },
     steps: async (p) => {
       await p.getByRole('button', { name: 'Menu' }).click();

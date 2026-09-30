@@ -64,6 +64,7 @@ jobs:
       - run: node tests/visual/capture.mjs --site web/out --out tests/visual/candidate
       - run: node tests/visual/compare.mjs --baseline tests/visual/ci-baseline
       - run: node tests/visual/interactions.mjs
+      - run: node tests/visual/nav-behaviour.mjs
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

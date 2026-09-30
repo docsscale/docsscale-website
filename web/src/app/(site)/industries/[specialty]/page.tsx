@@ -7,17 +7,18 @@ import { pageMetadata } from '@/features/seo/metadata';
 import { SpecialtyPage } from '@/features/services/SpecialtyPage';
 import { Nav } from '@/features/site-chrome/Nav';
 
-// One static page per specialty: /services/dental/, /services/chiropractic/ …
+// One static page per industry: /industries/dental/, /industries/chiropractic/ …
+// (the old /services/<slug>/ URLs 301 here; see server/public_html/.htaccess)
 export const dynamicParams = false;
 export function generateStaticParams() {
   return SPECIALTIES.map((s) => ({ specialty: s.slug }));
 }
 
 const STRUCTURED_DATA_KEY = {
-  dental: 'servicesDental',
-  chiropractic: 'servicesChiropractic',
-  'physical-therapy': 'servicesPhysicalTherapy',
-  'med-spa': 'servicesMedSpa',
+  dental: 'industryDental',
+  chiropractic: 'industryChiropractic',
+  'physical-therapy': 'industryPhysicalTherapy',
+  'med-spa': 'industryMedSpa',
 } as const;
 
 type Props = { params: Promise<{ specialty: string }> };
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: Props) {
   return pageMetadata({
     title: specialty.title,
     description: specialty.metaDescription,
-    path: `/services/${specialty.slug}/`,
+    path: `/industries/${specialty.slug}/`,
   });
 }
 
@@ -43,7 +44,7 @@ export default async function SpecialtyRoute({ params }: Props) {
       {STRUCTURED_DATA[ldKey].map((data, i) => (
         <JsonLd key={i} data={data} />
       ))}
-      <Nav active="services" specialties={SPECIALTY_LINKS} />
+      <Nav active="industries" specialties={SPECIALTY_LINKS} />
       <main>
         <SpecialtyPage specialty={specialty} />
       </main>

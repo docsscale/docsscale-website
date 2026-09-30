@@ -1,8 +1,8 @@
-// Template for the four specialty pages (/services/dental/ …). All copy comes
+// Template for the four industry pages (/industries/dental/ …). All copy comes
 // from src/content/specialties.ts; each specialty has its own accent colour.
 import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import Link from 'next/link';
-import { SPECIALTIES, type Specialty } from '@/content/specialties';
+import { industryHref, SPECIALTIES, type Specialty } from '@/content/specialties';
 import { T } from '@/styles/tokens';
 const eyebrow = {
   fontSize: 12,
@@ -128,7 +128,7 @@ function Hero({ specialty: s }: { specialty: Specialty }) {
             {others.map((o) => (
               <Link
                 key={o.slug}
-                href={`/services/${o.slug}`}
+                href={industryHref(o.slug)}
                 data-lift="1"
                 style={{
                   display: 'flex',
