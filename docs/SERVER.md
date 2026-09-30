@@ -34,7 +34,7 @@ the staging folder. The `private/` folder is never touched by deploys.
 
 ## Rotating the GHL token
 
-1. GHL → Settings → Private Integrations → create a token with **contacts.write** only.
+1. GHL → Settings → Private Integrations → create a token with only these scopes: **contacts.write** (save contacts, tags, notes), **contacts.readonly** (find an existing contact) and **locations/customFields.readonly** (custom field ids).
 2. hPanel → File Manager → `domains/docsscale.com/private/config.php` → edit `ghl_token`.
 3. Submit one test lead (or check `private/logs/errors.log` after the next real one).
 4. Delete the old token in GHL.
@@ -42,8 +42,12 @@ the staging folder. The `private/` folder is never touched by deploys.
 ## Lead backups
 
 `private/leads/2026-09.jsonl` etc. One JSON object per line:
-`time, form, sent_to_ghl, ghl_http, ip_hash, fields`. If `sent_to_ghl` is `false`, the lead
-did not reach GHL; re-enter it by hand. Contains personal data: download only when needed,
+`time, form, sent_to_ghl, ghl_http, ghl_tagged, ghl_existing, ghl_noted, ip_hash, fields`.
+If `sent_to_ghl` is `false`, the lead did not reach GHL; re-enter it by hand. `ghl_existing`
+is `true` when the contact already existed (then only its empty fields were filled, and
+`ghl_noted` says whether the submission note was added). `false`/`null` in `ghl_tagged` or
+`ghl_noted` means the tag or note was not added: add it by hand. `private/cache/custom-fields.json`
+holds GHL's custom field ids (refreshed daily); deleting it is harmless. Contains personal data: download only when needed,
 and delete months you no longer need (suggested retention: 12 months).
 
 ## Limits (lead-handler.php constants)

@@ -9,6 +9,8 @@
 //               (via the Add Tags API, so existing tags are kept). GHL workflows
 //               trigger on it, because API-created contacts never count as a
 //               GHL "form submission".
+//   labels    — field labels for the note added when an existing contact
+//               submits again (their fields aren't overwritten; see lead-handler)
 //   build     — maps the cleaned values to the GHL /contacts/upsert body
 //
 // The two builders reproduce the payloads the original per-folder
@@ -32,6 +34,15 @@ return [
         'required' => ['clinicName', 'email', 'specialty'],
         'source' => 'Website form',
         'tag' => 'website-lead',
+        'labels' => [
+            'name' => 'Name',
+            'clinicName' => 'Clinic',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'specialty' => 'Specialty',
+            'locations' => 'Locations',
+            'message' => 'Biggest gap',
+        ],
         'build' => static function (array $v, string $locationId, string $source): array {
             $body = [
                 'locationId' => $locationId,
@@ -56,7 +67,9 @@ return [
                 $custom[] = ['key' => 'biggest_gap', 'field_value' => $v['message']];
             }
             if ($v['locations'] !== '') {
-                $custom[] = ['key' => 'locations', 'field_value' => $v['locations']];
+                // GHL's option is "3-5" (plain hyphen); pages cached before the
+                // site switched from "3–5" (en dash) may still send the old one.
+                $custom[] = ['key' => 'locations', 'field_value' => str_replace('–', '-', $v['locations'])];
             }
             if ($v['specialty'] !== '') {
                 $custom[] = ['key' => 'specialty', 'field_value' => $v['specialty']];
@@ -81,6 +94,13 @@ return [
         'required' => ['name', 'email'],
         'source' => 'Funnel - Free System',
         'tag' => 'free-system-lead',
+        'labels' => [
+            'name' => 'Name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'clinicName' => 'Clinic',
+            'clinicType' => 'Clinic type',
+        ],
         'build' => static function (array $v, string $locationId, string $source): array {
             [$first, $last] = lead_split_name($v['name']);
             $body = [

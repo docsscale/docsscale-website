@@ -73,6 +73,22 @@ Website leads reach GoHighLevel through its API, so GHL never records a "form su
 - **If tagging ever fails,** the visitor still sees success, since the contact is saved. The failure is logged in `private/logs/errors.log`, and the lead backup records `"ghl_tagged": false`, so the tag can be added by hand.
 - **Code:** `server/public_html/_server/forms.php` (`tag`) and `lead-handler.php` (`lead_add_tag`).
 
+### Existing contacts (repeat submissions)
+
+Before saving, the lead handler looks the person up in GHL by email and phone:
+
+| | New contact | Existing contact |
+|---|---|---|
+| Name, source | set | **never changed** |
+| Email | set | never changed (a new email only fills an empty one; it's in the note) |
+| Clinic, phone, custom fields | set | filled **only where empty** |
+| Note with the whole submission | no | **yes** ("New website submission: …") |
+| Tag | added | added |
+
+- **If the lookup fails** (GHL error, or the token lacks `contacts.readonly`), the lead is saved the old way: a full upsert that overwrites the fields it sends. It's logged in `private/logs/errors.log`.
+- **If GHL's custom field list can't be read,** existing contacts' custom fields are left alone; the answers are in the note.
+- **Code:** `lead-handler.php` (`lead_find_contact`, `lead_fill_only`, `lead_add_note`), labels for the note in `forms.php` (`labels`).
+
 ## UTM naming standard
 
 Every link we control in ads, emails and posts carries UTM tags. Use lowercase words and hyphens only, and never a tool or vendor name.

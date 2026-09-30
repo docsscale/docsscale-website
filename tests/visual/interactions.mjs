@@ -27,7 +27,8 @@ const fillMainForm = async (page, scope) => {
   await f.locator('[name=email]').fill('parity@example.com');
   await f.locator('[name=phone]').fill('+1 713 000 0000');
   await f.locator('[name=specialty]').selectOption('Dental');
-  await f.locator('[name=locations]').selectOption('3–5');
+  // By position: the approved baseline says "3–5", the site now "3-5" (GHL's option).
+  await f.locator('[name=locations]').selectOption({ index: 3 });
   await f.locator('[name=message]').fill('Parity test');
 };
 

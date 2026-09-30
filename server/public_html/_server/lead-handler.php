@@ -3,9 +3,15 @@
 //
 // Request flow:
 //   method check → config → same-origin check → size/JSON check → honeypot
-//   → required/length/email validation → rate limit → GHL upsert
-//   → GHL add tag (the form's tag; existing tags kept) → lead backup (always)
-//   → JSON response
+//   → required/length/email validation → rate limit
+//   → GHL: look up the contact by email/phone
+//       new contact      → upsert with every field (as before)
+//       existing contact → upsert only fields that are empty on the contact
+//                          (never name or source), matched by the contact's
+//                          own email/phone; then add a note with the whole
+//                          submission
+//     → add the form's tag (existing tags kept)
+//   → lead backup (always) → JSON response
 //
 // Secrets and data live OUTSIDE public_html, next to it:
 //   ../private/config.php      GHL token + settings (created by hand, see docs)
@@ -112,6 +118,8 @@ function handle_lead_request(string $formKey): never
         lead_respond(429, ['ok' => false, 'error' => 'Too many submissions. Please wait a few minutes and try again.']);
     }
 
+    $existing = null;
+    $lookedUp = false;
     if ($config === null) {
         [$httpCode, $response, $curlError] = [0, false, 'not attempted: no config'];
     } elseif ($config['test_mode']) {
@@ -119,9 +127,36 @@ function handle_lead_request(string $formKey): never
         lead_respond(200, ['ok' => true]);
     } else {
         $body = ($form['build'])($values, $config['ghl_location_id'], $form['source']);
-        [$httpCode, $response, $curlError] = lead_send_to_ghl($body, $config);
+        // Existing contact: keep what GHL already has. If the lookup itself fails,
+        // fall back to the full upsert so the lead is never lost (and log it).
+        $existing = lead_find_contact($values, $config, $formKey);
+        $lookedUp = true;
+        if ($existing === null) {
+            [$httpCode, $response, $curlError] = lead_send_to_ghl($body, $config);
+            $contactId = lead_contact_id($response);
+        } else {
+            $contactId = (string) $existing['id'];
+            $update = lead_fill_only($body, $existing, $config, $formKey);
+            if ($update === null) {
+                [$httpCode, $response, $curlError] = [200, '{}', '']; // nothing empty to fill
+            } else {
+                [$httpCode, $response, $curlError] = lead_send_to_ghl($update, $config);
+                $updatedId = lead_contact_id($response);
+                if ($updatedId !== '' && $updatedId !== $contactId) {
+                    lead_log('errors', "$formKey: GHL upsert updated $updatedId, lookup found $contactId; note and tag go to $updatedId");
+                    $contactId = $updatedId;
+                }
+            }
+        }
     }
     $ok = $response !== false && $httpCode >= 200 && $httpCode < 300;
+
+    // A repeat submission's details go into a note, so nothing the person wrote
+    // is lost even though their existing fields weren't overwritten.
+    $noted = null;
+    if ($ok && $existing !== null) {
+        $noted = lead_add_note($contactId, lead_note_text($form, $values), $config, $formKey);
+    }
 
     // Tag the contact so GHL workflows can start. Upsert's own `tags` field would
     // replace all existing tags, so the separate Add Tags call is used. A tagging
@@ -129,10 +164,10 @@ function handle_lead_request(string $formKey): never
     // logged and recorded in the backup so the tag can be added by hand.
     $tagged = null;
     if ($ok && !empty($form['tag'])) {
-        $tagged = lead_add_tag((string) $response, $form['tag'], $config, $formKey);
+        $tagged = lead_add_tag($contactId ?? '', $form['tag'], $config, $formKey);
     }
 
-    lead_store($formKey, $ipHash, $values, $ok, $httpCode, $tagged);
+    lead_store($formKey, $ipHash, $values, $ok, $httpCode, $tagged, $lookedUp ? $existing !== null : null, $noted);
 
     if ($ok) {
         lead_respond(200, ['ok' => true]);
@@ -277,17 +312,184 @@ function lead_send_to_ghl(array $body, array $config, ?string $url = null): arra
     return [$httpCode, $response, $curlError];
 }
 
-/** Adds $tag to the contact the upsert returned; true when GHL confirms it. */
-function lead_add_tag(string $upsertResponse, string $tag, array $config, string $formKey): bool
+/** Base URL of the GHL API (tests point ghl_api_url at a local fake). */
+function lead_ghl_base(array $config): string
 {
-    $decoded = json_decode($upsertResponse, true);
-    $contactId = is_array($decoded) ? (string) ($decoded['contact']['id'] ?? '') : '';
+    return (string) preg_replace('#/contacts/upsert$#', '', $config['ghl_api_url'] ?? LEAD_GHL_API_URL);
+}
+
+/** GET a GHL API path; returns the decoded JSON, or null on any failure. */
+function lead_ghl_get(string $path, array $query, array $config, string $formKey, string $what): ?array
+{
+    $ch = curl_init(lead_ghl_base($config) . $path . '?' . http_build_query($query));
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $config['ghl_token'],
+            'Version: ' . LEAD_GHL_API_VERSION,
+            'Accept: application/json',
+        ],
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT => 10,
+    ]);
+    $response = curl_exec($ch);
+    $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $decoded = is_string($response) ? json_decode($response, true) : null;
+    if ($httpCode >= 200 && $httpCode < 300 && is_array($decoded)) {
+        return $decoded;
+    }
+    lead_log('errors', sprintf(
+        '%s: GHL %s failed: HTTP %d %s',
+        $formKey,
+        $what,
+        $httpCode,
+        $response === false ? 'curl: ' . curl_error($ch) : lead_ghl_message((string) $response)
+    ));
+    return null;
+}
+
+/**
+ * The existing GHL contact with this email (or phone), matched the way GHL's
+ * upsert matches. null when there is none, or when the lookup fails (then the
+ * caller falls back to a full upsert, as before this check existed).
+ */
+function lead_find_contact(array $values, array $config, string $formKey): ?array
+{
+    $query = ['locationId' => $config['ghl_location_id'], 'email' => $values['email']];
+    if (($values['phone'] ?? '') !== '') {
+        $query['number'] = $values['phone'];
+    }
+    $found = lead_ghl_get('/contacts/search/duplicate', $query, $config, $formKey, 'contact lookup');
+    $contact = $found['contact'] ?? null;
+    return is_array($contact) && !empty($contact['id']) ? $contact : null;
+}
+
+/**
+ * GHL custom field ids by key ("specialty" => "0AUL…"), cached for a day in
+ * private/cache. null if GHL can't be asked (the caller then leaves custom
+ * fields alone and records the values in the note).
+ */
+function lead_custom_field_ids(array $config, string $formKey): ?array
+{
+    $dir = lead_ensure_dir('cache');
+    $file = $dir === null ? null : "$dir/custom-fields.json";
+    if ($file !== null && is_file($file) && filemtime($file) > time() - 86400) {
+        $cached = json_decode((string) file_get_contents($file), true);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+    $path = '/locations/' . rawurlencode($config['ghl_location_id']) . '/customFields';
+    $list = lead_ghl_get($path, ['model' => 'contact'], $config, $formKey, 'custom field list');
+    if ($list === null || !isset($list['customFields']) || !is_array($list['customFields'])) {
+        return null;
+    }
+    $ids = [];
+    foreach ($list['customFields'] as $field) {
+        $key = preg_replace('/^contact\./', '', (string) ($field['fieldKey'] ?? ''));
+        if ($key !== '' && !empty($field['id'])) {
+            $ids[$key] = (string) $field['id'];
+        }
+    }
+    if ($file !== null) {
+        file_put_contents($file, json_encode($ids), LOCK_EX);
+        @chmod($file, 0600);
+    }
+    return $ids;
+}
+
+/**
+ * Reduces a full upsert body to the upsert for an existing contact: never the
+ * name or source, other fields only where the contact has no value yet; null
+ * when there is nothing to fill. The contact is matched by its own email (or,
+ * without one, its own phone), so its email is never changed and the upsert
+ * can't land on a different contact.
+ */
+function lead_fill_only(array $body, array $contact, array $config, string $formKey): ?array
+{
+    $isEmpty = static fn ($value): bool => $value === null || $value === '' || $value === [];
+    $filled = [];
+    foreach ($body as $key => $value) {
+        if (in_array($key, ['locationId', 'firstName', 'lastName', 'name', 'source', 'customFields'], true)) {
+            continue;
+        }
+        if ($isEmpty($contact[$key] ?? null)) {
+            $filled[$key] = $value;
+        }
+    }
+    if (!empty($body['customFields'])) {
+        $ids = lead_custom_field_ids($config, $formKey);
+        $current = [];
+        foreach ($contact['customFields'] ?? [] as $field) {
+            if (isset($field['id'])) {
+                $current[$field['id']] = $field['value'] ?? ($field['fieldValue'] ?? null);
+            }
+        }
+        $custom = [];
+        foreach ($ids === null ? [] : $body['customFields'] as $field) {
+            $id = $ids[$field['key']] ?? null;
+            if ($id !== null && $isEmpty($current[$id] ?? null)) {
+                $custom[] = $field;
+            }
+        }
+        if ($custom) {
+            $filled['customFields'] = $custom;
+        }
+    }
+    if ($filled === []) {
+        return null;
+    }
+    $match = $isEmpty($contact['email'] ?? null)
+        ? ['phone' => (string) ($contact['phone'] ?? '')]
+        : ['email' => (string) $contact['email']];
+    return ['locationId' => $body['locationId']] + $match + $filled;
+}
+
+/** The whole submission as a plain-text GHL note (labels from forms.php). */
+function lead_note_text(array $form, array $values): string
+{
+    $lines = [sprintf('New website submission: %s, %s UTC', $form['source'], gmdate('j M Y H:i'))];
+    foreach ($form['labels'] ?? [] as $key => $label) {
+        if (($values[$key] ?? '') !== '') {
+            $lines[] = "$label: " . $values[$key];
+        }
+    }
+    return implode("\n", $lines);
+}
+
+/** The contact id in an upsert response ('' when there is none). */
+function lead_contact_id(string|false $upsertResponse): string
+{
+    $decoded = is_string($upsertResponse) ? json_decode($upsertResponse, true) : null;
+    return is_array($decoded) ? (string) ($decoded['contact']['id'] ?? '') : '';
+}
+
+/** Adds a note to an existing contact; true when GHL confirms it. */
+function lead_add_note(string $contactId, string $text, array $config, string $formKey): bool
+{
+    $url = lead_ghl_base($config) . '/contacts/' . rawurlencode($contactId) . '/notes';
+    [$httpCode, $response, $curlError] = lead_send_to_ghl(['body' => $text], $config, $url);
+    if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
+        return true;
+    }
+    lead_log('errors', sprintf(
+        '%s: GHL add note to %s: HTTP %d %s',
+        $formKey,
+        $contactId,
+        $httpCode,
+        $response === false ? "curl: $curlError" : lead_ghl_message($response)
+    ));
+    return false;
+}
+
+/** Adds $tag to the contact ('' = the upsert returned none); true when GHL confirms it. */
+function lead_add_tag(string $contactId, string $tag, array $config, string $formKey): bool
+{
     if ($contactId === '') {
         lead_log('errors', "$formKey: GHL upsert returned no contact id; tag '$tag' not added");
         return false;
     }
-    $upsertUrl = $config['ghl_api_url'] ?? LEAD_GHL_API_URL;
-    $url = preg_replace('#/contacts/upsert$#', '/contacts/' . rawurlencode($contactId) . '/tags', $upsertUrl);
+    $url = lead_ghl_base($config) . '/contacts/' . rawurlencode($contactId) . '/tags';
     [$httpCode, $response, $curlError] = lead_send_to_ghl(['tags' => [$tag]], $config, $url);
     if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
         return true;
@@ -315,9 +517,19 @@ function lead_ghl_message(string $response): string
 
 /**
  * Append the submission to ../private/leads/YYYY-MM.jsonl, whatever GHL said.
- * `ghl_tagged`: true/false when tagging was attempted, null when it wasn't.
+ * `ghl_tagged` / `ghl_noted`: true/false when attempted, null when not.
+ * `ghl_existing`: whether the contact already existed (null: not looked up).
  */
-function lead_store(string $formKey, string $ipHash, array $values, bool $sentToGhl, int $httpCode, ?bool $tagged = null): void
+function lead_store(
+    string $formKey,
+    string $ipHash,
+    array $values,
+    bool $sentToGhl,
+    int $httpCode,
+    ?bool $tagged = null,
+    ?bool $existing = null,
+    ?bool $noted = null,
+): void
 {
     $dir = lead_ensure_dir('leads');
     if ($dir === null) {
@@ -331,6 +543,8 @@ function lead_store(string $formKey, string $ipHash, array $values, bool $sentTo
         'sent_to_ghl' => $sentToGhl,
         'ghl_http' => $httpCode,
         'ghl_tagged' => $tagged,
+        'ghl_existing' => $existing,
+        'ghl_noted' => $noted,
         'ip_hash' => substr($ipHash, 0, 16),
         'fields' => $values,
     ];
