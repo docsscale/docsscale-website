@@ -125,9 +125,9 @@ expect "too long" "$(post send-lead.php "{\"clinicName\":\"$(printf 'x%.0s' {1..
 expect "honeypot" "$(post send-lead.php '{"clinicName":"C","email":"a@b.co","specialty":"Dental","website":"spam"}')" 200
 
 # --- main form: exact GHL payload, same as the original send-lead.php
-expect "main ok" "$(post send-lead.php '{"name":"Jane Q Doe","clinicName":"Bright Dental","email":"jane@bright.co","phone":"+1 713 555 0100","specialty":"Dental","locations":"3–5","message":"Recall"}')" 200
+expect "main ok" "$(post send-lead.php '{"name":"Jane Q Doe","clinicName":"Bright Dental","email":"jane@bright.co","phone":"+1 713 555 0100","specialty":"Dental","locations":"3-5","message":"Recall"}')" 200
 expect "main ok body" "$(body)" '{"ok":true}'
-expect "main payload" "$(ghl)" '{"companyName": "Bright Dental", "customFields": [{"field_value": "Recall", "key": "biggest_gap"}, {"field_value": "3–5", "key": "locations"}, {"field_value": "Dental", "key": "specialty"}], "email": "jane@bright.co", "firstName": "Jane", "lastName": "Q Doe", "locationId": "LOC123", "name": "Jane Q Doe", "phone": "+1 713 555 0100", "source": "Website form"}'
+expect "main payload" "$(ghl)" '{"companyName": "Bright Dental", "customFields": [{"field_value": "Recall", "key": "biggest_gap"}, {"field_value": "3-5", "key": "locations"}, {"field_value": "Dental", "key": "specialty"}], "email": "jane@bright.co", "firstName": "Jane", "lastName": "Q Doe", "locationId": "LOC123", "name": "Jane Q Doe", "phone": "+1 713 555 0100", "source": "Website form"}'
 expect "auth header" "$(cat "$TMP/ghl/auth.txt")" "Bearer pit-test"
 # tag added through the Add Tags API (never in the upsert body, which would replace all tags)
 expect "main tag body" "$(tag)" '{"tags": ["website-lead"]}'
@@ -168,6 +168,11 @@ expect "tag fails: backup says untagged" "$(backup tagfail@x.co ghl_tagged)" Fal
 expect "no contact id: still ok" "$(post free-system/send-lead.php '{"name":"N","email":"noid@x.co"}')" 200
 expect "no contact id: logged" "$(grep -c "returned no contact id; tag 'free-system-lead' not added" "$PRIV/logs/errors.log")" 1
 expect "no contact id: backup says untagged" "$(backup noid@x.co ghl_tagged)" False
+
+# --- a page cached before the switch still sends "3–5" (en dash): stored as GHL's "3-5"
+rm -rf "$PRIV/ratelimit"
+expect "old en dash: ok" "$(post send-lead.php '{"clinicName":"C","email":"dash@x.co","specialty":"Dental","locations":"3–5"}')" 200
+expect "old en dash: sent as 3-5" "$(ghl | grep -c '"field_value": "3-5", "key": "locations"')" 1
 
 # --- existing contacts: only empty fields are filled (never name or source);
 #     the submission goes into a note; the tag is always added

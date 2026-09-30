@@ -67,7 +67,9 @@ return [
                 $custom[] = ['key' => 'biggest_gap', 'field_value' => $v['message']];
             }
             if ($v['locations'] !== '') {
-                $custom[] = ['key' => 'locations', 'field_value' => $v['locations']];
+                // GHL's option is "3-5" (plain hyphen); pages cached before the
+                // site switched from "3–5" (en dash) may still send the old one.
+                $custom[] = ['key' => 'locations', 'field_value' => str_replace('–', '-', $v['locations'])];
             }
             if ($v['specialty'] !== '') {
                 $custom[] = ['key' => 'specialty', 'field_value' => $v['specialty']];
