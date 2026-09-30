@@ -14,7 +14,7 @@ Every account and service the website depends on, where each credential is kept 
 | **Staging** | staging.docsscale.com password gate | user `docsscale` | `~/DocsScale-Secure/staging-login.txt` (owner's Mac) |
 | **Google Analytics 4** | Analytics (on from v1.1, consent-based) | Measurement ID `G-804589LNJW` in `web/src/content/analytics.ts` | Google account of the owner |
 | **Google Search Console** | Search performance | Domain property `sc-domain:docsscale.com` (verified; owner: Abdul). **Sitemap `https://docsscale.com/sitemap.xml` submitted on 29 Sep 2026** (14 URLs, all returning 200) | Owner's Google account |
-| **Bing Webmaster Tools** | Bing search data (read-only use). See [Bing Webmaster API](#bing-webmaster-api) | Site `https://docsscale.com/` (verified; imported from Search Console on 29 Sep 2026) | API key: **only** in `~/DocsScale-Secure/bing-webmaster-api-key.txt` (owner's Mac, owner-only permissions) |
+| **Bing Webmaster Tools** | Bing search data (read-only use). See [Bing Webmaster API](#bing-webmaster-api) | Site `https://docsscale.com/` (verified; imported from Search Console on 29 Sep 2026). **Sitemap `https://docsscale.com/sitemap.xml` submitted on 30 Sep 2026** | API key: **only** in `~/DocsScale-Secure/bing-webmaster-api-key.txt` (owner's Mac, owner-only permissions) |
 
 - **Backups and originals:** `~/DocsScale-Secure/` on the owner's Mac: the full hPanel backup (25 Sep 2026) and every original server file replaced during hardening. It isn't synced and isn't in git. **It contains the GoHighLevel token; treat it as secret.**
 - **Rotating the GoHighLevel token:** see [SERVER.md](SERVER.md#rotating-the-ghl-token).
@@ -25,12 +25,13 @@ Set up on 30 Sep 2026 for **reading** Bing data about docsscale.com. It's accoun
 
 - **Key:** a Bing Webmaster API key, kept in `~/DocsScale-Secure/bing-webmaster-api-key.txt` (permissions 600). It's never in the repository, the site or any committed file. It's tied to the owner's Bing Webmaster account.
 - **Endpoint:** `https://ssl.bing.com/webmaster/api.svc/json/<Method>?siteUrl=https%3A%2F%2Fdocsscale.com%2F&apikey=<key>`. Bing only accepts the key as a query parameter, so never paste a full request URL into a ticket, chat or log.
-- **Read-only methods used:** `GetUserSites`, `GetQueryStats`, `GetPageStats`, `GetCrawlStats`, `GetCrawlIssues`, `GetRankAndTrafficStats`, `GetUrlInfo`, `GetFeeds`. The key itself can also make changes (submit URLs or sitemaps); nothing does that without the owner's approval.
+- **Read-only methods used:** `GetUserSites`, `GetQueryStats`, `GetPageStats`, `GetCrawlStats`, `GetCrawlIssues`, `GetRankAndTrafficStats`, `GetUrlInfo`, `GetFeeds`. The one write so far: `SubmitFeed` for the sitemap (owner-approved, 30 Sep 2026). The key itself can also make changes (submit URLs or sitemaps); nothing does that without the owner's approval.
 - **Check on 30 Sep 2026:**
   - `docsscale.com` is verified.
   - Bing first saw the homepage on 12 Aug 2026 and last crawled it on 28 Sep 2026.
   - Query, page, traffic and crawl stats are still empty. Bing fills them in a few days after a site is added, so check again in about a week.
-  - No sitemap is submitted in Bing yet. That's an SEO task, left for when SEO work resumes.
+  - Sitemap `https://docsscale.com/sitemap.xml` submitted to Bing on 30 Sep 2026 (basic setup, like Search Console); status "Pending" until Bing fetches it.
+  - A read-only check of the data and sitemap status is scheduled for 7 Oct 2026.
 - **Rotating the key:** Bing Webmaster Tools → gear icon (Settings) → **API access** → **API key** → generate a new key, then replace the one line in the file above. The old key stops working immediately.
 
 ## Email authentication (SPF, DKIM, DMARC)
