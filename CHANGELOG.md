@@ -3,10 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [Unreleased]
+## [1.2.0] — 2026-09-30
 
-### Visible changes (approved plan; before/after pending approval)
-- **New header:** a **Services** dropdown with the seven confirmed services grouped by stage (each with a one-line description, linking to its stage on /services), and a new **Industries** dropdown with the four industry pages. Mobile menu: full height, with Services and Industries sections.
+### Visible changes (approved by the owner, before/after reviewed)
+- **New header:** a **Services** dropdown with the seven confirmed services grouped by stage (each with a one-line description, linking to its stage on /services; footnote "One system: Attract → Capture → Convert → Retain"), and a new **Industries** dropdown with the four industry pages. Mobile menu: full height, with Services and Industries sections.
 - **Industry pages moved** from `/services/<industry>/` to `/industries/<industry>/` (301 redirects, one hop, query strings kept), plus a new overview page at **/industries/**.
 - **Footer:** the Services column shows the seven confirmed service names; a new Industries column.
 - **Dropdown bug fixed:** no gap between the button and the menu (it no longer closes on the way down), a tap opens it once instead of open-then-close, Escape and Tab work, one menu at a time.
