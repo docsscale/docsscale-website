@@ -76,7 +76,7 @@ With nothing to report, no email is sent. Each problem is reported once: the las
 | Sends per IP | 5 per 10 minutes |
 | Sends overall | 60 per 10 minutes |
 | Request body | 16 KB |
-| GHL time budget | 20 s for all calls of one submission; per call: lookup 5 s, field list 5 s, save 8 s (at least 3 s), tag 4 s, note 4 s; 3 s connect |
+| GHL time budget | 20 s for all calls of one submission; per call: lookup 5 s, field list 5 s, save 8 s (at least 3 s), tag 4 s, note 4 s; 5 s connect (includes the DNS lookup, which is done once per submission and reused) |
 
 ## Tests
 

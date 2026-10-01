@@ -5,6 +5,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+- **GoHighLevel calls survive a slow DNS lookup:** the first live failure email found a lookup that failed because the server took over 3 seconds to resolve GoHighLevel's address. The connect timeout is now 5 seconds, and the address is looked up once per submission and reused by every GHL call. Nothing visible changes.
 - **Form messages reach screen readers** (agency review QA-1, WCAG 4.1.3): "Sending…" is announced, error messages are alerts, and after a successful send on the homepage and Book a Call forms focus moves to the confirmation. Nothing changes for sighted visitors (every page pixel-identical).
 
 ## [1.2.2] — 2026-10-01

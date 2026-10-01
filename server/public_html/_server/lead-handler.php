@@ -41,7 +41,8 @@ const LEAD_GENERIC_ERROR = 'Something went wrong. Please try again, or email inf
 // field list leave room for it, and the tag and note are skipped (and logged)
 // once the budget is spent.
 const LEAD_TIME_BUDGET_SECONDS = 20;
-const LEAD_CONNECT_TIMEOUT_SECONDS = 3;
+// Includes the DNS lookup: the host's resolver has been seen taking over 3 s.
+const LEAD_CONNECT_TIMEOUT_SECONDS = 5;
 const LEAD_UPSERT_MIN_SECONDS = 3;
 const LEAD_CALL_CAPS = ['lookup' => 5, 'fields' => 5, 'upsert' => 8, 'tag' => 4, 'note' => 4];
 
@@ -243,6 +244,21 @@ function lead_reply_early(?array $payload = null): bool
     return $sent = true;
 }
 
+/**
+ * One curl share handle per request, holding the DNS cache (and TLS sessions),
+ * so GHL's address is looked up once and reused by every call of a submission.
+ */
+function lead_curl_share(): CurlShareHandle
+{
+    static $share = null;
+    if ($share === null) {
+        $share = curl_share_init();
+        curl_share_setopt($share, CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS);
+        curl_share_setopt($share, CURLSHOPT_SHARE, CURL_LOCK_DATA_SSL_SESSION);
+    }
+    return $share;
+}
+
 /** Starts the GHL time budget (with $seconds) or returns seconds left in it. */
 function lead_deadline(?float $seconds = null): float
 {
@@ -393,6 +409,7 @@ function lead_send_to_ghl(array $body, array $config, ?string $url = null, strin
         CURLOPT_CONNECTTIMEOUT_MS => (int) (min(LEAD_CONNECT_TIMEOUT_SECONDS, $timeout) * 1000),
         CURLOPT_TIMEOUT_MS => (int) ($timeout * 1000),
         CURLOPT_NOSIGNAL => true,
+        CURLOPT_SHARE => lead_curl_share(),
     ]);
     $response = curl_exec($ch);
     $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -425,6 +442,7 @@ function lead_ghl_get(string $path, array $query, array $config, string $formKey
         CURLOPT_CONNECTTIMEOUT_MS => (int) (min(LEAD_CONNECT_TIMEOUT_SECONDS, $timeout) * 1000),
         CURLOPT_TIMEOUT_MS => (int) ($timeout * 1000),
         CURLOPT_NOSIGNAL => true,
+        CURLOPT_SHARE => lead_curl_share(),
     ]);
     $response = curl_exec($ch);
     $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
