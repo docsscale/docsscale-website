@@ -123,6 +123,14 @@ function handle_lead_request(string $formKey): never
     if (!filter_var($values['email'], FILTER_VALIDATE_EMAIL)) {
         lead_respond(400, ['ok' => false, 'error' => 'Please enter a valid email address.']);
     }
+    if (($values['phone'] ?? '') !== '') {
+        $phone = lead_normalize_phone($values['phone']);
+        if ($phone === null) {
+            lead_log('rejected', "$formKey: invalid phone");
+            lead_respond(400, ['ok' => false, 'error' => 'Please enter a valid phone number, including the country code.']);
+        }
+        $values['phone'] = $phone;
+    }
 
     $ipHash = hash('sha256', lead_client_ip());
     if (!lead_rate_limit_allows($ipHash)) {
@@ -292,6 +300,36 @@ function lead_field(array $input, string $key): string
 {
     $value = $input[$key] ?? '';
     return is_scalar($value) ? trim((string) $value) : '';
+}
+
+/**
+ * The phone number in E.164 (+17135550100), or null if it isn't one.
+ * The forms send E.164 already (country picker, checked in the browser). A US
+ * number in the old free-text format, from a page cached before the change,
+ * is still accepted: 10 digits, or 11 starting with 1, as a valid NANP number.
+ * Anything else without a country code is refused rather than guessed: GHL
+ * would otherwise prefix +1 to it (that's how "+103225351511" got in).
+ */
+function lead_normalize_phone(string $phone): ?string
+{
+    $digits = preg_replace('/\D+/', '', $phone);
+    if (str_starts_with(ltrim($phone), '+')) {
+        $e164 = '+' . $digits;
+    } elseif (strlen($digits) === 10) {
+        $e164 = '+1' . $digits;
+    } elseif (strlen($digits) === 11 && $digits[0] === '1') {
+        $e164 = '+' . $digits;
+    } else {
+        return null;
+    }
+    if (!preg_match('/^\+[1-9]\d{7,14}$/', $e164)) {
+        return null;
+    }
+    // North America (+1): area code and exchange can't start with 0 or 1.
+    if (str_starts_with($e164, '+1') && !preg_match('/^\+1[2-9]\d{2}[2-9]\d{6}$/', $e164)) {
+        return null;
+    }
+    return $e164;
 }
 
 function lead_split_name(string $name): array

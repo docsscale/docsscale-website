@@ -38,6 +38,7 @@ async function fillMain(page, scope) {
   await f.locator('[name=name]').fill('QA');
   await f.locator('[name=clinicName]').fill('Clinic');
   await f.locator('[name=email]').fill('qa@example.com');
+  await f.locator('input[type=tel]').fill('713 555 0100');
   await f.locator('[name=specialty]').selectOption('Dental');
   await f.locator('[name=locations]').selectOption({ index: 1 });
 }
@@ -79,7 +80,8 @@ for (const { name, path, scope, success } of [
   const form = page.locator('#form form');
   await form.locator('input[placeholder="Full name"]').fill('QA');
   await form.locator('input[placeholder="Work email"]').fill('qa@example.com');
-  await form.locator('select').selectOption('Dental');
+  await form.locator('input[type=tel]').fill('713 555 0100');
+  await form.locator('select[aria-label="Clinic type"]').selectOption('Dental');
   await form.locator('button[type=submit]').click();
   expect('funnel: "Sending…" announced', await form.locator('[role=status]').textContent(), 'Sending…');
   release();

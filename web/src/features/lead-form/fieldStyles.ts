@@ -34,3 +34,6 @@ export const errorStyle = {
   borderRadius: 12,
   padding: '10px 14px',
 } as const;
+
+/** PhoneField look on the main-site forms. */
+export const phoneVariant = { input: fieldStyle, height: 50, radius: 14 };

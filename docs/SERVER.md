@@ -39,6 +39,10 @@ the staging folder. The `private/` folder is never touched by deploys.
 3. Submit one test lead (or check `private/logs/errors.log` after the next real one).
 4. Delete the old token in GHL.
 
+## Phone numbers
+
+Phone is required on all three forms. The browser checks the number for the country picked (default United States) and sends it in E.164 (`+17135550100`). The server accepts only E.164, or a valid US number in the old free-text format (from pages cached before v1.2.4), which it converts. Anything else without a country code is refused with "Please enter a valid phone number, including the country code.": GoHighLevel would otherwise assume +1 (how numbers like `+103225351511` got in before).
+
 ## Lead backups
 
 `private/leads/2026-09.jsonl` etc. Two lines per submission, sharing an `id`:

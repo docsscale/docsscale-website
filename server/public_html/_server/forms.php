@@ -31,7 +31,7 @@ return [
             'locations' => 20,
             'message' => 2000,
         ],
-        'required' => ['clinicName', 'email', 'specialty'],
+        'required' => ['clinicName', 'email', 'phone', 'specialty'],
         'source' => 'Website form',
         'tag' => 'website-lead',
         'labels' => [
@@ -91,7 +91,7 @@ return [
             'clinicType' => 60,
             'source' => 60, // sent by the page; ignored in favour of the pinned value
         ],
-        'required' => ['name', 'email'],
+        'required' => ['name', 'email', 'phone'],
         'source' => 'Funnel - Free System',
         'tag' => 'free-system-lead',
         'labels' => [

@@ -25,7 +25,7 @@ const fillMainForm = async (page, scope) => {
   await f.locator('[name=name]').fill('QA Parity');
   await f.locator('[name=clinicName]').fill('Parity Clinic');
   await f.locator('[name=email]').fill('parity@example.com');
-  await f.locator('[name=phone]').fill('+1 713 000 0000');
+  await f.locator('input[type=tel]').fill('713 555 0100');
   await f.locator('[name=specialty]').selectOption('Dental');
   // By position: the approved baseline says "3–5", the site now "3-5" (GHL's option).
   await f.locator('[name=locations]').selectOption({ index: 3 });
@@ -154,9 +154,9 @@ export const SCENARIOS = [
       const f = p.locator('#form form');
       await f.locator('input[placeholder="Full name"]').fill('QA Parity');
       await f.locator('input[placeholder="Work email"]').fill('parity@example.com');
-      await f.locator('input[placeholder="Mobile number"]').fill('+1 713 000 0000');
+      await f.locator('input[placeholder="Mobile number"]').fill('713 555 0100');
       await f.locator('input[placeholder="Clinic name"]').fill('Parity Clinic');
-      await f.locator('select').selectOption('Dental');
+      await f.locator('select[aria-label="Clinic type"]').selectOption('Dental');
       await f.locator('button[type=submit]').click();
       await p.waitForURL('**/free-system/thank-you/');
       await p.clock.runFor(3000);

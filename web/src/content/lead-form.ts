@@ -8,6 +8,11 @@ export const SPECIALTY_OPTIONS = [...SERVED_SPECIALTIES, 'Other'] as const;
 // Must match the GHL "Locations" field's options exactly (plain hyphen in 3-5).
 export const LOCATION_OPTIONS = ['1', '2', '3-5', '6+'] as const;
 
+export const PHONE_MESSAGES = {
+  required: 'Please enter your phone number.',
+  invalid: (country: string) => `Please enter a valid phone number for ${country}, or pick another country.`,
+} as const;
+
 export const LEAD_FORM_MESSAGES = {
   sending: 'Sending…',
   genericError: 'Something went wrong. Please email info@docsscale.com instead.',

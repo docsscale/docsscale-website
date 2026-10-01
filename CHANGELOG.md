@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Phone required on all three forms, with a country picker** (default United States, never guessed from the visitor's location). The number is checked for the chosen country and sent to GoHighLevel as E.164 (`+17135550100`), so GHL no longer prefixes +1 to numbers typed without a country code. The server refuses numbers it can't place in a country and still accepts old-format US numbers from cached pages. On the homepage form, email and phone now each get a full-width row. Owner approval pending.
+
 ## [1.2.3] — 2026-10-01
 
 - **GoHighLevel calls survive a slow DNS lookup:** the first live failure email found a lookup that failed because the server took over 3 seconds to resolve GoHighLevel's address. The connect timeout is now 5 seconds, and the address is looked up once per submission and reused by every GHL call. Nothing visible changes.

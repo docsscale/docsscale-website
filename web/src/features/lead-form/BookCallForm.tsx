@@ -5,7 +5,8 @@
 import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/content/lead-form';
 import { T } from '@/styles/tokens';
 import { StatusAnnouncer, useFocusOnMount } from './a11y';
-import { errorStyle, fieldStyle, textareaStyle } from './fieldStyles';
+import { errorStyle, fieldStyle, phoneVariant, textareaStyle } from './fieldStyles';
+import { PhoneField } from './PhoneField';
 import { Honeypot } from './Honeypot';
 import { useLeadSubmit } from './useLeadSubmit';
 
@@ -16,7 +17,7 @@ const row = {
 } as const;
 
 export function BookCallForm() {
-  const { status, error, onSubmit } = useLeadSubmit('book-a-call');
+  const { status, error, onSubmit, register } = useLeadSubmit('book-a-call');
   const submitting = status === 'submitting';
 
   return (
@@ -77,13 +78,7 @@ export function BookCallForm() {
               aria-label="Work email"
               style={fieldStyle}
             />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone (optional)"
-              aria-label="Phone (optional)"
-              style={fieldStyle}
-            />
+            <PhoneField register={register} variant={phoneVariant} placeholder="Phone" />
           </div>
           <div style={row}>
             <select required name="specialty" aria-label="Specialty" style={fieldStyle} defaultValue="">
