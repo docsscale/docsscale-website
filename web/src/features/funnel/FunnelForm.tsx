@@ -7,6 +7,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { FUNNEL_FORM } from '@/content/funnel';
 import { trackLead } from '@/features/analytics/track';
 import { Honeypot, honeypotValue } from '@/features/lead-form/Honeypot';
+import { StatusAnnouncer } from '@/features/lead-form/a11y';
 
 type Fields = { name: string; email: string; phone: string; clinic: string; type: string };
 
@@ -101,7 +102,12 @@ export function FunnelForm() {
       >
         {status === 'submitting' ? 'Sending…' : FUNNEL_FORM.submit}
       </button>
-      {status === 'error' && <span style={{ fontSize: 13, color: '#B4432F', fontWeight: 700 }}>{error}</span>}
+      {status === 'error' && (
+        <span role="alert" style={{ fontSize: 13, color: '#B4432F', fontWeight: 700 }}>
+          {error}
+        </span>
+      )}
+      <StatusAnnouncer message={status === 'submitting' ? 'Sending…' : ''} />
       <span style={{ fontSize: 13, color: '#6C6962', fontWeight: 600 }}>{FUNNEL_FORM.footnote}</span>
     </form>
   );
