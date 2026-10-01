@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **GoHighLevel calls survive a slow DNS lookup:** the first live failure email found a lookup that failed because the server took over 3 seconds to resolve GoHighLevel's address. The connect timeout is now 5 seconds, and the address is looked up once per submission and reused by every GHL call. Nothing visible changes.
+
 ## [1.2.2] — 2026-10-01
 
 - **Daily failure email** (agency review BE-2): a daily cron job emails info@docsscale.com when the lead handler logged errors, when a lead didn't reach GoHighLevel or wasn't tagged or noted, or when a request was cut off before its outcome was recorded. No email when there's nothing to report; each problem is reported once. Nothing visible changes on the site.

@@ -123,6 +123,11 @@ rec=[r for r in rows if r['status']=='received' and r['fields'].get('email')=='$
 out=[r for r in rows if r['status']=='outcome' and r['id']==rec['id']]
 print({**rec, **(out[-1] if out else {})}.get('$2', 'MISSING'))"; }
 
+# --- GHL calls share one DNS cache per request (the host's resolver can be slow)
+expect "one shared curl handle per request" "$(php -r 'require $argv[1]; echo lead_curl_share() === lead_curl_share() ? "same" : "different";' "$ROOT/server/public_html/_server/lead-handler.php")" same
+expect "connect timeout allows a slow DNS lookup" "$(php -r 'require $argv[1]; echo LEAD_CONNECT_TIMEOUT_SECONDS;' "$ROOT/server/public_html/_server/lead-handler.php")" 5
+expect "both GHL request paths use the shared handle" "$(grep -c 'CURLOPT_SHARE => lead_curl_share()' "$ROOT/server/public_html/_server/lead-handler.php")" 2
+
 # --- method / origin / input validation
 expect "GET 405" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8781/send-lead.php)" 405
 expect "cross-origin" "$(post send-lead.php '{}' https://evil.example)" 403
