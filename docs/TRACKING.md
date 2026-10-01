@@ -53,9 +53,14 @@ To undo it, open **https://docsscale.com/?team=off**. The mark lives in that bro
 | `generate_lead` | A form submitted successfully | `form`: `home`, `book-a-call` or `free-system`; `lead_magnet`: `free-system` for the funnel; `page`: path |
 | `view_lead_magnet` | A lead-magnet landing page opened | `lead_magnet`: `free-system` |
 | `book_call` | The funnel's booking confirmation shown (GoHighLevel returned with `?booked=1`) | `source`: `free-system` |
+| `LCP`, `INP`, `CLS` | Real-user Core Web Vitals, once per page view, sent when the visitor leaves or hides the page | `value`: the metric as an integer (ms; CLS × 1000); `metric_value` (exact); `metric_rating`: `good`, `needs-improvement` or `poor`; `metric_id`; `page_path` |
 
 - **Useful report:** Explore → Free form. Rows: `lead_magnet` × Session source / medium. Values: event count of `generate_lead`.
 - **What's never sent to GA:** personal data (names, emails, phone numbers).
+- **Web Vitals** (added v1.2.4) measure how fast pages feel for real visitors, which lab tests can't show. Google's thresholds for "good" at the 75th percentile: LCP ≤ 2,500 ms, INP ≤ 200 ms, CLS ≤ 100 (that is, 0.1).
+  - **To see the ratings in reports**, add an event-scoped custom dimension `metric_rating` (GA4 → Admin → Custom definitions).
+  - **Quick read:** Explore → Free form. Rows: Event name (LCP/INP/CLS) × Page path. Values: Event count and Event value, so average = Event value ÷ Event count.
+  - Only visitors who accept analytics are measured, so samples grow slowly. Read them once each page has a few dozen visits.
 
 ## GoHighLevel tags (workflow triggers)
 

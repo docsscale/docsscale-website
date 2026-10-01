@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Real-user Web Vitals in GA4** (agency review FE-4): LCP, INP and CLS are sent as GA4 events (`LCP`, `INP`, `CLS`) with a good / needs-improvement / poor rating, after analytics consent only, using Google's `web-vitals` library (about 2 KB). This shows whether the slow-hero finding (FE-1) affects real visitors before anything visible changes. Nothing visible changes.
+
 ## [1.2.3] — 2026-10-01
 
 - **GoHighLevel calls survive a slow DNS lookup:** the first live failure email found a lookup that failed because the server took over 3 seconds to resolve GoHighLevel's address. The connect timeout is now 5 seconds, and the address is looked up once per submission and reused by every GHL call. Nothing visible changes.
