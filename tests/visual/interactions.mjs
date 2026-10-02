@@ -177,6 +177,7 @@ export const SCENARIOS = [
       const f = p.locator('#form form');
       await f.locator('input[placeholder="Full name"]').fill('QA Parity');
       await f.locator('input[placeholder="Work email"]').fill('parity@example.com');
+      await f.locator('input[type=tel]').fill('713 555 0100');
       await f.locator('button[type=submit]').click();
       await p.getByText('Please enter a valid email address.').waitFor();
     },
