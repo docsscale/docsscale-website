@@ -67,6 +67,7 @@ jobs:
       - run: node tests/visual/interactions.mjs
       - run: node tests/visual/nav-behaviour.mjs
       - run: node tests/visual/form-a11y.mjs
+      - run: node tests/visual/web-vitals.mjs
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
