@@ -16,6 +16,7 @@
 // SPA page changes are counted by GA4's enhanced measurement (history events).
 import { CONSENT_STORAGE_KEY, GA_MEASUREMENT_ID, TEAM_MESSAGES, TEAM_STORAGE_KEY } from '@/content/analytics';
 import { ConsentBanner } from './ConsentBanner';
+import { TrackEvents } from './TrackEvents';
 import { WebVitals } from './WebVitals';
 
 const bootstrap = (id: string) => `
@@ -39,6 +40,7 @@ export function GoogleAnalytics() {
       <script dangerouslySetInnerHTML={{ __html: bootstrap(GA_MEASUREMENT_ID) }} />
       <ConsentBanner />
       <WebVitals />
+      <TrackEvents />
     </>
   );
 }

@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { DEFAULT_PHONE_COUNTRY, PHONE_COUNTRIES } from '@/content/phone-countries';
 import { PHONE_MESSAGES } from '@/content/lead-form';
+import { formForPath, trackFormError } from '@/features/analytics/track';
 import { T } from '@/styles/tokens';
 
 /** Returns the fields to send (e.g. { phone: '+1…' }), or null when invalid. */
@@ -44,6 +45,7 @@ export function PhoneField({
 
   useEffect(() => {
     const fail = (message: string) => {
+      trackFormError(formForPath(window.location.pathname), 'phone');
       setError(message);
       inputRef.current?.focus();
       return null;
@@ -127,6 +129,7 @@ export function PhoneField({
           ref={inputRef}
           type="tel"
           autoComplete="tel-national"
+          data-field="phone"
           inputMode="tel"
           required
           placeholder={placeholder}

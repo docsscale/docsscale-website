@@ -5,7 +5,9 @@
 import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { FUNNEL_FORM } from '@/content/funnel';
-import { trackLead } from '@/features/analytics/track';
+import { attributionFields } from '@/features/analytics/attribution';
+import { trackFormError, trackLead } from '@/features/analytics/track';
+import { serverErrorField } from '@/features/lead-form/useLeadSubmit';
 import { Honeypot, honeypotValue } from '@/features/lead-form/Honeypot';
 import { StatusAnnouncer } from '@/features/lead-form/a11y';
 import { PhoneField, useValidators } from '@/features/lead-form/PhoneField';
@@ -42,6 +44,7 @@ export function FunnelForm() {
           clinicName: fields.clinic,
           clinicType: fields.type,
           source: 'Funnel - Free System',
+          ...attributionFields(),
           ...(website && { website }),
         }),
       });
@@ -52,6 +55,7 @@ export function FunnelForm() {
     } catch (e) {
       setStatus('error');
       setError(e instanceof Error ? e.message : FUNNEL_FORM.genericError);
+      trackFormError('free-system', serverErrorField(e instanceof Error ? e.message : undefined));
     }
   }
 

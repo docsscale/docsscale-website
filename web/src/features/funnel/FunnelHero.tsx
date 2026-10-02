@@ -191,7 +191,7 @@ export function FunnelHero() {
             gap: 10,
           }}
         >
-          <a href="#form" className="cta-btn">
+          <a href="#form" className="cta-btn" data-cta-location="hero">
             {'Claim the free system — it takes 30 seconds '}
             <span className="arr">→</span>
           </a>

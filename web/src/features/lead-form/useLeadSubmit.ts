@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from 'react';
 import { LEAD_FORM_MESSAGES } from '@/content/lead-form';
-import { trackLead } from '@/features/analytics/track';
+import { attributionFields } from '@/features/analytics/attribution';
+import { trackFormError, trackLead } from '@/features/analytics/track';
 import { useValidators } from './PhoneField';
 
 export type LeadStatus = 'idle' | 'submitting' | 'sent' | 'error';
@@ -23,7 +24,11 @@ export function useLeadSubmit(form: 'home' | 'book-a-call', endpoint = '/send-le
     const checked = await validate();
     if (!checked) return; // the field shows its own error
     setStatus('submitting');
-    const fields = { ...Object.fromEntries(new FormData(formElement).entries()), ...checked };
+    const fields: Record<string, FormDataEntryValue> = {
+      ...Object.fromEntries(new FormData(formElement).entries()),
+      ...checked,
+      ...attributionFields(),
+    };
     // The honeypot is only sent when a bot filled it in (see Honeypot.tsx).
     if (!fields.website) delete fields.website;
     try {
@@ -41,6 +46,7 @@ export function useLeadSubmit(form: 'home' | 'book-a-call', endpoint = '/send-le
       } else {
         setStatus('error');
         setError(result.error || LEAD_FORM_MESSAGES.genericError);
+        trackFormError(form, serverErrorField(result.error));
       }
     } catch {
       setStatus('error');
@@ -49,4 +55,13 @@ export function useLeadSubmit(form: 'home' | 'book-a-call', endpoint = '/send-le
   }
 
   return { status, error, onSubmit, register };
+}
+
+/** The field a server refusal is about, for the form_error event. */
+export function serverErrorField(message: string | undefined): string {
+  if (!message) return 'server';
+  if (/email/i.test(message)) return 'email';
+  if (/phone/i.test(message)) return 'phone';
+  if (/required/i.test(message)) return 'required';
+  return 'server';
 }

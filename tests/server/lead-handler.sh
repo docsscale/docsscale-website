@@ -208,6 +208,15 @@ expect "old US format (cached page): ok" "$(post send-lead.php '{"clinicName":"C
 expect "old US format: E.164 to GHL" "$(python3 -c "import json;print(json.load(open('$TMP/ghl/last.json'))['phone'])")" "+17135550100"
 expect "UK number: E.164 to GHL" "$(post send-lead.php '{"clinicName":"C","email":"uk@x.co","phone":"+44 20 7946 0958","specialty":"Dental"}' >/dev/null; python3 -c "import json;print(json.load(open('$TMP/ghl/last.json'))['phone'])")" "+442079460958"
 
+# --- attribution (UTM tags + landing page, sent by the browser after consent) →
+#     the GHL custom fields utm_source, utm_medium, utm_campaign, landing_page
+rm -rf "$PRIV/ratelimit"
+cf() { python3 -c "import json;print(json.dumps({c['key']:c['field_value'] for c in json.load(open('$TMP/ghl/last.json')).get('customFields',[])},sort_keys=True))"; }
+expect "attribution (main): ok" "$(post send-lead.php '{"clinicName":"U","email":"utm@x.co","phone":"+17135550142","specialty":"Dental","utmSource":"facebook","utmMedium":"paid-social","utmCampaign":"free-system-tx-hou-202610","landingPage":"https://docsscale.com/"}')" 200
+expect "attribution (main): custom fields" "$(cf)" '{"landing_page": "https://docsscale.com/", "specialty": "Dental", "utm_campaign": "free-system-tx-hou-202610", "utm_medium": "paid-social", "utm_source": "facebook"}'
+expect "attribution (funnel): custom fields" "$(post free-system/send-lead.php '{"name":"U","email":"utmf@x.co","phone":"+17135550142","utmSource":"google","landingPage":"https://docsscale.com/free-system/"}' >/dev/null; cf)" '{"landing_page": "https://docsscale.com/free-system/", "utm_source": "google"}'
+expect "no attribution sent: no tracking fields" "$(post free-system/send-lead.php '{"name":"U","email":"utmn@x.co","phone":"+17135550142"}' >/dev/null; cf)" '{}'
+
 # --- existing contacts: only empty fields are filled (never name or source);
 #     the submission goes into a note; the tag is always added
 rm -rf "$PRIV/ratelimit"
