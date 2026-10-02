@@ -5,6 +5,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+- **Optional "Clinic website" field** on the homepage and Book a Call forms (not the Free System form), under name and clinic. Saved to GoHighLevel's standard Website field (`https://` added; text that isn't an address stays in the backup and repeat-lead note only). Owner approval pending.
 - **Phone required on all three forms, with a country picker** (default United States, never guessed from the visitor's location). The number is checked for the chosen country and sent to GoHighLevel as E.164 (`+17135550100`), so GHL no longer prefixes +1 to numbers typed without a country code. The server refuses numbers it can't place in a country and still accepts old-format US numbers from cached pages. On the homepage form, email and phone now each get a full-width row. Approved by the owner (before/after).
 
 ## [1.2.4] — 2026-10-02
