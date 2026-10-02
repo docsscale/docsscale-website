@@ -8,14 +8,18 @@ import { FUNNEL_FORM } from '@/content/funnel';
 import { trackLead } from '@/features/analytics/track';
 import { Honeypot, honeypotValue } from '@/features/lead-form/Honeypot';
 import { StatusAnnouncer } from '@/features/lead-form/a11y';
+import { PhoneField, useValidators } from '@/features/lead-form/PhoneField';
 
-type Fields = { name: string; email: string; phone: string; clinic: string; type: string };
+type Fields = { name: string; email: string; clinic: string; type: string };
+
+const FUNNEL_PHONE = { input: {}, className: 'field', height: 54, radius: 14 };
 
 export function FunnelForm() {
   const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'submitting' | 'error'>('idle');
   const [error, setError] = useState('');
-  const [fields, setFields] = useState<Fields>({ name: '', email: '', phone: '', clinic: '', type: '' });
+  const [fields, setFields] = useState<Fields>({ name: '', email: '', clinic: '', type: '' });
+  const { register, validate } = useValidators();
   const bind = (key: keyof Fields) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setFields((f) => ({ ...f, [key]: e.target.value }));
 
@@ -23,8 +27,10 @@ export function FunnelForm() {
     event.preventDefault();
     if (!fields.name || !fields.email) return;
     const website = honeypotValue(event.currentTarget as HTMLFormElement);
-    setStatus('submitting');
     setError('');
+    const checked = await validate();
+    if (!checked) return; // the phone field shows its own error
+    setStatus('submitting');
     try {
       const response = await fetch('/free-system/send-lead.php', {
         method: 'POST',
@@ -32,7 +38,7 @@ export function FunnelForm() {
         body: JSON.stringify({
           name: fields.name,
           email: fields.email,
-          phone: fields.phone,
+          phone: checked.phone,
           clinicName: fields.clinic,
           clinicType: fields.type,
           source: 'Funnel - Free System',
@@ -72,14 +78,7 @@ export function FunnelForm() {
           onChange={bind('email')}
         />
       </div>
-      <input
-        type="tel"
-        placeholder="Mobile number"
-        aria-label="Mobile number"
-        className="field"
-        value={fields.phone}
-        onChange={bind('phone')}
-      />
+      <PhoneField register={register} variant={FUNNEL_PHONE} placeholder="Mobile number" />
       <input
         type="text"
         placeholder="Clinic name"

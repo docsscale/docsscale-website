@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react';
 import { LEAD_FORM_MESSAGES } from '@/content/lead-form';
 import { trackLead } from '@/features/analytics/track';
+import { useValidators } from './PhoneField';
 
 export type LeadStatus = 'idle' | 'submitting' | 'sent' | 'error';
 
@@ -13,12 +14,16 @@ export type LeadStatus = 'idle' | 'submitting' | 'sent' | 'error';
 export function useLeadSubmit(form: 'home' | 'book-a-call', endpoint = '/send-lead.php') {
   const [status, setStatus] = useState<LeadStatus>('idle');
   const [error, setError] = useState('');
+  const { register, validate } = useValidators();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus('submitting');
+    const formElement = event.currentTarget;
     setError('');
-    const fields = Object.fromEntries(new FormData(event.currentTarget).entries());
+    const checked = await validate();
+    if (!checked) return; // the field shows its own error
+    setStatus('submitting');
+    const fields = { ...Object.fromEntries(new FormData(formElement).entries()), ...checked };
     // The honeypot is only sent when a bot filled it in (see Honeypot.tsx).
     if (!fields.website) delete fields.website;
     try {
@@ -43,5 +48,5 @@ export function useLeadSubmit(form: 'home' | 'book-a-call', endpoint = '/send-le
     }
   }
 
-  return { status, error, onSubmit };
+  return { status, error, onSubmit, register };
 }

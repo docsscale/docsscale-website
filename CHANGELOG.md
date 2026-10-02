@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Phone required on all three forms, with a country picker** (default United States, never guessed from the visitor's location). The number is checked for the chosen country and sent to GoHighLevel as E.164 (`+17135550100`), so GHL no longer prefixes +1 to numbers typed without a country code. The server refuses numbers it can't place in a country and still accepts old-format US numbers from cached pages. On the homepage form, email and phone now each get a full-width row. Approved by the owner (before/after).
+
 ## [1.2.4] — 2026-10-02
 
 - **Real-user Web Vitals in GA4** (agency review FE-4): LCP, INP and CLS are sent as GA4 events (`LCP`, `INP`, `CLS`) with a good / needs-improvement / poor rating, after analytics consent only, using Google's `web-vitals` library (about 2 KB). This shows whether the slow-hero finding (FE-1) affects real visitors before anything visible changes. Nothing visible changes.

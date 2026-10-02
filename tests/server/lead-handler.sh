@@ -39,12 +39,12 @@ $existing = [
   ['id' => 'C-OLD', 'email' => 'old@x.co', 'firstName' => 'Olga', 'companyName' => 'Old Clinic', 'source' => 'Website form',
    'customFields' => [['id' => 'ID-SPEC', 'value' => ['Dental']]]],
   // everything the main form can send is already set
-  ['id' => 'C-FULL', 'email' => 'oldfull@x.co', 'firstName' => 'Fay', 'companyName' => 'Full Clinic', 'phone' => '+1 713 555 0102',
+  ['id' => 'C-FULL', 'email' => 'oldfull@x.co', 'firstName' => 'Fay', 'companyName' => 'Full Clinic', 'phone' => '+17135550102',
    'customFields' => [['id' => 'ID-SPEC', 'value' => ['Dental']], ['id' => 'ID-LOC', 'value' => '1'], ['id' => 'ID-GAP', 'value' => 'Old gap']]],
   // found by phone; has a different email
-  ['id' => 'C-PH', 'email' => 'orig@x.co', 'phone' => '+1 555 0199', 'customFields' => []],
+  ['id' => 'C-PH', 'email' => 'orig@x.co', 'phone' => '+17135550199', 'customFields' => []],
   // found by phone; no email yet
-  ['id' => 'C-NOEMAIL', 'email' => '', 'phone' => '+1 555 0177'],
+  ['id' => 'C-NOEMAIL', 'email' => '', 'phone' => '+17135550177'],
   ['id' => 'C-OLD2', 'email' => 'old2@x.co', 'firstName' => 'Otto'],
   ['id' => 'NOTEFAIL', 'email' => 'oldnotefail@x.co', 'firstName' => 'Nia'],
 ];
@@ -135,15 +135,15 @@ expect "bad json" "$(post send-lead.php 'not json')" 400
 expect "bad json body" "$(body)" '{"ok":false,"error":"Invalid submission."}'
 expect "missing required" "$(post send-lead.php '{"email":"a@b.co"}')" 400
 expect "missing required body" "$(body)" '{"ok":false,"error":"Please fill in the required fields."}'
-expect "bad email" "$(post send-lead.php '{"clinicName":"C","email":"nope","specialty":"Dental"}')" 400
+expect "bad email" "$(post send-lead.php '{"clinicName":"C","email":"nope","specialty":"Dental","phone":"+17135550142"}')" 400
 expect "bad email body" "$(body)" '{"ok":false,"error":"Please enter a valid email address."}'
 expect "too long" "$(post send-lead.php "{\"clinicName\":\"$(printf 'x%.0s' {1..151})\",\"email\":\"a@b.co\",\"specialty\":\"Dental\"}")" 400
-expect "honeypot" "$(post send-lead.php '{"clinicName":"C","email":"a@b.co","specialty":"Dental","website":"spam"}')" 200
+expect "honeypot" "$(post send-lead.php '{"clinicName":"C","email":"a@b.co","specialty":"Dental","website":"spam","phone":"+17135550142"}')" 200
 
 # --- main form: exact GHL payload, same as the original send-lead.php
 expect "main ok" "$(post send-lead.php '{"name":"Jane Q Doe","clinicName":"Bright Dental","email":"jane@bright.co","phone":"+1 713 555 0100","specialty":"Dental","locations":"3-5","message":"Recall"}')" 200
 expect "main ok body" "$(body)" '{"ok":true}'
-expect "main payload" "$(ghl)" '{"companyName": "Bright Dental", "customFields": [{"field_value": "Recall", "key": "biggest_gap"}, {"field_value": "3-5", "key": "locations"}, {"field_value": "Dental", "key": "specialty"}], "email": "jane@bright.co", "firstName": "Jane", "lastName": "Q Doe", "locationId": "LOC123", "name": "Jane Q Doe", "phone": "+1 713 555 0100", "source": "Website form"}'
+expect "main payload" "$(ghl)" '{"companyName": "Bright Dental", "customFields": [{"field_value": "Recall", "key": "biggest_gap"}, {"field_value": "3-5", "key": "locations"}, {"field_value": "Dental", "key": "specialty"}], "email": "jane@bright.co", "firstName": "Jane", "lastName": "Q Doe", "locationId": "LOC123", "name": "Jane Q Doe", "phone": "+17135550100", "source": "Website form"}'
 expect "auth header" "$(cat "$TMP/ghl/auth.txt")" "Bearer pit-test"
 expect "backup written before GHL is called" "$(cat "$TMP/ghl/backup_seen.txt")" yes
 # tag added through the Add Tags API (never in the upsert body, which would replace all tags)
@@ -153,18 +153,18 @@ expect "tag call authorised" "$(cut -d' ' -f2- "$TMP/ghl/tag.txt")" "Bearer pit-
 expect "upsert has no tags" "$(ghl | grep -c '"tags"')" 0
 expect "backup records tag" "$(backup jane@bright.co ghl_tagged)" True
 
-expect "main no name" "$(post send-lead.php '{"clinicName":"C","email":"c@c.co","specialty":"Med spa"}')" 200
-expect "main no-name payload" "$(ghl)" '{"companyName": "C", "customFields": [{"field_value": "Med spa", "key": "specialty"}], "email": "c@c.co", "locationId": "LOC123", "source": "Website form"}'
+expect "main no name" "$(post send-lead.php '{"clinicName":"C","email":"c@c.co","specialty":"Med spa","phone":"+17135550142"}')" 200
+expect "main no-name payload" "$(ghl)" '{"companyName": "C", "customFields": [{"field_value": "Med spa", "key": "specialty"}], "email": "c@c.co", "locationId": "LOC123", "phone": "+17135550142", "source": "Website form"}'
 
 # --- funnel form: exact payload, source pinned server-side
-expect "funnel ok" "$(post free-system/send-lead.php '{"name":"Sam","email":"sam@x.co","phone":"","clinicName":"","clinicType":"Chiropractic","source":"hacked"}')" 200
-expect "funnel payload" "$(ghl)" '{"customFields": [{"field_value": "Chiropractic", "key": "clinic_type"}], "email": "sam@x.co", "firstName": "Sam", "lastName": "", "locationId": "LOC123", "name": "Sam", "source": "Funnel - Free System"}'
+expect "funnel ok" "$(post free-system/send-lead.php '{"name":"Sam","email":"sam@x.co","phone":"+17135550142","clinicName":"","clinicType":"Chiropractic","source":"hacked"}')" 200
+expect "funnel payload" "$(ghl)" '{"customFields": [{"field_value": "Chiropractic", "key": "clinic_type"}], "email": "sam@x.co", "firstName": "Sam", "lastName": "", "locationId": "LOC123", "name": "Sam", "phone": "+17135550142", "source": "Funnel - Free System"}'
 expect "funnel tag body" "$(tag)" '{"tags": ["free-system-lead"]}'
 expect "funnel tag contact" "$(tagpath)" "/contacts/$(cid sam@x.co)/tags"
 expect "funnel requires name" "$(post free-system/send-lead.php '{"email":"sam@x.co"}')" 400
 
 # --- GHL failure: generic message, no upstream detail, lead still backed up
-expect "ghl fail" "$(post free-system/send-lead.php '{"name":"F","email":"fail@x.co"}')" 502
+expect "ghl fail" "$(post free-system/send-lead.php '{"name":"F","email":"fail@x.co","phone":"+17135550142"}')" 502
 expect "ghl fail body" "$(body)" '{"ok":false,"error":"Something went wrong. Please try again, or email info@docsscale.com."}'
 expect "failed lead backed up" "$(grep -c '"fail@x.co"' "$PRIV"/leads/*.jsonl)" 1
 expect "ghl detail logged" "$(grep -c 'internal GHL detail' "$PRIV/logs/errors.log")" 1
@@ -174,35 +174,51 @@ expect "every lead has an outcome line" "$(grep -c '"status":"outcome"' "$PRIV"/
 expect "backup perms" "$(php -r 'printf("%o", fileperms($argv[1]) & 0777);' "$PRIV"/leads/*.jsonl)" 600
 
 # --- rate limit: 5 sends per IP per 10 min (4 used above)
-expect "5th send ok" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental"}')" 200
-expect "6th send limited" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental"}')" 429
+expect "5th send ok" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental","phone":"+17135550142"}')" 200
+expect "6th send limited" "$(post send-lead.php '{"clinicName":"C","email":"r@r.co","specialty":"Dental","phone":"+17135550142"}')" 429
 
 # --- tagging problems never fail the visitor's submission (the contact is saved)
 rm -rf "$PRIV/ratelimit"
-expect "tag fails: still ok" "$(post send-lead.php '{"clinicName":"C","email":"tagfail@x.co","specialty":"Dental"}')" 200
+expect "tag fails: still ok" "$(post send-lead.php '{"clinicName":"C","email":"tagfail@x.co","specialty":"Dental","phone":"+17135550142"}')" 200
 expect "tag fails: body ok" "$(body)" '{"ok":true}'
 expect "tag fails: logged" "$(grep -c "add tag 'website-lead' to TAGFAIL: HTTP 422 tag detail" "$PRIV/logs/errors.log")" 1
 expect "tag fails: backup says untagged" "$(backup tagfail@x.co ghl_tagged)" False
-expect "no contact id: still ok" "$(post free-system/send-lead.php '{"name":"N","email":"noid@x.co"}')" 200
+expect "no contact id: still ok" "$(post free-system/send-lead.php '{"name":"N","email":"noid@x.co","phone":"+17135550142"}')" 200
 expect "no contact id: logged" "$(grep -c "returned no contact id; tag 'free-system-lead' not added" "$PRIV/logs/errors.log")" 1
 expect "no contact id: backup says untagged" "$(backup noid@x.co ghl_tagged)" False
 
 # --- a page cached before the switch still sends "3–5" (en dash): stored as GHL's "3-5"
 rm -rf "$PRIV/ratelimit"
-expect "old en dash: ok" "$(post send-lead.php '{"clinicName":"C","email":"dash@x.co","specialty":"Dental","locations":"3–5"}')" 200
+expect "old en dash: ok" "$(post send-lead.php '{"clinicName":"C","email":"dash@x.co","specialty":"Dental","locations":"3–5","phone":"+17135550142"}')" 200
 expect "old en dash: sent as 3-5" "$(ghl | grep -c '"field_value": "3-5", "key": "locations"')" 1
+
+# --- phone: required, sent to GHL in E.164; numbers without a country code are
+#     refused unless they're valid US numbers (GHL would otherwise prefix +1)
+rm -rf "$PRIV/ratelimit"; rm -f "$TMP/ghl/last.json"
+expect "phone missing: refused" "$(post send-lead.php '{"clinicName":"C","email":"nophone@x.co","specialty":"Dental"}')" 400
+expect "phone missing: required message" "$(body)" '{"ok":false,"error":"Please fill in the required fields."}'
+expect "local Pakistani number: refused" "$(post free-system/send-lead.php '{"name":"P","email":"pk@x.co","phone":"03225351511"}')" 400
+expect "local number: clear message" "$(body)" '{"ok":false,"error":"Please enter a valid phone number, including the country code."}'
+expect "+1 in front of a non-US number: refused" "$(post free-system/send-lead.php '{"name":"P","email":"pk@x.co","phone":"+103225351511"}')" 400
+expect "refused numbers never reach GHL" "$([ -f "$TMP/ghl/last.json" ] && echo sent || echo not-sent)" not-sent
+expect "Pakistani number with +92: ok" "$(post free-system/send-lead.php '{"name":"P","email":"pk@x.co","phone":"+92 322 5351511"}')" 200
+expect "Pakistani number: E.164 to GHL" "$(python3 -c "import json;print(json.load(open('$TMP/ghl/last.json'))['phone'])")" "+923225351511"
+rm -rf "$PRIV/ratelimit"
+expect "old US format (cached page): ok" "$(post send-lead.php '{"clinicName":"C","email":"usold@x.co","phone":"(713) 555-0100","specialty":"Dental"}')" 200
+expect "old US format: E.164 to GHL" "$(python3 -c "import json;print(json.load(open('$TMP/ghl/last.json'))['phone'])")" "+17135550100"
+expect "UK number: E.164 to GHL" "$(post send-lead.php '{"clinicName":"C","email":"uk@x.co","phone":"+44 20 7946 0958","specialty":"Dental"}' >/dev/null; python3 -c "import json;print(json.load(open('$TMP/ghl/last.json'))['phone'])")" "+442079460958"
 
 # --- existing contacts: only empty fields are filled (never name or source);
 #     the submission goes into a note; the tag is always added
 rm -rf "$PRIV/ratelimit"
 expect "existing: ok" "$(post send-lead.php '{"name":"New Name","clinicName":"New Clinic","email":"old@x.co","phone":"+1 713 555 0101","specialty":"Weight loss","locations":"1","message":"Hi again"}')" 200
-expect "existing: lookup query" "$(tail -1 "$TMP/ghl/dup.txt")" "locationId=LOC123&email=old%40x.co&number=%2B1+713+555+0101"
-expect "existing: only empty fields sent" "$(ghl)" '{"customFields": [{"field_value": "Hi again", "key": "biggest_gap"}, {"field_value": "1", "key": "locations"}], "email": "old@x.co", "locationId": "LOC123", "phone": "+1 713 555 0101"}'
+expect "existing: lookup query" "$(tail -1 "$TMP/ghl/dup.txt")" "locationId=LOC123&email=old%40x.co&number=%2B17135550101"
+expect "existing: only empty fields sent" "$(ghl)" '{"customFields": [{"field_value": "Hi again", "key": "biggest_gap"}, {"field_value": "1", "key": "locations"}], "email": "old@x.co", "locationId": "LOC123", "phone": "+17135550101"}'
 expect "existing: note on the contact" "$(cat "$TMP/ghl/note.txt")" "/contacts/C-OLD/notes"
 expect "existing: note has the whole submission" "$(note | tail -n +2)" "Name: New Name
 Clinic: New Clinic
 Email: old@x.co
-Phone: +1 713 555 0101
+Phone: +17135550101
 Specialty: Weight loss
 Locations: 1
 Biggest gap: Hi again"
@@ -212,33 +228,33 @@ expect "existing: backup" "$(backup old@x.co ghl_existing) $(backup old@x.co ghl
 expect "new contact: backup" "$(backup jane@bright.co ghl_existing) $(backup jane@bright.co ghl_noted)" "False None"
 
 rm -f "$TMP/ghl/last.json"
-expect "nothing to fill: ok" "$(post send-lead.php '{"clinicName":"Other","email":"oldfull@x.co","phone":"+1 713 555 0199","specialty":"Med spa","locations":"2","message":"New gap"}')" 200
+expect "nothing to fill: ok" "$(post send-lead.php '{"clinicName":"Other","email":"oldfull@x.co","phone":"+17135550198","specialty":"Med spa","locations":"2","message":"New gap"}')" 200
 expect "nothing to fill: no upsert" "$([ -f "$TMP/ghl/last.json" ] && echo called || echo not-called)" not-called
 expect "nothing to fill: note + tag" "$(cat "$TMP/ghl/note.txt") $(tagpath)" "/contacts/C-FULL/notes /contacts/C-FULL/tags"
 
-expect "found by phone: ok" "$(post free-system/send-lead.php '{"name":"Pat","email":"new@x.co","phone":"+1 555 0199","clinicName":"PH Clinic","clinicType":"Dental"}')" 200
+expect "found by phone: ok" "$(post free-system/send-lead.php '{"name":"Pat","email":"new@x.co","phone":"+17135550199","clinicName":"PH Clinic","clinicType":"Dental"}')" 200
 expect "found by phone: email kept, matched on it" "$(ghl)" '{"companyName": "PH Clinic", "customFields": [{"field_value": "Dental", "key": "clinic_type"}], "email": "orig@x.co", "locationId": "LOC123"}'
 expect "found by phone: new email in note" "$(note | grep -c '^Email: new@x.co$')" 1
 expect "found by phone: funnel tag" "$(tag) $(tagpath)" '{"tags": ["free-system-lead"]} /contacts/C-PH/tags'
 
-expect "no email yet: ok" "$(post free-system/send-lead.php '{"name":"Ned","email":"ne@x.co","phone":"+1 555 0177"}')" 200
-expect "no email yet: email filled, matched on phone" "$(ghl)" '{"email": "ne@x.co", "locationId": "LOC123", "phone": "+1 555 0177"}'
+expect "no email yet: ok" "$(post free-system/send-lead.php '{"name":"Ned","email":"ne@x.co","phone":"+17135550177"}')" 200
+expect "no email yet: email filled, matched on phone" "$(ghl)" '{"email": "ne@x.co", "locationId": "LOC123", "phone": "+17135550177"}'
 expect "field list fetched once (cached)" "$(cat "$TMP/ghl/cf.count")" 1
 
 rm -rf "$PRIV/ratelimit"
 rm -f "$PRIV/cache/custom-fields.json"; touch "$TMP/ghl/cf.fail"
-expect "field list fails: ok" "$(post send-lead.php '{"clinicName":"C2","email":"old2@x.co","specialty":"Dental","message":"Gap two"}')" 200
-expect "field list fails: no custom fields sent" "$(ghl)" '{"companyName": "C2", "email": "old2@x.co", "locationId": "LOC123"}'
+expect "field list fails: ok" "$(post send-lead.php '{"clinicName":"C2","email":"old2@x.co","specialty":"Dental","message":"Gap two","phone":"+17135550142"}')" 200
+expect "field list fails: no custom fields sent" "$(ghl)" '{"companyName": "C2", "email": "old2@x.co", "locationId": "LOC123", "phone": "+17135550142"}'
 expect "field list fails: values in note" "$(note | grep -c '^Biggest gap: Gap two$')" 1
 expect "field list fails: logged" "$(grep -c 'custom field list failed: HTTP 500 cf detail' "$PRIV/logs/errors.log")" 1
 rm -f "$TMP/ghl/cf.fail"
 
-expect "lookup fails: ok" "$(post send-lead.php '{"name":"Liz","clinicName":"L","email":"lookupfail@x.co","specialty":"Dental"}')" 200
-expect "lookup fails: full upsert" "$(ghl)" '{"companyName": "L", "customFields": [{"field_value": "Dental", "key": "specialty"}], "email": "lookupfail@x.co", "firstName": "Liz", "lastName": "", "locationId": "LOC123", "name": "Liz", "source": "Website form"}'
+expect "lookup fails: ok" "$(post send-lead.php '{"name":"Liz","clinicName":"L","email":"lookupfail@x.co","specialty":"Dental","phone":"+17135550142"}')" 200
+expect "lookup fails: full upsert" "$(ghl)" '{"companyName": "L", "customFields": [{"field_value": "Dental", "key": "specialty"}], "email": "lookupfail@x.co", "firstName": "Liz", "lastName": "", "locationId": "LOC123", "name": "Liz", "phone": "+17135550142", "source": "Website form"}'
 expect "lookup fails: logged" "$(grep -c 'contact lookup failed: HTTP 500 lookup detail' "$PRIV/logs/errors.log")" 1
 expect "lookup fails: no note" "$(backup lookupfail@x.co ghl_noted)" None
 
-expect "note fails: still ok" "$(post free-system/send-lead.php '{"name":"Nia","email":"oldnotefail@x.co","clinicName":"NF"}')" 200
+expect "note fails: still ok" "$(post free-system/send-lead.php '{"name":"Nia","email":"oldnotefail@x.co","clinicName":"NF","phone":"+17135550142"}')" 200
 expect "note fails: logged" "$(grep -c 'add note to NOTEFAIL: HTTP 500 note detail' "$PRIV/logs/errors.log")" 1
 expect "note fails: backup" "$(backup oldnotefail@x.co ghl_noted) $(backup oldnotefail@x.co ghl_tagged)" "False True"
 
@@ -257,7 +273,7 @@ PHP
 LEAD_PRIVATE_DIR="$BUDGET_PRIV" php -S 127.0.0.1:8784 -t "$ROOT/server/public_html" >/dev/null 2>&1 & BUDGET_PID=$!
 wait_for 8784
 start=$(date +%s)
-code=$(curl -s -o "$TMP/resp" -w '%{http_code}' -X POST http://127.0.0.1:8784/send-lead.php -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:8784' --data '{"clinicName":"S","email":"slowupsert@x.co","specialty":"Dental"}')
+code=$(curl -s -o "$TMP/resp" -w '%{http_code}' -X POST http://127.0.0.1:8784/send-lead.php -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:8784' --data '{"clinicName":"S","email":"slowupsert@x.co","specialty":"Dental","phone":"+17135550142"}')
 expect "slow GHL: still ok" "$code" 200
 expect "slow GHL: finished within the budget" "$(( $(date +%s) - start <= 6 ))" 1
 budget_out() { python3 -c "import json,glob;r=[json.loads(l) for f in glob.glob('$BUDGET_PRIV/leads/*.jsonl') for l in open(f)];print(r[-1]['$1'])"; }
@@ -271,7 +287,7 @@ kill $BUDGET_PID 2>/dev/null || true
 rm -rf "$PRIV/ratelimit"; mv "$PRIV/config.php" "$PRIV/config.off"
 expect "no config: origin still enforced" "$(post send-lead.php '{}' https://evil.example)" 403
 expect "no config: validation still runs" "$(post send-lead.php '{"email":"a@b.co"}' https://docsscale.com)" 400
-expect "no config: 502 generic" "$(post send-lead.php '{"clinicName":"C","email":"noconf@x.co","specialty":"Dental"}' https://docsscale.com)" 502
+expect "no config: 502 generic" "$(post send-lead.php '{"clinicName":"C","email":"noconf@x.co","specialty":"Dental","phone":"+17135550142"}' https://docsscale.com)" 502
 expect "no config: lead backed up" "$(grep -c '"noconf@x.co"' "$PRIV"/leads/*.jsonl)" 1
 mv "$PRIV/config.off" "$PRIV/config.php"
 
@@ -286,7 +302,7 @@ php -S 127.0.0.1:8783 -t "$TMP/staging_html" >/dev/null 2>&1 & STAGE_PID=$!
 wait_for 8783
 rm -f "$TMP/ghl/last.json"
 stage_post() { curl -s -o "$TMP/resp" -w '%{http_code}' -X POST "http://127.0.0.1:8783/$1" -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:8783' --data "$2"; }
-expect "staging: test mode ok" "$(stage_post send-lead.php '{"clinicName":"C","email":"stage@x.co","specialty":"Dental"}')" 200
+expect "staging: test mode ok" "$(stage_post send-lead.php '{"clinicName":"C","email":"stage@x.co","specialty":"Dental","phone":"+17135550142"}')" 200
 expect "staging: GHL not called" "$([ -f "$TMP/ghl/last.json" ] && echo called || echo not-called)" not-called
 expect "staging: lead in staging dir" "$(grep -c '"stage@x.co"' "$STAGE_PRIV"/leads/*.jsonl)" 1
 expect "staging: nothing in prod dir" "$(grep -c '"stage@x.co"' "$PRIV"/leads/*.jsonl)" 0

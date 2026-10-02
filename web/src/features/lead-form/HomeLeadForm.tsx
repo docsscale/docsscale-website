@@ -4,7 +4,8 @@
 import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/content/lead-form';
 import { T } from '@/styles/tokens';
 import { StatusAnnouncer, useFocusOnMount } from './a11y';
-import { errorStyle, fieldStyle as field, textareaStyle } from './fieldStyles';
+import { errorStyle, fieldStyle as field, phoneVariant, textareaStyle } from './fieldStyles';
+import { PhoneField } from './PhoneField';
 import { Honeypot } from './Honeypot';
 import { useLeadSubmit } from './useLeadSubmit';
 
@@ -15,7 +16,7 @@ const row = {
 } as const;
 
 export function HomeLeadForm() {
-  const { status, error, onSubmit } = useLeadSubmit('home');
+  const { status, error, onSubmit, register } = useLeadSubmit('home');
   const submitting = status === 'submitting';
 
   if (status === 'sent') return <HomeLeadSuccess />;
@@ -27,17 +28,16 @@ export function HomeLeadForm() {
         <input required name="name" placeholder="Your name" aria-label="Your name" style={field} />
         <input required name="clinicName" placeholder="Clinic name" aria-label="Clinic name" style={field} />
       </div>
-      <div style={row}>
-        <input
-          required
-          type="email"
-          name="email"
-          placeholder="Work email"
-          aria-label="Work email"
-          style={field}
-        />
-        <input type="tel" name="phone" placeholder="Mobile" aria-label="Mobile" style={field} />
-      </div>
+      {/* Full-width rows: the card is too narrow for the country picker beside another field. */}
+      <input
+        required
+        type="email"
+        name="email"
+        placeholder="Work email"
+        aria-label="Work email"
+        style={field}
+      />
+      <PhoneField register={register} variant={phoneVariant} placeholder="Mobile" />
       <div style={row}>
         <select required name="specialty" aria-label="Specialty" style={field} defaultValue="">
           <option value="" disabled>
