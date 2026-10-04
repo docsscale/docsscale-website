@@ -332,6 +332,26 @@ function lead_normalize_phone(string $phone): ?string
     return $e164;
 }
 
+/**
+ * A clinic website as an https URL ("brightdental.com" → "https://brightdental.com"),
+ * or null when it's empty or doesn't look like a web address.
+ */
+function lead_normalize_website(string $website): ?string
+{
+    $website = trim($website);
+    if ($website === '') {
+        return null;
+    }
+    if (!preg_match('#^https?://#i', $website)) {
+        $website = 'https://' . $website;
+    }
+    $host = parse_url($website, PHP_URL_HOST);
+    if (!filter_var($website, FILTER_VALIDATE_URL) || !is_string($host) || !preg_match('/^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i', $host)) {
+        return null;
+    }
+    return $website;
+}
+
 function lead_split_name(string $name): array
 {
     $parts = preg_split('/\s+/', $name, 2);

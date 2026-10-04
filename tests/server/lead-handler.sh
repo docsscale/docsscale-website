@@ -208,15 +208,27 @@ expect "old US format (cached page): ok" "$(post send-lead.php '{"clinicName":"C
 expect "old US format: E.164 to GHL" "$(python3 -c "import json;print(json.load(open('$TMP/ghl/last.json'))['phone'])")" "+17135550100"
 expect "UK number: E.164 to GHL" "$(post send-lead.php '{"clinicName":"C","email":"uk@x.co","phone":"+44 20 7946 0958","specialty":"Dental"}' >/dev/null; python3 -c "import json;print(json.load(open('$TMP/ghl/last.json'))['phone'])")" "+442079460958"
 
+# --- clinic website ("clinicWebsite"; "website" is the honeypot): GHL's standard
+#     Website field, https added; non-addresses left out
+expect "honeypot still named website" "$(post send-lead.php '{"clinicName":"C","email":"bot@x.co","phone":"+17135550142","specialty":"Dental","website":"spam"}' >/dev/null; grep -c 'honeypot filled' "$PRIV/logs/rejected.log")" 2
+rm -rf "$PRIV/ratelimit"
+expect "website: ok" "$(post send-lead.php '{"clinicName":"W","email":"web@x.co","phone":"+17135550142","specialty":"Dental","clinicWebsite":"brightdental.com"}')" 200
+expect "website: https added, sent as website" "$(python3 -c "import json;print(json.load(open('$TMP/ghl/last.json')).get('website'))")" "https://brightdental.com"
+expect "not a website: still ok" "$(post send-lead.php '{"clinicName":"W","email":"web2@x.co","phone":"+17135550142","specialty":"Dental","clinicWebsite":"ask me"}')" 200
+expect "not a website: not sent" "$(python3 -c "import json;print(json.load(open('$TMP/ghl/last.json')).get('website'))")" None
+expect "not a website: kept in the backup" "$(backup web2@x.co fields | grep -c 'ask me')" 1
+expect "funnel ignores clinicWebsite" "$(post free-system/send-lead.php '{"name":"F","email":"fw@x.co","phone":"+17135550142","clinicWebsite":"x.com"}' >/dev/null; python3 -c "import json;print(json.load(open('$TMP/ghl/last.json')).get('website'))")" None
+
 # --- existing contacts: only empty fields are filled (never name or source);
 #     the submission goes into a note; the tag is always added
 rm -rf "$PRIV/ratelimit"
-expect "existing: ok" "$(post send-lead.php '{"name":"New Name","clinicName":"New Clinic","email":"old@x.co","phone":"+1 713 555 0101","specialty":"Weight loss","locations":"1","message":"Hi again"}')" 200
+expect "existing: ok" "$(post send-lead.php '{"name":"New Name","clinicName":"New Clinic","email":"old@x.co","phone":"+1 713 555 0101","specialty":"Weight loss","locations":"1","message":"Hi again","clinicWebsite":"newclinic.com"}')" 200
 expect "existing: lookup query" "$(tail -1 "$TMP/ghl/dup.txt")" "locationId=LOC123&email=old%40x.co&number=%2B17135550101"
-expect "existing: only empty fields sent" "$(ghl)" '{"customFields": [{"field_value": "Hi again", "key": "biggest_gap"}, {"field_value": "1", "key": "locations"}], "email": "old@x.co", "locationId": "LOC123", "phone": "+17135550101"}'
+expect "existing: only empty fields sent" "$(ghl)" '{"customFields": [{"field_value": "Hi again", "key": "biggest_gap"}, {"field_value": "1", "key": "locations"}], "email": "old@x.co", "locationId": "LOC123", "phone": "+17135550101", "website": "https://newclinic.com"}'
 expect "existing: note on the contact" "$(cat "$TMP/ghl/note.txt")" "/contacts/C-OLD/notes"
 expect "existing: note has the whole submission" "$(note | tail -n +2)" "Name: New Name
 Clinic: New Clinic
+Website: newclinic.com
 Email: old@x.co
 Phone: +17135550101
 Specialty: Weight loss

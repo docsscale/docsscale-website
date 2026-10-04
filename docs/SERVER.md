@@ -43,6 +43,10 @@ the staging folder. The `private/` folder is never touched by deploys.
 
 Phone is required on all three forms. The browser checks the number for the country picked (default United States) and sends it in E.164 (`+17135550100`). The server accepts only E.164, or a valid US number in the old free-text format (from pages cached before v1.2.4), which it converts. Anything else without a country code is refused with "Please enter a valid phone number, including the country code.": GoHighLevel would otherwise assume +1 (how numbers like `+103225351511` got in before).
 
+## Clinic website
+
+Homepage and Book a Call send an optional `clinicWebsite` (not `website`: that's the spam trap's name, see `Honeypot.tsx`). The server adds `https://` when missing and saves it to GoHighLevel's **standard Website field** (no custom field). Text that doesn't look like a web address isn't sent to that field; it stays in the backup and the repeat-lead note.
+
 ## Lead backups
 
 `private/leads/2026-09.jsonl` etc. Two lines per submission, sharing an `id`:
