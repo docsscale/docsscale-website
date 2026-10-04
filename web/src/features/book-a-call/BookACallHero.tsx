@@ -16,7 +16,7 @@ export function BookACallHero() {
         className="two container"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))',
+          gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,440px),1fr))',
           gap: 14,
           alignItems: 'start',
         }}

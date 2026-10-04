@@ -2,7 +2,6 @@ import { SPECIALTY_LINKS } from '@/content/specialties';
 import { STRUCTURED_DATA } from '@/content/structured-data';
 import { BookACallCover } from '@/features/book-a-call/BookACallCover';
 import { BookACallHero } from '@/features/book-a-call/BookACallHero';
-import { BookACallReassurance } from '@/features/book-a-call/BookACallReassurance';
 import { SiteMotion } from '@/features/motion/SiteMotion';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
@@ -25,7 +24,6 @@ export default function BookACallPage() {
       <main>
         <BookACallHero />
         <BookACallCover />
-        <BookACallReassurance />
       </main>
       <SiteMotion />
     </>

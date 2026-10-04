@@ -78,7 +78,7 @@ export function FunnelForm() {
           onChange={bind('email')}
         />
       </div>
-      <PhoneField register={register} variant={FUNNEL_PHONE} placeholder="Mobile number" />
+      <PhoneField register={register} variant={FUNNEL_PHONE} placeholder="Phone" />
       <input
         type="text"
         placeholder="Clinic name"
