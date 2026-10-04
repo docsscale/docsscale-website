@@ -1,3 +1,5 @@
+// PERMANENT CI check (owner's decision, 4 Oct 2026): a recording tool must never
+// see what visitors type into the lead forms. Don't delete or loosen it.
 // Microsoft Clarity loads only after "Accept", only on docsscale.com, never for
 // team-marked browsers, and forms are masked. The local build is served under
 // https://docsscale.com (requests intercepted), and clarity.ms is blocked, so

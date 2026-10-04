@@ -35,7 +35,7 @@ When the ID is empty, the site renders no analytics code and no banner.
 - **Production only:** loads on docsscale.com, never on staging, local builds or in tests. **Team browsers** (`?team=on`) never load it, so recordings show real visitors only.
 - **Forms are masked:** every lead form has `data-clarity-mask="true"`, so nothing typed is recorded (the Clarity project's own masking setting should stay on "Balanced" or "Strict").
 - The Privacy Policy describes it under "Cookies and analytics" (updated 2 Oct 2026).
-- **Test:** `tests/visual/clarity.mjs` (in CI).
+- **Test:** `tests/visual/clarity.mjs` runs in CI **permanently** (owner's decision): it proves the forms are masked and that Clarity loads only after consent on docsscale.com.
 
 ## Excluding DocsScale team visits
 

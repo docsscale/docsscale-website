@@ -10,7 +10,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
-- **Microsoft Clarity** (heatmaps and recordings): loaded only after "Accept", on docsscale.com only, never for team browsers; every form masked. **Privacy Policy** updated (Microsoft added to service providers, a Clarity paragraph under "Cookies and analytics", "Last updated" 2 October 2026). Owner approval of the policy wording pending.
+- **Microsoft Clarity** (heatmaps and recordings): loaded only after "Accept", on docsscale.com only, never for team browsers; every form masked. **Privacy Policy** updated (Microsoft added to service providers, a Clarity paragraph under "Cookies and analytics", "Last updated" is the production deploy date, 4 October 2026 unless the deploy slips). Policy wording approved by the owner.
 
 ## [1.2.4] — 2026-10-02
 
