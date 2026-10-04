@@ -25,6 +25,7 @@ return [
         'fields' => [
             'name' => 100,
             'clinicName' => 150,
+            'clinicWebsite' => 200,
             'email' => 254,
             'phone' => 40,
             'specialty' => 60,
@@ -37,6 +38,7 @@ return [
         'labels' => [
             'name' => 'Name',
             'clinicName' => 'Clinic',
+            'clinicWebsite' => 'Website',
             'email' => 'Email',
             'phone' => 'Phone',
             'specialty' => 'Specialty',
@@ -60,6 +62,13 @@ return [
             }
             if ($v['phone'] !== '') {
                 $body['phone'] = $v['phone'];
+            }
+            // GHL's standard Website field ("clinicWebsite": "website" is the
+            // honeypot). Text that isn't a web address stays
+            // out of it (it's still in the backup and the repeat-lead note).
+            $website = lead_normalize_website($v['clinicWebsite'] ?? '');
+            if ($website !== null) {
+                $body['website'] = $website;
             }
             // GHL custom field keys are the bare keys (no "contact." prefix).
             $custom = [];

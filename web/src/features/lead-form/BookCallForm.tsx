@@ -6,6 +6,7 @@ import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/conte
 import { T } from '@/styles/tokens';
 import { StatusAnnouncer, useFocusOnMount } from './a11y';
 import { errorStyle, fieldStyle, phoneVariant, textareaStyle } from './fieldStyles';
+import { ClinicWebsiteField } from './ClinicWebsiteField';
 import { PhoneField } from './PhoneField';
 import { Honeypot } from './Honeypot';
 import { useLeadSubmit } from './useLeadSubmit';
@@ -70,6 +71,7 @@ export function BookCallForm() {
               style={fieldStyle}
             />
           </div>
+          <ClinicWebsiteField style={fieldStyle} />
           <div style={row}>
             <input
               required
