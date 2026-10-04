@@ -1,5 +1,6 @@
 import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
 import { BookCallForm } from '@/features/lead-form/BookCallForm';
+import { BOOK_A_CALL } from '@/content/book-a-call';
 import { T } from '@/styles/tokens';
 export function BookACallHero() {
   return (
@@ -25,10 +26,12 @@ export function BookACallHero() {
             display: 'flex',
             flexDirection: 'column',
             gap: 14,
+            alignSelf: 'stretch', // the headline card fills the height of the form beside it
           }}
         >
           <div
             style={{
+              flex: 1,
               background: '#FFFFFF',
               border: `1px solid ${T.hairline}`,
               borderRadius: 28,
@@ -47,7 +50,7 @@ export function BookACallHero() {
                 color: T.caption,
               }}
             >
-              Book a strategy call
+              {BOOK_A_CALL.eyebrow}
             </span>
             <AnimatedHeading
               style={{
@@ -59,176 +62,27 @@ export function BookACallHero() {
                 textWrap: 'balance',
               }}
             >
-              {'Thirty minutes. Your numbers. '}
+              {BOOK_A_CALL.headline}
               <em
                 className="serif-accent"
                 style={{
                   color: T.teal,
                 }}
               >
-                A plan either way.
+                {BOOK_A_CALL.headlineAccent}
               </em>
             </AnimatedHeading>
             <p
               style={{
                 margin: 0,
+                marginTop: 'auto',
                 fontSize: 17,
                 lineHeight: 1.5,
                 color: T.body,
               }}
             >
-              Free, no deck, and no pitch for anything on the first call. If we&apos;re not the right fit for
-              your clinic, we&apos;ll tell you who is.
+              {BOOK_A_CALL.subheadline}
             </p>
-          </div>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,200px),1fr))',
-              gap: 14,
-            }}
-          >
-            <div
-              data-lift="1"
-              style={{
-                background: T.peachBg,
-                color: T.peachFg,
-                borderRadius: 28,
-                padding: 24,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 12,
-              }}
-            >
-              <span
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  background: T.peachFg,
-                  color: T.peachBg,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                }}
-              >
-                1
-              </span>
-              <div
-                style={{
-                  fontWeight: 800,
-                  fontSize: 18,
-                  letterSpacing: '-.02em',
-                  lineHeight: 1.15,
-                }}
-              >
-                Where patients come from today
-              </div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                }}
-              >
-                Referrals, search, ads, walk-ins. Rough numbers are fine.
-              </p>
-            </div>
-            <div
-              data-lift="1"
-              style={{
-                background: T.lavenderBg,
-                color: T.lavenderFg,
-                borderRadius: 28,
-                padding: 24,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 12,
-              }}
-            >
-              <span
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  background: T.lavenderFg,
-                  color: T.lavenderBg,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                }}
-              >
-                2
-              </span>
-              <div
-                style={{
-                  fontWeight: 800,
-                  fontSize: 18,
-                  letterSpacing: '-.02em',
-                  lineHeight: 1.15,
-                }}
-              >
-                What happens after 5 pm
-              </div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                }}
-              >
-                Who answers, how fast, and what happens to a missed call.
-              </p>
-            </div>
-            <div
-              data-lift="1"
-              style={{
-                background: T.sageBg,
-                color: T.sageFg,
-                borderRadius: 28,
-                padding: 24,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 12,
-              }}
-            >
-              <span
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  background: T.sageFg,
-                  color: T.sageBg,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                }}
-              >
-                3
-              </span>
-              <div
-                style={{
-                  fontWeight: 800,
-                  fontSize: 18,
-                  letterSpacing: '-.02em',
-                  lineHeight: 1.15,
-                }}
-              >
-                The one service line to grow first
-              </div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                }}
-              >
-                You leave with it named, plus a realistic timeline.
-              </p>
-            </div>
           </div>
         </div>
         <BookCallForm />
