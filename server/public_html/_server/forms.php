@@ -10,7 +10,7 @@
 //               trigger on it, because API-created contacts never count as a
 //               GHL "form submission".
 //   (both forms also accept the LEAD_ATTRIBUTION_FIELDS: UTM tags and landing
-//   page, sent by the browser only after analytics consent)
+//   page, kept in the visitor's browser tab and sent with the form)
 //   labels    — field labels for the note added when an existing contact
 //               submits again (their fields aren't overwritten; see lead-handler)
 //   build     — maps the cleaned values to the GHL /contacts/upsert body
@@ -27,6 +27,7 @@ return [
         'fields' => [
             'name' => 100,
             'clinicName' => 150,
+            'clinicWebsite' => 200,
             'email' => 254,
             'phone' => 40,
             'specialty' => 60,
@@ -39,6 +40,7 @@ return [
         'labels' => [
             'name' => 'Name',
             'clinicName' => 'Clinic',
+            'clinicWebsite' => 'Website',
             'email' => 'Email',
             'phone' => 'Phone',
             'specialty' => 'Specialty',
@@ -62,6 +64,13 @@ return [
             }
             if ($v['phone'] !== '') {
                 $body['phone'] = $v['phone'];
+            }
+            // GHL's standard Website field ("clinicWebsite": "website" is the
+            // honeypot). Text that isn't a web address stays
+            // out of it (it's still in the backup and the repeat-lead note).
+            $website = lead_normalize_website($v['clinicWebsite'] ?? '');
+            if ($website !== null) {
+                $body['website'] = $website;
             }
             // GHL custom field keys are the bare keys (no "contact." prefix).
             $custom = [];

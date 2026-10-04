@@ -144,6 +144,7 @@ Each lead carries where it came from into the CRM, in the custom fields of the *
 | `utm_campaign` | UTM Campaign (`contact.utm_campaign`) |
 | First page of the visit (no query string) | Landing Page (`contact.landing_page`) |
 
-- **Same consent rule as analytics:** captured on the visitor's first page, kept for the session only after "Accept", and sent with the form only then. "Decline" clears it, and those leads arrive without these fields.
-- **First touch wins:** for an existing contact these fields are filled only when empty, like every other field.
-- **Code:** `web/src/features/analytics/attribution.ts`, server fields in `lead-handler.php` (`LEAD_ATTRIBUTION_KEYS`).
+- **Not analytics, so no consent gate:** the tags are read from the URL when a page loads, kept only in that browser tab (`sessionStorage`; no cookie; gone when the tab closes) and sent to GHL only if the visitor submits a form, whatever their cookie choice. The Privacy Policy says so ("Where you came from"). The GA4 events (`cta_click`, `form_error`, link clicks) stay behind consent.
+- **First page wins:** a later page load replaces it only if that page carries UTM tags and the first one had none. Visitors who arrive with no tags still send their landing page.
+- **First touch:** for an existing contact these fields are filled only when empty, like every other field.
+- **Code:** `web/src/features/lead-form/attribution.ts`, server fields in `lead-handler.php` (`LEAD_ATTRIBUTION_KEYS`).

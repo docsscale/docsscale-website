@@ -5,7 +5,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { FUNNEL_FORM } from '@/content/funnel';
-import { attributionFields } from '@/features/analytics/attribution';
+import { attributionFields } from '@/features/lead-form/attribution';
 import { trackFormError, trackLead } from '@/features/analytics/track';
 import { serverErrorField } from '@/features/lead-form/useLeadSubmit';
 import { Honeypot, honeypotValue } from '@/features/lead-form/Honeypot';

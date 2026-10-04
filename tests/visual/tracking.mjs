@@ -79,9 +79,10 @@ const events = (page, name) =>
   expect('form_error: invalid phone', last, { form: 'book-a-call', field: 'phone', page: '/book-a-call/' });
   await page.context().close();
 }
-// attribution: sent with the lead after consent, not without
-for (const consent of ['granted', 'denied']) {
-  const { page, lead } = await open('/?utm_source=facebook&utm_medium=paid-social&utm_campaign=free-system-tx-hou-202610', consent);
+// attribution: captured from the URL on page load, kept in the tab only
+// (sessionStorage, no cookie), sent with a submitted form whatever the consent choice
+const CAMPAIGN = '/?utm_source=facebook&utm_medium=paid-social&utm_campaign=free-system-tx-hou-202610';
+async function submitHome(page, lead) {
   const f = page.locator('#call form');
   await f.locator('[name=name]').fill('QA');
   await f.locator('[name=clinicName]').fill('Clinic');
@@ -91,19 +92,33 @@ for (const consent of ['granted', 'denied']) {
   await f.locator('button[type=submit]').click();
   await page.waitForTimeout(800);
   const got = lead();
-  const attribution = got && {
-    utmSource: got.utmSource,
-    utmMedium: got.utmMedium,
-    utmCampaign: got.utmCampaign,
-    landingPage: got.landingPage,
-  };
+  return got && { utmSource: got.utmSource, utmMedium: got.utmMedium, utmCampaign: got.utmCampaign, landingPage: got.landingPage };
+}
+for (const consent of ['granted', 'denied', null]) {
+  const { page, lead } = await open(CAMPAIGN, consent);
   expect(
-    `attribution with consent ${consent}`,
-    attribution,
-    consent === 'granted'
-      ? { utmSource: 'facebook', utmMedium: 'paid-social', utmCampaign: 'free-system-tx-hou-202610', landingPage: `${base}/` }
-      : { utmSource: undefined, utmMedium: undefined, utmCampaign: undefined, landingPage: undefined },
+    `attribution sent, consent ${consent}`,
+    await submitHome(page, lead),
+    { utmSource: 'facebook', utmMedium: 'paid-social', utmCampaign: 'free-system-tx-hou-202610', landingPage: `${base}/` },
   );
+  expect(`no cookie set, consent ${consent}`, await page.evaluate(() => document.cookie), '');
+  expect(`kept in sessionStorage, consent ${consent}`, await page.evaluate(() => sessionStorage.getItem('ds-landing') !== null), true);
+  await page.context().close();
+}
+// first page wins: a later page load without tags doesn't replace it
+{
+  const { page, lead } = await open(CAMPAIGN, 'denied');
+  await page.waitForTimeout(500); // let the first page finish loading its scripts
+  await page.goto(base + '/', { waitUntil: 'load' }); // second full page load, no tags
+  await page.waitForTimeout(300);
+  const got = await submitHome(page, lead);
+  expect('first page wins across page loads', [got.utmSource, got.utmCampaign, got.landingPage], ['facebook', 'free-system-tx-hou-202610', `${base}/`]);
+  await page.context().close();
+}
+// no campaign tags: the landing page is still sent, UTM fields are empty
+{
+  const { page, lead } = await open('/', null);
+  expect('direct visit: landing page only', await submitHome(page, lead), { utmSource: '', utmMedium: '', utmCampaign: '', landingPage: `${base}/` });
   await page.context().close();
 }
 

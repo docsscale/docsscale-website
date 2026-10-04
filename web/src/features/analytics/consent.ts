@@ -1,5 +1,4 @@
 import { CONSENT_STORAGE_KEY } from '@/content/analytics';
-import { forgetLanding, persistLanding } from './attribution';
 
 export type Consent = 'granted' | 'denied';
 export const OPEN_CONSENT_EVENT = 'ds-consent-open';
@@ -21,9 +20,7 @@ export function saveConsent(value: Consent) {
   } catch {}
   if (value === 'granted') {
     window.dsLoadAnalytics?.();
-    persistLanding();
   } else {
-    forgetLanding();
     // Withdrawn after accepting earlier: stop storage and remove GA's cookies.
     window.gtag?.('consent', 'update', { analytics_storage: 'denied' });
     for (const name of document.cookie.split(';').map((c) => c.split('=')[0]!.trim())) {

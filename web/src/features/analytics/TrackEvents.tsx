@@ -8,9 +8,7 @@
 // - email_link_click / phone_link_click on mailto: / tel: links;
 // - form_error when the browser's required-field check stops a form.
 // Everything goes through gtag, so nothing is sent before "Accept".
-// Also remembers the landing page and UTM tags for the lead (attribution.ts).
 import { useEffect } from 'react';
-import { rememberLanding } from './attribution';
 import { formForPath, trackContactClick, trackCtaClick, trackFormError } from './track';
 
 function locationOf(el: Element): string {
@@ -34,7 +32,6 @@ function ctaOf(a: HTMLAnchorElement): string | null {
 
 export function TrackEvents() {
   useEffect(() => {
-    rememberLanding();
     const onClick = (e: MouseEvent) => {
       const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
       if (!a) return;

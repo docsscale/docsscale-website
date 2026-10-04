@@ -5,6 +5,7 @@ import { LEAD_FORM_MESSAGES, LOCATION_OPTIONS, SPECIALTY_OPTIONS } from '@/conte
 import { T } from '@/styles/tokens';
 import { StatusAnnouncer, useFocusOnMount } from './a11y';
 import { errorStyle, fieldStyle as field, phoneVariant, textareaStyle } from './fieldStyles';
+import { ClinicWebsiteField } from './ClinicWebsiteField';
 import { PhoneField } from './PhoneField';
 import { Honeypot } from './Honeypot';
 import { useLeadSubmit } from './useLeadSubmit';
@@ -28,6 +29,7 @@ export function HomeLeadForm() {
         <input required name="name" placeholder="Your name" aria-label="Your name" style={field} />
         <input required name="clinicName" placeholder="Clinic name" aria-label="Clinic name" style={field} />
       </div>
+      <ClinicWebsiteField style={field} />
       {/* Full-width rows: the card is too narrow for the country picker beside another field. */}
       <input
         required

@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { LEAD_FORM_MESSAGES } from '@/content/lead-form';
-import { attributionFields } from '@/features/analytics/attribution';
+import { attributionFields } from '@/features/lead-form/attribution';
 import { trackFormError, trackLead } from '@/features/analytics/track';
 import { useValidators } from './PhoneField';
 

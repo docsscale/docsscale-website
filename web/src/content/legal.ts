@@ -25,7 +25,8 @@ export const PRIVACY: LegalDoc = {
     {
       heading: 'Information we collect',
       paragraphs: [
-        'Information you give us. The strategy call forms ask for your name, clinic name, work email and specialty, and optionally your mobile number, number of locations and a short message. The free-system form asks for your name and work email, and optionally your mobile number, clinic name and clinic type. If you email us, we receive what you send.',
+        'Information you give us. The strategy call forms ask for your name, clinic name, work email, phone number and specialty, and optionally your clinic’s website, number of locations and a short message. The free-system form asks for your name, work email and phone number, and optionally your clinic name and clinic type. If you email us, we receive what you send.',
+        'Where you came from. If you arrive through a link or advertisement with campaign tags (such as utm_source), your browser tab remembers those tags and the first page you opened, without using a cookie. They are added to a form if you submit one, so we know which campaign or page brought you to us, and are forgotten when you close the tab.',
         'Information collected automatically. When you submit a form, our server records a one-way hashed (scrambled) value derived from your IP address, used only to detect spam and repeated automated submissions. We do not store your IP address itself with your submission. Our hosting provider also keeps standard server logs, such as IP address, browser type, the pages requested and the time of the request, to operate and secure the site.',
         'Booking calendar. If you book a call through the calendar on our booking page, the details you enter are collected by our scheduling provider, GoHighLevel, on our behalf.',
         'We do not ask for, and ask you not to submit, any patient health information through the site.',

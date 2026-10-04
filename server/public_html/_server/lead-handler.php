@@ -44,7 +44,8 @@ const LEAD_TIME_BUDGET_SECONDS = 20;
 // Includes the DNS lookup: the host's resolver has been seen taking over 3 s.
 const LEAD_CONNECT_TIMEOUT_SECONDS = 5;
 const LEAD_UPSERT_MIN_SECONDS = 3;
-// Where the lead came from, sent by the forms after analytics consent, saved to
+// Where the lead came from (UTM tags + first page, kept in the visitor's tab and
+// sent with the form whatever the cookie choice), saved to
 // the GHL custom fields in the "Tracking" folder (keys without "contact.").
 const LEAD_ATTRIBUTION_FIELDS = ['utmSource' => 150, 'utmMedium' => 150, 'utmCampaign' => 150, 'landingPage' => 500];
 const LEAD_ATTRIBUTION_KEYS = ['utmSource' => 'utm_source', 'utmMedium' => 'utm_medium', 'utmCampaign' => 'utm_campaign', 'landingPage' => 'landing_page'];
@@ -346,6 +347,26 @@ function lead_attribution_custom_fields(array $v): array
         }
     }
     return $fields;
+}
+
+/**
+ * A clinic website as an https URL ("brightdental.com" → "https://brightdental.com"),
+ * or null when it's empty or doesn't look like a web address.
+ */
+function lead_normalize_website(string $website): ?string
+{
+    $website = trim($website);
+    if ($website === '') {
+        return null;
+    }
+    if (!preg_match('#^https?://#i', $website)) {
+        $website = 'https://' . $website;
+    }
+    $host = parse_url($website, PHP_URL_HOST);
+    if (!filter_var($website, FILTER_VALIDATE_URL) || !is_string($host) || !preg_match('/^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i', $host)) {
+        return null;
+    }
+    return $website;
 }
 
 function lead_split_name(string $name): array
