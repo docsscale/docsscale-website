@@ -24,6 +24,7 @@ import {
   TEAM_STORAGE_KEY,
 } from '@/content/analytics';
 import { ConsentBanner } from './ConsentBanner';
+import { TrackEvents } from './TrackEvents';
 import { WebVitals } from './WebVitals';
 
 // Microsoft Clarity, inside dsLoadAnalytics (so only after consent): the real
@@ -55,6 +56,7 @@ export function GoogleAnalytics() {
       <script dangerouslySetInnerHTML={{ __html: bootstrap(GA_MEASUREMENT_ID) }} />
       <ConsentBanner />
       <WebVitals />
+      <TrackEvents />
     </>
   );
 }
