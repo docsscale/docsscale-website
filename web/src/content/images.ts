@@ -7,8 +7,14 @@ const HERO = [640, 980, 1280, 1600];
 export const HERO_SIZES = '(max-width: 1060px) calc(100vw - 32px), 980px';
 const FUNNEL_SHOT = [400, 800, 1200];
 
+/** The example ad photo on the homepage (stock photo; source in incoming/README.md). */
+export const AD_EXAMPLE = '/images/home/ad-example.jpg';
+// About the width of its box: the card's width less padding, at most ~470px.
+export const AD_EXAMPLE_SIZES = '(max-width: 760px) calc(100vw - 86px), 470px';
+
 export const IMAGE_WIDTHS: Record<string, readonly number[]> = {
   '/free-system/images/hero-mockup.jpg': HERO,
+  [AD_EXAMPLE]: [400, 600, 800, 1200],
   '/free-system/images/funnel-new-patient.jpg': FUNNEL_SHOT,
   '/free-system/images/funnel-service-promo.jpg': FUNNEL_SHOT,
   '/free-system/images/funnel-booking.jpg': FUNNEL_SHOT,

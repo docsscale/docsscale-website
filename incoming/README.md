@@ -22,9 +22,22 @@ the optimised versions are.
 | `funnel-hero/` | `hero.png` | Click-to-Chair System overview: funnels + CRM dashboard + automations, e.g. a clean collage of real screenshots | **2400 × 1500** | 16:10 landscape, shown exactly |
 | `funnel-gallery/` | `new-patient.png`, `service-promo.png`, `booking.png`, `application.png`, `reactivation.png`, `review.png` | Top of each funnel's landing page, in that order: Get New Patients · Fill Your Best Service Line · Kill the Phone Tag · Only Talk to the Right Patients · Win Back Dormant Patients · Build Your Google Reputation | **1800 × 1200** | 3:2 landscape. Cards show the **top strip** (about 1.8:1); the enlarged view shows the whole image. Capture a 1440-px-wide browser window and crop the top to 3:2. |
 | `home-hero/` | `hero.jpg` | Homepage photo box (currently "Clinic photo: real team, real rooms"). A real photo of your team at work, or a dashboard on a screen | **1200 × 2000** | Tall portrait on desktop (about 0.55:1), nearly square on phones: keep the subject in the middle third |
-| `home-ad-creative/` | `ad.jpg` or `ad.png` | Homepage "Ad creative" example: a real ad you ran for a clinic (with the clinic's permission) | **1600 × 1000** | Landscape, about 1.3–1.7:1: centre the key message |
+| `home-ad-creative/` | `ad.jpg` or `ad.png` | Homepage "Ad preview" card photo. **Filled 6 Oct 2026 with a stock photo** (see "Sources and licences" below). A real ad you ran for a clinic (with the clinic's permission) can replace it later | **1600 × 1000** | Landscape, about 1.3–1.7:1: centre the key message |
 | `about-founder/` | `founder.jpg` | About page founder photo (Abdul Samad), real, in the office | **1200 × 1600** | Portrait 3:4, face in the upper third |
 | `team/` | `abdul-samad.jpg`, `ahmed-mustafa.jpg`, `mohsin.jpg`, `omar.jpg`, `owais.jpg`, `ali.jpg` | Team cards: head and shoulders, same background and lighting for everyone if possible | **1000 × 1000** | Square, face centred slightly above the middle |
 
 The thank-you page reuses the funnel hero image unless you want a separate one
 (same size and shape: add `funnel-hero/thank-you.png`).
+
+## Sources and licences
+
+Every image that isn't our own work is recorded here: where it came from and
+what the licence allows. Check this before reusing an image anywhere else.
+
+| Image on the site | Original file | Source | Licence | Credit required? |
+|---|---|---|---|---|
+| Homepage "Ad preview" card (`web/public/images/home/ad-example*`) | `home-ad-creative/ad.jpg`, from `dentist-matching-colour-tooth-enamel-with-whitening-chart.jpg` (6336 × 4224), added 6 Oct 2026 | **TO CONFIRM (owner)** | **TO CONFIRM (owner)** | **TO CONFIRM** |
+
+The photo is shown as a sample ad: the card is labelled "Ad preview" and the alt
+text calls it an example ad photo. It is not presented as our team or a client.
+

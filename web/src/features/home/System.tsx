@@ -1,4 +1,5 @@
-import { Placeholder } from '@/components/ui/Placeholder';
+import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
+import { AD_EXAMPLE, AD_EXAMPLE_SIZES } from '@/content/images';
 import { T } from '@/styles/tokens';
 import { StageCard } from './StageCard';
 import { SpecialtyText } from './specialty-context';
@@ -131,6 +132,7 @@ export function System() {
                 flexDirection: 'column',
                 gap: 14,
                 flex: 1,
+                containerType: 'inline-size', // the photo's height follows this width (globals.css)
               }}
             >
               <div
@@ -144,15 +146,33 @@ export function System() {
                 <SpecialtyText field="adHeadline" />
               </div>
               <div
+                id="sys-attract-photo"
                 style={{
                   position: 'relative',
                   flex: 1,
                   minHeight: 180,
                   borderRadius: 16,
                   overflow: 'hidden',
+                  background: T.band,
                 }}
               >
-                <Placeholder placeholder="Ad creative: your team, your rooms" />
+                {/* Stock photo, shown as a sample ad. The two faces sit left and
+                    right of centre, so the crop is anchored on the point between
+                    them (not the middle of the photo) to keep both in view. */}
+                <ResponsiveImage
+                  src={AD_EXAMPLE}
+                  sizes={AD_EXAMPLE_SIZES}
+                  alt="Example ad photo: a dentist showing a smiling patient a tooth shade guide"
+                  loading="lazy"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: '34% 8%',
+                  }}
+                />
               </div>
               <div
                 style={{

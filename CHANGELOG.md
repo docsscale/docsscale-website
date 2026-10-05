@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Homepage "Attract" ad preview: a photo replaces the placeholder** (agency review UX-1, System part). The "Sponsored · Your Clinic" card showed a dashed box reading "Ad creative: your team, your rooms"; it now shows a stock photo of a dentist and a patient, still under the "Ad preview" label, with alt text that calls it an example ad photo. The crop is anchored between the two faces (not the centre of the photo), and the photo's box is at least 55% as tall as it is wide, so both faces stay fully in view at every width checked (320–1920 px, all specialties). Served as AVIF/WebP at four widths (11–48 KB as AVIF) and lazy-loaded. Source and licence are recorded in `incoming/README.md`.
+
 ## [1.4.1] — 2026-10-05
 
 - **Hero graphic: the first example now plays too.** After a reload the first example (Maya) sat complete for about two seconds and then switched to the second one, so it never animated (owner's report, 5 Oct). The page still paints the complete first example, then, about 1.4 seconds after load, plays it through step by step before moving on. Reduced-motion visitors still get the static version.
