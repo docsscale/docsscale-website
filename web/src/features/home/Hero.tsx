@@ -1,9 +1,9 @@
 // Homepage hero: a bento grid of tiles. Server Component; the specialty-driven
 // bits are the small client leaves from specialty-context.
-import { Placeholder } from '@/components/ui/Placeholder';
 import { HERO, INTEGRATIONS } from '@/content/home';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 import { AnimatedHeading } from '@/features/motion/AnimatedHeading';
+import { HeroJourney } from './HeroJourney';
 import { IntegrationChip } from './IntegrationChip';
 import { SpecialtyInquiries, SpecialtyPicker, SpecialtyText } from './specialty-context';
 const tileLabel = {
@@ -159,19 +159,19 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Photo tile */}
+        {/* Product graphic: example patient journeys (HeroJourney). Until v1.4 this
+            was a photo placeholder. */}
         <div
-          id="hero-photo-tile"
+          id="hero-journey-tile"
           style={{
             gridColumn: 'span 1',
             gridRow: 'span 2',
             borderRadius: 28,
-            overflow: 'hidden',
             position: 'relative',
             minHeight: 340,
           }}
         >
-          <Placeholder placeholder={HERO.photo.placeholder} />
+          <HeroJourney />
         </div>
 
         {/* Attract: inquiries this week */}
