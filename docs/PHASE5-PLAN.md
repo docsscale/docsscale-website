@@ -4,7 +4,7 @@ Status: **in progress.** Approved in principle on 27 Sep 2026; v1.0 went live on
 
 ## Status tracker
 
-**Last updated: 6 Oct 2026 (production is v1.4.2).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
+**Last updated: 6 Oct 2026 (production is v1.4.3).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
 
 Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's fine); the only estimates are the build-effort figures in "Phase order" below.
 
@@ -52,7 +52,7 @@ Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's f
 | 4 | FE-1 / FE-4: slow hero on phones; real-user Web Vitals | Measuring since v1.2.4; decision at the 15 Oct review |
 | 5 | UX-1: homepage placeholders | Hero done (v1.4.0–v1.4.1, 5 Oct); ad preview done (v1.4.2, 6 Oct); About team photos still initials |
 | 6 | PM-1 / PM-2: this tracker | Done, 6 Oct |
-| 7 | AR-1 / SEO-1: old industry-page files still served | PR open (redirect + prune report); deleting the old files needs the owner's approval |
+| 7 | AR-1 / SEO-1: old industry-page files still served | Done, v1.4.3 (6 Oct): redirected, and the old files deleted with the owner's approval |
 | 8 | QA-2 / QA-3: landmarks, skip link, autocomplete | Open |
 | 9 | BE-3: back up rate-limited submissions | Open |
 | 10 | WebKit in CI and an iPhone spot check | Open (engine download approved) |
