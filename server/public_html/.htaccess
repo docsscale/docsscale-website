@@ -17,11 +17,14 @@ ErrorDocument 404 /404.html
 #     (301, with or without the trailing slash, query string kept). Before the
 #     www rule so www + old URL is still one hop; the host is kept (minus www.)
 #     so staging redirects within staging.
+#     Everything under the old folders redirects too (index.html, index.txt, the
+#     __next.*.txt files): deploys don't delete, so the old pages' files are
+#     still on the server and must not be served.
 # ---------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
-    RewriteRule ^services/(dental|chiropractic|physical-therapy|med-spa)/?$ https://%1/industries/$1/ [R=301,L]
+    RewriteRule ^services/(dental|chiropractic|physical-therapy|med-spa)(?:/.*)?$ https://%1/industries/$1/ [R=301,L]
 
     RewriteCond %{HTTP_HOST} ^www\.docsscale\.com$ [NC]
     RewriteRule ^ https://docsscale.com%{REQUEST_URI} [R=301,L]

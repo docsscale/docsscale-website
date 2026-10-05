@@ -24,6 +24,10 @@ for slug in dental chiropractic physical-therapy med-spa; do
   check "$BASE/services/$slug/" "https://$HOST/industries/$slug/"
   check "$BASE/services/$slug" "https://$HOST/industries/$slug/"
   check "$BASE/services/$slug/?utm_source=test&x=1" "https://$HOST/industries/$slug/?utm_source=test&x=1"
+  # the old pages' own files (still on the server: deploys don't delete)
+  check "$BASE/services/$slug/index.html" "https://$HOST/industries/$slug/"
+  check "$BASE/services/$slug/index.txt" "https://$HOST/industries/$slug/"
+  check "$BASE/services/$slug/__next._full.txt" "https://$HOST/industries/$slug/"
 done
 # www + old URL: still one hop (production only)
 if [[ "$HOST" == docsscale.com ]]; then
@@ -31,7 +35,7 @@ if [[ "$HOST" == docsscale.com ]]; then
 fi
 # untouched URLs: 200 (on www: the usual 301 to the bare domain)
 want=200; [[ "$BASE" == https://www.* ]] && want=301
-for path in /services/ /industries/ /; do
+for path in /services/ /services/index.txt /industries/ /; do
   code=$(curl -s ${AUTH[@]+"${AUTH[@]}"} -o /dev/null -w '%{http_code}' "$BASE$path")
   if [[ "$code" == "$want" ]]; then pass=$((pass+1)); else echo "FAIL $path: $code, want $want"; fail=$((fail+1)); fi
 done
