@@ -130,6 +130,14 @@ em.serif-accent {
 .marquee-track:hover {
   animation-play-state: paused;
 }
+/* The example ad photo (home/System.tsx) has two faces, left and right. Its box
+   is at least 55% as tall as it is wide (cqw = 1% of the card body's width),
+   so it never gets so wide and flat that a face is cut off. Browsers without
+   container units keep the 180px minimum from the markup. */
+#sys-attract-photo {
+  min-height: max(180px, 55cqw) !important;
+}
+
 @media (max-width: 760px) {
   #cta-grid,
   #faq-grid,
