@@ -43,7 +43,7 @@ export function HomeLeadForm() {
         aria-label="Work email"
         style={field}
       />
-      <PhoneField register={register} variant={phoneVariant} placeholder="Mobile" />
+      <PhoneField register={register} variant={phoneVariant} placeholder="Phone" />
       <div style={row}>
         <select required name="specialty" aria-label="Specialty" style={field} defaultValue="">
           <option value="" disabled>
