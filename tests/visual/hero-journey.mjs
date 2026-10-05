@@ -49,6 +49,7 @@ const state = (page) =>
       text: hj.innerText,
       name: hj.querySelector('.hj-name').textContent,
       live: hj.hasAttribute('data-live'),
+      done: hj.querySelectorAll('[data-state="done"]').length,
       box: [box.x, box.y, box.width, box.height].map(Math.round).join(','),
       page: document.documentElement.scrollHeight,
     };
@@ -77,13 +78,14 @@ const state = (page) =>
     }).observe({ type: 'layout-shift', buffered: true });
   });
   const atLoad = await state(page);
-  await page.waitForTimeout(1500); // the hero's own entrance (older than this graphic) settles
+  await page.waitForTimeout(900); // the hero's own entrance (older than this graphic) settles
   const first = await state(page);
   expect('after the entrance: still not moving', first.live, false);
   expect('at load: still the complete first example', atLoad.name, 'Maya');
   expect('at load: not moving yet', atLoad.live, false);
 
   const seen = new Set();
+  let firstToPlay = '';
   const boxes = new Set([first.box]);
   const pages = new Set([first.page]);
   let sending = false;
@@ -95,6 +97,7 @@ const state = (page) =>
     boxes.add(now.box);
     pages.add(now.page);
     if (now.text.includes('Sending')) sending = true;
+    if (now.live && !firstToPlay) firstToPlay = `${now.name}, ${now.done} steps done`;
     if (now.live && !seen.has(now.name)) {
       seen.add(now.name);
       starts[now.name] = Date.now();
@@ -103,6 +106,7 @@ const state = (page) =>
     }
     await page.waitForTimeout(100);
   }
+  expect('the first example is played through first', firstToPlay, 'Maya, 0 steps done');
   expect('all five examples shown', NAMES.every((n) => seen.has(n)), true);
   expect('"Sending" shown before automated replies', sending, true);
   expect(`full rotation takes 30-40 s (took ${(rotation / 1000).toFixed(1)} s)`, rotation >= 30000 && rotation <= 40000, true);

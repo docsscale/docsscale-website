@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Hero graphic: the first example now plays too.** After a reload the first example (Maya) sat complete for about two seconds and then switched to the second one, so it never animated (owner's report, 5 Oct). The page still paints the complete first example, then, about 1.4 seconds after load, plays it through step by step before moving on. Reduced-motion visitors still get the static version.
+
 ## [1.4.0] — 2026-10-05
 
 - **Homepage hero: an animated "patient journey" graphic replaces the photo placeholder** (agency review UX-1, hero part). Five example patients rotate, four steps each, every step tagged with its stage in the stage colours: a new lead after hours, a missed call, someone who didn't book right away, a no-show, and a past patient. Automated replies show a short "Sending…" first. Labelled "Example", with the caption "Every step runs on its own. Times vary by clinic."; no statistics, and nothing names the software behind it. The complete first example is in the page's HTML (first paint, no script needed); motion starts after the page has loaded, pauses off-screen and in background tabs, and never starts for visitors who prefer reduced motion. On phones the graphic now sits right under the headline card (it was at the bottom of the hero). Wording lives in `web/src/content/hero-journey.ts`. Lighthouse before/after (5 runs each): no change in score, LCP, CLS or blocking time; the page is 3.6 KB heavier. New CI check `tests/visual/hero-journey.mjs` (28 checks). The System-section placeholder and the About initials are unchanged.
