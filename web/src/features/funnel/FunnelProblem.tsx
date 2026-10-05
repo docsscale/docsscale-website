@@ -410,6 +410,7 @@ export function FunnelProblem() {
             </p>
             <a
               href="#form"
+              data-cta-location="problem"
               className="cta-btn"
               style={{
                 whiteSpace: 'nowrap',

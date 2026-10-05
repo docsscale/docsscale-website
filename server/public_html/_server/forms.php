@@ -9,6 +9,8 @@
 //               (via the Add Tags API, so existing tags are kept). GHL workflows
 //               trigger on it, because API-created contacts never count as a
 //               GHL "form submission".
+//   (both forms also accept the LEAD_ATTRIBUTION_FIELDS: UTM tags and landing
+//   page, kept in the visitor's browser tab and sent with the form)
 //   labels    — field labels for the note added when an existing contact
 //               submits again (their fields aren't overwritten; see lead-handler)
 //   build     — maps the cleaned values to the GHL /contacts/upsert body
@@ -31,7 +33,7 @@ return [
             'specialty' => 60,
             'locations' => 20,
             'message' => 2000,
-        ],
+        ] + LEAD_ATTRIBUTION_FIELDS,
         'required' => ['clinicName', 'email', 'phone', 'specialty'],
         'source' => 'Website form',
         'tag' => 'website-lead',
@@ -83,6 +85,7 @@ return [
             if ($v['specialty'] !== '') {
                 $custom[] = ['key' => 'specialty', 'field_value' => $v['specialty']];
             }
+            $custom = array_merge($custom, lead_attribution_custom_fields($v));
             if ($custom) {
                 $body['customFields'] = $custom;
             }
@@ -99,7 +102,7 @@ return [
             'clinicName' => 150,
             'clinicType' => 60,
             'source' => 60, // sent by the page; ignored in favour of the pinned value
-        ],
+        ] + LEAD_ATTRIBUTION_FIELDS,
         'required' => ['name', 'email', 'phone'],
         'source' => 'Funnel - Free System',
         'tag' => 'free-system-lead',
@@ -126,8 +129,10 @@ return [
             if ($v['phone'] !== '') {
                 $body['phone'] = $v['phone'];
             }
-            if ($v['clinicType'] !== '') {
-                $body['customFields'] = [['key' => 'clinic_type', 'field_value' => $v['clinicType']]];
+            $custom = $v['clinicType'] !== '' ? [['key' => 'clinic_type', 'field_value' => $v['clinicType']]] : [];
+            $custom = array_merge($custom, lead_attribution_custom_fields($v));
+            if ($custom) {
+                $body['customFields'] = $custom;
             }
             return $body;
         },
