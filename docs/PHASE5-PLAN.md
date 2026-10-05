@@ -6,7 +6,7 @@ Status: **in progress.** Approved in principle on 27 Sep 2026; v1.0 went live on
 
 **Last updated: 6 Oct 2026 (production is v1.4.2).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
 
-Hours and budget are not tracked in this repository; the only estimates are the build-effort figures in "Phase order" below.
+Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's fine); the only estimates are the build-effort figures in "Phase order" below.
 
 ### Phases
 
@@ -64,7 +64,7 @@ Hours and budget are not tracked in this repository; the only estimates are the 
 |---|---|
 | "GoHighLevel" in the funnel's name and copy | **Answered (27–28 Sep):** the funnel is the "Click-to-Chair System"; GoHighLevel is named only in details a buyer needs. |
 | Analytics tags in the page source | **Answered in practice:** GA4 (v1.0) and Clarity (v1.3.0) were approved and are live. |
-| Integrations strip on the homepage | **Not formally answered.** The strip is live and unchanged. |
+| Integrations strip on the homepage | **Answered (owner, 6 Oct 2026):** keep it, as plain platform names with no official logos, listing only platforms we actually work on for clients. Still open: whether TikTok stays on the list. The strip itself has not been changed yet; any change is visible and gets a before/after. |
 | CMS images | No decision needed until 5E. |
 
 ## Decisions recorded (27–28 Sep 2026)
