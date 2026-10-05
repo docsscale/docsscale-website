@@ -3,7 +3,7 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [Unreleased]
+## [1.4.1] — 2026-10-05
 
 - **Hero graphic: the first example now plays too.** After a reload the first example (Maya) sat complete for about two seconds and then switched to the second one, so it never animated (owner's report, 5 Oct). The page still paints the complete first example, then, about 1.4 seconds after load, plays it through step by step before moving on. Reduced-motion visitors still get the static version.
 
