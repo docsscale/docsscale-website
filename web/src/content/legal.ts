@@ -13,7 +13,7 @@ export type LegalDoc = {
 
 export const PRIVACY: LegalDoc = {
   title: 'Privacy Policy',
-  updated: 'October 4, 2026',
+  updated: 'October 5, 2026',
   sections: [
     {
       heading: 'What this policy covers',
