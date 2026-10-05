@@ -7,7 +7,7 @@
     "visual:baseline": "node tests/visual/capture.mjs --out tests/visual/baseline",
     "visual:candidate": "node tests/visual/capture.mjs --site web/out --out tests/visual/candidate",
     "visual:compare": "node tests/visual/compare.mjs",
-    "test:e2e": "node tests/visual/interactions.mjs && node tests/visual/nav-behaviour.mjs && node tests/visual/form-a11y.mjs && node tests/visual/web-vitals.mjs && node tests/visual/tracking.mjs && node tests/visual/clarity.mjs && node tests/visual/hero-journey.mjs",
+    "test:e2e": "node tests/visual/interactions.mjs && node tests/visual/nav-behaviour.mjs && node tests/visual/form-a11y.mjs && node tests/visual/web-vitals.mjs && node tests/visual/tracking.mjs && node tests/visual/clarity.mjs && node tests/visual/hero-journey.mjs && node tests/visual/funnel-stats.mjs",
     "test:redirects": "bash tests/server/redirects.sh",
     "visual:approve": "node scripts/approve-visual.mjs"
   },
