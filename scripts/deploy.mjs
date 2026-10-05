@@ -4,6 +4,12 @@
 //   node scripts/deploy.mjs --target staging            (web build + server files → staging)
 //   node scripts/deploy.mjs --target production --yes   (same → docsscale.com; guarded)
 //   node scripts/deploy.mjs --target staging --dry-run  (assemble release/<target>/ only)
+//   node scripts/deploy.mjs --target production --prune (report only: files on the
+//        server that are not in this release. Uploads nothing, deletes nothing.
+//        The list is saved to release/<target>-prune.txt.)
+//   node scripts/deploy.mjs --target production --delete-listed <file> --yes
+//        (deletes exactly the paths in <file>, one per line: a prune list the
+//         owner has read and approved. Needs the owner's approval every time.)
 //   node scripts/deploy.mjs --target production --rollback-original --yes
 //        (emergency: put back the site exactly as it was before v1.0: the static
 //         export in reference/live-2026-09-25/ plus the server code at tag
@@ -19,8 +25,10 @@
 //   production → public_html/              (never touches public_html/staging_html/)
 //   staging    → public_html/staging_html/ (+ password .htaccess, noindex robots,
 //                                           _server/environment.php → private-staging/)
-// Files are uploaded over existing ones; nothing on the server is deleted. Old,
-// content-hashed /_next/ files stay harmlessly until cleaned up by hand.
+// Files are uploaded over existing ones; a deploy never deletes anything. Files
+// from older releases stay on the server until pruned (--prune lists them;
+// --delete-listed removes an approved list). Old pages must not stay reachable
+// meanwhile: redirect them in .htaccess, as for /services/<industry>/.
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -46,9 +54,14 @@ const rollbackOriginal = flag('rollback-original');
 if (rollbackOriginal && target !== 'production') fail('--rollback-original is for production only.');
 if (rollbackOriginal && !flag('yes') && !flag('dry-run')) fail('Rollback needs --yes.');
 
+const pruneReport = flag('prune');
+const deleteList = flag('delete-listed') ? option('delete-listed') : null;
+if (deleteList && !flag('yes')) fail('--delete-listed needs --yes, and the owner\'s approval of that exact list.');
+if (deleteList && !fs.existsSync(deleteList)) fail(`No such list: ${deleteList}`);
+
 // 1. Safety checks for production (skipped for the emergency rollback, which
-//    must work even when main or CI is broken).
-if (target === 'production' && !flag('dry-run') && !rollbackOriginal) {
+//    must work even when main or CI is broken, and for the read-only prune report).
+if (target === 'production' && !flag('dry-run') && !rollbackOriginal && !pruneReport) {
   if (!flag('yes')) fail('Production deploy needs --yes (after checking staging).');
   if (git('status --porcelain')) fail('Working tree has uncommitted changes.');
   if (git('rev-parse --abbrev-ref HEAD') !== 'main') fail('Production deploys only from main.');
@@ -104,6 +117,60 @@ const { HOSTINGER_UPLOAD_URL: url, HOSTINGER_AUTH: auth, HOSTINGER_REST: rest } 
 if (!url || !auth || !rest) fail('Set HOSTINGER_UPLOAD_URL, HOSTINGER_AUTH and HOSTINGER_REST.');
 const base = target === 'staging' ? `${url}/staging_html` : url;
 const headers = { 'X-Auth': auth, 'X-Auth-Rest': rest, 'Tus-Resumable': '1.0.0' };
+
+// 3b. Prune: what is on the server but not in this release.
+// Never listed and never deleted: anything that isn't this site's own deploy
+// output (the staging site inside production's folder, certificate challenges,
+// host-managed files, dotfiles).
+const PROTECTED = [/^staging_html(\/|$)/, /^\.well-known(\/|$)/, /^cgi-bin(\/|$)/, /(^|\/)\.[^/]+/, /(^|\/)error_log$/];
+const isProtected = (rel) => PROTECTED.some((pattern) => pattern.test(rel));
+const resources = base.replace('/api/tus/', '/api/resources/');
+const encode = (rel) => rel.split('/').map(encodeURIComponent).join('/');
+async function listServer(dir = '') {
+  const response = await fetch(`${resources}/${encode(dir)}`, { headers });
+  if (!response.ok) fail(`could not list ${dir || '/'} on the server (${response.status})`);
+  const found = [];
+  for (const item of (await response.json()).items ?? []) {
+    const rel = dir ? `${dir}/${item.name}` : item.name;
+    if (isProtected(rel)) continue;
+    if (item.isDir) found.push(...(await listServer(rel)));
+    else found.push({ rel, size: item.size, modified: item.modified.slice(0, 10) });
+  }
+  return found;
+}
+if (pruneReport) {
+  const inRelease = new Set(files.map((file) => file.split(path.sep).join('/')));
+  const extra = (await listServer()).filter((file) => !inRelease.has(file.rel));
+  const hashed = extra.filter((file) => /(^|\/)_next\/static\//.test(file.rel));
+  const other = extra.filter((file) => !hashed.includes(file));
+  const kb = (list) => `${Math.round(list.reduce((sum, file) => sum + file.size, 0) / 1024)} KB`;
+  console.log(`\nPrune report for ${target} (nothing was changed):`);
+  console.log(`  ${hashed.length} old build files under /_next/static/ (${kb(hashed)}): from older releases; no current page links to them`);
+  console.log(`  ${other.length} other files not in this release (${kb(other)}): read the list before approving`);
+  for (const file of other) console.log(`    ${file.modified}  ${file.rel}`);
+  const out = path.join(root, 'release', `${target}-prune.txt`);
+  fs.writeFileSync(out, [...other, ...hashed].map((file) => file.rel).join('\n') + '\n');
+  console.log(`  Full list: ${path.relative(root, out)}. To delete an approved list: --delete-listed <file> --yes`);
+  process.exit(0);
+}
+if (deleteList) {
+  const inRelease = new Set(files.map((file) => file.split(path.sep).join('/')));
+  const wanted = fs.readFileSync(deleteList, 'utf8').split('\n').map((line) => line.trim()).filter(Boolean);
+  // Refuse the whole list if any line could remove something that is in use.
+  for (const rel of wanted) {
+    if (rel.startsWith('/') || rel.includes('..') || rel.endsWith('/')) fail(`not a plain file path: ${rel}`);
+    if (isProtected(rel)) fail(`protected, never deleted: ${rel}`);
+    if (inRelease.has(rel)) fail(`in the current release, not deleted: ${rel}`);
+  }
+  let removed = 0;
+  for (const rel of wanted) {
+    const response = await fetch(`${resources}/${encode(rel)}`, { method: 'DELETE', headers });
+    if (response.ok) removed++;
+    else console.log(`  not deleted (${response.status}): ${rel}`);
+  }
+  console.log(`Deleted ${removed} of ${wanted.length} listed files on ${target}. Nothing was uploaded.`);
+  process.exit(0);
+}
 
 // .htaccess first on staging so the password is in place before content lands.
 files.sort((a, b) => (a === '.htaccess' ? -1 : b === '.htaccess' ? 1 : a.localeCompare(b)));

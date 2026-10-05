@@ -5,6 +5,8 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+- **Old industry-page files are no longer served** (agency review AR-1 / SEO-1). `/services/<industry>/index.html`, `index.txt` and the other files of the pages that moved in v1.2 still answered with the old page, because deploys never delete. Everything under those four folders now redirects (301) to the matching `/industries/` page. `tests/server/redirects.sh` checks it (28 checks, was 16).
+- **Deploy script: prune report.** `--prune` lists server files that are not in the current release and changes nothing; `--delete-listed <file> --yes` deletes exactly an owner-approved list and refuses anything in the current release or protected (`staging_html/`, `.well-known/`, dotfiles). Deleting needs the owner's approval every time (`docs/RELEASE.md`, "Pruning old files"). Nothing visible changes.
 - **Free System page: the stat numbers are in the HTML.** The five cards under the hero (6, 17, $0, 24/7, 100%) were written into the page as 0, 0 and 0% and only became the real numbers when a script counted them up, so anything that reads the page without running scripts saw zeros. The HTML now carries the real numbers; the count-up still plays when the cards scroll into view. Visitors who prefer reduced motion now get the numbers without the count-up. Nothing looks different (every page pixel-identical). New CI check `tests/visual/funnel-stats.mjs` (7 checks).
 
 ## [1.4.2] — 2026-10-06
