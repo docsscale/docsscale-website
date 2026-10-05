@@ -234,7 +234,9 @@ async function run(siteKey, scenario, browser) {
   else buf = await page.screenshot({ ...opts, fullPage: !!scenario.shot.fullPage });
   await context.close();
   server.close();
-  return { png: buf, lead: lead ? JSON.parse(lead.body) : null };
+  // The lead carries its landing page; the two test servers run on different
+  // ports, so compare with the server's own address taken out.
+  return { png: buf, lead: lead ? JSON.parse(lead.body.replaceAll(base, 'http://site')) : null };
 }
 
 fs.mkdirSync(OUT, { recursive: true });

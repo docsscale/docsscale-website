@@ -13,10 +13,26 @@
 //   never load GA (tests opt in with window.dsAnalyticsTest = true).
 // - Team browsers (marked once with ?team=on, see content/analytics.ts) send
 //   traffic_type=internal, which GA4's Internal Traffic data filter excludes.
+// - Microsoft Clarity loads with GA (same consent) on docsscale.com only, not for
+//   team browsers; forms are masked (data-clarity-mask).
 // SPA page changes are counted by GA4's enhanced measurement (history events).
-import { CONSENT_STORAGE_KEY, GA_MEASUREMENT_ID, TEAM_MESSAGES, TEAM_STORAGE_KEY } from '@/content/analytics';
+import {
+  CLARITY_PROJECT_ID,
+  CONSENT_STORAGE_KEY,
+  GA_MEASUREMENT_ID,
+  TEAM_MESSAGES,
+  TEAM_STORAGE_KEY,
+} from '@/content/analytics';
 import { ConsentBanner } from './ConsentBanner';
+import { TrackEvents } from './TrackEvents';
 import { WebVitals } from './WebVitals';
+
+// Microsoft Clarity, inside dsLoadAnalytics (so only after consent): the real
+// site only (never tests or staging) and never for team-marked browsers.
+const clarity = (id: string) =>
+  id
+    ? `if(/^(www\\.)?docsscale\\.com$/.test(location.hostname)&&!team){(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script",${JSON.stringify(id)});window.clarity("consent")}`
+    : '';
 
 const bootstrap = (id: string) => `
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;
@@ -28,7 +44,8 @@ var team=false;try{team=localStorage.getItem(${JSON.stringify(TEAM_STORAGE_KEY)}
 gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
 window.dsLoadAnalytics=function(){if(window.dsAnalyticsLoaded)return;if(!/^(www\\.)?docsscale\\.com$/.test(location.hostname)&&!window.dsAnalyticsTest)return;window.dsAnalyticsLoaded=true;
 gtag("consent","update",{analytics_storage:"granted"});gtag("js",new Date());gtag("config",${JSON.stringify(id)},team?{traffic_type:"internal"}:{});
-var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id=${id}";document.head.appendChild(s)};
+var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id=${id}";document.head.appendChild(s);
+${clarity(CLARITY_PROJECT_ID)}};
 var c=null;try{c=localStorage.getItem(${JSON.stringify(CONSENT_STORAGE_KEY)})}catch(e){}
 if(c==="granted")window.dsLoadAnalytics();`;
 
@@ -39,6 +56,7 @@ export function GoogleAnalytics() {
       <script dangerouslySetInnerHTML={{ __html: bootstrap(GA_MEASUREMENT_ID) }} />
       <ConsentBanner />
       <WebVitals />
+      <TrackEvents />
     </>
   );
 }

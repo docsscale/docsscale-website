@@ -3,6 +3,11 @@
 // whole site and the funnel. Empty = no analytics script and no consent banner.
 export const GA_MEASUREMENT_ID = 'G-804589LNJW';
 
+// Microsoft Clarity (heatmaps and recordings). Loaded with GA, after "Accept",
+// on docsscale.com only (never staging, local builds or tests). Forms are
+// masked (data-clarity-mask on each <form>). Empty = no Clarity.
+export const CLARITY_PROJECT_ID = 'yr9lxbtgy0';
+
 /**
  * Team visits: opening https://docsscale.com/?team=on once in a browser marks
  * all its later visits as internal (GA4 parameter traffic_type=internal), so

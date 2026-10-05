@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { SITE } from '@/content/site';
 import { GoogleAnalytics } from '@/features/analytics/GoogleAnalytics';
+import { LandingCapture } from '@/features/lead-form/LandingCapture';
 
 // Root layout shared by the main site and the /free-system funnel. Each of those
 // has its own layout (route groups (site) and (funnel)) with its own stylesheet,
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         {children}
+        <LandingCapture />
         <GoogleAnalytics />
       </body>
     </html>

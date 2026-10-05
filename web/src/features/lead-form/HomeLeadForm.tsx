@@ -23,7 +23,11 @@ export function HomeLeadForm() {
   if (status === 'sent') return <HomeLeadSuccess />;
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <form
+      data-clarity-mask="true"
+      onSubmit={onSubmit}
+      style={{ display: 'flex', flexDirection: 'column', gap: 10 }}
+    >
       <Honeypot />
       <div style={row}>
         <input required name="name" placeholder="Your name" aria-label="Your name" style={field} />

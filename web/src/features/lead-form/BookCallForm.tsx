@@ -23,6 +23,7 @@ export function BookCallForm() {
 
   return (
     <form
+      data-clarity-mask="true"
       onSubmit={onSubmit}
       style={{
         background: T.tealTintBg,

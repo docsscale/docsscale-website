@@ -13,7 +13,7 @@ export type LegalDoc = {
 
 export const PRIVACY: LegalDoc = {
   title: 'Privacy Policy',
-  updated: 'September 29, 2026',
+  updated: 'October 4, 2026',
   sections: [
     {
       heading: 'What this policy covers',
@@ -25,7 +25,8 @@ export const PRIVACY: LegalDoc = {
     {
       heading: 'Information we collect',
       paragraphs: [
-        'Information you give us. The strategy call forms ask for your name, clinic name, work email and specialty, and optionally your mobile number, number of locations and a short message. The free-system form asks for your name and work email, and optionally your mobile number, clinic name and clinic type. If you email us, we receive what you send.',
+        'Information you give us. The strategy call forms ask for your name, clinic name, work email, phone number and specialty, and optionally your clinic’s website, number of locations and a short message. The free-system form asks for your name, work email and phone number, and optionally your clinic name and clinic type. If you email us, we receive what you send.',
+        'Where you came from. If you arrive through a link or advertisement with campaign tags (such as utm_source), your browser tab remembers those tags and the first page you opened, without using a cookie. They are added to a form if you submit one, so we know which campaign or page brought you to us, and are forgotten when you close the tab.',
         'Information collected automatically. When you submit a form, our server records a one-way hashed (scrambled) value derived from your IP address, used only to detect spam and repeated automated submissions. We do not store your IP address itself with your submission. Our hosting provider also keeps standard server logs, such as IP address, browser type, the pages requested and the time of the request, to operate and secure the site.',
         'Booking calendar. If you book a call through the calendar on our booking page, the details you enter are collected by our scheduling provider, GoHighLevel, on our behalf.',
         'We do not ask for, and ask you not to submit, any patient health information through the site.',
@@ -47,6 +48,7 @@ export const PRIVACY: LegalDoc = {
         'GoHighLevel (LeadConnector). Every form submission is sent to our customer relationship management (CRM) system, operated by GoHighLevel, where we manage replies, follow-up and bookings. Calls booked through our calendar at booking.docsscale.com are handled by the same system.',
         'Hostinger. Our website and its server are hosted by Hostinger. So that no inquiry is lost if the CRM is unavailable, a backup copy of each form submission is kept in a private, access-restricted folder on that server. It is never publicly accessible.',
         'Google. We use, or may use, Google Analytics 4 as described under Cookies and analytics.',
+        'Microsoft. With your consent, we use Microsoft Clarity as described under Cookies and analytics.',
         'These providers process information on our behalf to provide their services to us. We may also disclose information if required by law, to protect our rights or the safety of others, or as part of a merger, acquisition or sale of our business, in which case this policy continues to apply to the information transferred.',
       ],
     },
@@ -79,6 +81,7 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         'This site does not use advertising cookies. The booking calendar on our booking page is provided by GoHighLevel and may set its own cookies when you use it, as described in GoHighLevel’s privacy policy.',
         'We use, or may use, Google Analytics 4 to understand how visitors use the site, such as which pages are viewed and how visitors arrive. Google Analytics uses cookies and collects information such as device, browser, approximate location and pages visited; we do not use it to identify you personally. Where the law requires your consent for analytics cookies, we will ask for it before they are set. You can opt out of Google Analytics with Google’s browser add-on (tools.google.com/dlpage/gaoptout) or by blocking cookies in your browser.',
+        'With your consent, we also use Microsoft Clarity to see how visitors use our pages, for example where they click and how far they scroll, through heatmaps and recordings of visits. Clarity uses cookies and collects information such as device, browser, approximate location, pages visited and how you interact with them. Everything typed into our forms is masked before it leaves your browser, so Clarity never records what you enter. Clarity is provided by Microsoft; see the [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement). You can withdraw your consent at any time with "Cookie settings" at the bottom of every page.',
         'Some browsers send a "Do Not Track" signal. Because there is no common standard for it, the site does not respond to it; the choices above remain available to you.',
       ],
     },

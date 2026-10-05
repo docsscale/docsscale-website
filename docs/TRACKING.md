@@ -28,6 +28,15 @@ When the ID is empty, the site renders no analytics code and no banner.
 - **Changing your mind:** "Cookie settings" in the footer reopens the banner.
 - **Code:** `web/src/features/analytics/`. Banner text: `web/src/content/analytics.ts`.
 
+## Microsoft Clarity (heatmaps and recordings)
+
+- **Project ID** `yr9lxbtgy0` in `web/src/content/analytics.ts` (`CLARITY_PROJECT_ID`; empty switches Clarity off).
+- **Same consent as GA4:** loaded together with GA only after "Accept", and told so (`clarity('consent')`). "Decline" after accepting sends `clarity('consent', false)` and deletes the `_clck`/`_clsk` cookies.
+- **Production only:** loads on docsscale.com, never on staging, local builds or in tests. **Team browsers** (`?team=on`) never load it, so recordings show real visitors only.
+- **Forms are masked:** every lead form has `data-clarity-mask="true"`, so nothing typed is recorded (the Clarity project's own masking setting should stay on "Balanced" or "Strict").
+- The Privacy Policy describes it under "Cookies and analytics" (updated 2 Oct 2026).
+- **Test:** `tests/visual/clarity.mjs` runs in CI **permanently** (owner's decision): it proves the forms are masked and that Clarity loads only after consent on docsscale.com.
+
 ## Excluding DocsScale team visits
 
 **For each team member, once per browser** (desktop and phone, every browser they use):
@@ -54,6 +63,9 @@ To undo it, open **https://docsscale.com/?team=off**. The mark lives in that bro
 | `view_lead_magnet` | A lead-magnet landing page opened | `lead_magnet`: `free-system` |
 | `book_call` | The funnel's booking confirmation shown (GoHighLevel returned with `?booked=1`) | `source`: `free-system` |
 | `LCP`, `INP`, `CLS` | Real-user Core Web Vitals, once per page view, sent when the visitor leaves or hides the page | `value`: the metric as an integer (ms; CLS × 1000); `metric_value` (exact); `metric_rating`: `good`, `needs-improvement` or `poor`; `metric_id`; `page_path` |
+| `cta_click` | A "Book a call" or "Claim the free system" button or link is clicked | `cta`: `book_a_call`, `free_system` or `free_system_book_call`; `location`: the page section (`header`, `hero`, `footer`, `final_cta`, `cta`, `problem`…); `page` |
+| `form_error` | A form submission is stopped | `form`: `home`, `book-a-call` or `free-system`; `field`: the field that stopped it (`name`, `clinicName`, `email`, `phone`, `specialty`…), or `server` / `required` for a server-side refusal; `page` |
+| `email_link_click` / `phone_link_click` | A `mailto:` / `tel:` link is clicked | `location`, `page` (the address itself is never sent) |
 
 - **Useful report:** Explore → Free form. Rows: `lead_magnet` × Session source / medium. Values: event count of `generate_lead`.
 - **What's never sent to GA:** personal data (names, emails, phone numbers).
@@ -130,4 +142,18 @@ Not targeted for now: California and New York.
 
 Example: `https://docsscale.com/free-system/?utm_source=facebook&utm_medium=paid-social&utm_campaign=free-system-tx-dfw-202610`
 
-Planned (Phase 5A): the lead handler also stores the UTM tags and landing page on the GoHighLevel contact, so the CRM shows each lead's source.
+### UTM tags and landing page in GoHighLevel
+
+Each lead carries where it came from into the CRM, in the custom fields of the **Tracking** folder:
+
+| Website sends | GHL custom field (key) |
+|---|---|
+| `utm_source` of the visitor's first page | UTM Source (`contact.utm_source`) |
+| `utm_medium` | UTM Medium (`contact.utm_medium`) |
+| `utm_campaign` | UTM Campaign (`contact.utm_campaign`) |
+| First page of the visit (no query string) | Landing Page (`contact.landing_page`) |
+
+- **Not analytics, so no consent gate:** the tags are read from the URL when a page loads, kept only in that browser tab (`sessionStorage`; no cookie; gone when the tab closes) and sent to GHL only if the visitor submits a form, whatever their cookie choice. The Privacy Policy says so ("Where you came from"). The GA4 events (`cta_click`, `form_error`, link clicks) stay behind consent.
+- **First page wins:** a later page load replaces it only if that page carries UTM tags and the first one had none. Visitors who arrive with no tags still send their landing page.
+- **First touch:** for an existing contact these fields are filled only when empty, like every other field.
+- **Code:** `web/src/features/lead-form/attribution.ts`, server fields in `lead-handler.php` (`LEAD_ATTRIBUTION_KEYS`).
