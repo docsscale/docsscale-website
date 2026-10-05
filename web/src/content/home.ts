@@ -91,9 +91,6 @@ export const HERO = {
   intro:
     'The marketing agency for healthcare clinics that want one team on the whole patient journey, and one number that matters: booked appointments.',
   cta: { label: 'Book a strategy call', href: '/book-a-call' },
-  photo: {
-    placeholder: 'Clinic photo: real team, real rooms',
-  },
   attract: { label: 'This week · Attract', suffix: 'new patient inquiries for ' },
   convert: {
     label: 'Convert · replied in 2 min',

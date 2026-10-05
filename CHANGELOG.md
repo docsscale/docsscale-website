@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Homepage hero: an animated "patient journey" graphic replaces the photo placeholder** (agency review UX-1, hero part). Five example patients rotate, four steps each, every step tagged with its stage in the stage colours: a new lead after hours, a missed call, someone who didn't book right away, a no-show, and a past patient. Automated replies show a short "Sending…" first. Labelled "Example", with the caption "Every step runs on its own. Times vary by clinic."; no statistics, and nothing names the software behind it. The complete first example is in the page's HTML (first paint, no script needed); motion starts after the page has loaded, pauses off-screen and in background tabs, and never starts for visitors who prefer reduced motion. On phones the graphic now sits right under the headline card (it was at the bottom of the hero). Wording lives in `web/src/content/hero-journey.ts`. Lighthouse before/after (5 runs each): no change in score, LCP, CLS or blocking time; the page is 3.6 KB heavier. New CI check `tests/visual/hero-journey.mjs` (28 checks). The System-section placeholder and the About initials are unchanged.
+
 ## [1.3.0] — 2026-10-05
 
 - **Phone required on all three forms, with a country picker** (default United States, never guessed from the visitor's location). The number is checked for the chosen country and sent to GoHighLevel as E.164 (`+17135550100`), so GHL no longer prefixes +1 to numbers typed without a country code. The server refuses numbers it can't place in a country and still accepts old-format US numbers from cached pages. On the homepage form, email and phone now each get a full-width row. Approved by the owner (before/after).

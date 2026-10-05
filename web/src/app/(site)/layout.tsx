@@ -5,6 +5,7 @@ import '@/styles/fonts.css';
 import '@/styles/globals.css';
 import '@/styles/motion.css';
 import '@/styles/layout.css';
+import '@/styles/hero-journey.css';
 
 // Main-site shell. Pages render their own <Nav active="…"> (the active tab is
 // page-specific); the footer is identical everywhere, so it lives here.
