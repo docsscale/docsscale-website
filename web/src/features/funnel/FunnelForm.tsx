@@ -60,7 +60,11 @@ export function FunnelForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <form
+      data-clarity-mask="true"
+      onSubmit={onSubmit}
+      style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
+    >
       <Honeypot />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <input

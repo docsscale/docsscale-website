@@ -21,10 +21,11 @@ export function saveConsent(value: Consent) {
   if (value === 'granted') {
     window.dsLoadAnalytics?.();
   } else {
-    // Withdrawn after accepting earlier: stop storage and remove GA's cookies.
+    // Withdrawn after accepting earlier: stop storage and remove GA's and Clarity's cookies.
     window.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+    window.clarity?.('consent', false);
     for (const name of document.cookie.split(';').map((c) => c.split('=')[0]!.trim())) {
-      if (name === '_ga' || name.startsWith('_ga_'))
+      if (name === '_ga' || name.startsWith('_ga_') || name === '_clck' || name === '_clsk')
         for (const domain of ['', `; domain=.${location.hostname.replace(/^www\./, '')}`])
           document.cookie = `${name}=; max-age=0; path=/${domain}`;
     }
@@ -34,6 +35,8 @@ export function saveConsent(value: Consent) {
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
+    /** Microsoft Clarity's queue function, once loaded. */
+    clarity?: (...args: unknown[]) => void;
     /** Defined by the GoogleAnalytics bootstrap: loads GA after consent. */
     dsLoadAnalytics?: () => void;
   }

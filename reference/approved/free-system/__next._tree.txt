@@ -4,4 +4,4 @@
 :HL["/_next/static/chunks/0a1gwc2pba_c_.css","style"]
 :HL["/free-system/images/hero-mockup-1600.avif","image",{"type":"image/avif","fetchPriority":"high","imageSrcSet":"/free-system/images/hero-mockup-640.avif 640w, /free-system/images/hero-mockup-980.avif 980w, /free-system/images/hero-mockup-1280.avif 1280w, /free-system/images/hero-mockup-1600.avif 1600w","imageSizes":"(max-width: 1060px) calc(100vw - 32px), 980px"}]
 :HL["/brand/logo-dark.webp","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"(funnel)","param":null,"prefetchHints":4096,"slots":{"children":{"name":"free-system","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"mDV78NI6OmS20WVu3_sVs"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"(funnel)","param":null,"prefetchHints":4096,"slots":{"children":{"name":"free-system","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"4DlPun2pngT6Taep8Rr8j"}

@@ -12,6 +12,7 @@
 2. **Merge to `main`** (via a pull request or a fast-forward merge). Push, and wait for CI to go green on that exact commit.
 3. **Tag:** `git tag -a vX.Y.Z -m "…" && git push origin vX.Y.Z`.
 4. **Owner go-ahead:** production is never deployed without the owner's explicit approval for that release.
+4b. **Privacy Policy date:** if this release changes the Privacy Policy, set `updated` in `web/src/content/legal.ts` to the **actual production deploy date** (through the release PR) before tagging. If the deploy slips to another day, change it again.
 5. **Deploy:** `node scripts/deploy.mjs --target production --yes`. The script refuses if the tree is dirty, the branch isn't `main`, `main` isn't pushed, or CI isn't green.
 6. **Purge the CDN cache** (hPanel → Websites → docsscale.com → Performance → CDN → Purge all).
 7. Run the "After deploying to production" part of the QA checklist.
