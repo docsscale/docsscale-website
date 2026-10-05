@@ -75,6 +75,7 @@ jobs:
       # The homepage hero graphic: complete on first paint, static under reduced
       # motion, pauses off-screen, never moves the page.
       - run: node tests/visual/hero-journey.mjs
+      - run: node tests/visual/funnel-stats.mjs
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Free System page: the stat numbers are in the HTML.** The five cards under the hero (6, 17, $0, 24/7, 100%) were written into the page as 0, 0 and 0% and only became the real numbers when a script counted them up, so anything that reads the page without running scripts saw zeros. The HTML now carries the real numbers; the count-up still plays when the cards scroll into view. Visitors who prefer reduced motion now get the numbers without the count-up. Nothing looks different (every page pixel-identical). New CI check `tests/visual/funnel-stats.mjs` (7 checks).
+
 ## [1.4.2] — 2026-10-06
 
 - **Homepage "Attract" ad preview: a photo replaces the placeholder** (agency review UX-1, System part). The "Sponsored · Your Clinic" card showed a dashed box reading "Ad creative: your team, your rooms"; it now shows a stock photo of a dentist and a patient, still under the "Ad preview" label, with alt text that calls it an example ad photo. The crop is anchored between the two faces (not the centre of the photo), and the photo's box is at least 55% as tall as it is wide, so both faces stay fully in view at every width checked (320–1920 px, all specialties). Served as AVIF/WebP at four widths (11–48 KB as AVIF) and lazy-loaded. Source and licence are recorded in `incoming/README.md`.

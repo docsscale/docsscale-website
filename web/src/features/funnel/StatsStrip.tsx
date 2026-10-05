@@ -2,23 +2,32 @@
 
 // Five stat cards under the funnel hero; numeric ones count up (1 s, ease-out)
 // the first time they scroll into view.
+// The real numbers are in the page's HTML, so they are there without JavaScript
+// (search engines, link previews, a script that fails to load). The count-up is
+// added on top: once the script runs, a card that is still off-screen is set
+// back to 0 and counts up when it scrolls in. Visitors who prefer reduced
+// motion keep the real numbers and get no count-up.
 import { useEffect, useRef, useState } from 'react';
 import { FUNNEL_STATS, type FunnelStat } from '@/content/funnel';
 
 function StatCard({ card }: { card: FunnelStat }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [text, setText] = useState(card.staticText ?? `0${card.suffix ?? ''}`);
+  const [text, setText] = useState(card.staticText ?? `${card.value}${card.suffix ?? ''}`);
 
   useEffect(() => {
     if (card.staticText || card.value === undefined) return;
     const el = ref.current;
     if (!el || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const target = card.value;
     const suffix = card.suffix ?? '';
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+          if (!entry.isIntersecting) {
+            setText(`0${suffix}`); // off-screen: ready to count up
+            return;
+          }
           let start: number | null = null;
           const tick = (now: number) => {
             if (start === null) start = now;
