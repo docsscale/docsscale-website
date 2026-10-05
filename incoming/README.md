@@ -36,7 +36,7 @@ what the licence allows. Check this before reusing an image anywhere else.
 
 | Image on the site | Original file | Source | Licence | Credit required? |
 |---|---|---|---|---|
-| Homepage "Ad preview" card (`web/public/images/home/ad-example*`) | `home-ad-creative/ad.jpg`, from `dentist-matching-colour-tooth-enamel-with-whitening-chart.jpg` (6336 × 4224), added 6 Oct 2026 | **TO CONFIRM (owner)** | **TO CONFIRM (owner)** | **TO CONFIRM** |
+| Homepage "Ad preview" card (`web/public/images/home/ad-example*`) | `home-ad-creative/ad.jpg`, from `dentist-matching-colour-tooth-enamel-with-whitening-chart.jpg` (6336 × 4224), added 6 Oct 2026 | Freepik | Freepik Premium licence (the owner's subscription; confirmed by the owner, 6 Oct 2026) | No |
 
 The photo is shown as a sample ad: the card is labelled "Ad preview" and the alt
 text calls it an example ad photo. It is not presented as our team or a client.
