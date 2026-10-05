@@ -102,7 +102,7 @@ A deliberate visible change is approved by the owner, then frozen with `npm run 
 | Production | https://docsscale.com | `public_html/` | live, sends to GoHighLevel |
 | Staging | https://staging.docsscale.com (password) | `public_html/staging_html/` | test mode |
 
-- **How it deploys:** `scripts/deploy.mjs` builds, assembles `release/<target>/` (static export + server files, plus the staging additions), and uploads over the existing files. Nothing on the server is deleted; old hashed `/_next/` files stay harmlessly.
+- **How it deploys:** `scripts/deploy.mjs` builds, assembles `release/<target>/` (static export + server files, plus the staging additions), and uploads over the existing files. A deploy never deletes anything, so files from older releases stay on the server. Old *pages* must be redirected in `.htaccess` so they can't be served (as `/services/<industry>/` is). `--prune` lists the leftovers without changing anything; deleting an approved list is a separate, owner-approved step (`docs/RELEASE.md`, "Pruning old files").
 - **Production gates:** it only deploys from a clean `main` that is pushed to GitHub and has all CI checks green, and it needs `--yes`.
 - **Rollback:** see [RELEASE.md](RELEASE.md).
 

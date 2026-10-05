@@ -3,6 +3,11 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Old industry-page files are no longer served** (agency review AR-1 / SEO-1). `/services/<industry>/index.html`, `index.txt` and the other files of the pages that moved in v1.2 still answered with the old page, because deploys never delete. Everything under those four folders now redirects (301) to the matching `/industries/` page. `tests/server/redirects.sh` checks it (28 checks, was 16).
+- **Deploy script: prune report.** `--prune` lists server files that are not in the current release and changes nothing; `--delete-listed <file> --yes` deletes exactly an owner-approved list and refuses anything in the current release or protected (`staging_html/`, `.well-known/`, dotfiles). Deleting needs the owner's approval every time (`docs/RELEASE.md`, "Pruning old files"). Nothing visible changes.
+
 ## [1.4.2] — 2026-10-06
 
 - **Homepage "Attract" ad preview: a photo replaces the placeholder** (agency review UX-1, System part). The "Sponsored · Your Clinic" card showed a dashed box reading "Ad creative: your team, your rooms"; it now shows a stock photo of a dentist and a patient, still under the "Ad preview" label, with alt text that calls it an example ad photo. The crop is anchored between the two faces (not the centre of the photo), and the photo's box is at least 55% as tall as it is wide, so both faces stay fully in view at every width checked (320–1920 px, all specialties). Served as AVIF/WebP at four widths (11–48 KB as AVIF) and lazy-loaded. Source and licence are recorded in `incoming/README.md`.

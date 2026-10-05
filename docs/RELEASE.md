@@ -52,3 +52,27 @@ This keeps history honest and passes the same gates as any release.
 
 - **Hostinger backups:** hPanel → Websites → docsscale.com → Files → Backups (daily or weekly, depending on plan). Restoring there replaces all of `public_html/`, including `staging_html/`.
 - **Full hPanel backup** from 25 Sep 2026, plus every original server file: `~/DocsScale-Secure/` on the owner's Mac.
+
+## Pruning old files
+
+Deploys only add and overwrite. Files from older releases stay on the server:
+old hashed `/_next/static/` files, and the files of pages that no longer exist.
+
+1. **Report (changes nothing, safe to run any time):**
+   `node scripts/deploy.mjs --target production --prune`
+   It builds the current release, lists the server, and prints every server file
+   that is not in the release. The full list is saved to
+   `release/production-prune.txt`. It never looks inside `staging_html/`,
+   `.well-known/`, `cgi-bin/` or at dotfiles.
+2. **The owner reads the list and approves it** (every time; an old approval
+   doesn't carry over). Remove any line that should stay.
+3. **Delete exactly that list:**
+   `node scripts/deploy.mjs --target production --delete-listed release/production-prune.txt --yes`
+   On production this needs the same gates as a deploy (on `main`, clean, CI
+   green). The whole list is refused if any line is in the current release, is
+   protected, or isn't a plain file path. Nothing is uploaded.
+
+A removed page must not wait for a prune: add a redirect for it in
+`server/public_html/.htaccess` in the same release that removes it, and a check
+in `tests/server/redirects.sh`.
+
