@@ -5,6 +5,7 @@
 //
 // - First paint is the complete first example. That is also the whole graphic
 //   for visitors who prefer reduced motion: the loop never starts for them.
+//   For everyone else the loop begins by replaying that first example.
 // - The loop starts only after the page has loaded, and pauses while the tile
 //   is off-screen or the tab is hidden, so it costs nothing during load.
 // - Every row has a fixed height and single-line text (styles/hero-journey.css),
@@ -17,7 +18,7 @@ import { STAGE_COLORS, T } from '@/styles/tokens';
 const { patients } = HERO_JOURNEY;
 const STEPS = 4;
 // Milliseconds. One patient takes about 7 s, the five about 36 s.
-const TIMING = { start: 2200, arrive: 550, sending: 850, active: 600, settle: 400, hold: 1500 };
+const TIMING = { start: 1400, arrive: 550, sending: 850, active: 600, settle: 400, hold: 1500 };
 
 type Frame = { patient: number; step: number; sending: boolean };
 const COMPLETE: Frame = { patient: 0, step: STEPS, sending: false };
@@ -45,7 +46,9 @@ export function HeroJourney() {
 
     async function loop() {
       await sleep(TIMING.start);
-      for (let patient = 1; !cancelled; patient = (patient + 1) % patients.length) {
+      // Starts by playing the first example through (it was shown complete until
+      // now), so a visitor who has just arrived sees it happen step by step.
+      for (let patient = 0; !cancelled; patient = (patient + 1) % patients.length) {
         await whileHidden();
         if (!cancelled) setLive(true); // together with the first change, so nothing replays
         show({ patient, step: -1, sending: false });
