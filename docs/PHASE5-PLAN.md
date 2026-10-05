@@ -1,6 +1,71 @@
 # Phase 5: Growth — plan
 
-Status: **approved in principle (27 Sep 2026); starts after v1.0 is live.** Nothing here has been built yet.
+Status: **in progress.** Approved in principle on 27 Sep 2026; v1.0 went live on 28 Sep 2026. Where each part stands is in the tracker below. The rest of this document is the plan as approved; it is not rewritten as things ship.
+
+## Status tracker
+
+**Last updated: 6 Oct 2026 (production is v1.4.2).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
+
+Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's fine); the only estimates are the build-effort figures in "Phase order" below.
+
+### Phases
+
+| Phase | Status | Done | Open | Owner |
+|---|---|---|---|---|
+| **5A** Measurement and safety | **Mostly done** | See the 5A table below | Brand-rule CI check, link checker, SSL-expiry monitors, DMARC tightening, GA4 admin setup | Developer; owner for GA4 admin |
+| **5B** Site structure | **Partly done** | Services and Industries menus, `/industries/` hub and four industry pages, 301s from `/services/<industry>/` (v1.2.0, 30 Sep) | Real service pages (`/services/<service>/`); seven-vs-eight services wording ([BACKLOG.md](BACKLOG.md)) | Waits for the 5C keyword map |
+| **5C** SEO / AEO / GEO | **Not started** (pause lifted 6 Oct 2026) | Search Console and Bing set up; sitemaps submitted | Keyword map, on-page, schema, FAQs, `llms.txt` rewrite, long page titles | Developer; owner approves copy |
+| **5D** Lead magnets app | Not started | — | All | — |
+| **5E** Blog | Not started | — | All | — |
+| **5F** Newsletter | Not started | — | All | — |
+| **5G** Content plan | Not started | — | All | — |
+
+### 5A item by item
+
+| # | Item | Status | When |
+|---|---|---|---|
+| 1 | GA4 with consent banner | Done | v1.0–v1.1 (28 Sep) |
+| 2 | UTM naming standard ([TRACKING.md](TRACKING.md)) | Done | 27–28 Sep |
+| 2 | GA4 events `generate_lead`, `view_lead_magnet`, `book_call` | Done | v1.1 |
+| 2 | More events: `cta_click`, `form_error`, email and phone link clicks | Done | v1.3.0 (5 Oct) |
+| 2 | UTMs and landing page sent to the CRM with each lead | Done | v1.3.0 (5 Oct) |
+| 2 | Real-user Web Vitals in GA4 | Done (not in the original plan) | v1.2.4 (2 Oct); first review 15 Oct |
+| 2 | GA4 admin: key events, custom dimensions, Internal Traffic filter | **Open** | Owner ([HANDOVER.md](HANDOVER.md) to-do 3) |
+| 3 | Google Search Console, sitemaps submitted | Done | 29–30 Sep |
+| 4 | Bing Webmaster Tools, sitemap submitted | Done | 30 Sep; data check 7 Oct |
+| 5 | Microsoft Clarity after consent, forms masked | Done | v1.3.0 (5 Oct) |
+| 6 | Uptime monitoring: home, Free System funnel, booking calendar, lead endpoint | Done | 30 Sep |
+| 6 | SSL-expiry monitors | **Open** | Not set up on the free plan |
+| 7 | DMARC reports to dmarc@docsscale.com (`p=none`) | Done | 29 Sep |
+| 7 | DMARC to `quarantine`, then `reject` | **Open** | Review 20 Oct |
+| 8 | Brand-rule CI check | **Open** | — |
+| 8 | Link checker in CI | **Open** | Manual check on 30 Sep: 0 broken |
+| — | Daily email when a lead fails to reach the CRM | Done (not in the original plan) | v1.2.2 (1 Oct) |
+
+### Agency review, top 10 ([AGENCY-REVIEW.md](AGENCY-REVIEW.md))
+
+| # | Item | Status |
+|---|---|---|
+| 1 | BE-1: save the lead before calling the CRM; time budget | Done, v1.2.1 (30 Sep) |
+| 2 | BE-2 / AR-3: failure email and uptime monitoring | Done, v1.2.2 (1 Oct) and 30 Sep |
+| 3 | QA-1: form messages reach screen readers | Done, v1.2.3 (1 Oct) |
+| 4 | FE-1 / FE-4: slow hero on phones; real-user Web Vitals | Measuring since v1.2.4; decision at the 15 Oct review |
+| 5 | UX-1: homepage placeholders | Hero done (v1.4.0–v1.4.1, 5 Oct); ad preview done (v1.4.2, 6 Oct); About team photos still initials |
+| 6 | PM-1 / PM-2: this tracker | Done, 6 Oct |
+| 7 | AR-1 / SEO-1: old industry-page files still served | PR open (redirect + prune report); deleting the old files needs the owner's approval |
+| 8 | QA-2 / QA-3: landmarks, skip link, autocomplete | Open |
+| 9 | BE-3: back up rate-limited submissions | Open |
+| 10 | WebKit in CI and an iPhone spot check | Open (engine download approved) |
+| — | PM-4, PM-6: out-of-date docs, client guide for v1.2 | Open |
+
+### Decisions from section 0 ("Needs your decision")
+
+| Question | Answer |
+|---|---|
+| "GoHighLevel" in the funnel's name and copy | **Answered (27–28 Sep):** the funnel is the "Click-to-Chair System"; GoHighLevel is named only in details a buyer needs. |
+| Analytics tags in the page source | **Answered in practice:** GA4 (v1.0) and Clarity (v1.3.0) were approved and are live. |
+| Integrations strip on the homepage | **Answered (owner, 6 Oct 2026):** keep it, as plain platform names with no official logos, listing only platforms we actually work on for clients. Still open: whether TikTok stays on the list. The strip itself has not been changed yet; any change is visible and gets a before/after. |
+| CMS images | No decision needed until 5E. |
 
 ## Decisions recorded (27–28 Sep 2026)
 
