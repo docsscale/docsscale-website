@@ -1,7 +1,8 @@
 # SEO command center: plan
 
-Status: **proposal, 6 Oct 2026, waiting for the owner's approval.** Nothing is
-built. A clickable mockup of the main tabs is in
+Status: **approved by the owner on 6 Oct 2026, with the lighter first cut**
+(decisions in section 12). Nothing is built yet; it comes after the publishing
+core and the first two content pieces. A clickable mockup of the main tabs is in
 [seo/dashboard-mockup.html](seo/dashboard-mockup.html); every number in it is
 example data and is labelled so.
 
@@ -15,9 +16,11 @@ example data and is labelled so.
   Settings; its tab then appears. Nothing is rebuilt.
 - **Running cost: USD 0** until you buy a tool. It runs on the Hostinger plan
   you have and uses only free APIs.
-- **It is a large addition: about 42–51 build days** on top of the current
-  plan (phase 1: 28–34; phase 2: 14–17). The whole project becomes roughly
-  116–138 build days.
+- **Approved size: phase 1 as the lighter first cut, about 15 build days**,
+  then phase 2 (14–17). The crawler, full Technical health, PageSpeed, Clarity
+  and the disabled paid connectors (phase 1b, about 13–19 days) wait until the
+  SEO person asks for them. The whole project becomes roughly 103–119 build
+  days with phases 1 and 2.
 - **It does not delay the first two content pieces.** The publishing part of
   the CMS is built first; the local SEO page and its post go out as soon as
   your material arrives, and the dashboard is built behind them.
@@ -26,7 +29,8 @@ example data and is labelled so.
   rather than by the server on its own (section 6); there is no automatic "fix
   runner" (section 7); and one technical point about sign-in is not settled
   until a half-day test (section 3).
-- **Five decisions for you** are in section 12.
+- **The five decisions are answered** in section 12, and the half-day test is
+  done (section 2).
 
 ## 1. What I took from your reference, and what I didn't
 
@@ -96,6 +100,19 @@ build** (on the existing `cms-trial.docsscale.com`, with your OK):
 If the first fails, the fallback is plain JSON files in the same private
 folder: slower for history, but it works. If the second fails, the schedule
 runs from a free GitHub scheduled workflow that calls the admin.
+
+**Test results (6 Oct 2026, on `cms-trial.docsscale.com`)**
+
+| Question | Result |
+|---|---|
+| A private file outside the app folder that survives a redeploy | **Yes.** A file written in a private folder in the hosting account's home, outside every served folder, kept its first entry through three redeploys. |
+| A scheduled job can wake the app | **Yes.** A Hostinger cron job called the app every five minutes for several hours; all 45 calls arrived. The test job has been removed; the lead-digest job was not touched. |
+| Built-in SQLite, no compiled add-on | **Yes, on Node.js 24.** It is not in Node.js 20, which Hostinger picks by default, so the admin app states Node.js 24 in its package file. The editing screen runs normally on 24. |
+| The server can verify a Keystatic Cloud sign-in | **No.** Keystatic Cloud keeps the sign-in in the browser only and never sends it to our server. The SEO tabs therefore use the email-link sign-in (decision 2). |
+
+So the store is SQLite as planned, the schedule is Hostinger's own cron, and
+there are two sign-ins on a new device: Keystatic Cloud for Content, an email
+link for the SEO tabs.
 
 ## 3. Sign-in and roles
 
@@ -327,8 +344,10 @@ keys. The public site remains as safe as it is today, because it is separate.
 
 | Phase | Contents | Build days | When |
 |---|---|---|---|
-| **Test** | The three Hostinger points and the sign-in point, on the trial site | 0.5–1 | Before phase 1 |
-| **1. With the CMS build** | Admin shell with the tab bar, sign-in and roles (3–4); store, schedule and connector framework with encrypted settings, health, limits and caps (4–5); the seven free connectors (7); Settings (1.5); Imports (2); Access log (1); crawler and Technical health (4); Content inventory (2); Google Search, Bing, Analytics and Keywords tabs (3); the five disabled paid connectors with their forms (1.5); tests and a security review (2) | 28–34 | After the publishing core; alongside the first content |
+| **Test** | The three Hostinger points and the sign-in point, on the trial site | Done | 6 Oct 2026 |
+| **1. Lighter first cut (approved)** | Admin shell with the tab bar, email-link sign-in and roles (3–4); store, schedule and connector framework with encrypted settings, health and limits (4); Search Console, GA4 and Bing connectors with their tabs (5); Settings (1.5); Imports (1.5); Access log (1); Content inventory (2) | about 15–18 | After the publishing core and the first two content pieces |
+| **1b. Later, on request** | Crawler and Technical health (4); PageSpeed and CrUX (1); Clarity (1); IndexNow log tab (0.5); the five disabled paid connectors with their forms (1.5); Technical-health part of the security review and tests (1); plus tab work | 13–19 | When the SEO person asks |
+| **1 as first proposed (not chosen)** | Admin shell with the tab bar, sign-in and roles (3–4); store, schedule and connector framework with encrypted settings, health, limits and caps (4–5); the seven free connectors (7); Settings (1.5); Imports (2); Access log (1); crawler and Technical health (4); Content inventory (2); Google Search, Bing, Analytics and Keywords tabs (3); the five disabled paid connectors with their forms (1.5); tests and a security review (2) | 28–34 | After the publishing core; alongside the first content |
 | **2. Once search data exists** | Overview (2); Fix queue with the three actions and the hand-off to drafts and pull requests (4); plan (1.5); question coverage (2); internal link map and Links tab (2.5); cannibalization from queries and coverage (1.5); AI visibility (1); History and outcomes (2.5); the weekly run's commands (already counted in the completion plan's stage E) | 14–17 | About 4 weeks after the first content is live |
 | **3. When you buy a tool** | Switch on its connector and check it against live data | 1.5–3 per tool | Your decision |
 
@@ -345,24 +364,26 @@ keys. The public site remains as safe as it is today, because it is separate.
 
 - The first content is not held behind the dashboard: it needs only the
   publishing core, which is built first either way.
-- **The honest cost:** the project grows by roughly half, from about 16–19
-  weeks to about 24–27. If that is too much, the lighter first cut is
-  decision 1.
+- **With the lighter first cut** the project is about 21–24 weeks instead of
+  16–19. Technical health in the tab list stays empty, with a note, until
+  phase 1b.
 
 **Running cost: USD 0.** Hostinger (existing plan), Google and Bing APIs (free
 within quotas we will not approach), Clarity export (free), GitHub Actions
 (free minutes), email links (existing mailbox). The first cost is whatever tool
 you choose to buy.
 
-## 12. Decisions I need
+## 12. Decisions (owner, 6 Oct 2026)
 
-| # | Question | Recommendation |
+| # | Question | Decision |
 |---|---|---|
-| 1 | **Full phase 1 (28–34 days), or a lighter first cut (about 15 days)?** The lighter cut is: shell, sign-in and roles, connector framework, Search Console, GA4 and Bing, Settings, Access log, Imports, Content inventory. It leaves the crawler and Technical health, PageSpeed, Clarity and the disabled paid connectors for a later step. | The lighter cut first. It gives the tabs you will open most, six weeks sooner, and the crawler's job is partly done already by the checks in CI. |
-| 2 | **Sign-in, if one sign-in for both parts is not possible:** email link for the SEO tabs? | Yes |
-| 3 | **Can the SEO person Approve in the Fix queue,** or only you? | Only you at first, like Publish |
-| 4 | **Access log: full IP addresses, shortened, or none?** | Shortened (the last part removed). People are already identified by their sign-in; the full address adds little and is personal data. |
-| 5 | **May I run the half-day test on `cms-trial.docsscale.com`** (a private folder, a scheduled job, the built-in SQLite, the sign-in check)? | Yes |
+| 1 | Full phase 1 or the lighter first cut | **The lighter first cut, about 15 days:** shell, roles, connector framework, Search Console, GA4, Bing, Settings, Access log, Imports, Content inventory. The crawler and full Technical health wait until the SEO person asks for them. |
+| 2 | Sign-in for the SEO tabs | **Email link**, since one sign-in cannot cover both parts (section 3 and the test results) |
+| 3 | Who can Approve in the Fix queue | **Only the owner at first.** A setting in Settings lets the owner extend it to the SEO role later, without code. Only a change made by the admin counts. |
+| 4 | Access log | **Shortened IP addresses** |
+| 5 | The half-day test | Done; results in section 2 |
+| — | Buying a tool | Nothing for two to three months; then confirm DataForSEO's current price before any purchase |
+| — | Priority | The publishing core and the first two content pieces come before any dashboard work |
 
 ## Sources for prices and limits
 
