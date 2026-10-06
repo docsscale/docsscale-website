@@ -18,7 +18,8 @@ in and replaces every "stage" number mentioned elsewhere in this file.**
 | **B** | The system: blog templates and the full CMS at `cms.docsscale.com` | Not started |
 | **C** | First content, published through the CMS | Waiting for B. The owner's team is gathering material for the local SEO page and the "Google Business Profile for dentists" post. |
 | **D** | Handover package, remaining review items, Safari in CI, WCAG pass | Not started |
-| **E** | Weekly SEO review; proposals for the interactive tools and the data page | Starts 28 days after the first content is live |
+| **E** | Weekly SEO review; proposals for the interactive tools and the data page | Starts 28 days after the first content is live. If the SEO command center is approved, the weekly review moves into it. |
+| **Proposed** | SEO command center inside the admin ([SEO-DASHBOARD-PLAN.md](SEO-DASHBOARD-PLAN.md)) | **Proposal, waiting for the owner's approval and five decisions.** Not counted in the totals below until approved. It would add about 42–51 build days and does not delay the first content. |
 
 ## The short version
 
@@ -753,6 +754,22 @@ to deploy.
 | **D. Handover and review** | Review leftovers, Safari in CI, WCAG pass (5–7); handover package and a walkthrough with the editors (4–6) | 9–13 | Approvals; the security checklist; iPhone check |
 | **E. Weekly SEO review** | Set-up (3–4); proposals for the interactive tools and the data page template (1) | 4–5 | — |
 | | **Total** | **74–87** | |
+
+**Proposed addition: the SEO command center.** On 6 Oct 2026 the owner asked
+for an SEO dashboard inside the admin at `cms.docsscale.com`. Its plan,
+architecture, tab list and a mockup are in
+[SEO-DASHBOARD-PLAN.md](SEO-DASHBOARD-PLAN.md) and
+[seo/dashboard-mockup.html](seo/dashboard-mockup.html). If approved as written:
+
+- Stage B is built in this order: blog templates and the publishing core
+  first; **the first content goes out as soon as the owner's material arrives
+  (about week 7–8)**; then the remaining CMS forms and dashboard phase 1.
+- Dashboard phase 1 adds 28–34 build days (or about 15 for the lighter first
+  cut); phase 2 adds 14–17, about four weeks after the first content.
+- Stage E's weekly review is replaced by the dashboard's weekly run, Overview,
+  Fix queue and plan.
+- Total becomes about 116–138 build days, roughly 24–27 weeks. Running cost
+  stays USD 0 until a paid tool is bought.
 
 **What is new in this order**
 

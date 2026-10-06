@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>SEO command center: mockup</title>
+<style>
+  :root { --bg:#FAF9F6; --band:#F3F1EC; --surface:#fff; --ink:#1A1A1A; --body:#5C5A55; --cap:#6C6962; --line:#E6E3DC; --teal:#0F5F63;
+    --peach:#FBE7D6; --peachfg:#8A4B1E; --sage:#DAEDE2; --sagefg:#1F5A40; --lav:#E5DFF5; --lavfg:#4A3D75; --red:#B4432F; --redbg:#F8E1DC; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  .example { background:var(--ink); color:#fff; text-align:center; padding:8px 16px; font-size:13px; font-weight:600; }
+  header { background:var(--surface); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 20px; }
+  .brand { font-weight:800; letter-spacing:-.02em; }
+  .who { font-size:13px; color:var(--cap); }
+  nav { display:flex; gap:10px 22px; padding:0 20px 10px; flex-wrap:wrap; align-items:flex-end; }
+  .group > div { flex-wrap:wrap; }
+  .group { display:flex; flex-direction:column; gap:6px; flex:none; }
+  .group > span { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--cap); }
+  .group > div { display:flex; gap:4px; }
+  nav button { border:1px solid transparent; background:none; font:inherit; font-size:13px; font-weight:600; padding:7px 11px; border-radius:999px; cursor:pointer; color:var(--body); white-space:nowrap; }
+  nav button:hover { background:var(--band); }
+  nav button[aria-selected="true"] { background:var(--teal); color:#fff; }
+  nav button.off { color:#A8A49B; border:1px dashed var(--line); }
+  main { max-width:1180px; margin:0 auto; padding:24px 20px 64px; }
+  section[hidden] { display:none; }
+  h1 { font-size:28px; letter-spacing:-.03em; margin:0 0 4px; }
+  h2 { font-size:17px; letter-spacing:-.01em; margin:0 0 10px; }
+  .sub { color:var(--body); margin:0 0 20px; max-width:760px; }
+  .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr)); margin-bottom:14px; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:18px; }
+  .card.wide { grid-column:1/-1; }
+  .num { font-size:30px; font-weight:800; letter-spacing:-.03em; line-height:1.1; }
+  .label { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--cap); }
+  .src { font-size:12px; color:var(--cap); margin-top:8px; }
+  .pill { display:inline-block; font-size:12px; font-weight:700; padding:3px 9px; border-radius:999px; }
+  .ok { background:var(--sage); color:var(--sagefg); } .warn { background:var(--peach); color:var(--peachfg); }
+  .bad { background:var(--redbg); color:var(--red); } .muted { background:var(--band); color:var(--body); } .info { background:var(--lav); color:var(--lavfg); }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--cap); padding:8px 10px; border-bottom:1px solid var(--line); }
+  td { padding:10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  tr:last-child td { border-bottom:0; }
+  .scroll { overflow-x:auto; }
+  ul.plain { margin:0; padding-left:18px; } ul.plain li { margin:6px 0; }
+  .item { display:grid; grid-template-columns:34px minmax(0,1fr); gap:12px; padding:16px 0; border-bottom:1px solid var(--line); }
+  .item:last-child { border-bottom:0; }
+  .n { width:30px; height:30px; border-radius:10px; background:var(--peach); color:var(--peachfg); font-weight:800; display:flex; align-items:center; justify-content:center; font-size:13px; }
+  .ev { background:var(--band); border-radius:12px; padding:10px 12px; font-size:13px; color:var(--body); margin:8px 0; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px; }
+  .btn { font:inherit; font-size:13px; font-weight:700; padding:8px 14px; border-radius:999px; border:1px solid var(--line); background:var(--surface); cursor:pointer; }
+  .btn.primary { background:var(--teal); color:#fff; border-color:var(--teal); }
+  input.note { flex:1; min-width:200px; font:inherit; font-size:13px; padding:8px 12px; border:1px solid var(--line); border-radius:999px; background:var(--surface); }
+  .two { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr)); }
+  .key { font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--cap); }
+</style>
+</head>
+<body>
+<div class="example">MOCKUP · every name, number and date on this page is example data, not real DocsScale data</div>
+<header>
+  <div class="top">
+    <div class="brand">DocsScale admin</div>
+    <div class="who">Signed in as Owner (Admin) · <u>Sign out</u></div>
+  </div>
+  <nav role="tablist" aria-label="Admin sections">
+    <div class="group"><span>Content</span><div><button data-tab="content">Content</button></div></div>
+    <div class="group"><span>Search</span><div>
+      <button data-tab="overview" aria-selected="true">Overview</button><button data-tab="google">Google Search</button><button data-tab="other" data-name="Bing">Bing</button>
+      <button data-tab="other" data-name="Analytics and leads">Analytics and leads</button><button data-tab="other" data-name="Keywords and rankings">Keywords and rankings</button>
+      <button data-tab="other" data-name="AI visibility">AI visibility</button></div></div>
+    <div class="group"><span>Site</span><div>
+      <button data-tab="tech">Technical health</button><button data-tab="inventory">Content inventory</button>
+      <button data-tab="other" data-name="Links and authority">Links and authority</button><button data-tab="other" data-name="Questions and content gaps">Questions and gaps</button></div></div>
+    <div class="group"><span>Actions</span><div>
+      <button data-tab="queue">Fix queue <span class="pill warn">3</span></button><button data-tab="other" data-name="30/60/90-day plan">Plan</button>
+      <button data-tab="other" data-name="History and outcomes">History</button></div></div>
+    <div class="group"><span>Admin</span><div>
+      <button data-tab="other" data-name="Imports">Imports</button><button data-tab="other" data-name="Access log">Access log</button><button data-tab="settings">Settings</button></div></div>
+    <div class="group"><span>Paid, off</span><div><button class="off" data-tab="other" data-name="A paid tool's tab (appears when its connector is switched on)">Rank tracker</button></div></div>
+  </nav>
+</header>
+<main>
+
+<section id="overview">
+  <h1>Overview</h1>
+  <p class="sub">Written by the weekly run on <b>Mon 12 Jan</b> (example date). Data tabs update on their own; this summary is only as fresh as that date.</p>
+  <div class="grid">
+    <div class="card"><div class="label">Google clicks · 28 days</div><div class="num">124</div><span class="pill ok">up from 81</span><div class="src">Search Console · example range · fetched example date</div></div>
+    <div class="card"><div class="label">Leads from organic search</div><div class="num">3</div><span class="pill muted">Insufficient data for a trend</span><div class="src">GA4 key events · consenting visitors only · the CRM is the count of record</div></div>
+    <div class="card"><div class="label">Pages indexed</div><div class="num">19 / 22</div><span class="pill warn">3 not indexed</span><div class="src">Search Console URL inspection · example date</div></div>
+    <div class="card"><div class="label">Visits from AI assistants</div><div class="num">7</div><span class="pill muted">Undercounts: app visits carry no referrer</span><div class="src">GA4 · grouped by referring address</div></div>
+  </div>
+  <div class="two">
+    <div class="card"><h2>What moved</h2><ul class="plain">
+      <li>The local SEO page went from no impressions to an average position of 18 for its main keyword.</li>
+      <li>The Google Business Profile post brought two of the three organic leads.</li>
+      <li>Bing: no meaningful change. <span class="pill muted">Insufficient data: 38 impressions; a trend needs 100</span></li></ul></div>
+    <div class="card"><h2>What matters most this week</h2><ol class="plain">
+      <li>Three pages are not indexed; two are waiting on Google, one has a real problem (Fix queue 1).</li>
+      <li>The paid ads page and its post target overlapping queries (Fix queue 2).</li>
+      <li>One post is close to page one and needs a clearer title (Fix queue 3).</li></ol></div>
+    <div class="card"><h2>What to ignore</h2><ul class="plain">
+      <li>Daily position swings on new pages: normal for the first two months.</li>
+      <li>CrUX shows no data: the site is below Google's visitor threshold.</li>
+      <li>A drop in "direct" visits on the weekend: the team filter was switched on.</li></ul></div>
+    <div class="card"><h2>Risks</h2><ul class="plain">
+      <li>The Search Console connector's access expires in 30 days. <span class="pill warn">Settings</span></li>
+      <li>No post has been reviewed in the last 90 days.</li></ul></div>
+  </div>
+</section>
+
+<section id="google" hidden>
+  <h1>Google Search</h1>
+  <p class="sub">Positions are averages across searches, not a fixed rank. The last three days are left out because Google's data for them is incomplete.</p>
+  <div class="grid">
+    <div class="card"><div class="label">Clicks</div><div class="num">124</div><div class="src">28 days vs previous 28: 81</div></div>
+    <div class="card"><div class="label">Impressions</div><div class="num">6,310</div><div class="src">previous: 3,940</div></div>
+    <div class="card"><div class="label">Average position</div><div class="num">23.4</div><div class="src">previous: 31.0</div></div>
+    <div class="card"><div class="label">Click-through rate</div><div class="num">2.0%</div><div class="src">previous: 2.1%</div></div>
+  </div>
+  <div class="card wide scroll"><h2>Queries</h2>
+    <table><thead><tr><th>Query</th><th>Page</th><th>Clicks</th><th>Impressions</th><th>Avg. position</th><th>Change</th></tr></thead><tbody>
+      <tr><td>local seo for medical practices</td><td>/services/local-seo/</td><td>22</td><td>1,140</td><td>18.2</td><td><span class="pill ok">up 9.1</span></td></tr>
+      <tr><td>google business profile for dentists</td><td>/blog/…</td><td>31</td><td>860</td><td>11.6</td><td><span class="pill ok">up 4.0</span></td></tr>
+      <tr><td>chiropractic facebook ads</td><td>/blog/…</td><td>9</td><td>410</td><td>27.3</td><td><span class="pill muted">New</span></td></tr>
+      <tr><td>dental recall messages</td><td>/blog/…</td><td>2</td><td>64</td><td>14.0</td><td><span class="pill muted">Insufficient data: 64 impressions</span></td></tr>
+    </tbody></table><div class="src">Search Console · example range · fetched example date · Google hides rare queries, so rows do not add up to the totals</div></div>
+  <div class="card wide scroll" style="margin-top:14px"><h2>Index status</h2>
+    <table><thead><tr><th>Page</th><th>Status</th><th>Last crawled</th><th>Note</th></tr></thead><tbody>
+      <tr><td>/services/local-seo/</td><td><span class="pill ok">Indexed</span></td><td>example date</td><td></td></tr>
+      <tr><td>/services/paid-ads/</td><td><span class="pill warn">Discovered, not indexed</span></td><td>—</td><td>Published 6 days ago. Usually resolves on its own.</td></tr>
+      <tr><td>/blog/example-post/</td><td><span class="pill bad">Excluded: canonical points elsewhere</span></td><td>example date</td><td>In the Fix queue</td></tr>
+    </tbody></table><div class="src">Search Console URL inspection · checked example date</div></div>
+</section>
+
+<section id="tech" hidden>
+  <h1>Technical health</h1>
+  <p class="sub">From our own crawl of the live site and from PageSpeed Insights. Speed figures are lab tests on a simulated phone unless marked "real visitors".</p>
+  <div class="grid">
+    <div class="card"><div class="label">Pages crawled</div><div class="num">22</div><div class="src">Our crawler · example date</div></div>
+    <div class="card"><div class="label">Problems</div><div class="num">1 <span style="font-size:15px;color:var(--cap)">high</span> · 4 <span style="font-size:15px;color:var(--cap)">low</span></div><div class="src">No broken links</div></div>
+    <div class="card"><div class="label">Slowest page (lab)</div><div class="num">3.9 s</div><span class="pill warn">/free-system/</span><div class="src">PageSpeed Insights · mobile · example date</div></div>
+    <div class="card"><div class="label">Real-visitor speed</div><div class="num" style="font-size:18px;padding:8px 0">Insufficient data</div><div class="src">CrUX: below Google's visitor threshold. See GA4 Web Vitals.</div></div>
+  </div>
+  <div class="card wide scroll"><h2>Findings</h2>
+    <table><thead><tr><th>Severity</th><th>Finding</th><th>Pages</th><th>First seen</th><th></th></tr></thead><tbody>
+      <tr><td><span class="pill bad">High</span></td><td>Canonical points to a different page</td><td>/blog/example-post/</td><td>example date</td><td><span class="pill info">In Fix queue</span></td></tr>
+      <tr><td><span class="pill muted">Low</span></td><td>Title longer than 60 characters</td><td>3 pages</td><td>example date</td><td><span class="pill info">Editor can fix in CMS</span></td></tr>
+      <tr><td><span class="pill muted">Low</span></td><td>In the sitemap but linked from no page</td><td>1 page</td><td>example date</td><td></td></tr>
+      <tr><td><span class="pill ok">Pass</span></td><td>Status codes, redirects (one hop), schema validity, one H1 per page</td><td>22 pages</td><td></td><td></td></tr>
+    </tbody></table></div>
+</section>
+
+<section id="inventory" hidden>
+  <h1>Content inventory</h1>
+  <p class="sub">Read from the CMS files at each publish. "Fresh" means updated within the threshold set in Settings (example: 180 days).</p>
+  <div class="card wide scroll">
+    <table><thead><tr><th>Page</th><th>Type</th><th>Target keyword</th><th>Parent</th><th>Words</th><th>Updated</th><th>Reviewed</th><th>Status</th></tr></thead><tbody>
+      <tr><td>Local SEO &amp; Google Business Profile</td><td>Service</td><td>local seo for medical practices</td><td>—</td><td>1,180</td><td>example date</td><td>example date</td><td><span class="pill ok">Published</span></td></tr>
+      <tr><td>Google Business Profile for dentists</td><td>Post</td><td>google business profile for dentists</td><td>Local SEO</td><td>1,640</td><td>example date</td><td>—</td><td><span class="pill ok">Published</span></td></tr>
+      <tr><td>Facebook ads for chiropractors</td><td>Post</td><td>chiropractic facebook ads</td><td>Paid ads</td><td>1,420</td><td>example date</td><td>—</td><td><span class="pill info">Ready for review</span></td></tr>
+      <tr><td>Example older post</td><td>Post</td><td>example keyword</td><td>Reactivation</td><td>380 <span class="pill warn">short</span></td><td>example date <span class="pill warn">stale</span></td><td>—</td><td><span class="pill ok">Published</span></td></tr>
+      <tr><td>Websites &amp; landing pages</td><td>Service</td><td><span class="pill bad">No keyword set</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pill muted">Draft</span></td></tr>
+    </tbody></table><div class="src">CMS files · inventory sent after the publish of example date</div></div>
+</section>
+
+<section id="queue" hidden>
+  <h1>Fix queue</h1>
+  <p class="sub">Approve turns an item into a CMS draft or task (content) or a pull request (code) at the next weekly run. Nothing here publishes anything.</p>
+  <div class="card wide">
+    <div class="item"><div class="n">1</div><div>
+      <b>Fix the canonical on "Example post"</b> <span class="pill bad">Impact: high</span> <span class="pill muted">Effort: small</span> <span class="pill info">Editor, in the CMS</span>
+      <div class="ev"><b>Evidence.</b> Our crawl, example date: the page's canonical points to another post. Search Console URL inspection, example date: "Excluded: alternate page with proper canonical". The page has had 0 impressions in 28 days. <b>Uncertain:</b> whether the other post was meant to replace it.</div>
+      <div class="actions"><button class="btn primary">Approve</button><button class="btn">Save for later</button><input class="note" placeholder="Instruction for whoever carries this out (optional)"><button class="btn">Save note</button></div></div></div>
+    <div class="item"><div class="n">2</div><div>
+      <b>Separate the paid ads page from its post</b> <span class="pill warn">Impact: medium</span> <span class="pill muted">Effort: medium</span> <span class="pill info">Editor, then your Publish</span>
+      <div class="ev"><b>Evidence.</b> Search Console, example range: both pages appear for the same four queries (212 impressions between them); neither is above position 30. <b>Uncertain:</b> under the 100-impression threshold per query, so this is an early signal, not a trend.</div>
+      <div class="actions"><button class="btn primary">Approve</button><button class="btn">Save for later</button><input class="note" placeholder="Instruction for whoever carries this out (optional)"><button class="btn">Save note</button></div></div></div>
+    <div class="item"><div class="n">3</div><div>
+      <b>Rewrite the title of the Google Business Profile post</b> <span class="pill warn">Impact: medium</span> <span class="pill muted">Effort: small</span> <span class="pill info">Editor, then your Publish</span>
+      <div class="ev"><b>Evidence.</b> Search Console, example range: average position 11.6, 860 impressions, click-through 3.6%. Pages at this position on this site average 5.1%. <b>Alternative considered:</b> do nothing for four more weeks.</div>
+      <div class="actions"><button class="btn primary">Approve</button><button class="btn">Save for later</button><input class="note" placeholder="Instruction for whoever carries this out (optional)"><button class="btn">Save note</button></div></div></div>
+  </div>
+  <div class="card wide" style="margin-top:14px"><h2>Waiting and done</h2>
+    <table><tbody>
+      <tr><td><span class="pill info">Approved, waiting for the next run</span></td><td>Add two FAQs to the local SEO page</td><td>Approved example date · your note: "keep answers under 60 words"</td></tr>
+      <tr><td><span class="pill ok">Done</span></td><td>Shorten three long titles</td><td>Outcome check due example date · see History</td></tr>
+      <tr><td><span class="pill muted">Saved for later</span></td><td>Write a post on review requests</td><td>Waiting for the extra keyword export</td></tr>
+    </tbody></table></div>
+</section>
+
+<section id="settings" hidden>
+  <h1>Settings and connections</h1>
+  <p class="sub">Admin only. A saved key is never shown again. Paid connectors stop at their monthly cap.</p>
+  <div class="card wide scroll"><h2>Free connectors</h2>
+    <table><thead><tr><th>Connector</th><th>On</th><th>Health</th><th>Last updated</th><th>Schedule</th><th>Key</th></tr></thead><tbody>
+      <tr><td>Google Search Console</td><td>☑</td><td><span class="pill ok">OK</span></td><td>today 09:00</td><td>Daily</td><td class="key">set on example date · Replace</td></tr>
+      <tr><td>GA4</td><td>☑</td><td><span class="pill ok">OK</span></td><td>today 09:00</td><td>Daily</td><td class="key">same service account</td></tr>
+      <tr><td>Bing Webmaster</td><td>☑</td><td><span class="pill warn">Warning: 1 of 6 calls failed, retried OK</span></td><td>today 09:05</td><td>Daily</td><td class="key">set on example date · Replace</td></tr>
+      <tr><td>PageSpeed Insights + CrUX</td><td>☑</td><td><span class="pill ok">OK</span></td><td>Monday</td><td>Weekly</td><td class="key">set on example date · Replace</td></tr>
+      <tr><td>Microsoft Clarity</td><td>☑</td><td><span class="pill ok">OK · 1 of 10 daily requests used</span></td><td>today 09:10</td><td>Daily</td><td class="key">set on example date · Replace</td></tr>
+      <tr><td>IndexNow log</td><td>☑</td><td><span class="pill ok">OK</span></td><td>last publish</td><td>On publish</td><td class="key">site key, not a secret</td></tr>
+    </tbody></table></div>
+  <div class="card wide scroll" style="margin-top:14px"><h2>Paid connectors (off)</h2>
+    <table><thead><tr><th>Connector</th><th>On</th><th>Adds</th><th>Monthly cap</th><th>Key</th></tr></thead><tbody>
+      <tr><td>DataForSEO</td><td>☐</td><td>Daily positions, search volumes, competitor gap, backlinks, AI mentions</td><td>USD — <span class="pill muted">required before switching on</span></td><td class="key">not set · Add key</td></tr>
+      <tr><td>SE Ranking</td><td>☐</td><td>Daily positions, audit, backlinks, AI visibility</td><td>USD —</td><td class="key">not set · Add key</td></tr>
+      <tr><td>Ahrefs</td><td>☐</td><td>Backlinks, competitor keywords</td><td>units —</td><td class="key">not set · Add key</td></tr>
+      <tr><td>Semrush</td><td>☐</td><td>Positions, backlinks and toxicity, competitor gap</td><td>units —</td><td class="key">not set · Add key</td></tr>
+      <tr><td>Moz</td><td>☐</td><td>Authority scores, link counts</td><td>rows —</td><td class="key">not set · Add key</td></tr>
+    </tbody></table></div>
+  <div class="two" style="margin-top:14px">
+    <div class="card"><h2>People and roles</h2><table><tbody>
+      <tr><td>Owner</td><td><span class="pill info">Admin</span></td><td>Everything</td></tr>
+      <tr><td>SEO person</td><td><span class="pill muted">SEO</span></td><td>Content and SEO tabs; no settings or keys</td></tr>
+      <tr><td>Editor</td><td><span class="pill muted">Editor</span></td><td>Content, Overview, Inventory, Keywords, Questions</td></tr></tbody></table></div>
+    <div class="card"><h2>Thresholds</h2><table><tbody>
+      <tr><td>Impressions needed to call a trend</td><td><b>100</b> in both periods</td></tr>
+      <tr><td>Days before measuring an outcome</td><td><b>28</b> (60 for a new page)</td></tr>
+      <tr><td>A page counts as stale after</td><td><b>180</b> days</td></tr>
+      <tr><td>A post counts as short under</td><td><b>400</b> words</td></tr></tbody></table><div class="src">Each change is logged with who made it and why</div></div>
+  </div>
+</section>
+
+<section id="content" hidden>
+  <h1>Content</h1>
+  <p class="sub">This tab is the Keystatic editing screen you used in the trial: blog posts, service pages, case studies, team, FAQs, settings and redirects. It is not redrawn in this mockup.</p>
+</section>
+<section id="other" hidden>
+  <h1 id="other-title">Tab</h1>
+  <p class="sub">Not drawn in this mockup. What it shows is described in section 8 of the plan.</p>
+</section>
+
+</main>
+<script>
+  const buttons = document.querySelectorAll('nav button');
+  buttons.forEach((b) => b.addEventListener('click', () => {
+    buttons.forEach((x) => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+    document.querySelectorAll('main > section').forEach((s) => (s.hidden = s.id !== b.dataset.tab));
+    if (b.dataset.tab === 'other') document.getElementById('other-title').textContent = b.dataset.name;
+    window.scrollTo(0, 0);
+  }));
+</script>
+</body>
+</html>
