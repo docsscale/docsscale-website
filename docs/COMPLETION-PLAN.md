@@ -1,11 +1,10 @@
 # Project completion plan
 
-Status: **approved by the owner on 6 Oct 2026 (revision 4: trial results and
-the additions in section 5).** First written
-6 Oct 2026 against production v1.4.4; revised twice the same day with the
-owner's decisions, the change of priority to SEO, and the SEO features in
-section 5. This is now the working plan. The tracker below is updated in every
-release PR.
+Status: **approved by the owner on 6 Oct 2026; order of work changed by the
+owner the same day (revision 5: the system first, then content through the
+CMS).** This is the working plan. The tracker below is updated in every release
+PR. Sections 1–9 describe what is built; **section 10 is the order it is built
+in and replaces every "stage" number mentioned elsewhere in this file.**
 
 ## Status tracker
 
@@ -13,22 +12,24 @@ release PR.
 
 | Stage | What | Status |
 |---|---|---|
-| 0 | CMS trial | **Done, 6 Oct 2026. Keystatic passed all six questions**; results in section 6. The trial site `cms-trial.docsscale.com` and the branches `trial/keystatic` and `trial/content` are kept on the owner's instruction: the site until `cms.docsscale.com` exists in stage 4, the branches as the build reference. Removing any of them still needs the owner's approval. |
-| 1 | Keyword map | **Approved 6 Oct 2026** ([seo/keywords/keyword-map.md](seo/keywords/keyword-map.md)). Open until the owner's extra export: keywords for the websites, lead follow-up and reviews pages, and the city-page decision. The cost page is on hold until the owner provides real price ranges. |
-| 2 | Money pages | Waiting for the owner's material for the first pair: the local SEO page and the "Google Business Profile for dentists" post. Order: local SEO, paid ads, reactivation, each with its post. |
-| 3 | Blog and first posts | Not started |
-| 4 | CMS build | Not started |
-| 5 | Review leftovers, Safari, WCAG, handover | Not started |
-| 6 | Weekly SEO review; proposals for tools and the data page | Not started |
+| Done | CMS trial | **Done, 6 Oct 2026. Keystatic passed all six questions**; results in section 6. The trial site `cms-trial.docsscale.com` and the branches `trial/keystatic` and `trial/content` are kept on the owner's instruction: the site until `cms.docsscale.com` exists, the branches as the build reference. Removing any of them still needs the owner's approval. |
+| Done | Keyword map | **Approved 6 Oct 2026** ([seo/keywords/keyword-map.md](seo/keywords/keyword-map.md)). Open until the owner's extra export: keywords for the websites, lead follow-up and reviews pages, and the city-page decision. The cost page is on hold until the owner provides real price ranges. |
+| **A** | Foundations: service-page layout, checks, generators, performance budget, dependency update PRs | **In progress** (started 6 Oct). First: the service-page layout, for the owner's before/after approval. |
+| **B** | The system: blog templates and the full CMS at `cms.docsscale.com` | Not started |
+| **C** | First content, published through the CMS | Waiting for B. The owner's team is gathering material for the local SEO page and the "Google Business Profile for dentists" post. |
+| **D** | Handover package, remaining review items, Safari in CI, WCAG pass | Not started |
+| **E** | Weekly SEO review; proposals for the interactive tools and the data page | Starts 28 days after the first content is live |
 
 ## The short version
 
-- **Priority: organic search.** SEO is the main growth channel, so the order of
-  work is now: keyword map, then a page for each service and deeper industry
-  pages, then the blog with its first posts, then the CMS, then handover and the
-  remaining review items.
-- **First new money pages live in about week 3; the blog in about week 6.**
-  After that, a steady two to three new pages or posts a week, not a burst.
+- **Priority: organic search, through a finished system.** The owner changed
+  the order on 6 Oct 2026: build the whole system first, so the team then works
+  on SEO in the CMS. Order: foundations, the full CMS, the first content
+  published through it, then handover and the rest.
+- **First new pages live in about week 10–11**, not week 3 as in the earlier
+  order. That is the cost of this order. In return, every page and post from
+  the first one is written, previewed, approved and published in the CMS, with
+  no developer in the loop. After that, a steady two to three a week.
 - **CMS: Keystatic**, starting with a one-day trial on a throwaway branch.
   Posts and case studies written before the CMS exists are saved as files in
   exactly the format Keystatic uses, so it takes them over without rework.
@@ -38,8 +39,9 @@ release PR.
   wait for your one-click approval; SEO fields, FAQs and team updates go live
   automatically after the checks. One switch in the CMS turns the approval step
   off later, with no code change.
-- **Effort:** about 70–86 working days of build across seven stages, roughly
-  15–19 calendar weeks. The first six weeks in section 10 are unchanged.
+- **Effort:** about 74–87 working days of build, roughly 16–19 calendar weeks.
+  Two days were added so that service pages are also edited and published in
+  the CMS (section 10).
 - **From you:** the material listed in section 13. The keyword map and the
   first posts cannot be good without it. No decisions are open.
 
@@ -735,41 +737,62 @@ recommendation to fix or to close as accepted.
 
 ## 10. Order of work and effort
 
-Code and page PRs follow today's rules throughout: CI green, before/after for
-anything visible, your approval of every visible copy change, your go-ahead to
-merge and to deploy.
+**Changed by the owner on 6 Oct 2026: the system first.** The stage letters
+here replace the stage numbers used in sections 1–9.
 
-| Stage | What | Build days | Live result |
+Code PRs follow today's rules throughout: CI green, before/after for anything
+visible, your approval of every visible copy change, your go-ahead to merge and
+to deploy.
+
+| Stage | What | Build days | Needs from you |
 |---|---|---|---|
-| **0** | CMS trial (section 6). One day, first, because it fixes the file format the posts and case studies are written in. | 1 | None |
-| **1** | Keyword map, including the "cost" and "how to choose" pages | 3–4 | None (a document for your approval) |
-| **2** | Money pages: checks and generators (3), content checks (1), structured-data validation (0.5), weekly dependency update PRs (0.25), target keyword and its check (0.5), IndexNow (0.5), AI-assistant channel (0.25), service-page layout and `/services` overview (3), seven service pages (5–7), four deeper industry pages (4–5) | 18–21 | First service pages about week 3, then two to three a week |
-| **3** | Blog design and build, including automatic social images (7–9); trust signals and the editorial standards page (1.5); answer-first format (0.5); topic clusters (1); call-to-action blocks (1); performance budget (1.5); honest "Last updated" dates (0.5); first three posts (3–4) | 16–19 | Blog live about week 6 |
-| **4** | CMS build: working copy, preview site, publish workflow, approval setting, rollback (8–10); SEO block, settings, team, FAQs, redirects (5–6); case studies, testimonials, resources page (4–5); sign-in and noindex on the CMS and preview with a check (0.5); call-to-action blocks in the editor (0.5); branch and pull-request controls hidden, with a test (0.5); uptime monitor for `cms.docsscale.com` (0.1) | 19–23 | Editors publishing without the developer |
-| **5** | Review leftovers, Safari in CI, WCAG pass (5–7); handover package and a walkthrough with the editor (4–6) | 9–13 | Handover complete |
-| **6** | Weekly SEO review set up (3–4); proposals for the interactive tools and the data page template (1) | 4–5 | Weekly review running. Building the tools or the template is extra, estimated in their proposals (section 5). |
-| | **Total** | **70–86** | |
+| Done | CMS trial (1) and keyword map (3) | 4 | — |
+| **A. Foundations** (no material needed) | Service-page layout and the `/services` overview, shown as before/after (3). Sitemap and schema generated at build, brand-rule check, link checker, similarity check (3). Content checks (1). Structured-data validation (0.5). Performance budget (1.5). Weekly dependency update PRs (0.25). | 9–10 | Approve the layout |
+| **B. The system** | **Blog templates:** index, post, category, author, RSS, automatic social images (7–9); author profiles, "Last updated" and "Last reviewed", editorial standards page (1.5); required summary and FAQ blocks (0.5); parent service page links and related posts (1); call-to-action blocks (1.5); honest "Last updated" dates (0.5). **CMS:** `cms.docsscale.com` on Hostinger, working copy, preview site, publish workflow with your approval for posts, case studies and service pages, rollback (8–10); SEO block, settings, team, FAQs, redirects (5–6); case studies, testimonials, resources page (4–5); **service pages as CMS entries (2, new)**; target keyword and duplicate check (0.5); IndexNow (0.5); AI-assistant channel (0.25); sign-in and noindex on CMS and preview, with a check (0.5); branch and pull-request controls hidden, with a test (0.5); uptime monitor (0.1). | 34–39 | Approve the blog design and the wording of the call-to-action blocks and editorial standards page; Hostinger API token as a GitHub secret; `cms.` and `preview.` subdomains; GA4 settings; the editor's name |
+| **C. First content, through the CMS** | Local SEO page and "Google Business Profile for dentists"; paid ads and "Facebook ads for chiropractors"; reactivation and "dental recall messages" (6–7). Then the other four service pages (4) and the four deeper industry pages (4–5). | 14–16 | The material for each piece; approval of each in the CMS |
+| **D. Handover and review** | Review leftovers, Safari in CI, WCAG pass (5–7); handover package and a walkthrough with the editors (4–6) | 9–13 | Approvals; the security checklist; iPhone check |
+| **E. Weekly SEO review** | Set-up (3–4); proposals for the interactive tools and the data page template (1) | 4–5 | — |
+| | **Total** | **74–87** | |
 
-- **Calendar:** roughly 15–19 weeks. The build is not the limit in stages 2 and
-  3; the pace rule and how quickly real material and approvals arrive are.
-  While pages are waiting on those, I carry on with the next stage, so the CMS
-  build overlaps the page roll-out.
-- Stage 6's weekly review starts by the calendar, not by the stage order: 28
-  days after the blog and first money pages are live (section 8).
-- **A realistic first six weeks**
+**What is new in this order**
 
-  | Week | Work | Goes live |
-  |---|---|---|
-  | 1 | Trial; keyword map | Nothing |
-  | 2 | Map approved; checks and generators; service-page layout for approval | Nothing visible |
-  | 3 | First service pages drafted and approved | 2 service pages |
-  | 4 | Service pages; blog design for approval | 2–3 service pages |
-  | 5 | Service pages; first industry page; blog build | 2–3 pages |
-  | 6 | Industry pages; blog launch | Blog with 3 posts; 1–2 pages |
+- **Service pages become CMS entries.** The earlier plan kept service pages in
+  code. To publish the local SEO page "through the finished CMS", each of the
+  seven services gets a form with fixed fields: direct answer, our process in
+  steps, the real client example, who it suits and who it doesn't, questions
+  and answers, the SEO block and the target keyword. The layout stays in code.
+  They need your Publish, like posts and case studies. Only the seven confirmed
+  services exist; an editor cannot create an eighth, so the rule against
+  templated pages holds.
+- **The four industry pages stay in code**, as you decided for existing pages.
+  Deepening them in stage C is developer work with before/after.
+- **Blog templates are part of the system**, because the CMS has nothing to
+  publish posts into without them.
 
-  This holds only if each page's real material arrives when its turn comes.
-- These are build-effort estimates, not a quote. Search results take months,
-  not weeks, to respond; nothing here promises a ranking.
+**Timing**
+
+| Weeks | Work | Goes live |
+|---|---|---|
+| 1–2 | A: layout for your approval, checks, generators, performance budget, dependency PRs | Nothing visible, except real dates in the sitemap |
+| 3–5 | B: blog templates (design for your approval in week 3), then the publishing core | Nothing visible |
+| 6–9 | B: `cms.docsscale.com`, preview site, approval, all the forms, service pages as entries | The empty blog and `/resources/` are not linked or listed until they have content |
+| 10–11 | C: first pair, written and approved in the CMS | Local SEO page; first post |
+| 12–14 | C: paid ads and reactivation with their posts; then the remaining pages at two to three a week | 2–3 pages or posts a week |
+| 15–19 | D, then E once there are 28 days of search data | Handover complete |
+
+- **The honest cost of this order:** the first new page reaches Google about
+  seven weeks later than in the earlier order (week 10–11 instead of week 3),
+  and search results take months to build after that.
+- **How I reduce it without changing your order:** inside stage B, the parts
+  needed to publish a service page and a post are built first (blog templates,
+  publishing core, approval, service-page and post forms). If your material is
+  ready before the rest of B is done (case studies, testimonials, resources,
+  redirects, settings forms), the first pair can go out through the CMS as
+  early as week 7–8 while I finish those. That is your call at the time.
+- The weeks hold only if approvals and account steps (token, subdomains) come
+  when they are needed.
+- These are build-effort estimates, not a quote. Nothing here promises a
+  ranking.
 
 ---
 
