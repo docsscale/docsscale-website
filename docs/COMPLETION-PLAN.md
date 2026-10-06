@@ -13,8 +13,8 @@ release PR.
 
 | Stage | What | Status |
 |---|---|---|
-| 0 | CMS trial | **Done, 6 Oct 2026. Keystatic passed all six questions**; results in section 6. The trial site `cms-trial.docsscale.com` and the branches `trial/keystatic` and `trial/content` are kept until the owner approves removing them. |
-| 1 | Keyword map | **In progress** (started 6 Oct). Exports received for all nine seed groups (United States) and the Texas city group. The city-page decision stays open until the owner's extra Texas export. |
+| 0 | CMS trial | **Done, 6 Oct 2026. Keystatic passed all six questions**; results in section 6. The trial site `cms-trial.docsscale.com` and the branches `trial/keystatic` and `trial/content` are kept on the owner's instruction: the site until `cms.docsscale.com` exists in stage 4, the branches as the build reference. Removing any of them still needs the owner's approval. |
+| 1 | Keyword map | **First draft with the owner** (6 Oct, PR #42, held until the owner answers its five questions). Exports received for all nine seed groups (United States) and the Texas city group. The city-page decision stays open until the owner's extra Texas export. |
 | 2 | Money pages | Not started |
 | 3 | Blog and first posts | Not started |
 | 4 | CMS build | Not started |
@@ -77,7 +77,7 @@ Second round (approval of the plan):
 | `/results/` case studies | All four are real client results with permission on file (owner, 6 Oct 2026): dental, Dallas; med spa, Las Vegas; physical therapy, Denver; chiropractic, Tampa. They may be reused on the matching industry pages with quotes and numbers unchanged. |
 | Texas cities with real clients | Houston, Dallas, San Antonio. Only these qualify for a city page under the rules in section 3. Whether any gets a page stays open until the owner's extra Texas keyword export. |
 | Trial outcome | Keystatic confirmed. The owner's approval lives inside the CMS. Branch and pull-request controls are hidden from editors. |
-| Keystatic Cloud | Team `docsscale`, project `docsscale-website`, connected to this repository only. The account owner is the owner's personal Gmail. Seats: the owner and one editor; the second test address is removed after the trial. |
+| Keystatic Cloud | Team `docsscale`, project `docsscale-website`, connected to this repository only. The account owner is the owner's personal Gmail. Seats, all three free ones: the owner (admin), "Team DS" (the future SEO person, non-admin) and one editor (non-admin, name to be confirmed). |
 | Search Console | The developer may read it through the connector, read-only. |
 | SEO features | The six in section 5 are built; interactive tools and the data page get a proposal first; "cost" and "how to choose an agency" pages go in the keyword map. |
 | Weekly SEO review | Section 8, based on [seo/SEO-OS-V1.md](seo/SEO-OS-V1.md). Nothing from its long-term "Autonomous Search Growth OS" section is built. |
