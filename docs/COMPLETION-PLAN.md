@@ -1,10 +1,24 @@
 # Project completion plan
 
-Status: **revision 2, waiting for the owner's approval.** First written 6 Oct
-2026 against production v1.4.4; revised the same day with the owner's decisions
-and the change of priority to SEO. Nothing in this plan has been built. When it
-is approved, this file becomes the working plan and gets a status tracker at the
-top, updated in every release PR.
+Status: **approved by the owner on 6 Oct 2026 (revision 3).** First written
+6 Oct 2026 against production v1.4.4; revised twice the same day with the
+owner's decisions, the change of priority to SEO, and the SEO features in
+section 5. This is now the working plan. The tracker below is updated in every
+release PR.
+
+## Status tracker
+
+**Last updated: 6 Oct 2026.**
+
+| Stage | What | Status |
+|---|---|---|
+| 0 | CMS trial | In progress |
+| 1 | Keyword map | Waiting for the owner's Keyword Planner exports and notes |
+| 2 | Money pages | Not started |
+| 3 | Blog and first posts | Not started |
+| 4 | CMS build | Not started |
+| 5 | Review leftovers, Safari, WCAG, handover | Not started |
+| 6 | Weekly SEO review; proposals for tools and the data page | Not started |
 
 ## The short version
 
@@ -17,23 +31,24 @@ top, updated in every release PR.
 - **CMS: Keystatic**, starting with a one-day trial on a throwaway branch.
   Posts and case studies written before the CMS exists are saved as files in
   exactly the format Keystatic uses, so it takes them over without rework.
-- **Running cost: USD 0 a month.** Section 9 shows where each zero comes from.
+- **Running cost: USD 0 a month.** Section 11 shows where each zero comes from.
 - **Publishing:** every edit can be previewed before it goes live, including
   edits to pages that are already published. New blog posts and case studies
   wait for your one-click approval; SEO fields, FAQs and team updates go live
   automatically after the checks. One switch in the CMS turns the approval step
   off later, with no code change.
-- **Effort:** about 55–70 working days of build across six stages, roughly
-  12–16 calendar weeks. The total grew because the money pages, the keyword map
-  and the first posts are now in this plan.
-- **From you:** six open decisions (section 10) and the material listed in
-  section 11. The keyword map and the first posts cannot be good without it.
+- **Effort:** about 63–79 working days of build across seven stages, roughly
+  14–18 calendar weeks. The first six weeks in section 10 are unchanged.
+- **From you:** the material listed in section 13. The keyword map and the
+  first posts cannot be good without it. No decisions are open.
 
 Still outside this plan: the lead magnets app at get.docsscale.com (5D), the
 newsletter (5F) and off-page work (directories, reviews, backlinks). They stay
 in [PHASE5-PLAN.md](PHASE5-PLAN.md) and [SEO-STRATEGY.md](SEO-STRATEGY.md).
 
 ## Decisions recorded (owner, 6 Oct 2026)
+
+First round:
 
 | Topic | Decision |
 |---|---|
@@ -43,10 +58,26 @@ in [PHASE5-PLAN.md](PHASE5-PLAN.md) and [SEO-STRATEGY.md](SEO-STRATEGY.md).
 | Preview | Before going live for every edit, including edits to published pages. |
 | Existing pages | Body copy stays in code for now. Editors get the SEO fields only. |
 | Approval of content | For the first months, new blog posts and case studies need the owner's one-click approval ("Ready for review" → the owner publishes). SEO field edits, FAQs and team updates go live automatically after the checks. This is a setting the owner can switch to fully automatic without code. |
-| Priority | SEO content first; order in section 8. |
+| Priority | SEO content first; order in section 10. |
 | Geography | US-wide with a Texas layer (as in [SEO-STRATEGY.md](SEO-STRATEGY.md)). |
 | Keyword sources | Free only: Search Console, Google Keyword Planner exports supplied by the owner, and Google's "People also ask". Unverified volumes are written "Unknown". |
 | Content quality | The rules in section 3; also added to [CLAUDE.md](../CLAUDE.md). |
+
+Second round (approval of the plan):
+
+| Topic | Decision |
+|---|---|
+| Trial | First, before anything else. |
+| Leads per post | No new CRM field now; the landing page already reaches the CRM. Revisit in January 2027. |
+| Second GitHub owner | Ahmed Mustafa (co-founder). The owner adds him; steps provided. |
+| Practice software on industry pages | Only software we have actually worked with for a client in that specialty, as plain text, no logos. |
+| First posts | The team supplies raw material, the developer drafts, the named author corrects, the owner approves. |
+| Notifications | The person who saved, plus info@docsscale.com. |
+| `/results/` case studies | All four are real client results with permission on file (owner, 6 Oct 2026): dental, Dallas; med spa, Las Vegas; physical therapy, Denver; chiropractic, Tampa. They may be reused on the matching industry pages with quotes and numbers unchanged. |
+| Texas cities with real clients | Houston, Dallas, San Antonio. Only these qualify for a city page under the rules in section 3. |
+| Search Console | The developer may read it through the connector, read-only. |
+| SEO features | The six in section 5 are built; interactive tools and the data page get a proposal first; "cost" and "how to choose an agency" pages go in the keyword map. |
+| Weekly SEO review | Section 8, based on [seo/SEO-OS-V1.md](seo/SEO-OS-V1.md). Nothing from its long-term "Autonomous Search Growth OS" section is built. |
 
 **Checked on 6 Oct 2026 (read-only, through the Hostinger connector):** the
 hosting plan is **Business**. Hostinger offers Node.js apps on its Business and
@@ -58,7 +89,9 @@ running it there, which is part of the trial.
 
 ## 1. Keyword map (stage 1)
 
-**Output:** `docs/KEYWORD-MAP.md`, one row per page, existing and planned.
+**Output:** `docs/seo/keywords/keyword-map.md` (the location
+[seo/SEO-OS-V1.md](seo/SEO-OS-V1.md) already names), one row per page, existing
+and planned. Raw exports go in `docs/seo/keywords/exports/`.
 
 | Column | What it holds |
 |---|---|
@@ -78,9 +111,9 @@ running it there, which is part of the trial.
 
 1. Seed terms from the seven services, the four industry pages and the nine
    specialties we work with, plus the words your prospects actually use
-   (section 11).
+   (section 13).
 2. You run those seeds through Keyword Planner and send me the exports; the
-   click-by-click steps are in section 11.
+   click-by-click steps are in section 13.
 3. I read Search Console for what the site already appears for. The site was
    indexed recently, so expect little data at first; that column fills in over
    the following months.
@@ -91,8 +124,13 @@ running it there, which is part of the trial.
    ("dental marketing") where national agencies and directories hold page one.
    Head terms are still mapped, as the long-term target of the main pages.
 6. The Texas layer: Texas wording on pages where it is true and natural, the
-   Google Business Profile, and a Houston page only if the city-page rule in
-   section 3 is met.
+   Google Business Profile, and city pages only for Houston, Dallas and San
+   Antonio, where there are real clients. Each still needs its own real
+   content (section 3); the map says which of the three is worth a page.
+7. **"Cost" and "how to choose an agency" pages** are mapped too: for example
+   what clinic marketing costs, and how to choose a marketing agency for a
+   clinic. People searching these are close to hiring. A cost page is only
+   written with real price information you are willing to publish.
 
 **What the map decides:** the final URLs and titles of the service pages, which
 long titles get shortened (backlog item), the order pages are written in, and
@@ -144,16 +182,14 @@ have:
 - the questions that specialty's owners actually ask, answered;
 - the treatments and service lines we build campaigns around for it;
 - the practice software that specialty uses and how our work fits beside it
-  (see open decision 4: you removed practice software from the homepage strip
-  on 6 Oct, so I need your rule for naming it here);
+  (only what we have worked with for a client there);
 - anything regulated or sensitive in marketing that specialty.
 
-If we have no real case study for a specialty, that page says so by leaving the
-section out; it is not filled with an example dressed as a result.
-**Unknown: which of the four cases on `/results/` today (dental, Dallas; med
-spa, Las Vegas; physical therapy, Denver; chiropractic, Tampa) are real client
-results with permission to publish.** I need that from you before any of them
-is reused (section 11).
+The four cases on `/results/` are real, with permission on file (owner, 6 Oct
+2026), one per industry page. Each is reused on its matching page with quotes
+and numbers exactly as they are on `/results/` today. Practice software is
+named only where we have worked with it for a client in that specialty, as
+plain text; where there is none, that part is left out.
 
 ### How these pages get approved and released
 
@@ -175,6 +211,8 @@ is reused (section 11).
 - Brand-rule check and link checker in CI (both Phase 5A leftovers).
 - A **similarity check** in CI: every page's text is compared with every other
   page's, and pairs above a threshold are listed for review.
+- The **target keyword** field and its duplicate check, **IndexNow**, and the
+  **AI-assistant channel** in GA4 (section 5, features 4–6).
 - Case studies and FAQs saved as content files in Keystatic's format, so the
   CMS takes them over later.
 
@@ -268,13 +306,52 @@ is shown for approval at the three widths before build-out. It is built to WCAG
 - Topics come from the keyword map's early-win rows. I propose six with a
   one-paragraph brief each; you pick.
 - Each post needs its "only DocsScale could say" material from you or the team
-  before it is drafted (section 11). A post without it isn't written.
+  before it is drafted (section 13). A post without it isn't written.
 - Each post has a real, named author from the team, who reads and corrects it
   before it comes to you.
 
 ---
 
-## 5. CMS (stage 0 trial, stage 4 build)
+## 5. SEO features added on 6 Oct 2026
+
+Six are built, in the stage shown. Effort is extra to the first estimate and is
+included in section 10.
+
+| # | Feature | What is built | Stage | Extra days |
+|---|---|---|---|---|
+| 1 | **Trust signals** | Author profiles with name, photo, role, experience, LinkedIn link, and Person schema with `sameAs`, linked from every post. A visible "Last updated" date on posts. A "Last reviewed" date and reviewer field, shown as "Reviewed by" when filled. An editorial standards page; its copy needs your approval. | 3 | 1.5 |
+| 2 | **Answer-first format** | A required summary at the top of every post: two or three sentences that answer the post's main question, shown above the body. FAQ blocks inside posts with FAQPage schema. Question-style headings explained in the editor guide. | 3 (guide in 5) | 0.5 |
+| 3 | **Topic clusters** | A required "parent service page" on every post. The post links to its service page; each service page lists its posts automatically; related posts are chosen by shared parent and category. The list on service pages is a visible change and comes as before/after. | 3 | 1 |
+| 4 | **Target keyword** | A field on every page and post, filled from the keyword map. Never shown on the site. A check on every push and publish flags two pages with the same or near-same keyword. | 2 (in the CMS in 4) | 0.5 |
+| 5 | **IndexNow** | When a page is published or updated, its address is sent automatically to IndexNow, which Bing and the other participating search engines read. Free. | 2 for releases, 4 for CMS publishes | 0.5 |
+| 6 | **AI-assistant traffic** | A custom channel group in GA4, "AI assistants", for visits arriving from ChatGPT, Perplexity, Gemini, Copilot and Claude. Leads are then reported by that channel like any other. | 2 | 0.25 |
+
+Things to know about three of them:
+
+- **IndexNow does not include Google.** Google finds changes through the
+  sitemap, which is regenerated on every publish. IndexNow needs one small key
+  file on the site; it is public by design and is not a secret.
+- **AI-assistant tracking is set up in GA4's admin, not in the site's code.**
+  Putting those product names in the site's public files would break the brand
+  rule in CLAUDE.md, and GA4 can do the grouping from the referring address
+  alone. I give you the exact rule to paste; it takes about ten minutes.
+  **Honest limit:** many visits from assistants' apps arrive with no referring
+  address and are counted as "Direct", so this channel undercounts. It shows
+  the trend, not the total.
+- **"Last reviewed" must be true.** The field records a real person rereading
+  the post on that date. It is never filled automatically.
+
+### Planned for stage 6, proposal before any build
+
+| # | Item | What the proposal will cover | Rough build if approved |
+|---|---|---|---|
+| 7 | **Free interactive tools**: a missed-calls cost calculator and a cost-per-booked-appointment calculator | Inputs, the formula in plain words, the result screen, where each leads (the Free System or a strategy call), tracking, and the design. They run in the browser with no server. Every result comes from the visitor's own numbers; any default or benchmark shown must be a real figure you supply, or there is none. | About 4 days for the first, 2 for the second |
+| 8 | **Original data page template** | A layout for our own anonymised findings: method, sample size, period, charts, plain-language takeaways, and Dataset schema. Used only with real numbers you provide; no page exists until there is a first real dataset. | About 2–3 days |
+| 9 | "Cost" and "how to choose an agency" pages | In the keyword map (section 1); written at the normal pace once mapped | Within stages 2–3 |
+
+---
+
+## 6. CMS (stage 0 trial, stage 4 build)
 
 ### Why Keystatic, and the one condition
 
@@ -330,7 +407,7 @@ All through forms with fixed fields; no page builder.
 | **Free resources** | Title, description, who it's for, what's inside, image, link | Automatically; the `/resources/` page itself is a new design needing approval |
 | **Site settings** | Contact email, announcement bar (on/off, text, link, end date), footer link groups, publishing settings | Automatically |
 | **SEO block for every existing page** | Title, description, social image, hide from search engines | Automatically |
-| **Redirects** | Old URL, new URL, note | Automatically, after the validation in section 6 |
+| **Redirects** | Old URL, new URL, note | Automatically, after the validation in section 7 |
 
 **SEO block, on every page and entry**
 
@@ -447,7 +524,7 @@ wording:
 
 ---
 
-## 6. Redirects that can't break the site
+## 7. Redirects that can't break the site
 
 An editor fills in "Old URL" and "New URL" and never writes a server rule.
 
@@ -474,7 +551,49 @@ An editor fills in "Old URL" and "New URL" and never writes a server rule.
 
 ---
 
-## 7. Handover, review leftovers, Safari and accessibility (stage 5)
+## 8. Weekly SEO review (stage 6)
+
+Based on your [seo/SEO-OS-V1.md](seo/SEO-OS-V1.md), copied into the repo
+unchanged on 6 Oct 2026. Its rules stand: never fabricate data, evidence for
+every recommendation, "Insufficient data" when data is thin, every
+recommendation and its outcome recorded, no paid data by default, and "do
+nothing" is a valid answer.
+
+**When it starts:** once the blog and the first money pages have been live for
+28 days. Before that there is too little data, and a review would mostly say
+"Insufficient data". A baseline snapshot is taken earlier, at the end of
+stage 2.
+
+**Data, read-only everywhere**
+
+| Source | How | State |
+|---|---|---|
+| Search Console | Connector | Connected; permission given 6 Oct 2026 |
+| GA4 | Connector | Connected |
+| Bing Webmaster | The key in `~/DocsScale-Secure/`, read methods only | Working since 30 Sep |
+| Clarity | Its free data export, if it gives enough | **Unknown until tested.** It needs a token you create, and the free export is limited to a few requests a day covering the last few days. If it isn't enough, Clarity is reported as "Not measured" and read by hand. |
+
+**What changes from the original document, because of the CMS**
+
+| SEO-OS V1 says | Adapted |
+|---|---|
+| Every approved change is implemented by the developer on a branch | Changes an editor can make (titles, descriptions, FAQs, a post's text, internal links in a post, redirects) are written as steps to follow in the CMS, naming the entry and the field. Only changes to code or to existing pages' body copy go to the developer. |
+| Content suggestions are briefs and drafts on a branch | A suggested new post is created as a **draft in the CMS**, with its brief, target keyword and parent service page filled in. It is never published automatically; a person writes it, and posts still need your approval. |
+| Keyword map at `docs/seo/keywords/keyword-map.md` | Same file; the target-keyword fields in the CMS are checked against it |
+| Nothing reaches production without approval | Still true for everything the review itself does. It only reads data and writes files and drafts. |
+| You run the review by hand each Monday | Unchanged. No scheduler and no background service. |
+| Long-term "Autonomous Search Growth OS" | **Not built.** Nothing from that section, as you instructed. |
+
+**Outputs**, as in the document: a weekly report, one file per recommendation
+with its evidence and status, an index of them, and outcome checks 28 days
+after a change (60 for a new page). At most five recommendations a week.
+
+**Effort:** 3–4 days to set up the folders, the five commands and the baseline,
+each command shown to you first as the document requires.
+
+---
+
+## 9. Handover, review leftovers, Safari and accessibility (stage 5)
 
 ### Handover package
 
@@ -530,7 +649,7 @@ recommendation to fix or to close as accepted.
 
 ---
 
-## 8. Order of work and effort
+## 10. Order of work and effort
 
 Code and page PRs follow today's rules throughout: CI green, before/after for
 anything visible, your approval of every visible copy change, your go-ahead to
@@ -538,21 +657,21 @@ merge and to deploy.
 
 | Stage | What | Build days | Live result |
 |---|---|---|---|
-| **0** | CMS trial (section 5). One day, first, because it fixes the file format the posts and case studies are written in. | 1 | None |
-| **1** | Keyword map | 3–4 | None (a document for your approval) |
-| **2** | Money pages: checks and generators (3), service-page layout and `/services` overview (3), seven service pages (5–7), four deeper industry pages (4–5) | 15–18 | First service pages about week 3, then two to three a week |
-| **3** | Blog design and build (7–9); first three posts (3–4) | 10–13 | Blog live about week 6 |
+| **0** | CMS trial (section 6). One day, first, because it fixes the file format the posts and case studies are written in. | 1 | None |
+| **1** | Keyword map, including the "cost" and "how to choose" pages | 3–4 | None (a document for your approval) |
+| **2** | Money pages: checks and generators (3), target keyword and its check (0.5), IndexNow (0.5), AI-assistant channel (0.25), service-page layout and `/services` overview (3), seven service pages (5–7), four deeper industry pages (4–5) | 16–19 | First service pages about week 3, then two to three a week |
+| **3** | Blog design and build (7–9); trust signals and the editorial standards page (1.5); answer-first format (0.5); topic clusters (1); first three posts (3–4) | 13–16 | Blog live about week 6 |
 | **4** | CMS build: working copy, preview site, publish workflow, approval setting, rollback (8–10); SEO block, settings, team, FAQs, redirects (5–6); case studies, testimonials, resources page (4–5) | 17–21 | Editors publishing without the developer |
-| **5** | Review leftovers, Safari in CI, WCAG pass (5–7); handover package and a walkthrough with the editor (4–6) | 9–13 | Project complete |
-| | **Total** | **55–70** | |
+| **5** | Review leftovers, Safari in CI, WCAG pass (5–7); handover package and a walkthrough with the editor (4–6) | 9–13 | Handover complete |
+| **6** | Weekly SEO review set up (3–4); proposals for the interactive tools and the data page template (1) | 4–5 | Weekly review running. Building the tools or the template is extra, estimated in their proposals (section 5). |
+| | **Total** | **63–79** | |
 
-- **Calendar:** roughly 12–16 weeks. The build is not the limit in stages 2 and
+- **Calendar:** roughly 14–18 weeks. The build is not the limit in stages 2 and
   3; the pace rule and how quickly real material and approvals arrive are.
   While pages are waiting on those, I carry on with the next stage, so the CMS
   build overlaps the page roll-out.
-- **Order note:** you listed the trial under the CMS step, after the first
-  posts, and also asked to start with it. I've put the one-day trial first and
-  the CMS *build* fourth. Open decision 1 if you'd rather not.
+- Stage 6's weekly review starts by the calendar, not by the stage order: 28
+  days after the blog and first money pages are live (section 8).
 - **A realistic first six weeks**
 
   | Week | Work | Goes live |
@@ -570,7 +689,7 @@ merge and to deploy.
 
 ---
 
-## 9. Running cost: USD 0 a month
+## 11. Running cost: USD 0 a month
 
 | Item | Monthly | Why it is zero |
 |---|---|---|
@@ -595,27 +714,19 @@ merge and to deploy.
 
 ---
 
-## 10. Decisions still open, with my recommendation
+## 12. Decisions
 
-| # | Question | Recommendation |
-|---|---|---|
-| 1 | **Trial first, or after the first posts?** | **First.** It costs one day and settles the file format before anything is written in it. |
-| 2 | **Leads per post in the CRM** (old decision 7) | **No new CRM field now.** The landing page already reaches the CRM with every lead, which shows the post that brought the visitor. Add "last post read" to GA4 only. Revisit after three months of posts. |
-| 3 | **Second GitHub owner** (old decision 8) | Someone you'd trust with the whole business's website, not the editor and not the developer, with two-factor sign-in on. I need a name from you; I can't recommend a person. |
-| 4 | **Naming practice software on industry pages.** You asked for specialty software there; you removed practice software from the homepage strip on 6 Oct. | Name only software we have actually worked alongside for a client in that specialty, as plain text, no logos, with the sentence saying what we did with it. You give me the list per specialty; if there is none for a specialty, that part is left out. The CRM platform is never named. |
-| 5 | **Who writes the first posts?** | Your team supplies the raw material (section 11); I structure and draft; the named author corrects it; you approve. Once the CMS is live, the editor drafts and I'm out of the loop. |
-| 6 | **Who gets the "publish failed" and "ready for review" emails?** (old decision 9) | The person who saved, plus info@docsscale.com. |
+None are open. Every answer is in "Decisions recorded" at the top.
 
-Smaller points I'll assume unless you say otherwise: blog addresses are
+Working assumptions, unless you say otherwise: blog addresses are
 `/blog/<slug>/`; the service URLs in section 2 stand until the keyword map
 suggests better; the homepage and `/services` say seven services; case studies
-appear inside industry, service and results pages first, and get their own
-pages in stage 4; a Houston page is written only if you confirm real Houston
-clients or results.
+appear inside industry, service and results pages first and get their own pages
+in stage 4.
 
 ---
 
-## 11. What I need from you
+## 13. What I need from you
 
 ### For the keyword map
 
@@ -623,10 +734,10 @@ clients or results.
    running campaign. Steps: Google Ads → Tools → Keyword Planner → "Discover
    new keywords" → paste the seed list I'll send (about ten at a time) →
    location United States → download the CSV. Then the same again with location
-   Texas. About 30–40 minutes in total. Put the files in `incoming/keywords/`
-   or send them.
-2. **Your OK for me to read Search Console** through the connector (read-only),
-   for queries, pages and positions.
+   Texas. About 30–40 minutes in total. Put the files in
+   `docs/seo/keywords/exports/` or send them. The seed list is in the
+   developer's message of 6 Oct and will be saved beside the map.
+2. ~~Your OK to read Search Console~~ Given 6 Oct 2026.
 3. **The words your prospects use.** Ten minutes of notes: what clinic owners
    say they need on a first call, the questions they ask most, what they
    searched before finding you, and what they call each service.
@@ -636,14 +747,14 @@ clients or results.
 
 ### For the money pages
 
-6. **Which of the four cases on `/results/` are real, and whether you hold
-   permission to publish each.**
+6. ~~Which `/results/` cases are real~~ Answered 6 Oct 2026: all four, with
+   permission on file.
 7. **Per service:** one real client example (numbers, period, and whether the
    clinic may be named or must be anonymous), and how you actually deliver it,
    step by step, in your own words. A voice note is fine.
 8. **Per industry:** a real case study, the questions those owners ask, the
    treatments you build campaigns around, and the practice software you've
-   worked beside (decision 4).
+   worked with for a client in that specialty.
 
 ### For the first posts
 
@@ -663,7 +774,10 @@ clients or results.
 |---|---|---|
 | Keystatic Cloud account | 0 | 10 min |
 | Google Ads account for Keyword Planner | 1 | 10 min, plus the exports |
+| GA4: the "AI assistants" channel group | 2 | 10 min |
 | Three GA4 custom dimensions | 3 | 10 min |
+| Add Ahmed Mustafa as a second GitHub owner | Now | 5 min |
+| Clarity data-export token, if the weekly review uses it | 6 | 5 min |
 | Hostinger API token → GitHub secret | 4 | 10 min |
 | `cms.` and `preview.` subdomains, with SSL | 0 (test), 4 | 15 min |
 | The editor's name; invite them | 4 | 5 min |
@@ -672,7 +786,7 @@ clients or results.
 
 ---
 
-## 12. Risks
+## 14. Risks
 
 | Risk | How it's handled |
 |---|---|

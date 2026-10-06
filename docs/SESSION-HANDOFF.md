@@ -44,11 +44,15 @@ kept on purpose.
   info@ mailbox's SMTP).
 
 **Completion plan ([COMPLETION-PLAN.md](COMPLETION-PLAN.md))**
-- Revision 2, 6 Oct 2026: SEO first (keyword map, service and industry pages,
-  blog and first posts), then the Keystatic CMS, then handover and the rest of
-  the agency review. The owner's decisions are recorded at its top. **Waiting
-  for the owner's approval of the revision, the six open decisions in its
-  section 10 and the material in its section 11. Nothing is built.**
+- **Approved by the owner on 6 Oct 2026** (revision 3). It is the working plan:
+  SEO first (keyword map, service and industry pages, blog and first posts),
+  then the Keystatic CMS, handover and the rest of the agency review, then the
+  weekly SEO review. Decisions are recorded at its top; its tracker shows the
+  stage. Stage 0 (the one-day CMS trial) is in progress on a throwaway branch.
+- Waiting on the owner: Keystatic Cloud account, Keyword Planner exports,
+  notes on prospects' words and service priorities, material for the first
+  posts, adding Ahmed Mustafa as second GitHub owner.
+- `docs/seo/SEO-OS-V1.md` is back in the repo (owner's file, unchanged).
 - Hosting plan checked 6 Oct (read-only): Hostinger Business.
 
 **Agency review ([AGENCY-REVIEW.md](AGENCY-REVIEW.md)), still open**
