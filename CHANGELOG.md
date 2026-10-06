@@ -3,7 +3,7 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [Unreleased]
+## [1.4.4] — 2026-10-06
 
 - **Homepage hero: the platforms strip lists four platforms** (owner's decision, 6 Oct 2026): Google Business Profile, Meta Ads, Google Ads and Instagram, the platforms we work on for clients. TikTok and the eight practice-software names (Zocdoc, Dentrix, Open Dental, Jane, ChiroTouch, WebPT, Zenoti, Weave) are removed. With four names the strip is a still, centred row instead of a scrolling one; on phones it wraps to three lines, which makes the homepage 100 px taller there. Plain names, no official logos.
 
