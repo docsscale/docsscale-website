@@ -1,507 +1,695 @@
 # Project completion plan
 
-Status: **proposal, waiting for the owner's approval.** Written 6 Oct 2026 against
-production v1.4.4. Nothing in this plan has been built. When it is approved, this
-file becomes the working plan and gets a status tracker at the top, updated in
-every release PR like the one in [PHASE5-PLAN.md](PHASE5-PLAN.md).
+Status: **revision 2, waiting for the owner's approval.** First written 6 Oct
+2026 against production v1.4.4; revised the same day with the owner's decisions
+and the change of priority to SEO. Nothing in this plan has been built. When it
+is approved, this file becomes the working plan and gets a status tracker at the
+top, updated in every release PR.
 
 ## The short version
 
-- **Goal:** writers and an SEO person publish and maintain content themselves,
-  in a browser, with no code and no GitHub knowledge. The developer is only
-  needed for real development.
-- **CMS: Keystatic, as you prefer, with one condition.** Its editing screen
-  cannot run on a purely static host, so it gets its own small address
-  (`cms.docsscale.com`). The public site stays exactly as static as it is today.
-  A one-day trial proves the open points before anything else is built; TinaCMS
-  is the fallback. Details in section 1.
-- **Publishing:** an editor saves, sees the change on a private preview site,
-  marks it "Published", and it is live in about ten minutes if every check
-  passes. If a check fails the live site is untouched and the editor gets an
-  email saying what to fix. Every publish is a git commit, so any of them can be
-  undone.
-- **Effort:** about 31–40 working days of build, in seven phases. Editors can
-  publish blog posts at the end of phase 3 (about day 17).
-- **Cost:** USD 0–20 a month, depending on how many editors there are. No other
-  new paid service is required.
-- **From you:** nine decisions (section 9), about three hours of account setup
-  spread over the project, and content only you have (bios, photos, case-study
-  permissions).
+- **Priority: organic search.** SEO is the main growth channel, so the order of
+  work is now: keyword map, then a page for each service and deeper industry
+  pages, then the blog with its first posts, then the CMS, then handover and the
+  remaining review items.
+- **First new money pages live in about week 3; the blog in about week 6.**
+  After that, a steady two to three new pages or posts a week, not a burst.
+- **CMS: Keystatic**, starting with a one-day trial on a throwaway branch.
+  Posts and case studies written before the CMS exists are saved as files in
+  exactly the format Keystatic uses, so it takes them over without rework.
+- **Running cost: USD 0 a month.** Section 9 shows where each zero comes from.
+- **Publishing:** every edit can be previewed before it goes live, including
+  edits to pages that are already published. New blog posts and case studies
+  wait for your one-click approval; SEO fields, FAQs and team updates go live
+  automatically after the checks. One switch in the CMS turns the approval step
+  off later, with no code change.
+- **Effort:** about 55–70 working days of build across six stages, roughly
+  12–16 calendar weeks. The total grew because the money pages, the keyword map
+  and the first posts are now in this plan.
+- **From you:** six open decisions (section 10) and the material listed in
+  section 11. The keyword map and the first posts cannot be good without it.
 
-What this plan does **not** cover, because you didn't ask for it here: the
-lead magnets app at get.docsscale.com (5D), the newsletter (5F), keyword
-research and the rewriting of page copy (the content half of 5C), and the
-90-day content plan (5G). They stay in [PHASE5-PLAN.md](PHASE5-PLAN.md). This
-plan builds the tools those phases will use.
+Still outside this plan: the lead magnets app at get.docsscale.com (5D), the
+newsletter (5F) and off-page work (directories, reviews, backlinks). They stay
+in [PHASE5-PLAN.md](PHASE5-PLAN.md) and [SEO-STRATEGY.md](SEO-STRATEGY.md).
+
+## Decisions recorded (owner, 6 Oct 2026)
+
+| Topic | Decision |
+|---|---|
+| CMS | Keystatic, starting with the one-day trial on a throwaway branch. |
+| Cost | Target USD 0. Stay inside Keystatic Cloud's free tier (up to 3 users). Free hosting for the editing screen if Hostinger can't run it. If more than 3 editors are ever needed, the free GitHub-login option comes before any paid plan. |
+| Editors at the start | The owner as admin plus one editor. The owner confirms the editor's name before any account is set up. |
+| Preview | Before going live for every edit, including edits to published pages. |
+| Existing pages | Body copy stays in code for now. Editors get the SEO fields only. |
+| Approval of content | For the first months, new blog posts and case studies need the owner's one-click approval ("Ready for review" → the owner publishes). SEO field edits, FAQs and team updates go live automatically after the checks. This is a setting the owner can switch to fully automatic without code. |
+| Priority | SEO content first; order in section 8. |
+| Geography | US-wide with a Texas layer (as in [SEO-STRATEGY.md](SEO-STRATEGY.md)). |
+| Keyword sources | Free only: Search Console, Google Keyword Planner exports supplied by the owner, and Google's "People also ask". Unverified volumes are written "Unknown". |
+| Content quality | The rules in section 3; also added to [CLAUDE.md](../CLAUDE.md). |
+
+**Checked on 6 Oct 2026 (read-only, through the Hostinger connector):** the
+hosting plan is **Business**. Hostinger offers Node.js apps on its Business and
+Cloud plans, so the editing screen should be able to run on our own hosting at
+`cms.docsscale.com` with no new account. This is proven for certain only by
+running it there, which is part of the trial.
 
 ---
 
-## 1. CMS: Keystatic or TinaCMS
+## 1. Keyword map (stage 1)
 
-### What each one is
+**Output:** `docs/KEYWORD-MAP.md`, one row per page, existing and planned.
 
-Both keep content as files in our GitHub repository and both are open source.
-Neither puts a database behind docsscale.com. They differ in where the editing
-screen runs and who looks after logins.
+| Column | What it holds |
+|---|---|
+| Page | URL, existing or proposed |
+| Primary keyword | Exactly one. No two pages share one. |
+| Secondary keywords | Close variants and long-tail terms the same page can answer |
+| Intent | What the searcher wants: hire an agency, learn how, compare, find a price |
+| Layer | US-wide, or Texas |
+| Monthly searches | From your Keyword Planner export. If it isn't in an export: **"Unknown"**. Never an estimate presented as a fact. |
+| Competition | What ranks today: big directories, national agencies, small specialists, thin pages. From looking at the results page, with the date checked. |
+| Early win? | Marked when the term is specific, the current results are weak, and we have something real to say |
+| Questions | From Google's "People also ask" for that term; they feed the page's FAQ and direct answer |
+| What only we can say | The real example, number or process that page will carry (section 3). Empty means the page isn't ready to write. |
+| Current position | From Search Console, where there is data |
 
-| | **Keystatic** | **TinaCMS** |
+**How it's built**
+
+1. Seed terms from the seven services, the four industry pages and the nine
+   specialties we work with, plus the words your prospects actually use
+   (section 11).
+2. You run those seeds through Keyword Planner and send me the exports; the
+   click-by-click steps are in section 11.
+3. I read Search Console for what the site already appears for. The site was
+   indexed recently, so expect little data at first; that column fills in over
+   the following months.
+4. I look at the live results for each candidate term and collect the "People
+   also ask" questions.
+5. Long-tail terms get priority for early wins: specialty plus service plus
+   problem ("how to reactivate lapsed chiropractic patients"), not head terms
+   ("dental marketing") where national agencies and directories hold page one.
+   Head terms are still mapped, as the long-term target of the main pages.
+6. The Texas layer: Texas wording on pages where it is true and natural, the
+   Google Business Profile, and a Houston page only if the city-page rule in
+   section 3 is met.
+
+**What the map decides:** the final URLs and titles of the service pages, which
+long titles get shortened (backlog item), the order pages are written in, and
+the first blog topics. I'll bring it to you as one document to approve before
+any page is written from it.
+
+**Honest limits:** Keyword Planner gives ranges, not exact numbers, for accounts
+that aren't running ads, and it rounds small terms to zero. Low or missing
+numbers don't mean nobody searches; three months of Search Console data will be
+the real measure. No keyword tool or ranking can be promised.
+
+---
+
+## 2. Money pages (stage 2)
+
+### A page for each service
+
+Today the services are sections of `/services`. Each of the seven confirmed
+services gets its own page; `/services` becomes the overview that links to
+them, and the Services menu links to the pages instead of the sections.
+
+| Stage | Service | Proposed URL (final after the keyword map) |
 |---|---|---|
-| Content storage | Files in our repo (Markdown, YAML, JSON). Nothing else holds a copy. | Files in our repo. Tina's cloud service also keeps a searchable copy in its own database to run the editor. |
-| Editing screen | Forms with a rich-text editor. No on-page editing. | Forms, plus editing on a live copy of the page ("visual editing"). |
-| Where the editing screen runs | **Needs a small server program.** It cannot be part of our static site. It would run at its own address, separate from docsscale.com. | Plain files that can sit on Hostinger next to the site. No extra hosting. |
-| Editor login without GitHub | Yes, through Keystatic Cloud (email and password). | Yes, through Tina's cloud service. |
-| Running it with no vendor service at all | Possible, but then every editor needs a GitHub account. | Possible, but it then needs a database and a server, which you've ruled out. |
-| Cost | Free for up to 3 users. Above that USD 10 a month plus USD 5 for each user beyond three. | Free for 2 users. USD 24 a month for 3 users; USD 41 a month for 5 users with drafts and review. |
-| Preview before publishing | A "Preview" button that opens the page on our private preview site (we build this). | Live on-page preview while typing, plus branch previews on the USD 41 plan. |
-| Change to our site's code | Small: pages read content files at build time, as they read `web/src/content/*.ts` today. | Larger: every editable page is wrapped in Tina's editing code and reads through Tina's generated data layer. More risk to the pixel-identical pages. |
-| Trace on the public site | None. The public build contains nothing from the CMS. | The editor's files sit under `/admin/` on docsscale.com and name the product. |
-| Maturity | Version 0.5, not yet 1.0. Made by Thinkmill, an established agency. Releases are infrequent. | Version 2+, a funded company, frequent releases. |
+| Attract | Paid ads (Meta & Google) | `/services/paid-ads/` |
+| Attract | Local SEO & Google Business Profile | `/services/local-seo/` |
+| Attract | Social media management | `/services/social-media-management/` |
+| Capture | Websites & landing pages | `/services/websites-and-landing-pages/` |
+| Convert | Lead follow-up & booking | `/services/lead-follow-up-and-booking/` |
+| Retain | Reviews & reputation | `/services/reviews-and-reputation/` |
+| Retain | Reactivation & recall | `/services/patient-reactivation/` |
 
-Prices and limits are from the vendors' own pages on 6 Oct 2026 and must be
-checked again at sign-up.
+Each service page has: a direct answer of 40–60 words at the top, what we
+actually do and in what order (our own process), a real client example with
+numbers where we have permission, who it suits and who it doesn't, 4–6 real
+questions with answers, links to the industries and related services, and
+Service, FAQPage and BreadcrumbList schema.
 
-### Recommendation: Keystatic
+This also settles the **seven-versus-eight services** wording on `/services`,
+the homepage grid and the industry pages (backlog item): everything will say
+seven. Those are visible changes and come as before/after.
 
-Reasons, in order of weight:
+### Deeper industry pages
 
-1. **Our content stays only in our repo.** If Keystatic Cloud disappeared
-   tomorrow, the site would still build and deploy, and we could switch the
-   login method or the CMS without migrating anything. With Tina, the editor
-   stops working without its cloud database.
-2. **It leaves the site's code almost alone.** The pages were rebuilt
-   pixel-for-pixel and are covered by 54 screenshot checks. Keystatic only adds
-   content files; Tina reaches into the pages.
-3. **Structured fields only** is how Keystatic works by default, which is what
-   you asked for. There is no page builder to switch off.
-4. **Cheaper** at every team size we're likely to have.
-5. **Nothing about the CMS appears on the public site.**
+The four industry pages (dental, chiropractic, physical therapy, med spa) are
+built from one shared layout today. Each gets content only that specialty could
+have:
 
-What you give up: Tina's on-page visual editing. For blog posts, team members,
-FAQs and SEO fields, a form with a preview button is enough; visual editing
-matters most for free-form landing pages, which you've excluded.
+- a real case study from that specialty, with permission;
+- the questions that specialty's owners actually ask, answered;
+- the treatments and service lines we build campaigns around for it;
+- the practice software that specialty uses and how our work fits beside it
+  (see open decision 4: you removed practice software from the homepage strip
+  on 6 Oct, so I need your rule for naming it here);
+- anything regulated or sensitive in marketing that specialty.
 
-### The condition, stated plainly
+If we have no real case study for a specialty, that page says so by leaving the
+section out; it is not filled with an example dressed as a result.
+**Unknown: which of the four cases on `/results/` today (dental, Dallas; med
+spa, Las Vegas; physical therapy, Denver; chiropractic, Tampa) are real client
+results with permission to publish.** I need that from you before any of them
+is reused (section 11).
 
-Keystatic's editing screen needs a small server program to talk to GitHub. Our
-Hostinger site is static files plus one PHP script, so the editing screen has to
-live somewhere else. Two ways to do that, both free:
+### How these pages get approved and released
 
-- **(a) On Hostinger, as a small Node.js app** at `cms.docsscale.com`, if your
-  hosting plan includes Node.js apps. No new account. **Unknown: whether your
-  plan includes this.** I will check through the Hostinger connector during the
-  trial, with your OK.
-- **(b) On a free static-and-functions host** (Cloudflare's free plan allows
-  commercial use). This is a new account, which you would create.
+- **Layout once:** the service-page layout is shown as before/after (desktop,
+  tablet, mobile) and approved once.
+- **Copy every time:** each page's copy comes to you as a draft, with the
+  keyword it targets, the "only DocsScale could say this" element marked, and a
+  similarity note against existing pages. Nothing visible is merged without
+  your approval.
+- **Pace:** two to three pages a week, in the order the keyword map sets.
+- Old section links (`/services#attract` and so on) keep working; no URL is
+  removed, so no redirects are needed for this stage.
 
-Either way: the public site has no server and no database, visitors never touch
-`cms.docsscale.com`, and if it goes down the only effect is that editors can't
-edit until it is back.
+### Built with these pages (needed for any of it to be safe)
 
-### One-day trial before committing (phase 0)
+- Sitemap generated at build time, with real last-changed dates (also fixes
+  review item SEO-2).
+- Schema generated from the page content and validated on every push.
+- Brand-rule check and link checker in CI (both Phase 5A leftovers).
+- A **similarity check** in CI: every page's text is compared with every other
+  page's, and pairs above a threshold are listed for review.
+- Case studies and FAQs saved as content files in Keystatic's format, so the
+  CMS takes them over later.
 
-On a throwaway branch, never deployed to production, I will prove four things:
+---
+
+## 3. Content quality rules (all new pages)
+
+These apply to me, to editors and to every page type. They are also in
+[CLAUDE.md](../CLAUDE.md), section 2.
+
+1. **No scaled or templated pages.** Never create pages where only a city, a
+   specialty or a keyword changes. Every page needs unique, substantive
+   content.
+2. **Service + industry combination pages** only where we have real experience
+   or a case study for that combination.
+3. **City pages** only where we have real clients or results.
+4. **Every page must include something only DocsScale could say** before it is
+   published: a real client example, real numbers, or our own process.
+5. **Steady pace:** two to three strong pages or posts a week, not a burst.
+6. **Similar pages are flagged.** Any page that may be too close to an existing
+   one is pointed out before it is approved.
+
+**How each is enforced**
+
+| Rule | By a check | By a person |
+|---|---|---|
+| 1, 6 | The similarity check lists near-duplicates on every push and every publish. It warns; it doesn't decide. | The owner sees the similarity note with each draft |
+| 2, 3 | The CMS has no "city page" or "combination page" type at all. Creating one needs the developer, and so the owner's approval. | The keyword map marks which combinations and cities qualify, with the client or case study named |
+| 4 | Posts, case studies and service pages have a required field, "What only DocsScale could say here", shown to the approver, never on the site | The owner's approval; the editor guide explains it with examples |
+| 5 | The publish workflow counts new URLs in the last 7 days and warns the owner above the agreed number. It warns; it doesn't block. | The content calendar |
+
+No check can tell whether a page is good. These catch the mechanical failures;
+the approval step is what protects quality, which is a reason to keep it on for
+posts and case studies longer than feels necessary.
+
+---
+
+## 4. Blog design and first posts (stage 3)
+
+### Built before the CMS, in the CMS's format
+
+- Posts are files in the repo: one folder per post, text in Markdoc (Markdown
+  with a few extras) with its fields in a header block. This is the format
+  Keystatic reads and writes. The site reads them with Keystatic's own reader
+  from the first day, so there is nothing to convert when the CMS is switched
+  on.
+- Until the CMS exists, posts go live the way everything does today: branch,
+  pull request, your approval, release.
+- If the trial sends us to TinaCMS instead, the format changes to its close
+  cousin (MDX). The trial runs first for exactly this reason: so the format is
+  settled before the first post is written.
+
+### Pages
+
+| Page | Contents |
+|---|---|
+| Blog index `/blog/` | Featured post, category filter, pages of ten |
+| Post `/blog/<slug>/` | Readable column, table of contents from the headings, author box, related posts, call-to-action to book a call |
+| Category `/blog/category/<name>/` | Only created when a category has at least three posts, so there are no thin pages |
+| Author `/blog/author/<name>/` | Real bio and photo; only for people with a published post |
+| RSS | `/blog/rss.xml` |
+
+The design follows the existing site (type scale, hairlines, stage colours) and
+is shown for approval at the three widths before build-out. It is built to WCAG
+2.2 AA from the start rather than fixed afterwards.
+
+### Automatic for every post
+
+- BlogPosting, Person, BreadcrumbList schema, and FAQPage when the post has a
+  visible FAQ.
+- Social image generated at build time from a branded template with the post
+  title; a custom one can replace it.
+- Images: one upload becomes AVIF and WebP at several widths, with location and
+  camera data stripped and sizes written into the page so nothing jumps. Every
+  image carries its source and licence.
+- Sitemap and `llms.txt` updated.
+- **GA4:** blog pages are grouped as "Blog" and carry the post's slug, category
+  and author.
+- **Leads per post:** the browser tab already remembers the landing page and
+  UTMs. It will also remember the first and the most recent post read, and send
+  both with `generate_lead` and `book_call`. Same consent rules as today. The
+  landing page already reaches the CRM with every lead, so the post that
+  *brought* a visitor is visible there without any new field.
+- You add three custom dimensions in GA4 admin (post, category, author);
+  steps provided.
+
+### First posts
+
+- The blog launches with **three posts**, so the index isn't a single item, and
+  then follows the weekly pace.
+- Topics come from the keyword map's early-win rows. I propose six with a
+  one-paragraph brief each; you pick.
+- Each post needs its "only DocsScale could say" material from you or the team
+  before it is drafted (section 11). A post without it isn't written.
+- Each post has a real, named author from the team, who reads and corrects it
+  before it comes to you.
+
+---
+
+## 5. CMS (stage 0 trial, stage 4 build)
+
+### Why Keystatic, and the one condition
+
+Unchanged from the first version of this plan, in brief:
+
+| | **Keystatic** (chosen) | **TinaCMS** (fallback) |
+|---|---|---|
+| Content storage | Files in our repo only | Files in our repo, plus a copy in Tina's cloud database that its editor depends on |
+| Editing | Forms with a rich-text editor | Forms plus on-page visual editing |
+| Where the editing screen runs | Needs a small server program, so it runs at its own address, apart from the public site | Plain files next to the site |
+| Login without GitHub | Yes, through Keystatic Cloud (email and password); free up to 3 users | Yes; free for 2 users, paid beyond |
+| Change to our pages' code | Small: pages read content files at build time | Larger: editable pages are wrapped in Tina's editing code |
+| Trace on the public site | None | Editor files under `/admin/` |
+| Maturity | Version 0.5, infrequent releases, made by an established agency | Version 2+, frequent releases |
+
+**The condition:** Keystatic's editing screen cannot be part of a static site.
+It runs at `cms.docsscale.com`. The public site keeps no server and no
+database; visitors never touch the editing address; if it is down, the only
+effect is that editors can't edit until it is back.
+
+### The one-day trial (first task of the whole plan)
+
+On a throwaway branch, never deployed to production. It must prove:
 
 1. An editor signs in with an email address and no GitHub account, and a save
-   arrives in our repo as a commit.
-2. The editing screen runs at a separate address (option a or b).
-3. The SEO fields can show live length warnings as you type (this needs a
-   custom field, which Keystatic supports but documents thinly).
-4. An uploaded image lands in the repo and comes out optimised in the build.
+   arrives in our repo.
+2. The editing screen runs on our Hostinger Business plan at a test address.
+   If it can't, the same test on a free host (Cloudflare's free plan allows
+   commercial use; that would be a new account, created by you).
+3. The SEO fields can show live length warnings while typing.
+4. An uploaded image lands in the repo and comes out optimised.
+5. **The repo records which person made each save.** The approval step and the
+   automatic switch both depend on this (below).
+6. The editing screen can be fixed to the working copy (below), so an editor
+   can't save straight to the live copy by accident.
 
-If any of the four fails, I come back with the evidence and we use TinaCMS
-instead; the rest of this plan stays the same apart from about 3 extra days for
-Tina's deeper integration. A third option worth knowing about if both
-disappoint: Pages CMS, also open source, with email invitations and no hosting
-on our side, but a plainer editor.
+If 1–4 fail, we use TinaCMS; about 3 extra days. If only 5 or 6 fail,
+Keystatic still works, but your approval click would happen in GitHub's phone
+app or website instead of inside the CMS; I'd show you that before going on.
 
----
+### What editors can change
 
-## 2. What editors can change
+All through forms with fixed fields; no page builder.
 
-All of it through forms with fixed fields. Each item below is a "collection"
-(many entries) or a "single" (one settings form).
-
-### Blog
-
-| Item | Fields | What the site does with it |
+| Item | Fields | Goes live |
 |---|---|---|
-| **Posts** | Title, URL slug, summary, body (headings, lists, links, images with required alt text, quotes, tables), category, author, publish date, status (Draft / Published), optional custom social image, optional FAQ, SEO block | Post page with table of contents, author box, related posts and call-to-action; listed on the blog index, its category page and its author page |
-| **Categories** | Name, slug, short description, SEO block | A page per category |
-| **Authors** | Taken from Team members (below) | A page per author who has at least one published post |
-| Related posts | Automatic (same category, newest first); an editor can pin up to three by hand | |
-| Social image | Made automatically at build time from a branded template with the post title; a custom upload replaces it | |
-| Schema | BlogPosting, Person, BreadcrumbList, and FAQPage when the post has an FAQ | Automatic |
-| RSS | `/blog/rss.xml` | Automatic |
+| **Blog posts** | Title, slug, summary, body, category, author, date, optional social image, optional FAQ, SEO block, "What only DocsScale could say here" | After the owner's approval (while the setting is on) |
+| **Case studies** | Clinic name or an anonymous description, specialty, services, problem, what we did, results as label-and-number pairs with their period, optional quote, images, SEO block, **permission confirmed** (who, when) | After the owner's approval (while the setting is on) |
+| **Testimonials** | Quote, name and role, clinic, specialty, optional photo, **permission confirmed** | Automatically after the checks; refused without the permission box |
+| **Categories** | Name, slug, description, SEO block | Automatically |
+| **Team members** (also blog authors) | Name, role, short and long bio, photo, profile links, "writes for the blog", order | Automatically |
+| **FAQs** | Question, answer, which pages it appears on, order | Automatically |
+| **Free resources** | Title, description, who it's for, what's inside, image, link | Automatically; the `/resources/` page itself is a new design needing approval |
+| **Site settings** | Contact email, announcement bar (on/off, text, link, end date), footer link groups, publishing settings | Automatically |
+| **SEO block for every existing page** | Title, description, social image, hide from search engines | Automatically |
+| **Redirects** | Old URL, new URL, note | Automatically, after the validation in section 6 |
 
-### SEO block (on every post, category, case study, resource, and every existing page)
+**SEO block, on every page and entry**
 
-| Field | Check while typing | Check before publishing |
+| Field | While typing | Before publishing |
 |---|---|---|
 | Page title | Counter; amber over 55 characters, red over 60 | Required; unique across the site |
 | Meta description | Counter; amber under 120 or over 150, red over 160 | Required; unique |
-| URL slug | Lower-case letters, numbers and hyphens only | Unique; changing a published slug requires a redirect, which is created automatically |
+| URL slug | Lower-case letters, numbers, hyphens | Unique; changing a live slug creates its redirect automatically |
 | Social image | Size shown | 1200 × 630 minimum, or the automatic one is used |
-| Image alt text | Counter | Required for every image that isn't marked decorative |
-| FAQ (optional) | Question and answer pairs | Shown on the page and added as FAQPage schema; never schema without the visible FAQ |
-| Hide from search engines | A tick box, with a warning | Removes the page from the sitemap and adds `noindex` |
+| Image alt text | Counter | Required unless the image is marked decorative |
+| FAQ (optional) | Question and answer pairs | Shown on the page and added as schema; never schema without the visible FAQ |
+| Hide from search engines | Tick box with a warning | Leaves the sitemap; adds `noindex` |
 
-For the **existing pages** (home, services, industries, how it works, results,
-about, book a call, legal pages, funnel), the SEO block becomes editable. Their
-body copy and layout stay in code, as you asked ("page layouts out of the
-CMS"). See decision 4 in section 9 if you want specific sections of existing
-pages opened up later.
+**Not in the CMS:** body copy and layout of the existing pages, forms and their
+fields, tracking and consent, the CRM connection, the lead handler, the menus'
+structure, hosting, DNS, deploy settings. Also not in the CMS, on purpose: any
+way to create a city page or a service-and-industry page (section 3).
 
-### Case studies and testimonials
+### How publishing works
 
-- **Case studies:** clinic name (or "Anonymous dental clinic, Texas"),
-  specialty, services used, the problem, what we did, results as
-  label-and-number pairs with the period they cover, optional quote, images,
-  SEO block.
-- **Testimonials:** quote, person's name and role, clinic, specialty, optional
-  photo.
-- **Both have a "Permission confirmed" box**, with who gave permission and the
-  date. The form won't let an entry be set to Published without it, and the
-  build checks it again, so an entry can't go live by any route with the box
-  unticked.
-- The "no invented data" rule can't be checked by a machine. It goes in the
-  editor guide as a rule, and the permission record is the audit trail.
+**Two copies of the content.** The CMS always saves to a *working copy*. The
+live site is built only from the *live copy*. Nothing an editor saves can reach
+the live site until it is published, and that is equally true for a brand-new
+post and for a one-word change to a page that has been live for a year.
 
-### Everything else
+For an editor:
 
-| Item | Fields | Used on |
-|---|---|---|
-| **Team members** | Name, role, short and long bio, photo, optional profile links, "writes for the blog" tick box, display order | About page, author boxes, author pages, Person schema |
-| **FAQs** | Question, answer, which page or pages it appears on, order | The chosen pages, with FAQPage schema |
-| **Free resources** | Title, description, who it's for, what's inside, image, link, status | A `/resources/` page (new; design needs your approval) |
-| **Site settings** | Contact email, announcement bar (on/off, text, link, end date), footer link groups | Header, footer, schema |
-| **Redirects** | Old URL, new URL, note | Section 5 |
+1. Sign in at `cms.docsscale.com`.
+2. Create or change something and press **Save**. It is now in the working
+   copy.
+3. Press **Preview**. Within a few minutes the private preview site
+   (password-protected, hidden from search engines) shows the whole site as it
+   would look with every saved change.
+4. Set the entry's status:
+   - **SEO fields, FAQs, team, testimonials, settings, redirects:** choose
+     **Publish**. The checks run and it goes live in about ten minutes.
+   - **Blog posts and case studies:** choose **Ready for review**. The owner
+     gets an email with the preview link.
+5. The owner opens the entry, reads the preview, and chooses **Publish** (one
+   click and Save), or sends it back to Draft with a note.
+6. If a check fails, nothing changes on the live site, and the editor and the
+   owner get an email naming the entry and the problem in plain words.
 
-### Deliberately not in the CMS
+**The approval setting.** Site settings → Publishing has one switch: "Blog
+posts and case studies need the owner's approval". On: only the owner's
+**Publish** counts for those two types; an editor's is refused with a message.
+Off: editors publish them like everything else. Only a change to that switch
+made by the owner is honoured, so an editor can't turn it off. No code change
+and no developer are needed to flip it. The list of who counts as an approver
+is kept outside the CMS, in the repository's settings, for the same reason.
 
-Forms and their fields, tracking and consent, the CRM connection, the lead
-handler, page layouts and design, the navigation menus' structure, hosting, DNS
-and deploy settings. These stay with the developer and the approval rules in
-[CLAUDE.md](../CLAUDE.md).
+**Behind the scenes**
 
-### How the brand rules are kept when editors publish
+1. A save is a commit to the working-copy branch, recorded under the person who
+   made it.
+2. A workflow rebuilds the preview site from the working copy.
+3. When an entry's status is Publish, the workflow checks, in this order:
+   - **only content files changed.** Anything else stops everything; a CMS
+     login can never ship code, even a stolen one;
+   - **who published**, against the approval setting;
+   - build, content rules (required fields, permission boxes, unique titles
+     and slugs), redirect validation, brand-rule check, link checker, schema
+     check, accessibility check on the changed pages, image limits, similarity
+     check, behaviour tests.
+4. Green: that entry is copied to the live copy, production is deployed, the
+   Hostinger cache is cleared, the live pages are checked, and the visual
+   baseline is re-recorded.
+5. Red: nothing is copied or deployed, and the email goes out.
 
-| Rule | How it is enforced |
-|---|---|
-| No AI wording, tool names or generator tags in public files | The brand-rule check (a Phase 5A leftover) is built in phase 1 and blocks the publish |
-| The CRM platform is never named outside the Free System funnel | Same check |
-| Never "new", "startup", "recently launched" | Same check, on phrases about DocsScale |
-| No invented data; examples labelled as examples | Editor guide and the permission box; not machine-checkable |
-| No AI-generated or AI-edited images; third-party images have a recorded source and licence | Every uploaded image has required "Source" and "Licence" fields; the build writes them to the image record. Whether an image is AI-made can't be detected reliably, so that part is a rule in the guide |
-| Plain language | Editor guide |
+Notes:
 
----
+- The screenshot comparison is not run against content changes; it exists to
+  catch unintended visual changes from code. The baseline is re-recorded after
+  a content publish.
+- While an approved code release is merged but not yet deployed, content
+  publishing waits, so a content publish never carries undeployed code.
+- Preview builds skip the long test suite to stay fast and inside the free
+  Actions minutes; the full suite runs at publish.
 
-## 3. How publishing works
+**Rollback:** every publish is a commit in the live copy. The owner or
+developer runs a "Roll back content" action in GitHub and picks the publish to
+undo; it is reverted with a new commit (history is never rewritten) and the
+site is republished. Whole-site rollback stays as in [RELEASE.md](RELEASE.md).
 
-### For an editor
-
-1. Sign in at `cms.docsscale.com` with email and password.
-2. Create or edit an entry and press **Save**. Status is "Draft" by default.
-3. Press **Preview**. A few minutes after saving, the page is on the private
-   preview site (password-protected, hidden from search engines), drafts
-   included.
-4. Change the status to **Published** and save.
-5. About ten minutes later it is live. If a check fails, nothing changes on the
-   live site and the editor and the owner get an email naming the entry and the
-   problem in plain words ("The meta description of 'X' is missing").
-
-**Honest limit:** a draft can be previewed before it is published. An edit to
-something that is *already* published goes live after the checks, without a
-separate preview step, unless the editor first sets it back to Draft (which
-takes the page offline) or uses "Duplicate". If you want preview-then-approve
-for edits to live pages too, that is possible with a slightly more involved
-"working copy" flow; it is decision 5 in section 9.
-
-### Behind the scenes
-
-1. A save in the CMS is a commit to the repo by the CMS's own identity.
-2. A GitHub workflow looks at what changed.
-   - **Only content files** (the content folder and uploaded images): continue.
-   - **Anything else**: stop. Nothing is deployed automatically. This is the
-     guard that keeps "code needs the owner's approval" true even if an editor's
-     login were stolen: a CMS login can only ever publish content.
-3. The workflow runs the checks: build, content rules (required fields,
-   permission box, unique titles and slugs), redirect validation, brand-rule
-   check, link checker, structured-data check, accessibility check on the
-   changed pages, image size limits, and the behaviour tests.
-4. Green: it deploys the preview site (with drafts) and production (without),
-   clears the Hostinger cache, checks the live pages answer, and records the
-   new visual baseline.
-5. Red: no deploy. The failing commit is reverted automatically by a new commit
-   (history is never rewritten), and the email goes out.
-
-Two details you should know:
-
-- **The screenshot comparison is not run against content changes.** It exists to
-  catch unintended visual changes from code. A content edit such as the
-  announcement bar changes pages on purpose, so for content-only publishes the
-  baseline is re-recorded automatically after the other checks pass.
-- **While an approved code release is merged but not yet deployed**, content
-  publishing waits, so that a content publish can never carry undeployed code to
-  production. In practice that window is minutes.
-
-### Rollback
-
-- **One entry:** the CMS doesn't have an "undo publish" button, so the workflow
-  gets one: a "Roll back content" action in GitHub that the owner or developer
-  runs, choosing a publish from a list. It reverts that commit and republishes.
-- **Everything:** deploy an earlier tag, as in [RELEASE.md](RELEASE.md).
-- Editors who are unsure can ask the developer; the editor guide says so.
-
-### What this needs
-
-- **A permanent Hostinger API token stored as a GitHub secret**, so GitHub can
-  upload. You decided this on 27–28 Sep 2026 (PHASE5-PLAN, "Blog publishing").
-  You create it and paste it into GitHub; I never see it.
-- **A `preview.docsscale.com` subdomain** with a password, so content previews
-  don't collide with staging, which stays for reviewing code changes.
-- **GitHub Actions minutes.** The free plan includes 2,000 a month for private
-  repos; a publish takes roughly 10, so about 200 publishes a month before any
-  cost. To verify in phase 1.
+**What this needs:** a permanent Hostinger API token as a GitHub secret
+(decided 27–28 Sep 2026; you create it, I never see it), and two subdomains on
+the existing hosting, `cms.` and `preview.`, with DNS changes shown to you
+first.
 
 ### The rule change in CLAUDE.md
 
-Section 1 of [CLAUDE.md](../CLAUDE.md) gets a new, clearly bounded exception.
-Proposed wording, to go in with the phase 1 PR once you approve this plan:
+Goes in with the stage 4 PR that switches publishing on, not before. Proposed
+wording:
 
 > **Content published from the CMS** is the one exception to the rules above.
-> A change made in the CMS that touches only `content/` and
-> `web/public/uploads/` goes live automatically once every CI check passes, with
-> no pull request, before/after or go-ahead. Everything else, including any
+> A change made in the CMS that touches only the content folder and uploaded
+> images goes live once every CI check passes, with no pull request or
+> before/after. New blog posts and case studies also need the owner's Publish
+> in the CMS while the approval setting is on. Everything else, including any
 > change to what the CMS can edit, to the checks, or to the publish workflow
 > itself, follows the rules above without exception. The developer never uses
 > the CMS route to ship code or copy.
 
-The brand rules (section 2 of CLAUDE.md) are not relaxed; they are enforced by
-the checks and the editor guide.
+### How the brand rules are kept when editors publish
 
----
-
-## 4. Automatic SEO
-
-| What | How |
+| Rule | Enforcement |
 |---|---|
-| **Sitemap** | Generated at build time from the real pages instead of the hand-kept file. New posts, categories, authors, case studies and resources appear automatically; "hide from search engines" and drafts are left out; `lastmod` comes from each page's last change (this also fixes review item SEO-2). |
-| **Schema** | Generated from the content: BlogPosting, Person, FAQPage, BreadcrumbList, ItemList for resources, and the existing Organization and Service. A check validates the JSON-LD of every page on each publish. |
-| **Images** | An editor uploads one file (up to a set size, for example 5 MB). The build makes AVIF and WebP versions at several widths, strips location and camera data, and writes width and height into the page so nothing jumps. Oversized or wrongly shaped uploads are refused with a plain message. |
-| **GA4 grouping** | Blog pages are sent with content group "Blog" and with the post's slug, category and author, so GA4 can report by post, category and author. |
-| **Leads per post** | The browser tab already remembers the landing page and UTMs. It will also remember the first and the most recent blog post read, and send both with `generate_lead` and `book_call`. GA4 then shows which post brought each lead. Same consent rules as today: nothing is sent before "Accept". |
-| **Leads per post in the CRM** (optional) | The lead handler can forward the post to a new CRM field. That needs you to create the field, and is a lead-handler change with the usual QA lead. Decision 7. |
-| `robots.txt`, `llms.txt` | `llms.txt` gains a generated list of published posts; no other change. |
-
-You will need to add three custom dimensions in GA4 admin (post, category,
-author); click-by-click steps come with that phase. This sits alongside the
-GA4 admin to-do that is already open.
+| No AI wording, tool names or generator tags | Brand-rule check blocks the publish |
+| The CRM platform never named outside the Free System funnel | Same check |
+| Never "new", "startup", "recently launched" | Same check |
+| No invented data; examples labelled | Permission boxes, the owner's approval, the editor guide. Not machine-checkable. |
+| No AI-generated or AI-edited images; third-party images recorded | Required "Source" and "Licence" on every upload; whether an image is AI-made can't be detected reliably, so that is a rule in the guide |
+| Content quality rules | Section 3 |
 
 ---
 
-## 5. Redirects that can't break the site
+## 6. Redirects that can't break the site
 
-An editor fills in "Old URL" and "New URL". They never write server rules.
+An editor fills in "Old URL" and "New URL" and never writes a server rule.
 
-**Checked on save and again before publishing:**
+**Checked on save and before publishing**
 
-- Both are valid paths on docsscale.com (or a full `https://` address for the
-  target); no spaces, no query strings or `#` in the old URL.
-- The old URL is not a page that currently exists.
+- Both are valid paths on docsscale.com (or a full `https://` target); no
+  spaces; no query string or `#` in the old URL.
+- The old URL is not a page that exists.
 - The old URL is not protected: the homepage, `/send-lead.php`, `/_server/`,
-  anything under `/free-system/` (live ads point there), the sitemap, robots
+  anything under `/free-system/` (live ads point there), the sitemap, robots,
   and the existing `/services/<industry>/` rules.
-- No loops (A → B → A) and no chains (A → B → C is rewritten as A → C and
-  B → C, and the editor is told).
-- No duplicates, and the new URL is a real page or an allowed outside address.
+- No loops. No chains: A → B → C is rewritten as A → C and B → C, and the
+  editor is told.
+- No duplicates; the target is a real page or an allowed outside address.
 
-**Then:**
+**Then**
 
-- The server rules are generated into a marked block of `.htaccess`. Every
-  character an editor typed is escaped, so nothing they enter can be read as a
-  rule.
-- The complete `.htaccess` is started in a real Apache server inside CI and
-  every redirect, old and new, is requested and checked: one hop, right target,
-  query string kept. If the file doesn't load or any check fails, nothing is
-  deployed.
-- Changing the slug of a published page creates its redirect automatically.
-- After deploying, the existing `tests/server/redirects.sh` runs against the
-  live site.
+- The rules are generated into a marked block of `.htaccess`, with every
+  character an editor typed escaped so it can't be read as a rule.
+- The complete file is loaded into a real Apache server inside CI and every
+  redirect, old and new, is requested: one hop, right target, query string
+  kept. If the file doesn't load or any check fails, nothing is deployed.
+- After deploying, `tests/server/redirects.sh` runs against the live site.
 
 ---
 
-## 6. Finishing the agency review, Safari testing and accessibility
+## 7. Handover, review leftovers, Safari and accessibility (stage 5)
 
-### Review items still open
-
-| Item | What | Visible | Note |
-|---|---|---|---|
-| 4 (FE-1) | Slow hero on phones | Yes, subtle | Decide at the 15 Oct Web Vitals review, as already agreed. Build only if real-user numbers confirm it. |
-| 8 (QA-2, QA-3) | `<header>`/`<footer>` landmarks, skip link, `autocomplete` on form fields | Skip link on keyboard focus only | Before/after for the skip link |
-| 9 (BE-3) | Back up rate-limited submissions | No | Lead-handler change: PHP tests and one QA lead |
-| 10 (QA-5) | Safari engine in CI, iPhone check | No | Below |
-| PM-4, PM-6 | "Historical" banners on three old docs; client guide brought up to date | No | The client guide is replaced by the editor guide (section 7) |
-| 5A leftovers | Brand-rule check, link checker | No | Built in phase 1 because publishing depends on them |
-| 5A leftovers | SSL-expiry monitors, DMARC tightening | No | SSL: a weekly scheduled check in GitHub that emails if a certificate has under 21 days left (free). DMARC: follows the 20 Oct review. |
-
-The review also listed lower-priority findings that were never scheduled
-(among them UX-3 visible form labels, UX-4, UX-5, UX-7, FE-2, BE-4, BE-5, BE-6,
-QA-4, AR-2, AR-4, AR-5, AR-6, SEO-3). **Unknown: which of these have since been
-fixed in passing.** The first task of phase 5 is to check each against the
-current code and give you a short list of what is left, with my recommendation
-to fix or to close as "accepted". FE-3 (large components, inline styles) I
-recommend closing as accepted, with the existing rule "tidy a page when it next
-changes".
-
-### Safari and iPhone
-
-- **In CI:** install Playwright's WebKit engine (you approved the download) and
-  run the behaviour tests (forms, menus, consent, tracking, hero) on it at
-  iPhone and desktop Safari sizes, on every push. Screenshot comparison stays
-  Chromium-only, to keep one baseline.
-- **Honest limit:** Playwright's WebKit is the same engine as Safari but not
-  Safari on a real iPhone. It catches most Safari-only bugs, not all.
-- **Real iPhone:** a ten-minute checklist per code release, done on your phone,
-  added to [QA-CHECKLIST.md](QA-CHECKLIST.md). A paid device-testing service
-  (roughly USD 30–40 a month) would automate this; I don't recommend it at this
-  size.
-
-### WCAG pass
-
-Target: **WCAG 2.2 level AA** on every page, including the new blog and
-resource templates.
-
-1. Automated: axe-core on every page at phone and desktop width, added to CI as
-   a permanent check (today it was a one-off for the review).
-2. By hand: keyboard-only walk through every page and form, VoiceOver on Mac
-   and iPhone, 200% and 400% zoom, reduced motion, colour contrast with
-   animations settled.
-3. Fixes: invisible ones go straight to a PR; visible ones (visible form labels
-   are the likely big one) come to you as before/after first.
-4. Editors can't break it: required alt text, heading levels enforced in the
-   post editor (no skipped levels, one H1 from the title), link text check
-   ("click here" is flagged).
-5. Result written up in `docs/ACCESSIBILITY.md`: what was tested, what passed,
-   any known exceptions. I will not write "fully compliant"; automated and
-   manual checks reduce risk but only an independent audit can certify.
-
----
-
-## 7. Handover package
+### Handover package
 
 | Document | Contents |
 |---|---|
-| **`docs/EDITOR-GUIDE.md`** | For someone who has never used a CMS or done SEO. Signing in; writing a post start to finish; images and alt text; categories and authors; the SEO block field by field, with what a good title and description look like; preview and publish; what the error emails mean; case studies and the permission box; team members, FAQs, resources, site settings; redirects; "what never to publish" (the brand rules in plain words); who to ask. Real screenshots of our CMS at each step, taken automatically so they can be refreshed when the screens change. Ends with a **one-page per-post SEO checklist**. |
-| **`docs/ACCESS.md`** | One table: CMS, GitHub, Hostinger, Search Console, GA4, Bing Webmaster, Clarity, UptimeRobot, the CRM. For each: who owns it, who else has access and at what level, how to add a person, how to remove one, and what to do the day someone leaves. Names only, never credentials. I will need the current list of people from you; anything I can't verify is written as "Unknown". |
-| **`docs/SECURITY-CLEANUP.md`** | A tick list for you, in order: (1) rotate the CRM token on the server ([SERVER.md](SERVER.md) has the steps); (2) new Bing API key; (3) reset the UptimeRobot key; (4) update the files in `~/DocsScale-Secure/`; (5) delete the session logs in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/`, **keeping the `memory` folder inside it**; (6) two-factor sign-in on GitHub (required for the whole organisation), Hostinger, Google, Microsoft, the CRM, UptimeRobot and the CMS; (7) a second owner on the GitHub organisation; (8) check for old copies of `lead-debug-log.txt` (HANDOVER to-do 2). Rotating before deleting means a leaked copy is already useless. I can't do these for you: they are your accounts and passwords. |
-| **`docs/MAINTENANCE.md`** | A monthly routine of about an hour, split by role. Editor/SEO: Search Console coverage and queries, broken-link report, top and falling posts, refresh one old post. Owner: uptime and failure emails, DMARC reports, who has access, a lead-backup download. Developer (quarterly): dependency updates, CMS version, certificate and token expiry, restore test from a backup. |
+| **`docs/EDITOR-GUIDE.md`** | For someone who has never used a CMS or done SEO. Signing in; a post from blank page to live; images and alt text; the SEO block field by field with good and bad examples; preview, Ready for review, Publish; what each error email means; case studies and permission; team, FAQs, resources, settings; redirects; the content quality rules and "what never to publish" in plain words; who to ask. Real screenshots of our CMS, captured automatically so they can be refreshed. Ends with a **one-page per-post SEO checklist**. |
+| **`docs/ACCESS.md`** | CMS, GitHub, Hostinger, Search Console, GA4, Bing Webmaster, Clarity, UptimeRobot, the CRM: who owns each, who else has access and at what level, how to add and remove a person, what to do the day someone leaves. Names only. Anything I can't verify is written "Unknown". |
+| **`docs/SECURITY-CLEANUP.md`** | Your tick list, in order: rotate the CRM token on the server; new Bing API key; reset the UptimeRobot key; update `~/DocsScale-Secure/`; delete the session logs in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/` **but keep the `memory` folder inside it**; two-factor sign-in on GitHub (required for the whole organisation), Hostinger, Google, Microsoft, the CRM, UptimeRobot and Keystatic Cloud; a second owner on the GitHub organisation; check for old copies of `lead-debug-log.txt`. Rotate first, delete second, so any leaked copy is already useless. These are your accounts; I can't do them for you. |
+| **`docs/MAINTENANCE.md`** | About an hour a month. Editor/SEO: Search Console coverage and queries, keyword-map positions, broken-link and similarity reports, refresh one older post. Owner: uptime and failure emails, DMARC reports, who has access, a lead-backup download, whether to switch the approval setting. Developer, quarterly: dependency and CMS updates, token and certificate expiry, a restore test. |
 
-Also updated: CLAUDE.md (the publishing rule, where content lives),
-ARCHITECTURE.md, RELEASE.md, TRACKING.md, HANDOVER.md, SESSION-HANDOFF.md.
+### Agency review, still open
+
+| Item | What | Visible | Note |
+|---|---|---|---|
+| 4 (FE-1) | Slow hero on phones | Yes, subtle | Decided at the 15 Oct Web Vitals review, as agreed; this matters more now, because page speed on phones affects search |
+| 8 (QA-2, QA-3) | Header and footer landmarks, skip link, `autocomplete` | Skip link on keyboard focus | Small; can ride along with stage 2 since the header is touched there |
+| 9 (BE-3) | Back up rate-limited submissions | No | Lead-handler change: PHP tests and one QA lead |
+| 10 (QA-5) | Safari engine in CI, iPhone check | No | Below |
+| PM-4, PM-6 | "Historical" banners on old docs; client guide | No | The client guide is replaced by the editor guide |
+| 5A leftovers | Brand-rule check, link checker | No | Moved forward into stage 2 |
+| 5A leftovers | SSL-expiry check, DMARC tightening | No | SSL: a free weekly scheduled check that emails under 21 days. DMARC: after the 20 Oct review. |
+
+The review's lower-priority findings (UX-3 visible form labels, UX-4, UX-5,
+UX-7, FE-2, BE-4, BE-5, BE-6, QA-4, AR-2, AR-4, AR-5, AR-6, SEO-3) were never
+scheduled. **Unknown: which have since been fixed in passing.** First task of
+this stage: check each against the code and give you a short list with a
+recommendation to fix or to close as accepted.
+
+### Safari and iPhone
+
+- **CI:** Playwright's WebKit engine (download already approved) runs the
+  behaviour tests at iPhone and desktop Safari sizes on every push. Screenshot
+  comparison stays on one browser.
+- **Limit:** that is Safari's engine, not Safari on a real iPhone. It catches
+  most Safari-only bugs, not all.
+- **Real iPhone:** a ten-minute checklist per code release on your phone, added
+  to [QA-CHECKLIST.md](QA-CHECKLIST.md). Paid device testing is not needed and
+  not in this plan.
+
+### WCAG 2.2 AA pass
+
+1. axe-core on every page at phone and desktop width, as a permanent CI check.
+2. By hand: keyboard-only through every page and form, VoiceOver on Mac and
+   iPhone, 200% and 400% zoom, reduced motion, contrast with animations
+   settled.
+3. Invisible fixes go to a PR; visible ones (visible form labels are the likely
+   large one) come as before/after first.
+4. Editors can't break it: required alt text, heading levels enforced in the
+   post editor, vague link text flagged.
+5. Written up in `docs/ACCESSIBILITY.md`: what was tested, what passed, known
+   exceptions. It will not say "fully compliant"; only an independent audit can
+   certify that.
 
 ---
 
-## 8. Order of work, effort and cost
+## 8. Order of work and effort
 
-Each phase is one or more PRs. Code PRs follow today's rules: CI green,
-before/after for anything visible, your go-ahead to merge and to deploy.
+Code and page PRs follow today's rules throughout: CI green, before/after for
+anything visible, your approval of every visible copy change, your go-ahead to
+merge and to deploy.
 
-| Phase | What | Build days | Visible on the live site | Needs from you |
-|---|---|---|---|---|
-| **0** | CMS trial (section 1). Nothing deployed to production. | 1 | No | Keystatic Cloud account; OK to check the Hostinger plan |
-| **1** | Foundations: content folder and its rules; brand-rule check; link checker; sitemap and schema generated at build; image pipeline; publish workflow with the content-only guard, preview site, auto-revert and emails; CLAUDE.md rule | 5–6 | No (sitemap dates only) | Hostinger API token as a GitHub secret; `preview.` subdomain; approve the rule wording |
-| **2** | CMS live for what already exists: SEO block for every existing page, site settings, team members, FAQs, redirects with validation | 5–6 | Announcement bar and anything else new gets a before/after; existing pages must come out pixel-identical | Team bios and photos; approve before/after |
-| **3** | Blog: index, post, category and author pages, related posts, social images, RSS, schema, GA4 grouping and lead attribution | 7–9 | **Yes: new pages.** Design shown for approval before build-out. | Approve the design; three GA4 custom dimensions; one real first post |
-| **4** | Case studies, testimonials (permission box), free resources page | 4–5 | **Yes** | Approve the design; real case studies with permission, or the pages launch empty and unlisted |
-| **5** | Agency review leftovers, Safari in CI, WCAG pass | 5–7 | Skip link; possibly form labels | Approvals; one QA lead to delete after BE-3; iPhone check |
-| **6** | Handover: editor guide with screenshots, access list, security checklist, maintenance routine; a one-hour walkthrough with the first editor, and fixes from what confuses them | 4–6 | No | People list for the access doc; do the security checklist |
-| | **Total** | **31–40** | | |
+| Stage | What | Build days | Live result |
+|---|---|---|---|
+| **0** | CMS trial (section 5). One day, first, because it fixes the file format the posts and case studies are written in. | 1 | None |
+| **1** | Keyword map | 3–4 | None (a document for your approval) |
+| **2** | Money pages: checks and generators (3), service-page layout and `/services` overview (3), seven service pages (5–7), four deeper industry pages (4–5) | 15–18 | First service pages about week 3, then two to three a week |
+| **3** | Blog design and build (7–9); first three posts (3–4) | 10–13 | Blog live about week 6 |
+| **4** | CMS build: working copy, preview site, publish workflow, approval setting, rollback (8–10); SEO block, settings, team, FAQs, redirects (5–6); case studies, testimonials, resources page (4–5) | 17–21 | Editors publishing without the developer |
+| **5** | Review leftovers, Safari in CI, WCAG pass (5–7); handover package and a walkthrough with the editor (4–6) | 9–13 | Project complete |
+| | **Total** | **55–70** | |
 
-- **Calendar time:** about 7–9 weeks, driven mostly by how quickly approvals
-  and content (bios, photos, case studies) arrive, as in earlier phases.
-- **Why this order:** the trial first, so a wrong CMS choice costs one day.
-  Foundations before the CMS, because automatic publishing is only safe once
-  the checks exist. Existing content before the blog, so the pipeline is proven
-  on pages that already work. Phase 5 is independent and can move earlier if
-  you'd rather have the accessibility work first; item 4 (FE-1) follows the
-  15 Oct review regardless.
-- These are build-effort estimates like the ones in PHASE5-PLAN, not a quote.
-  Hours and budget are not tracked in this repository.
+- **Calendar:** roughly 12–16 weeks. The build is not the limit in stages 2 and
+  3; the pace rule and how quickly real material and approvals arrive are.
+  While pages are waiting on those, I carry on with the next stage, so the CMS
+  build overlaps the page roll-out.
+- **Order note:** you listed the trial under the CMS step, after the first
+  posts, and also asked to start with it. I've put the one-day trial first and
+  the CMS *build* fourth. Open decision 1 if you'd rather not.
+- **A realistic first six weeks**
 
-### Running cost
+  | Week | Work | Goes live |
+  |---|---|---|
+  | 1 | Trial; keyword map | Nothing |
+  | 2 | Map approved; checks and generators; service-page layout for approval | Nothing visible |
+  | 3 | First service pages drafted and approved | 2 service pages |
+  | 4 | Service pages; blog design for approval | 2–3 service pages |
+  | 5 | Service pages; first industry page; blog build | 2–3 pages |
+  | 6 | Industry pages; blog launch | Blog with 3 posts; 1–2 pages |
 
-| Item | Monthly | Note |
-|---|---|---|
-| Keystatic Cloud | USD 0 for up to 3 users; USD 10 + USD 5 per user above three (for example 5 users: USD 20) | Verify at sign-up |
-| Hosting for the editing screen | USD 0 | On your Hostinger plan if it runs Node.js apps, otherwise a free plan elsewhere |
-| GitHub Actions | USD 0 expected | Within the free 2,000 minutes at up to about 200 publishes a month |
-| GitHub Team (optional) | USD 4 per GitHub user | Lets GitHub itself enforce "checks must pass" on `main`. Recommended once a second developer joins, as HANDOVER already says. Editors don't count: they have no GitHub accounts. |
-| Real-device Safari testing (optional) | About USD 30–40 | Not recommended now |
+  This holds only if each page's real material arrives when its turn comes.
+- These are build-effort estimates, not a quote. Search results take months,
+  not weeks, to respond; nothing here promises a ranking.
 
 ---
 
-## 9. What I need from you
+## 9. Running cost: USD 0 a month
 
-### Decisions
-
-1. **Approve this plan and the order**, or say what to change.
-2. **CMS:** Keystatic with the separate editing address and the one-day trial
-   (recommended), or go straight to TinaCMS.
-3. **Where the editing screen runs:** Hostinger if your plan allows it
-   (preferred), otherwise a new free account that you create. May I check your
-   plan through the Hostinger connector? Read-only.
-4. **Existing pages:** SEO fields only (this plan), or should some body copy
-   also become editable? Each page opened up is roughly 1–2 extra days, because
-   its copy has to move out of the large components first.
-5. **Edits to pages that are already live:** publish straight after the checks
-   (this plan), or preview-and-confirm every time (about 2 extra days, one more
-   step for editors)?
-6. **How many editors at the start, and who?** This sets the Keystatic cost and
-   the access list.
-7. **Leads per post in the CRM** as well as in GA4? Needs a new CRM field
-   created by you.
-8. **Who is the second GitHub owner?**
-9. **Who gets the "publish failed" emails** besides the editor: info@, you, or
-   both?
-
-### Accounts and setup (your logins; click-by-click steps when we get there)
-
-| Item | Phase | Your time |
+| Item | Monthly | Why it is zero |
 |---|---|---|
-| Keystatic Cloud account; invite editors | 0, 2 | 15 min |
-| Hostinger API token → GitHub secret | 1 | 10 min |
-| `preview.docsscale.com` and (if on Hostinger) `cms.docsscale.com`, with SSL. DNS changes shown to you first | 1 | 15 min |
+| Keystatic Cloud | USD 0 | Free up to 3 users; we start with 2 (owner and one editor). The developer works through git and needs no seat. |
+| Hosting for the editing screen and the preview site | USD 0 | Subdomains on the Hostinger Business plan you already pay for. If the trial shows Hostinger can't run the editing screen: a free plan elsewhere, never a paid one. |
+| GitHub | USD 0 | Free organisation plan, as today. GitHub Team is not needed. |
+| GitHub Actions | USD 0 | 2,000 free minutes a month for private repos. GitHub's default spending limit is USD 0, so going over can't create a bill: runs would pause until the next month. I'll report usage in the first month of publishing and trim the workflows if it passes half. |
+| Keyword research | USD 0 | Search Console, your Keyword Planner exports, "People also ask" |
+| Safari testing | USD 0 | Playwright's WebKit in CI, your iPhone for the spot check |
+| **Total new running cost** | **USD 0** | |
+
+- **More than 3 editors later:** switch the CMS login to Keystatic's
+  GitHub-login mode, which is free with no user limit. Each editor then needs a
+  free GitHub account with access to the repository; they still only ever use
+  the CMS screen. Because that access would let a technical person change files
+  outside the CMS, the content-only guard matters more in that mode; it stays
+  in force. Paid Keystatic seats (USD 10 a month plus USD 5 per user above
+  three) would only be raised with you after that.
+- **Caveat:** free tiers are the vendors' to change. Prices and limits are from
+  their own pages on 6 Oct 2026 and are checked again at sign-up; if any stops
+  being free I stop and ask, as the standing rule on paid services requires.
+
+---
+
+## 10. Decisions still open, with my recommendation
+
+| # | Question | Recommendation |
+|---|---|---|
+| 1 | **Trial first, or after the first posts?** | **First.** It costs one day and settles the file format before anything is written in it. |
+| 2 | **Leads per post in the CRM** (old decision 7) | **No new CRM field now.** The landing page already reaches the CRM with every lead, which shows the post that brought the visitor. Add "last post read" to GA4 only. Revisit after three months of posts. |
+| 3 | **Second GitHub owner** (old decision 8) | Someone you'd trust with the whole business's website, not the editor and not the developer, with two-factor sign-in on. I need a name from you; I can't recommend a person. |
+| 4 | **Naming practice software on industry pages.** You asked for specialty software there; you removed practice software from the homepage strip on 6 Oct. | Name only software we have actually worked alongside for a client in that specialty, as plain text, no logos, with the sentence saying what we did with it. You give me the list per specialty; if there is none for a specialty, that part is left out. The CRM platform is never named. |
+| 5 | **Who writes the first posts?** | Your team supplies the raw material (section 11); I structure and draft; the named author corrects it; you approve. Once the CMS is live, the editor drafts and I'm out of the loop. |
+| 6 | **Who gets the "publish failed" and "ready for review" emails?** (old decision 9) | The person who saved, plus info@docsscale.com. |
+
+Smaller points I'll assume unless you say otherwise: blog addresses are
+`/blog/<slug>/`; the service URLs in section 2 stand until the keyword map
+suggests better; the homepage and `/services` say seven services; case studies
+appear inside industry, service and results pages first, and get their own
+pages in stage 4; a Houston page is written only if you confirm real Houston
+clients or results.
+
+---
+
+## 11. What I need from you
+
+### For the keyword map
+
+1. **Keyword Planner exports.** A Google Ads account is free and needs no
+   running campaign. Steps: Google Ads → Tools → Keyword Planner → "Discover
+   new keywords" → paste the seed list I'll send (about ten at a time) →
+   location United States → download the CSV. Then the same again with location
+   Texas. About 30–40 minutes in total. Put the files in `incoming/keywords/`
+   or send them.
+2. **Your OK for me to read Search Console** through the connector (read-only),
+   for queries, pages and positions.
+3. **The words your prospects use.** Ten minutes of notes: what clinic owners
+   say they need on a first call, the questions they ask most, what they
+   searched before finding you, and what they call each service.
+4. **Priorities:** which of the seven services you most want more of, and which
+   specialties and Texas cities you have real clients in.
+5. Any competitors or agencies you see prospects comparing you with.
+
+### For the money pages
+
+6. **Which of the four cases on `/results/` are real, and whether you hold
+   permission to publish each.**
+7. **Per service:** one real client example (numbers, period, and whether the
+   clinic may be named or must be anonymous), and how you actually deliver it,
+   step by step, in your own words. A voice note is fine.
+8. **Per industry:** a real case study, the questions those owners ask, the
+   treatments you build campaigns around, and the practice software you've
+   worked beside (decision 4).
+
+### For the first posts
+
+9. Pick three of the six topics I'll propose from the map.
+10. For each: 15 minutes of raw material from whoever knows it best: what you
+    did for a real clinic, what happened, the numbers, what you'd tell an owner
+    to do differently. Bullet points or a voice note.
+11. **The author** of each post: a real team member, with a bio (two sentences
+    and a longer paragraph) and a photo. The About photos are already an open
+    to-do; one set covers both.
+12. Permission, in writing from the client, for anything that names or could
+    identify a clinic.
+
+### Accounts and setup (your logins; steps given at the time)
+
+| Item | Stage | Your time |
+|---|---|---|
+| Keystatic Cloud account | 0 | 10 min |
+| Google Ads account for Keyword Planner | 1 | 10 min, plus the exports |
 | Three GA4 custom dimensions | 3 | 10 min |
-| Optional CRM field for the post | 3 | 5 min |
-| Security checklist | 6 | About 1 hour |
-| iPhone check per code release | 5 onward | 10 min each |
-
-### Content only you have
-
-- Team bios and photos (the About photos are still an open to-do).
-- Case studies and testimonials with the client's permission.
-- The first real blog post, to launch the blog with. I can prepare outlines and
-  SEO briefs; the writing is your team's.
+| Hostinger API token → GitHub secret | 4 | 10 min |
+| `cms.` and `preview.` subdomains, with SSL | 0 (test), 4 | 15 min |
+| The editor's name; invite them | 4 | 5 min |
+| Security checklist | 5 | About 1 hour |
+| iPhone check per code release | 2 onward | 10 min each |
 
 ---
 
-## 10. Risks
+## 12. Risks
 
 | Risk | How it's handled |
 |---|---|
-| Keystatic is not yet version 1.0 and is updated infrequently | The trial; content is plain files, so changing CMS later means rebuilding forms, not migrating content; version pinned and reviewed quarterly |
-| Keystatic Cloud changes its price or closes | Fallback login through GitHub accounts exists; content is unaffected |
-| An editor publishes something off-brand that a machine can't catch (invented numbers, an AI-made image) | Editor guide, permission records, the monthly review, one-click rollback. This is a real trade-off of removing your approval from content, and no check removes it entirely |
-| A stolen editor login | Two-factor sign-in; the content-only guard means it can change words and images but not code, forms, tracking or redirects into protected paths |
-| Automatic deploys go wrong | Nothing deploys unless every check passes; live pages are checked after each deploy; rollback is one action; the uptime monitors already email on failure |
+| Real material arrives slowly, so pages stall | The map's "what only we can say" column shows which pages are ready; pages are written in the order material exists, not held in a queue behind a missing one |
+| Pages that read alike (seven services, four industries) | Section 3: the similarity check, the note with every draft, and no page without its own real example or process |
+| Search results are slow or don't come | Long-tail early wins first; monthly Search Console review; no ranking is promised |
+| Keystatic is not yet 1.0 and is updated infrequently | The trial; content is plain files, so changing CMS later means rebuilding forms, not migrating content; version pinned and reviewed quarterly |
+| A free tier ends | Content is unaffected; GitHub-login mode is the free fallback for logins; I stop and ask before any cost |
+| An editor publishes something a machine can't catch (an invented number, an AI-made image) | The owner's approval on posts and case studies, permission records, the editor guide, the monthly review, rollback. Switching the approval setting off accepts more of this risk; that is your call to make later. |
+| A stolen editor login | Two-factor sign-in; the content-only guard; posts and case studies still need the owner |
+| Automatic deploys go wrong | Nothing deploys unless every check passes; live pages are checked after each deploy; rollback is one action; uptime monitors already email |
 | The permanent Hostinger token leaks | Stored only as a GitHub secret, never printed; scoped as narrowly as Hostinger allows; rotation steps in the maintenance doc |
-| Existing pages shift when their SEO fields move into content files | The screenshot comparison must show zero change in phase 2 |
+| Existing pages shift when their SEO fields move into content files | The screenshot comparison must show zero change |
 
 ## Sources for the CMS comparison
 
 Checked 6 Oct 2026: [Keystatic Cloud](https://keystatic.com/docs/cloud),
 [Keystatic GitHub mode](https://keystatic.com/docs/github-mode),
 [Keystatic and static sites (maintainers' discussion)](https://github.com/Thinkmill/keystatic/discussions/826),
-[TinaCMS pricing](https://tina.io/pricing),
-[Pages CMS collaborators](https://pagescms.org/docs/configuration/collaborators/).
+[TinaCMS pricing](https://tina.io/pricing).

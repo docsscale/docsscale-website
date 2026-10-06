@@ -44,9 +44,12 @@ kept on purpose.
   info@ mailbox's SMTP).
 
 **Completion plan ([COMPLETION-PLAN.md](COMPLETION-PLAN.md))**
-- Proposed 6 Oct 2026: CMS for editors, automatic content publishing, the rest
-  of the agency review, handover documents. **Waiting for the owner's approval
-  and the nine decisions in its section 9. Nothing is built.**
+- Revision 2, 6 Oct 2026: SEO first (keyword map, service and industry pages,
+  blog and first posts), then the Keystatic CMS, then handover and the rest of
+  the agency review. The owner's decisions are recorded at its top. **Waiting
+  for the owner's approval of the revision, the six open decisions in its
+  section 10 and the material in its section 11. Nothing is built.**
+- Hosting plan checked 6 Oct (read-only): Hostinger Business.
 
 **Agency review ([AGENCY-REVIEW.md](AGENCY-REVIEW.md)), still open**
 - 4: slow hero on phones (FE-1). Decide at the 15 Oct Web Vitals review.

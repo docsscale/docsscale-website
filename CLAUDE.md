@@ -56,6 +56,21 @@ If you are unsure whether something needs the owner's sign-off, stop and ask.
   they go live.
 - Plain language in copy: no automation jargon.
 
+**Content quality rules for all new pages** (owner, 6 Oct 2026; how each is
+checked is in [docs/COMPLETION-PLAN.md](docs/COMPLETION-PLAN.md), section 3):
+
+- **No scaled or templated pages.** Never create pages where only a city, a
+  specialty or a keyword changes. Every page needs unique, substantive content.
+- **Service + industry combination pages** only where we have real experience
+  or a case study for that combination.
+- **City pages** only where we have real clients or results.
+- **Every page must include something only DocsScale could say** (a real client
+  example, real numbers, or our own process) before it is published.
+- **Steady publishing pace** (about two to three strong pages or posts a week),
+  not a burst.
+- **Flag any page that may be too similar to an existing one** before asking
+  for approval.
+
 ## 3. Secrets
 
 - **Never in the repo, never printed** in output, logs, commit messages or PRs.
