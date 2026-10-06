@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [1.4.4] — 2026-10-06
+
+- **Homepage hero: the platforms strip lists four platforms** (owner's decision, 6 Oct 2026): Google Business Profile, Meta Ads, Google Ads and Instagram, the platforms we work on for clients. TikTok and the eight practice-software names (Zocdoc, Dentrix, Open Dental, Jane, ChiroTouch, WebPT, Zenoti, Weave) are removed. With four names the strip is a still, centred row instead of a scrolling one; on phones it wraps to three lines, which makes the homepage 100 px taller there. Plain names, no official logos.
+
 ## [1.4.3] — 2026-10-06
 
 - **Old industry-page files are no longer served** (agency review AR-1 / SEO-1). `/services/<industry>/index.html`, `index.txt` and the other files of the pages that moved in v1.2 still answered with the old page, because deploys never delete. Everything under those four folders now redirects (301) to the matching `/industries/` page. `tests/server/redirects.sh` checks it (28 checks, was 16).

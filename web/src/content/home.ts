@@ -67,21 +67,17 @@ export const HOME_SPECIALTIES: HomeSpecialty[] = [
   },
 ];
 
-/** Tools shown in the scrolling strip at the bottom of the hero: [name, brand colour]. */
+/**
+ * Platforms shown in the strip at the bottom of the hero: [name, dot colour].
+ * Owner's rule (6 Oct 2026): plain names, no official logos, and only platforms
+ * we actually work on for clients (paid ads on Meta and Google, local SEO and
+ * Google Business Profile, social media). Ask before adding one.
+ */
 export const INTEGRATIONS: [name: string, color: string][] = [
   ['Google Business Profile', '#4285F4'],
   ['Meta Ads', '#0866FF'],
   ['Google Ads', '#FBBC04'],
   ['Instagram', '#E1306C'],
-  ['TikTok', '#1A1A1A'],
-  ['Zocdoc', '#FFC107'],
-  ['Dentrix', '#0B5CAD'],
-  ['Open Dental', '#2E7D32'],
-  ['Jane', '#2F5D8A'],
-  ['ChiroTouch', '#E4572E'],
-  ['WebPT', '#3C8DBC'],
-  ['Zenoti', '#7B3FE4'],
-  ['Weave', '#2D2A4A'],
 ];
 
 export const HERO = {
