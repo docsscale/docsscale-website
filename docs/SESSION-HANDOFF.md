@@ -43,6 +43,11 @@ kept on purpose.
 - If the daily failure email lands in spam, tell the developer (switch to the
   info@ mailbox's SMTP).
 
+**Completion plan ([COMPLETION-PLAN.md](COMPLETION-PLAN.md))**
+- Proposed 6 Oct 2026: CMS for editors, automatic content publishing, the rest
+  of the agency review, handover documents. **Waiting for the owner's approval
+  and the nine decisions in its section 9. Nothing is built.**
+
 **Agency review ([AGENCY-REVIEW.md](AGENCY-REVIEW.md)), still open**
 - 4: slow hero on phones (FE-1). Decide at the 15 Oct Web Vitals review.
 - 8: landmarks, skip link, `autocomplete` (QA-2, QA-3).
