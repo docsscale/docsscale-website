@@ -1,7 +1,8 @@
 # Keyword map
 
-Status: **first draft, 6 Oct 2026, for the owner's review.** Nothing is written
-or changed on the site from this file until it is approved. Stage 1 of
+Status: **approved by the owner on 6 Oct 2026**, with the answers in section 7.
+Three service pages (websites, lead follow-up, reviews) and the city-page
+decision stay open until the owner's extra keyword export. Stage 1 of
 [COMPLETION-PLAN.md](../../COMPLETION-PLAN.md).
 
 ## What you need to know first
@@ -49,7 +50,7 @@ written; where it says *needed*, I don't have it yet.
 | `/services/` | healthcare marketing services | 100–1K | Low | National healthcare agencies | No | digital marketing services for healthcare (100–1K); medical marketing service (100–1K) | The seven services and how they connect |
 | `/industries/` | None of its own | — | — | — | — | It is a hub; giving it a keyword would compete with the four pages under it | — |
 | `/industries/dental/` | dental marketing agency | 100–1K | Medium | Specialist dental agencies | No. Medium term. | dental marketing companies (100–1K); dental practice marketing (100–1K); marketing for dental offices (100–1K); dental marketing (1K–10K, broad) | The Dallas dental case; dental software and treatments: *needed* |
-| `/industries/chiropractic/` | chiropractor marketing agency | 100–1K | Medium | Not checked for this exact term. For "chiropractic marketing": chiropractic software companies and specialist agencies. | Possibly | chiropractic marketing (100–1K); chiropractic marketing companies (100–1K); digital marketing for chiropractors (100–1K) | The Tampa chiropractic case; rest *needed* |
+| `/industries/chiropractic/` | chiropractor marketing agency | 100–1K | Medium | Not checked for this exact term. For "chiropractic marketing": chiropractic software companies and specialist agencies. | Possibly | chiropractic marketing (100–1K, secondary on this page by the owner's decision); chiropractic marketing companies (100–1K); digital marketing for chiropractors (100–1K) | The Tampa chiropractic case; rest *needed* |
 | `/industries/physical-therapy/` | physical therapy marketing | 100–1K | Medium | Mostly physical-therapy software companies' guides, a few specialist agencies | Possibly; the results are guides, not agencies | digital marketing for physical therapy (10–100); marketing a physical therapy practice (10–100) | The Denver physical therapy case; rest *needed* |
 | `/industries/med-spa/` | med spa marketing agency | 100–1K | Low | Specialist med spa agencies | No. Medium term. | medspa marketing agency (100–1K); med spa marketing (100–1K); med spa digital marketing agency (100–1K) | The Las Vegas med spa case; rest *needed* |
 | `/how-it-works/`, `/results/`, `/about/`, `/book-a-call/` | None (brand and navigation) | — | — | — | — | These pages serve people who already know DocsScale | — |
@@ -85,7 +86,7 @@ Proposed as long articles in the blog, so they need no new page type.
 
 | Topic | Primary keyword | Searches / month (US) | Who ranks today | Early win? | Only we can say |
 |---|---|---|---|---|---|
-| What dental marketing costs | dental marketing cost | 10–100 | Small agencies' articles | **Yes**, if it has real prices | Price ranges you are willing to publish: *needed*. Without them this page is not written. |
+| What dental marketing costs | dental marketing cost | 10–100 | Small agencies' articles | **Yes**, if it has real prices | **On hold** (owner, 6 Oct 2026) until the owner provides real price ranges. Not written before then. |
 | How to choose a dental marketing agency | how to choose a dental marketing agency | Unknown | Trade publications and agencies' articles | Possibly | The questions you'd tell a dentist to ask any agency, us included |
 | What healthcare marketing costs | how much does healthcare marketing cost | Unknown | National agencies and practice-software companies | No | As above |
 
@@ -155,16 +156,27 @@ Same steps as before, location United States. Suggested seeds:
 Your notes on the words prospects use matter most for the lead follow-up page:
 no tool gave me a term a clinic owner would type for that service.
 
-## 7. What I need you to decide on this draft
+## 7. The owner's decisions (6 Oct 2026)
 
-1. Are the primary keywords for the homepage, `/services/` and the four
-   industry pages right?
-2. Chiropractic: "chiropractor marketing agency" (people looking to hire) or
-   "chiropractic marketing" (broader, more guides in the results)? I recommend
-   the first.
-3. Do you agree to leave "missed call text back" alone?
-4. Cost page: are you willing to publish real price ranges? If not, I drop it
-   rather than write one without numbers.
-5. Which of the seven services do you most want more of? That sets the order
-   the service pages are written in. My order from the data alone would be
-   local SEO, paid ads, reactivation, then the rest.
+| Question | Decision |
+|---|---|
+| Primary keywords for the homepage, `/services/` and the four industry pages | Accepted as proposed |
+| Chiropractic | "chiropractor marketing agency" is the primary; "chiropractic marketing" is a secondary on the same page |
+| "missed call text back" | Not targeted. Missed-call follow-up may be mentioned naturally in page copy, never as a page's keyword. |
+| Cost page | Stays in the map, on hold until the owner provides real price ranges |
+| Order of the service pages | Local SEO, then paid ads, then reactivation. Websites, lead follow-up and reviews come after the extra keyword export. |
+
+## 8. Writing order: each service page with its post
+
+Each pair links to the other: the post names its parent service page, and the
+service page lists the post.
+
+| Order | Service page | Primary keyword | Paired post | Post's primary keyword |
+|---|---|---|---|---|
+| 1 | `/services/local-seo/` | local seo for medical practices | Google Business Profile for dentists | google business profile for dentists |
+| 2 | `/services/paid-ads/` | healthcare ppc agency | Facebook ads for chiropractors | chiropractic facebook ads |
+| 3 | `/services/patient-reactivation/` | patient reactivation (volume Unknown) | Recall messages that bring dental patients back | dental recall messages |
+| Later | Websites; lead follow-up; reviews | Open | To be chosen | After the extra export |
+
+Nothing is written for a pair until its real material has arrived
+([COMPLETION-PLAN.md](../../COMPLETION-PLAN.md), section 3).

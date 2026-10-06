@@ -14,8 +14,8 @@ release PR.
 | Stage | What | Status |
 |---|---|---|
 | 0 | CMS trial | **Done, 6 Oct 2026. Keystatic passed all six questions**; results in section 6. The trial site `cms-trial.docsscale.com` and the branches `trial/keystatic` and `trial/content` are kept on the owner's instruction: the site until `cms.docsscale.com` exists in stage 4, the branches as the build reference. Removing any of them still needs the owner's approval. |
-| 1 | Keyword map | **First draft with the owner** (6 Oct, PR #42, held until the owner answers its five questions). Exports received for all nine seed groups (United States) and the Texas city group. The city-page decision stays open until the owner's extra Texas export. |
-| 2 | Money pages | Not started |
+| 1 | Keyword map | **Approved 6 Oct 2026** ([seo/keywords/keyword-map.md](seo/keywords/keyword-map.md)). Open until the owner's extra export: keywords for the websites, lead follow-up and reviews pages, and the city-page decision. The cost page is on hold until the owner provides real price ranges. |
+| 2 | Money pages | Waiting for the owner's material for the first pair: the local SEO page and the "Google Business Profile for dentists" post. Order: local SEO, paid ads, reactivation, each with its post. |
 | 3 | Blog and first posts | Not started |
 | 4 | CMS build | Not started |
 | 5 | Review leftovers, Safari, WCAG, handover | Not started |
