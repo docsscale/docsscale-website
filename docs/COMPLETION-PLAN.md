@@ -12,7 +12,7 @@ release PR.
 
 | Stage | What | Status |
 |---|---|---|
-| 0 | CMS trial | In progress |
+| 0 | CMS trial | **In progress.** Proven locally on branch `trial/keystatic` (6 Oct): live length warnings in the SEO fields, image upload and optimisation, the file format, and that the editing app builds. Still to prove, waiting for the owner's Keystatic Cloud account and a test subdomain: email sign-in, running on Hostinger, who-saved records, fixing the screen to the working copy. |
 | 1 | Keyword map | Waiting for the owner's Keyword Planner exports and notes |
 | 2 | Money pages | Not started |
 | 3 | Blog and first posts | Not started |
@@ -365,7 +365,7 @@ Unchanged from the first version of this plan, in brief:
 | Login without GitHub | Yes, through Keystatic Cloud (email and password); free up to 3 users | Yes; free for 2 users, paid beyond |
 | Change to our pages' code | Small: pages read content files at build time | Larger: editable pages are wrapped in Tina's editing code |
 | Trace on the public site | None | Editor files under `/admin/` |
-| Maturity | Version 0.5, infrequent releases, made by an established agency | Version 2+, frequent releases |
+| Maturity | Version 0.6 (0.6.9, updated August 2026), not yet 1.0, made by an established agency | Version 2+, frequent releases |
 
 **The condition:** Keystatic's editing screen cannot be part of a static site.
 It runs at `cms.docsscale.com`. The public site keeps no server and no
@@ -793,7 +793,7 @@ in stage 4.
 | Real material arrives slowly, so pages stall | The map's "what only we can say" column shows which pages are ready; pages are written in the order material exists, not held in a queue behind a missing one |
 | Pages that read alike (seven services, four industries) | Section 3: the similarity check, the note with every draft, and no page without its own real example or process |
 | Search results are slow or don't come | Long-tail early wins first; monthly Search Console review; no ranking is promised |
-| Keystatic is not yet 1.0 and is updated infrequently | The trial; content is plain files, so changing CMS later means rebuilding forms, not migrating content; version pinned and reviewed quarterly |
+| Keystatic is not yet 1.0 | The trial; content is plain files, so changing CMS later means rebuilding forms, not migrating content; version pinned and reviewed quarterly |
 | A free tier ends | Content is unaffected; GitHub-login mode is the free fallback for logins; I stop and ask before any cost |
 | An editor publishes something a machine can't catch (an invented number, an AI-made image) | The owner's approval on posts and case studies, permission records, the editor guide, the monthly review, rollback. Switching the approval setting off accepts more of this risk; that is your call to make later. |
 | A stolen editor login | Two-factor sign-in; the content-only guard; posts and case studies still need the owner |
