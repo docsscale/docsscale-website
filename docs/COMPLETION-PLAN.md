@@ -1,6 +1,7 @@
 # Project completion plan
 
-Status: **approved by the owner on 6 Oct 2026 (revision 3).** First written
+Status: **approved by the owner on 6 Oct 2026 (revision 4: trial results and
+the additions in section 5).** First written
 6 Oct 2026 against production v1.4.4; revised twice the same day with the
 owner's decisions, the change of priority to SEO, and the SEO features in
 section 5. This is now the working plan. The tracker below is updated in every
@@ -12,8 +13,8 @@ release PR.
 
 | Stage | What | Status |
 |---|---|---|
-| 0 | CMS trial | **In progress.** Proven locally on branch `trial/keystatic` (6 Oct): live length warnings in the SEO fields, image upload and optimisation, the file format, and that the editing app builds. Still to prove, waiting for the owner's Keystatic Cloud account and a test subdomain: email sign-in, running on Hostinger, who-saved records, fixing the screen to the working copy. |
-| 1 | Keyword map | Waiting for the owner's Keyword Planner exports and notes |
+| 0 | CMS trial | **Done, 6 Oct 2026. Keystatic passed all six questions**; results in section 6. The trial site `cms-trial.docsscale.com` and the branches `trial/keystatic` and `trial/content` are kept on the owner's instruction: the site until `cms.docsscale.com` exists in stage 4, the branches as the build reference. Removing any of them still needs the owner's approval. |
+| 1 | Keyword map | **First draft with the owner** (6 Oct, PR #42, held until the owner answers its five questions). Exports received for all nine seed groups (United States) and the Texas city group. The city-page decision stays open until the owner's extra Texas export. |
 | 2 | Money pages | Not started |
 | 3 | Blog and first posts | Not started |
 | 4 | CMS build | Not started |
@@ -37,8 +38,8 @@ release PR.
   wait for your one-click approval; SEO fields, FAQs and team updates go live
   automatically after the checks. One switch in the CMS turns the approval step
   off later, with no code change.
-- **Effort:** about 63–79 working days of build across seven stages, roughly
-  14–18 calendar weeks. The first six weeks in section 10 are unchanged.
+- **Effort:** about 70–86 working days of build across seven stages, roughly
+  15–19 calendar weeks. The first six weeks in section 10 are unchanged.
 - **From you:** the material listed in section 13. The keyword map and the
   first posts cannot be good without it. No decisions are open.
 
@@ -74,7 +75,9 @@ Second round (approval of the plan):
 | First posts | The team supplies raw material, the developer drafts, the named author corrects, the owner approves. |
 | Notifications | The person who saved, plus info@docsscale.com. |
 | `/results/` case studies | All four are real client results with permission on file (owner, 6 Oct 2026): dental, Dallas; med spa, Las Vegas; physical therapy, Denver; chiropractic, Tampa. They may be reused on the matching industry pages with quotes and numbers unchanged. |
-| Texas cities with real clients | Houston, Dallas, San Antonio. Only these qualify for a city page under the rules in section 3. |
+| Texas cities with real clients | Houston, Dallas, San Antonio. Only these qualify for a city page under the rules in section 3. Whether any gets a page stays open until the owner's extra Texas keyword export. |
+| Trial outcome | Keystatic confirmed. The owner's approval lives inside the CMS. Branch and pull-request controls are hidden from editors. |
+| Keystatic Cloud | Team `docsscale`, project `docsscale-website`, connected to this repository only. The account owner is the owner's personal Gmail. Seats, all three free ones: the owner (admin), "Team DS" (the future SEO person, non-admin) and one editor (non-admin, name to be confirmed). |
 | Search Console | The developer may read it through the connector, read-only. |
 | SEO features | The six in section 5 are built; interactive tools and the data page get a proposal first; "cost" and "how to choose an agency" pages go in the keyword map. |
 | Weekly SEO review | Section 8, based on [seo/SEO-OS-V1.md](seo/SEO-OS-V1.md). Nothing from its long-term "Autonomous Search Growth OS" section is built. |
@@ -341,6 +344,51 @@ Things to know about three of them:
 - **"Last reviewed" must be true.** The field records a real person rereading
   the post on that date. It is never filled automatically.
 
+### Added on 6 Oct 2026, second round
+
+| # | Item | What is built | Stage | Extra days |
+|---|---|---|---|---|
+| 7 | **CMS and preview hidden from search engines** | `cms.docsscale.com` requires sign-in and shows nothing else. The preview site requires a password, like staging. Both send `noindex` on every response, and the preview's pages keep pointing to docsscale.com as the original. A check in CI requests both and fails if either answers without sign-in or without `noindex`. The trial site already sends `noindex` and holds no copies of pages. | 4 | 0.5 |
+| 8 | **Call-to-action blocks in posts** | Two ready-made blocks an editor inserts from the editor's menu: "Book a strategy call" and "Get the Free System". The wording and design are fixed in code and approved by you once; the editor only chooses which, and the one that fits the post's parent service is suggested. Clicks are counted as `cta_click` with the post. | 3 (design and display), 4 (in the editor) | 1.5 |
+| 9 | **Content checks before publishing** | One list, below, of what blocks and what warns, with messages in plain words. | 2 (checks), 4 (shown to editors) | 1 |
+| 10 | **Structured data validation on every change** | Every page's schema is parsed and checked for the fields each type requires. A bad CMS field stops the publish; it cannot produce invalid schema on the live site. | 2 | 0.5 |
+| 11 | **Performance budget** | An automatic lab test on every push and publish, of the changed pages and the key pages. It fails a page that is too slow or too heavy. Posts cannot embed outside content directly; a video is a still image that loads the player on click. | 3 (then part of publishing in 4) | 1.5 |
+| 12 | **Automatic social images** | Already in stage 3: made from the post title in the brand style when no image is uploaded. | 3 | 0 (already counted) |
+| 13 | **Honest "Last updated" dates** | The date changes only when the editor ticks "This is a meaningful update" and says in a few words what changed. The workflow warns when the box is ticked but almost nothing changed, and when a large change was saved without it. Typo fixes leave the date alone. | 3, 4 | 0.5 |
+| 14 | **Weekly dependency update PRs** | GitHub's built-in updater opens one grouped pull request a week for the site, the test tools, the editing app and the CI actions, and a separate one straight away for a security fix. CI tests each like any other change; merging still needs your go-ahead. | 2 | 0.25 |
+| 15 | **Uptime monitoring for `cms.docsscale.com`** | A fifth monitor in the existing UptimeRobot account (the free plan allows 50), alerting info@docsscale.com. | 4 | 0.1 |
+| — | **Branch and pull-request controls hidden from editors** | See "Trial results" in section 6. | 4 | 0.5 |
+
+**Content checks (item 9)**
+
+| Check | Result |
+|---|---|
+| Two pages with the same title or the same meta description | Blocks |
+| An image without alt text that isn't marked decorative | Blocks |
+| Banned wording: AI wording and tool names, the CRM platform's name anywhere outside the Free System funnel, "new", "startup" or "recently launched" about DocsScale | Blocks |
+| Missing required field, permission box unticked, invalid schema, broken link, bad redirect | Blocks |
+| Two pages with the same target keyword | Warns, and is shown to the approver |
+| A very short page (a post under about 400 words; the number is set once we have real posts) | Warns |
+| A page too similar to an existing one | Warns, and is shown to the approver |
+| More new pages in a week than the agreed pace | Warns the owner |
+
+A warning never stops an automatic publish of FAQs or SEO fields; for posts
+and case studies the approver sees the warnings beside the preview link.
+
+**Performance budget (item 11), honestly.** The numbers are lab tests on a
+simulated phone, not real visitors. New templates (blog, service pages) must
+meet the target: a mobile performance score of at least 90, the main content
+painted within 2.5 seconds, no layout shift, and a limit on page and image
+weight set from the first real posts. Existing pages are held to "no worse than
+today", because the homepage and `/free-system/` measured 81–82 in the 30 Sep
+review and would fail a flat target; they move to the target if the 15 Oct
+review leads to the hero fix (FE-1).
+
+**Dependency updates (item 14), honestly.** This would not have prevented
+today's failure, where a newly published advisory turned the audit check red on
+every branch at once. It shortens it: the fix arrives as a ready, tested pull
+request within hours instead of being found by accident.
+
 ### Planned for stage 6, proposal before any build
 
 | # | Item | What the proposal will cover | Rough build if approved |
@@ -391,6 +439,42 @@ On a throwaway branch, never deployed to production. It must prove:
 If 1–4 fail, we use TinaCMS; about 3 extra days. If only 5 or 6 fail,
 Keystatic still works, but your approval click would happen in GitHub's phone
 app or website instead of inside the CMS; I'd show you that before going on.
+
+### Trial results (6 Oct 2026, Keystatic 0.6.9)
+
+**Keystatic passed. TinaCMS is not needed.**
+
+| # | Question | Result |
+|---|---|---|
+| 1 | Sign-in with email, no GitHub account; a save arrives in the repo | **Yes.** The owner and a second invited address both signed in with email and saved; both saves arrived on the working branch within seconds. |
+| 2 | The editing screen runs on our Hostinger Business plan | **Yes.** It runs as a Node.js site at `cms-trial.docsscale.com`, in its own folder apart from the main site. No new account and no cost. |
+| 3 | Live length warnings in the SEO fields | **Yes.** A custom field counts while typing, turns amber outside the recommended range and red over the limit, and refuses to save over the limit. |
+| 4 | An uploaded image lands in the repo and comes out optimised | **Yes.** |
+| 5 | The repo records who made each save | **Yes.** Every save is made by Keystatic Cloud's own identity, signed by GitHub, and carries a line naming the signed-in person and their email. That line is added by Keystatic Cloud's server, not by the browser. |
+| 6 | The editing screen can be kept on the working copy | **Yes, with our own guard.** Keystatic always lists the repository's main branch in its branch menu and has no setting to hide it. Our app sends the screen straight back to the working branch (confirmed by the owner), and hides the branch menu, "New branch…" and "Create pull request". |
+
+**So the owner's one-click approval can live inside the CMS.** The publish
+workflow reads who saved the change that set a post or case study to Published
+and compares it with the approver list kept in the repository's settings.
+
+Things to know:
+
+- **How strong the "who saved" record is.** It is reliable against mistakes and
+  against an editor simply pressing Publish. It rests on Keystatic Cloud's
+  sign-in, so it is exactly as strong as each person's password and two-factor
+  sign-in there. It is a record kept by a vendor, not something GitHub itself
+  verifies per person.
+- **The approver is identified by the email used in Keystatic Cloud.** For the
+  owner that is a personal Gmail address; it appears in the private repo's
+  history with each save.
+- **Hiding controls is ours to maintain.** A Keystatic update could rename a
+  control and bring it back. A test in CI fails if any of them is visible, and
+  even then nothing an editor clicks there can reach the live site: only the
+  publish workflow copies content to the live copy, it only reads the working
+  branch, and it refuses anything that is not content. "Create pull request"
+  opens GitHub, where an editor has no account.
+- **Roles.** Editors are invited with the non-admin role. An admin in Keystatic
+  Cloud can invite people and change the project; that stays with the owner.
 
 ### What editors can change
 
@@ -659,14 +743,14 @@ merge and to deploy.
 |---|---|---|---|
 | **0** | CMS trial (section 6). One day, first, because it fixes the file format the posts and case studies are written in. | 1 | None |
 | **1** | Keyword map, including the "cost" and "how to choose" pages | 3–4 | None (a document for your approval) |
-| **2** | Money pages: checks and generators (3), target keyword and its check (0.5), IndexNow (0.5), AI-assistant channel (0.25), service-page layout and `/services` overview (3), seven service pages (5–7), four deeper industry pages (4–5) | 16–19 | First service pages about week 3, then two to three a week |
-| **3** | Blog design and build (7–9); trust signals and the editorial standards page (1.5); answer-first format (0.5); topic clusters (1); first three posts (3–4) | 13–16 | Blog live about week 6 |
-| **4** | CMS build: working copy, preview site, publish workflow, approval setting, rollback (8–10); SEO block, settings, team, FAQs, redirects (5–6); case studies, testimonials, resources page (4–5) | 17–21 | Editors publishing without the developer |
+| **2** | Money pages: checks and generators (3), content checks (1), structured-data validation (0.5), weekly dependency update PRs (0.25), target keyword and its check (0.5), IndexNow (0.5), AI-assistant channel (0.25), service-page layout and `/services` overview (3), seven service pages (5–7), four deeper industry pages (4–5) | 18–21 | First service pages about week 3, then two to three a week |
+| **3** | Blog design and build, including automatic social images (7–9); trust signals and the editorial standards page (1.5); answer-first format (0.5); topic clusters (1); call-to-action blocks (1); performance budget (1.5); honest "Last updated" dates (0.5); first three posts (3–4) | 16–19 | Blog live about week 6 |
+| **4** | CMS build: working copy, preview site, publish workflow, approval setting, rollback (8–10); SEO block, settings, team, FAQs, redirects (5–6); case studies, testimonials, resources page (4–5); sign-in and noindex on the CMS and preview with a check (0.5); call-to-action blocks in the editor (0.5); branch and pull-request controls hidden, with a test (0.5); uptime monitor for `cms.docsscale.com` (0.1) | 19–23 | Editors publishing without the developer |
 | **5** | Review leftovers, Safari in CI, WCAG pass (5–7); handover package and a walkthrough with the editor (4–6) | 9–13 | Handover complete |
 | **6** | Weekly SEO review set up (3–4); proposals for the interactive tools and the data page template (1) | 4–5 | Weekly review running. Building the tools or the template is extra, estimated in their proposals (section 5). |
-| | **Total** | **63–79** | |
+| | **Total** | **70–86** | |
 
-- **Calendar:** roughly 14–18 weeks. The build is not the limit in stages 2 and
+- **Calendar:** roughly 15–19 weeks. The build is not the limit in stages 2 and
   3; the pace rule and how quickly real material and approvals arrive are.
   While pages are waiting on those, I carry on with the next stage, so the CMS
   build overlaps the page roll-out.
