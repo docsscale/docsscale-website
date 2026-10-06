@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   turbopack: { root: path.resolve(__dirname) },
+  // Never in search results: every response says so, not only the HTML pages.
+  async headers() {
+    return [{ source: '/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }] }];
+  },
 };
 
 export default nextConfig;
