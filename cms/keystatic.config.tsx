@@ -24,13 +24,16 @@ const seo = fields.object(
   { label: 'Search engines (SEO)' },
 );
 
-// local on a developer's machine; cloud (email login, no GitHub account) once
-// KEYSTATIC_CLOUD_PROJECT is set on the server.
-const cloudProject = process.env.NEXT_PUBLIC_KEYSTATIC_CLOUD_PROJECT;
+// Local files on a developer's machine; Keystatic Cloud (email sign-in, no
+// GitHub account) on the server. The project key is not a secret.
+const onServer = process.env.NODE_ENV === 'production';
+
+/** The branch the editing screen is kept on. Saves must never go to main. */
+export const WORKING_BRANCH = 'trial/content';
 
 export default config({
-  storage: cloudProject ? { kind: 'cloud' } : { kind: 'local' },
-  ...(cloudProject ? { cloud: { project: cloudProject } } : {}),
+  storage: onServer ? { kind: 'cloud', branchPrefix: 'trial/' } : { kind: 'local' },
+  cloud: { project: 'docsscale/docsscale-website' },
   ui: { brand: { name: 'DocsScale content' } },
   collections: {
     posts: collection({
