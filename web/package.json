@@ -8,7 +8,10 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "sitemap:check": "node scripts/generate-sitemap.mjs --check",
+    "check:site": "node scripts/site-checks.mjs"
   },
   "dependencies": {
     "gsap": "3.15.0",
@@ -24,6 +27,7 @@
     "@types/react-dom": "19.3.0",
     "eslint": "9.39.5",
     "eslint-config-next": "16.3.6",
+    "node-html-parser": "9.0.4",
     "prettier": "3.9.9",
     "typescript": "6.0.3"
   }
