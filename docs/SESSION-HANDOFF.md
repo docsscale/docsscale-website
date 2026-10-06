@@ -44,16 +44,19 @@ kept on purpose.
   info@ mailbox's SMTP).
 
 **Completion plan ([COMPLETION-PLAN.md](COMPLETION-PLAN.md))**
-- **Approved by the owner on 6 Oct 2026** (revision 3). It is the working plan:
-  SEO first (keyword map, service and industry pages, blog and first posts),
-  then the Keystatic CMS, handover and the rest of the agency review, then the
-  weekly SEO review. Decisions are recorded at its top; its tracker shows the
-  stage. Stage 0 (the one-day CMS trial) is in progress on a throwaway branch.
-- Waiting on the owner: Keystatic Cloud account, Keyword Planner exports,
-  notes on prospects' words and service priorities, material for the first
-  posts, adding Ahmed Mustafa as second GitHub owner.
-- `docs/seo/SEO-OS-V1.md` is back in the repo (owner's file, unchanged).
-- Hosting plan checked 6 Oct (read-only): Hostinger Business.
+- The working plan, approved by the owner on 6 Oct 2026. Its tracker and
+  section 10 give the current order: **the system first** (foundations, then
+  blog templates and the full CMS), then the first content through the CMS,
+  then handover and review items, then the weekly SEO review.
+- CMS trial done (Keystatic confirmed); keyword map approved
+  (`docs/seo/keywords/keyword-map.md`).
+- In progress: stage A, starting with the service-page layout for the owner's
+  before/after approval.
+- Kept on purpose: `cms-trial.docsscale.com` and the branches `trial/keystatic`
+  and `trial/content`.
+- Waiting on the owner: material for the local SEO page and its post; a check
+  of the hidden controls on the trial site; the extra keyword export; adding
+  Ahmed Mustafa as second GitHub owner.
 
 **Agency review ([AGENCY-REVIEW.md](AGENCY-REVIEW.md)), still open**
 - 4: slow hero on phones (FE-1). Decide at the 15 Oct Web Vitals review.
