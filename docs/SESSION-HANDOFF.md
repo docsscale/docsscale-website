@@ -43,6 +43,18 @@ kept on purpose.
 - If the daily failure email lands in spam, tell the developer (switch to the
   info@ mailbox's SMTP).
 
+**Completion plan ([COMPLETION-PLAN.md](COMPLETION-PLAN.md))**
+- **Approved by the owner on 6 Oct 2026** (revision 3). It is the working plan:
+  SEO first (keyword map, service and industry pages, blog and first posts),
+  then the Keystatic CMS, handover and the rest of the agency review, then the
+  weekly SEO review. Decisions are recorded at its top; its tracker shows the
+  stage. Stage 0 (the one-day CMS trial) is in progress on a throwaway branch.
+- Waiting on the owner: Keystatic Cloud account, Keyword Planner exports,
+  notes on prospects' words and service priorities, material for the first
+  posts, adding Ahmed Mustafa as second GitHub owner.
+- `docs/seo/SEO-OS-V1.md` is back in the repo (owner's file, unchanged).
+- Hosting plan checked 6 Oct (read-only): Hostinger Business.
+
 **Agency review ([AGENCY-REVIEW.md](AGENCY-REVIEW.md)), still open**
 - 4: slow hero on phones (FE-1). Decide at the 15 Oct Web Vitals review.
 - 8: landmarks, skip link, `autocomplete` (QA-2, QA-3).
