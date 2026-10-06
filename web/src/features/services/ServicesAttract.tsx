@@ -233,7 +233,7 @@ export function ServicesAttract() {
                   {':'}
                 </b>{' '}
                 {
-                  'Google Business Profile management, a page per treatment and neighborhood, review velocity, monthly rank report.'
+                  'Google Business Profile management, pages for the treatments you want more of, review velocity, monthly rank report.'
                 }
               </div>
               <div>
