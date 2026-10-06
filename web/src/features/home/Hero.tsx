@@ -349,33 +349,25 @@ export function Hero() {
           </span>
         </div>
 
-        {/* Integrations marquee (list doubled so the loop is seamless) */}
+        {/* Platforms we work on: a short list, so a still, centred row (it was a
+            scrolling strip while the list was long). */}
         <div
           style={{
             gridColumn: 'span 2',
             background: T.surface,
             border: `1px solid ${T.hairline}`,
             borderRadius: 28,
-            padding: '18px 0',
+            padding: '18px 20px',
             display: 'flex',
+            flexWrap: 'wrap',
             alignItems: 'center',
-            overflow: 'hidden',
+            justifyContent: 'center',
+            gap: 10,
           }}
         >
-          <div
-            className="marquee-track"
-            style={{
-              display: 'flex',
-              gap: 10,
-              width: 'max-content',
-              paddingRight: 10,
-              animation: 'marquee 44s linear infinite',
-            }}
-          >
-            {[...INTEGRATIONS, ...INTEGRATIONS].map(([name, color], i) => (
-              <IntegrationChip key={`${name}-${i}`} name={name} dot={color} />
-            ))}
-          </div>
+          {INTEGRATIONS.map(([name, color]) => (
+            <IntegrationChip key={name} name={name} dot={color} />
+          ))}
         </div>
 
         {/* Ownership */}

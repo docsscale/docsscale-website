@@ -1,6 +1,6 @@
 import { T } from '@/styles/tokens';
 
-/** One tool in the hero's scrolling integrations strip. */
+/** One platform in the hero's platforms strip. */
 export function IntegrationChip({ name, dot }: { name: string; dot: string }) {
   return (
     <span

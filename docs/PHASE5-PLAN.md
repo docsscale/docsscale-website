@@ -14,7 +14,7 @@ Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's f
 |---|---|---|---|---|
 | **5A** Measurement and safety | **Mostly done** | See the 5A table below | Brand-rule CI check, link checker, SSL-expiry monitors, DMARC tightening, GA4 admin setup | Developer; owner for GA4 admin |
 | **5B** Site structure | **Partly done** | Services and Industries menus, `/industries/` hub and four industry pages, 301s from `/services/<industry>/` (v1.2.0, 30 Sep) | Real service pages (`/services/<service>/`); seven-vs-eight services wording ([BACKLOG.md](BACKLOG.md)) | Waits for the 5C keyword map |
-| **5C** SEO / AEO / GEO | **Not started** (pause lifted 6 Oct 2026) | Search Console and Bing set up; sitemaps submitted | Keyword map, on-page, schema, FAQs, `llms.txt` rewrite, long page titles | Developer; owner approves copy |
+| **5C** SEO / AEO / GEO | **Not started** (pause lifted 6 Oct 2026) | Search Console and Bing set up; sitemaps submitted; indexing requested by the owner for 9 of the 11 unindexed pages (6 Oct; `/privacy/` and `/terms/` can wait) | Keyword map, on-page, schema, FAQs, `llms.txt` rewrite, long page titles | Developer; owner approves copy |
 | **5D** Lead magnets app | Not started | — | All | — |
 | **5E** Blog | Not started | — | All | — |
 | **5F** Newsletter | Not started | — | All | — |
@@ -52,7 +52,7 @@ Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's f
 | 4 | FE-1 / FE-4: slow hero on phones; real-user Web Vitals | Measuring since v1.2.4; decision at the 15 Oct review |
 | 5 | UX-1: homepage placeholders | Hero done (v1.4.0–v1.4.1, 5 Oct); ad preview done (v1.4.2, 6 Oct); About team photos still initials |
 | 6 | PM-1 / PM-2: this tracker | Done, 6 Oct |
-| 7 | AR-1 / SEO-1: old industry-page files still served | Done, v1.4.3 (6 Oct): redirected, and the old files deleted with the owner's approval |
+| 7 | AR-1 / SEO-1: old industry-page files still served | Done, v1.4.3 (6 Oct): redirected; the 30 old page files, 138 old build files and five empty folders deleted with the owner's approval |
 | 8 | QA-2 / QA-3: landmarks, skip link, autocomplete | Open |
 | 9 | BE-3: back up rate-limited submissions | Open |
 | 10 | WebKit in CI and an iPhone spot check | Open (engine download approved) |
@@ -64,7 +64,7 @@ Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's f
 |---|---|
 | "GoHighLevel" in the funnel's name and copy | **Answered (27–28 Sep):** the funnel is the "Click-to-Chair System"; GoHighLevel is named only in details a buyer needs. |
 | Analytics tags in the page source | **Answered in practice:** GA4 (v1.0) and Clarity (v1.3.0) were approved and are live. |
-| Integrations strip on the homepage | **Answered (owner, 6 Oct 2026):** keep it, as plain platform names with no official logos, listing only platforms we actually work on for clients. Still open: whether TikTok stays on the list. The strip itself has not been changed yet; any change is visible and gets a before/after. |
+| Integrations strip on the homepage | **Answered (owner, 6 Oct 2026):** keep it, as plain platform names with no official logos, listing only platforms we actually work on for clients. The list is Google Business Profile, Meta Ads, Google Ads and Instagram, matching the confirmed services (paid ads on Meta and Google, local SEO and Google Business Profile, social media management); TikTok is removed. |
 | CMS images | No decision needed until 5E. |
 
 ## Decisions recorded (27–28 Sep 2026)

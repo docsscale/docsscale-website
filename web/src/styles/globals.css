@@ -78,14 +78,6 @@ em.serif-accent {
     opacity: 1;
   }
 }
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
 @keyframes pulse {
   0%,
   to {
@@ -126,9 +118,6 @@ em.serif-accent {
 }
 #hero-cta:hover {
   background: var(--teal) !important;
-}
-.marquee-track:hover {
-  animation-play-state: paused;
 }
 /* The example ad photo (home/System.tsx) has two faces, left and right. Its box
    is at least 55% as tall as it is wide (cqw = 1% of the card body's width),
