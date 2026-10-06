@@ -3,6 +3,12 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [1.4.5] — 2026-10-07
+
+- **Services page, Local SEO card: no more "a page per treatment and neighborhood".** The "You get" line now reads "Google Business Profile management, pages for the treatments you want more of, review velocity, monthly rank report." The old wording promised a page per neighborhood, which the content quality rules (CLAUDE.md, 6 Oct 2026) forbid. Wording given and approved by the owner (before/after at 1440, 768 and 375). The homepage and `llms.txt` lines about ranking "in the neighborhoods you serve" stay as they are (owner's decision): they promise no pages.
+- **Build tools updated** after two security advisories published on 6 Oct 2026 (`source-map-js`, `sharp`). Neither is sent to visitors; nothing visible changes.
+- **Weekly dependency update pull requests** are switched on (GitHub's built-in updater), tested by CI like any other change.
+
 ## [1.4.4] — 2026-10-06
 
 - **Homepage hero: the platforms strip lists four platforms** (owner's decision, 6 Oct 2026): Google Business Profile, Meta Ads, Google Ads and Instagram, the platforms we work on for clients. TikTok and the eight practice-software names (Zocdoc, Dentrix, Open Dental, Jane, ChiroTouch, WebPT, Zenoti, Weave) are removed. With four names the strip is a still, centred row instead of a scrolling one; on phones it wraps to three lines, which makes the homepage 100 px taller there. Plain names, no official logos.
