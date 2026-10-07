@@ -92,10 +92,19 @@ it.**
      post is at `/blog/sample-post/` behind the staging login. Not checked
      signed in (the developer does not enter passwords); the owner was asked
      to look.
-   - Next, in order: the preview workflow (builds the working copy to
-     `preview.docsscale.com`; needs the Hostinger API token as a GitHub
-     secret, created by the owner); the publish workflow with the owner's
-     approval; post images, schema, RSS, social images; the remaining forms.
+   - Done 7 Oct: the preview workflow (`.github/workflows/preview.yml`). On
+     every save in the editing screen (a push to `content/working`) and every
+     change to `main`, it builds `main`'s code with the working copy's content
+     and uploads it to the preview site. It needs the repository secret
+     `HOSTINGER_API_TOKEN` (a Hostinger API token, created by the owner at
+     hPanel → Account → API; it has the owner's full Hostinger rights, so it
+     lives only as a GitHub secret and is never printed). Without the secret
+     the workflow does nothing and says so. **The owner was sent the steps on
+     7 Oct; until he adds it, refresh the preview by hand** (RELEASE.md, "The
+     preview site").
+   - Next, in order: the publish workflow with the owner's approval (and its
+     rule in CLAUDE.md, plan section 6); RSS, social images, the category
+     filter; the remaining forms.
    - Known: `npm audit` reports one advisory with no fixed version yet
      (`braces`, reached through the CMS library and, in `web/`, through the
      lint tools). Neither is sent to visitors; the weekly updater will bring
