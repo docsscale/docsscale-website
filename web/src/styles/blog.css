@@ -1,33 +1,44 @@
 /* Blog pages. Layout that depends on width lives here; everything else is inline
    with tokens, like the rest of the site. */
-.post-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 28px;
+
+/* A post or the blog list beside the offers panel. The panel wraps under the
+   content when there is no room for both (tablets and phones). */
+.post-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: flex-start;
 }
-.post-toc-side {
-  display: none;
+.post-main {
+  flex: 999 1 560px;
+  min-width: 0;
+}
+.post-aside {
+  flex: 1 1 280px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 @media (min-width: 1100px) {
-  .post-layout {
-    grid-template-columns: 240px minmax(0, 720px);
-    gap: 64px;
-    justify-content: center;
-  }
-  .post-toc-side {
-    display: block;
+  .post-aside {
     position: sticky;
-    top: 104px;
-    align-self: start;
+    top: 96px;
   }
-  .post-toc-top {
-    display: none;
-  }
+}
+/* The cover photo and the featured card overlap the tinted band above them. */
+.post-overlap {
+  margin-top: clamp(-190px, -11.5vw, -90px);
 }
 .post-body a {
   color: var(--teal);
   font-weight: 600;
   text-decoration: underline;
+}
+.post-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
 }
 .post-toc a,
 .post-card a {
@@ -43,15 +54,10 @@
 }
 .post-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 40px 24px;
 }
 .post-featured {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-}
-@media (min-width: 860px) {
-  .post-featured {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  }
+  display: flex;
+  flex-wrap: wrap;
 }

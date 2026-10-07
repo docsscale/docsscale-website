@@ -95,13 +95,20 @@ it.**
      lint tools). Neither is sent to visitors; the weekly updater will bring
      the fix.
 
-**Blog design (step 3):** screenshots of the post page and the index went to
-the owner on 7 Oct 2026 (branch `feat/blog-design`, sample text). The owner
-answered "do what you think is best", so the templates are built on it; it
-still gets a before/after before anything is public. Not built yet from that
-design: the category filter and images on the index. The index heading,
-introduction and search wording (`web/src/content/blog.ts`) and the two
-call-to-action texts in posts are placeholders that need the owner's wording.
+**Blog design (step 3): approved 7 Oct 2026.** The owner rejected the first
+version (too plain, no images), then two versions on a design canvas (one too
+dark and busy, one too simple and without the brand colours), and approved the
+fourth ("it's good"): teal-tint title band, overlapping cover photo, one
+reading column, coloured blocks, and a right-hand panel with DocsScale's own
+offers (never outside ads; the owner asked for "ads of our offers"). The
+canvas is the owner's private design artifact; the built version is in
+`web/src/features/blog/` and on the preview site. Offers are entries in
+`content/offers/` so the owner can add more "like the Free System" himself.
+Not built yet: image resizing to AVIF/WebP (uploads are used as they are),
+the category filter, RSS, post schema, social images. The index heading,
+introduction and search wording (`web/src/content/blog.ts`), the two
+call-to-action texts inside posts, and the three offers' wording need the
+owner's approval before anything is public.
 
 **Open question for the blog design (step 3):** in the lab test the lightest
 existing page already paints its main content at 2.4–2.5 seconds, right at the

@@ -1,7 +1,7 @@
 import { BLOG_INDEX } from '@/content/blog';
 import { SPECIALTY_LINKS } from '@/content/specialties';
 import { BlogIndex } from '@/features/blog/BlogIndex';
-import { getPosts } from '@/features/blog/posts';
+import { getOffers, getPosts } from '@/features/blog/posts';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
 import '@/styles/blog.css';
@@ -19,7 +19,7 @@ export default async function BlogPage() {
     <>
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <main>
-        <BlogIndex posts={await getPosts()} copy={BLOG_INDEX} />
+        <BlogIndex posts={await getPosts()} offers={await getOffers()} copy={BLOG_INDEX} />
       </main>
     </>
   );

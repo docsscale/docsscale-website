@@ -25,6 +25,7 @@ export type Post = {
   takeaways: string[];
   faqs: { question: string; answer: string }[];
   seo: { title: string; description: string; noindex: boolean };
+  cover: { src: string; alt: string; caption: string } | null;
   headings: { id: string; text: string }[];
   body: RenderableTreeNode;
   /** Publication date as written in the file, for ordering; drafts without one come first. */
@@ -100,6 +101,7 @@ export async function getPosts(): Promise<Post[]> {
           minutes: Math.max(1, Math.round(words / 220)),
           takeaways: [...entry.takeaways],
           faqs: entry.faqs.map((faq) => ({ ...faq })),
+          cover: entry.cover ? { src: entry.cover, alt: entry.coverAlt, caption: entry.coverCaption } : null,
           seo: { ...entry.seo },
           headings,
           body: Markdoc.transform(node, MARKDOC),
@@ -109,4 +111,35 @@ export async function getPosts(): Promise<Post[]> {
   );
   // Newest first; posts without a date (drafts) lead on the preview site.
   return posts.sort((a, b) => b.sort.localeCompare(a.sort));
+}
+
+export type Offer = {
+  slug: string;
+  title: string;
+  badge: string;
+  figure: string;
+  text: string;
+  image: { src: string; alt: string } | null;
+  buttonLabel: string;
+  link: string;
+  colour: Stage;
+};
+
+/** The offers beside every post and the blog list, in the order the editor set. */
+export async function getOffers(): Promise<Offer[]> {
+  const entries = await reader.collections.offers.all();
+  return entries
+    .filter(({ entry }) => entry.active)
+    .sort((a, b) => (a.entry.order ?? 0) - (b.entry.order ?? 0))
+    .map(({ slug, entry }) => ({
+      slug,
+      title: entry.title,
+      badge: entry.badge,
+      figure: entry.figure,
+      text: entry.text,
+      image: entry.image ? { src: entry.image, alt: entry.imageAlt } : null,
+      buttonLabel: entry.buttonLabel,
+      link: entry.link,
+      colour: entry.colour,
+    }));
 }
