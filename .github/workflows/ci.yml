@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: web } }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
       - run: npm ci
       - run: npm run lint
@@ -30,14 +30,14 @@ jobs:
       # Brand rules, titles and descriptions, headings, alt text, links,
       # structured data, sitemap coverage; warns on short or near-duplicate pages.
       - run: npm run check:site
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with: { name: web-out, path: web/out, retention-days: 7 }
 
   server:
     name: Lead handler tests (PHP)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with: { php-version: '8.3', tools: none }
       - run: bash tests/server/lead-handler.sh
@@ -47,8 +47,8 @@ jobs:
     name: Dependency audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 22 }
       - run: npm audit --omit=dev --audit-level=high
         working-directory: web
@@ -58,12 +58,12 @@ jobs:
     needs: web
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with: { name: web-out, path: web/out }
       # Both sides are captured on this runner, so OS font rendering cancels out.
       # Baseline = reference/approved/ if present, else the original live snapshot.
@@ -83,7 +83,7 @@ jobs:
       - run: node tests/visual/hero-journey.mjs
       - run: node tests/visual/funnel-stats.mjs
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: visual-diffs
           path: |

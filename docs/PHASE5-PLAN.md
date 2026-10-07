@@ -4,7 +4,7 @@ Status: **in progress.** Approved in principle on 27 Sep 2026; v1.0 went live on
 
 ## Status tracker
 
-**Last updated: 7 Oct 2026 (production is v1.4.5).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
+**Last updated: 7 Oct 2026 (production is v1.4.6).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
 
 Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's fine); the only estimates are the build-effort figures in "Phase order" below.
 
@@ -38,8 +38,8 @@ Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's f
 | 6 | SSL-expiry monitors | **Open** | Not set up on the free plan |
 | 7 | DMARC reports to dmarc@docsscale.com (`p=none`) | Done | 29 Sep |
 | 7 | DMARC to `quarantine`, then `reject` | **Open** | Review 20 Oct |
-| 8 | Brand-rule CI check | **Open** | — |
-| 8 | Link checker in CI | **Open** | Manual check on 30 Sep: 0 broken |
+| 8 | Brand-rule CI check | Done | v1.4.6 (7 Oct), part of the site checks |
+| 8 | Link checker in CI | Done | v1.4.6 (7 Oct), part of the site checks |
 | — | Daily email when a lead fails to reach the CRM | Done (not in the original plan) | v1.2.2 (1 Oct) |
 
 ### Agency review, top 10 ([AGENCY-REVIEW.md](AGENCY-REVIEW.md))

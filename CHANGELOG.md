@@ -3,6 +3,14 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [1.4.6] — 2026-10-07
+
+- **The sitemap is generated from the built pages** (agency review SEO-2). Every indexable page is listed automatically, and each page's `lastmod` is the day its own copy last changed; a change to the header or footer moves no dates. 13 of the 15 dates were stale and are corrected from the change history. CI fails if the committed sitemap is out of date.
+- **Automatic site checks in CI** (`npm run check:site` in `web/`): AI wording, tool names and generator tags; the CRM platform named outside its allowed places; "new/startup" wording; missing or duplicate titles and descriptions; canonicals; one h1 and no skipped heading levels; images without an alt attribute; broken internal links; incomplete structured data and FAQ schema for questions that aren't on the page; sitemap coverage. Warnings, which never fail: long titles, short pages, pages sharing half their wording. The current site has no errors.
+- **Routine updates** from the first weekly update run: the site framework 16.3.6 → 16.3.8 and the CI actions. Every page is pixel-identical.
+
+Nothing visible changes in this release.
+
 ## [1.4.5] — 2026-10-07
 
 - **Services page, Local SEO card: no more "a page per treatment and neighborhood".** The "You get" line now reads "Google Business Profile management, pages for the treatments you want more of, review velocity, monthly rank report." The old wording promised a page per neighborhood, which the content quality rules (CLAUDE.md, 6 Oct 2026) forbid. Wording given and approved by the owner (before/after at 1440, 768 and 375). The homepage and `llms.txt` lines about ranking "in the neighborhoods you serve" stay as they are (owner's decision): they promise no pages.
