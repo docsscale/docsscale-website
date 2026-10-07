@@ -28,9 +28,19 @@ cd web && npm run lint && npm run typecheck && npm run format:check && npm run b
 cd .. && npm run test:e2e             # behaviour + payloads vs approved build
 npm run test:server                   # if you touched server/ (needs PHP 8.1+)
 npm run visual:candidate && npm run visual:compare   # full pixel check
+npm run test:performance              # performance budget (a laptop is faster than CI; CI decides)
 ```
 
 **Deterministic captures:** the capture tools neutralise `will-change` before every screenshot. Even so, the CI runner's renderer occasionally anti-aliases an unchanged edge 1/255 differently between two captures, so the interaction tests ignore pixels whose colour moved by at most 2/255 (and say so in their output). Real changes move colours by tens or hundreds; never raise that limit to make a real change pass.
+
+## Performance budget
+
+`tests/performance/budget.mjs` runs a lab test (Lighthouse, simulated phone) on every built page in CI, three runs each, and uses the middle run. Limits are in `tests/performance/budget.json`.
+
+- **A page listed under `baseline`** is held to "no worse than today": its recorded numbers plus the `allowance`. The allowance covers what the same build varies by between CI runs (measured 7 Oct 2026: up to 5 points and about 10% in paint time). If the job fails on a change that can't have affected speed, rerun it once before looking further.
+- **Any other page is new** and must meet `target`. Don't add a new page to the record to make it pass.
+- **Only this build is measured.** Outside hosts are blocked, so the booking calendar embedded in `/free-system/book-a-call/` is not counted.
+- **Re-recording** (after an approved change that makes a page heavier, or to lock in an improvement): download `performance-results` from the branch's CI run, run `node tests/performance/budget.mjs --record <path>/results.json`, and commit `budget.json` with the reason. Never record from a laptop; the numbers depend on the machine.
 
 ## Code conventions
 

@@ -47,8 +47,8 @@ it.**
 |---|---|---|
 | Done | CMS trial | Keystatic passed all six questions (plan, section 6) |
 | Done | Keyword map | Approved 6 Oct. Open until the owner's extra export: keywords for the websites, lead follow-up and reviews pages; the city-page decision |
-| **A** | Foundations | **Nearly done.** Done: service-page layout (draft #45), weekly dependency update PRs, generated sitemap, site checks in CI. **Left: the performance budget** (plan, section 5, item 11). |
-| **B** | The system: blog templates and the CMS at `cms.docsscale.com` | **Not started. This is next after the performance budget.** Build the publishing core first: content folder, blog templates (design to the owner for approval), the editing app, working copy and preview site, publish workflow with the owner's approval for posts, case studies and service pages. Then the remaining forms. |
+| **A** | Foundations | **Done 7 Oct 2026.** Service-page layout (draft #45), weekly dependency update PRs, generated sitemap, site checks in CI, performance budget in CI (plan, section 5, item 11, with what the first runs showed). |
+| **B** | The system: blog templates and the CMS at `cms.docsscale.com` | **Not started. This is next.** Build the publishing core first: content folder, blog templates (design to the owner for approval), the editing app, working copy and preview site, publish workflow with the owner's approval for posts, case studies and service pages. Then the remaining forms. |
 | **C** | First content, through the CMS | Waiting for B and for the owner's material. First pair: the local SEO page and the "Google Business Profile for dentists" post; then paid ads with "Facebook ads for chiropractors"; then reactivation with "dental recall messages". Publish the first pair as soon as the material and the publishing core both exist. |
 | **F** | SEO command center | Approved as the lighter first cut (about 15–18 build days). **Not started; it comes after the publishing core and the first two content pieces.** Half-day test done (dashboard plan, section 2). |
 | **D** | Handover package, remaining agency-review items, Safari in CI, WCAG pass | Not started |
@@ -56,13 +56,17 @@ it.**
 
 **The very next steps, in order**
 
-1. Performance budget in CI (finishes stage A). Existing pages are held to "no
-   worse than today"; new templates to the target in the plan.
+1. ~~Performance budget in CI~~ Done 7 Oct 2026.
 2. Show the owner the exact change for creating `cms.docsscale.com` and
    `preview.docsscale.com` (new infrastructure: needs the owner's OK), and ask
    for the Hostinger API token as a GitHub secret.
 3. Blog design, as before/after for the owner's approval.
 4. Publishing core, then the first two content pieces.
+
+**Open question for the blog design (step 3):** in the lab test the lightest
+existing page already paints its main content at 2.4–2.5 seconds, right at the
+2.5-second target for new templates. The blog template needs a lighter shared
+part, or the target needs the owner's decision (plan, section 5, item 11).
 
 ## Rules and decisions the owner has approved
 
@@ -159,6 +163,11 @@ can be dropped.
 - **After a page's copy changes,** run `npm run build && npm run sitemap` in
   `web/` and commit `public/sitemap.xml` and `sitemap-state.json`, or CI's
   sitemap check fails and names the pages.
+- **Performance budget:** CI job "Performance budget"; `npm run
+  test:performance` locally (a laptop is faster than CI, so only CI decides).
+  A page not listed in `tests/performance/budget.json` is treated as new and
+  must meet the target. Re-record only from a CI run, with the reason, after
+  an approved change (CONTRIBUTING.md).
 - **Site checks:** `npm run check:site` in `web/` after a build. Current
   warnings, all known: three long titles (backlog), and two short pages
   (`/about/`, `/industries/`).
@@ -260,7 +269,7 @@ Record to set at each step (both names), for example: `v=DMARC1; p=quarantine; p
 ## When the team grows
 
 - **GitHub plan:** the `docsscale` organization is on the free plan. Private repos on the free plan can't enforce branch protection, so "all CI checks must pass" is enforced by `scripts/deploy.mjs` at deploy time instead of by GitHub at merge time.
-  - **When other developers join:** upgrade the organization to GitHub Team and enable branch protection on `main`. Required checks: the four CI jobs, no force-push, no deletion, at least one review.
+  - **When other developers join:** upgrade the organization to GitHub Team and enable branch protection on `main`. Required checks: the five CI jobs, no force-push, no deletion, at least one review.
 - **Access:** give each person their own logins (Hostinger team access, GoHighLevel user, GitHub member), never shared ones. Remove access when someone leaves.
 
 ## Change process

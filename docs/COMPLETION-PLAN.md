@@ -8,13 +8,13 @@ in and replaces every "stage" number mentioned elsewhere in this file.**
 
 ## Status tracker
 
-**Last updated: 6 Oct 2026.**
+**Last updated: 7 Oct 2026.**
 
 | Stage | What | Status |
 |---|---|---|
 | Done | CMS trial | **Done, 6 Oct 2026. Keystatic passed all six questions**; results in section 6. The trial site `cms-trial.docsscale.com` and the branches `trial/keystatic` and `trial/content` are kept on the owner's instruction: the site until `cms.docsscale.com` exists, the branches as the build reference. Removing any of them still needs the owner's approval. |
 | Done | Keyword map | **Approved 6 Oct 2026** ([seo/keywords/keyword-map.md](seo/keywords/keyword-map.md)). Open until the owner's extra export: keywords for the websites, lead follow-up and reviews pages, and the city-page decision. The cost page is on hold until the owner provides real price ranges. |
-| **A** | Foundations: service-page layout, checks, generators, performance budget, dependency update PRs | **In progress.** Done: service-page layout (structure approved 6 Oct; draft PR #45 until real copy replaces the filler); weekly dependency update PRs (7 Oct); sitemap generated from the built pages with true last-changed dates, and the site checks in CI: brand rules, titles and descriptions, headings, alt text, links, structured data, sitemap coverage, short and near-duplicate page warnings (7 Oct). Still to do: the performance budget; schema generated from content arrives with the blog and service-page forms in stage B. |
+| **A** | Foundations: service-page layout, checks, generators, performance budget, dependency update PRs | **Done, 7 Oct 2026** (the service-page layout stays a draft until real copy exists). Done: service-page layout (structure approved 6 Oct; draft PR #45 until real copy replaces the filler); weekly dependency update PRs (7 Oct); sitemap generated from the built pages with true last-changed dates, and the site checks in CI: brand rules, titles and descriptions, headings, alt text, links, structured data, sitemap coverage, short and near-duplicate page warnings (7 Oct).; the performance budget in CI (7 Oct; see the note under item 11 in section 5). Schema generated from content arrives with the blog and service-page forms in stage B. |
 | **B** | The system: blog templates and the full CMS at `cms.docsscale.com` | Not started |
 | **C** | First content, published through the CMS | Waiting for B. The owner's team is gathering material for the local SEO page and the "Google Business Profile for dentists" post. |
 | **D** | Handover package, remaining review items, Safari in CI, WCAG pass | Not started |
@@ -386,6 +386,31 @@ weight set from the first real posts. Existing pages are held to "no worse than
 today", because the homepage and `/free-system/` measured 81–82 in the 30 Sep
 review and would fail a flat target; they move to the target if the 15 Oct
 review leads to the hero fix (FE-1).
+
+**Built 7 Oct 2026** (`tests/performance/budget.mjs`, limits in
+`tests/performance/budget.json`, how to use it in CONTRIBUTING.md). What the
+first CI runs showed:
+
+- On the CI machine the 16 existing pages score 93–98, paint their main
+  content at 2.4–3.2 seconds and weigh 260–409 KB. Layout shift is zero on
+  all of them. These are not comparable with the 81–82 of the 30 Sep review,
+  which was measured on the live site with a different setup.
+- The same build measured three times moved by up to 5 points and about 10%
+  in paint time, so "no worse than today" has an allowance of 6 points and
+  15%. Page weight barely moves between runs and has an allowance of 3%.
+- **Open question for stage B:** the lightest existing page (`/terms/`, text
+  only) paints at 2.4–2.5 seconds, right at the 2.5-second target for new
+  templates. A blog template that shares today's header, fonts and scripts
+  will sit on that line and fail some runs. Either the shared part gets
+  lighter for the new templates, or the target is adjusted; decide with the
+  blog design.
+- All pages are tested on every push (16 pages take about four minutes). When
+  the blog grows, narrow it to the changed pages and the key pages, as the
+  plan says.
+- The booking calendar embedded in `/free-system/book-a-call/` is not counted
+  (outside hosts are blocked so the test can't fail on someone else's
+  service). Measured once from the owner's Mac it adds about 2 MB and a layout
+  shift of 0.05, inside the "good" limit of 0.1.
 
 **Dependency updates (item 14), honestly.** This would not have prevented
 today's failure, where a newly published advisory turned the audit check red on
