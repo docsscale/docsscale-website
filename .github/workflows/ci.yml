@@ -24,6 +24,12 @@ jobs:
       - run: npm run typecheck
       - run: npm run format:check
       - run: npm run build
+      # The sitemap is generated from the built pages; a page's date moves only
+      # when its own copy changes. Fails if the committed files are out of date.
+      - run: npm run sitemap:check
+      # Brand rules, titles and descriptions, headings, alt text, links,
+      # structured data, sitemap coverage; warns on short or near-duplicate pages.
+      - run: npm run check:site
       - uses: actions/upload-artifact@v4
         with: { name: web-out, path: web/out, retention-days: 7 }
 
