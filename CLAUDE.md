@@ -49,11 +49,15 @@ If you are unsure whether something needs the owner's sign-off, stop and ask.
   alt text, captions, file names, `llms.txt`). `robots.txt` is the only
   exception. No AI-generated or AI-edited images.
 - **The CRM platform:** never name it, show its interface or use its branding on
-  the main site, in graphics, alt text, captions or file names. The one recorded
+  the main site, in graphics, alt text, captions or file names. The main recorded
   exception is the Free System funnel (`/free-system/`), where the product *is*
   a system set up in the buyer's account on that platform: there it is named
-  only in details a buyer needs (owner's decision, 27–28 Sep 2026). Don't add
-  new mentions; ask first.
+  only in details a buyer needs (owner's decision, 27–28 Sep 2026). Three more
+  places are intended and recorded (owner, 7 Oct 2026): the **Privacy Policy**
+  and the **Terms**, which must name the company that processes form and
+  booking data, and the one **`llms.txt` line that describes the Free System**.
+  The site checks (`web/scripts/site-checks.mjs`) allow exactly these places
+  and fail on any other. Don't add new mentions; ask first.
 - **No invented data.** No made-up statistics, results, testimonials, client
   names, reviews or logos. Example content must be labelled as an example and
   use neutral first names that are not clients or team members (team: Abdul
