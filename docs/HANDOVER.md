@@ -121,30 +121,32 @@ app goes in, its sign-in redirect is already an accepted answer. The two
 these sites yet. Hostinger's own "Default page" file is still in each folder,
 unreachable behind the rules; removing it needs the owner's approval.
 
-**CI is paused: October's free GitHub Actions minutes are used up (7 Oct 2026)**
+**The repository is public since 7 Oct 2026 (owner's decision), until about 1 Nov**
 
-The organisation used 2,009 of the 2,000 free minutes by 7 Oct (200 runs in
-seven days; every push to a pull request was also tested twice, fixed the same
-day). GitHub refuses to start jobs on its machines until the allowance resets
-on 1 November or the owner sets a spending limit.
+The organisation used up October's 2,000 free GitHub Actions minutes on 7 Oct
+(200 runs in seven days; every push to a pull request was also tested twice,
+fixed the same day). Public repositories have unlimited free minutes, so the
+owner made the repository public and plans to make it private again in
+November, when the allowance resets.
 
-- **7 Oct:** for a few hours checks ran on a runner program on the owner's
-  Mac. The owner did not want it; it is completely removed the same day (the
-  service, the registration with GitHub, the folder and its logs, the
-  repository variable, and the workflow's support for it). **Do not install
-  anything on the owner's Mac for CI again.**
-- **Open decision (the owner's):** a spending limit (the developer's
-  recommendation: USD 10 a month), waiting until 1 November, or making the
-  repository public. Before going public, read the developer's message of
-  7 Oct: no keys or passwords were found in the history, but commit `84f5fb3`
-  holds the original site's `lead-debug-log.txt` with four email addresses,
-  and the history shows how the site is built (CLAUDE.md, section 2).
-- **Until checks run again,** nothing can be merged or deployed under the
-  rules. Open and waiting: this handover update, and the updater's two pull
-  requests (#62, #63).
-- **CI runs once per change:** on pull requests and on pushes to `main`. A
-  full run costs about 20 minutes on GitHub's machines. Check the month's
-  total with `gh api orgs/docsscale/settings/billing/usage`.
+- **While it is public,** everything in the repository and its history can be
+  read and copied by anyone: never commit anything that is not fit to be
+  read by a stranger, and remember that pull requests can now come from
+  outside (never merge one without reading it; CI jobs have read-only access
+  and the repository has no secrets).
+- **Told to the owner before the switch (7 Oct):** no keys or passwords were
+  found in the history; commit `84f5fb3` holds the original site's
+  `lead-debug-log.txt` with four email addresses; the history and these notes
+  show how the site is built (CLAUDE.md, section 2); public copies cannot be
+  taken back.
+- **Before making it private again:** check the month's usage
+  (`gh api orgs/docsscale/settings/billing/usage`). A full CI run costs about
+  20 minutes on a private repository; CI runs once per change (pull requests
+  and pushes to `main`).
+- **7 Oct, for a few hours,** checks ran on a runner program on the owner's
+  Mac. The owner did not want it; it is completely removed (service,
+  registration, folder, logs, repository variable, workflow support). **Do
+  not install anything on the owner's Mac for CI again.**
 
 ## Rules and decisions the owner has approved
 
