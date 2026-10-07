@@ -21,10 +21,15 @@ check() {
     echo "ok   $url  $status, noindex"
   fi
 }
-# preview: password like staging. cms: closed (403) until the editing app is
-# installed, then a redirect to its sign-in (302/307) or 401.
+# preview: password like staging.
 for path in / /blog/ /robots.txt; do
   check "https://preview.docsscale.com$path" "401"
-  check "https://cms.docsscale.com$path" "401 403 302 307"
 done
+# cms: the editing app. Its address redirects to the sign-in screen, which is
+# the only page it has; anything else is "not found". (403: the address closed
+# by server/cms/.htaccess, before the app is installed.)
+check "https://cms.docsscale.com/" "302 307 308 403"
+check "https://cms.docsscale.com/keystatic" "200 401 403"
+check "https://cms.docsscale.com/blog/" "404 403"
+check "https://cms.docsscale.com/robots.txt" "404 403"
 exit $fail

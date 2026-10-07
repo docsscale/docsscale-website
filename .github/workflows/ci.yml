@@ -44,6 +44,11 @@ jobs:
       # Brand rules, titles and descriptions, headings, alt text, links,
       # structured data, sitemap coverage; warns on short or near-duplicate pages.
       - run: npm run check:site
+      # The editing app (cms/): its content model must be the same file as the
+      # site's, and it must build.
+      - run: cmp src/content/content-schema.ts ../cms/content-schema.ts
+      - run: npm ci && npm run build
+        working-directory: cms
       - uses: actions/upload-artifact@v7
         with: { name: web-out, path: web/out, retention-days: 7 }
 
