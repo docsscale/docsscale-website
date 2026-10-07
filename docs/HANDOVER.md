@@ -121,31 +121,32 @@ app goes in, its sign-in redirect is already an accepted answer. The two
 these sites yet. Hostinger's own "Default page" file is still in each folder,
 unreachable behind the rules; removing it needs the owner's approval.
 
-**CI runs on the owner's Mac until 1 Nov 2026 (owner's decision, 7 Oct 2026)**
+**CI is paused: October's free GitHub Actions minutes are used up (7 Oct 2026)**
 
-The organisation used up October's 2,000 free GitHub Actions minutes on 7 Oct
-(200 runs in seven days; every push to a pull request was also tested twice).
-GitHub then refuses to start jobs on its own machines until the allowance
-resets on 1 November. The owner chose no spending limit and no pause, so:
+The organisation used 2,009 of the 2,000 free minutes by 7 Oct (200 runs in
+seven days; every push to a pull request was also tested twice, fixed the same
+day). GitHub refuses to start jobs on its machines until the allowance resets
+on 1 November or the owner sets a spending limit.
 
-- **A self-hosted runner** (GitHub's official program, v2.338.0) is installed on
-  the owner's Mac in `~/actions-runner-docsscale`, registered to this
-  repository as `abdul-mac` with the label `docsscale-mac`. It runs as a
-  login service (`./svc.sh status | stop | start` in that folder). Self-hosted
-  minutes are free.
-- **The repository variable `CI_RUNNER`** is set to `docsscale-mac`; `ci.yml`
-  reads it. **To go back to GitHub's machines** (planned for 1 Nov): delete the
-  variable (`gh variable delete CI_RUNNER`). To remove the runner afterwards:
-  `./svc.sh stop && ./svc.sh uninstall`, then `./config.sh remove` with a
-  removal token; deleting the folder needs the owner's approval.
-- **While it is in use:** checks run only while the Mac is on and awake, one
-  job at a time. The Mac's PHP is 8.5 (GitHub's machines used 8.3). The
-  performance record was taken on GitHub's machines and the Mac is faster, so
-  that check is weaker until the switch back; re-record nothing from the Mac.
-- **CI now runs once per change:** on pull requests and on pushes to `main`,
-  not on pushes to other branches. Watch the month's total after the switch
-  back (`gh api orgs/docsscale/settings/billing/usage`); a full run costs
-  about 20 minutes on GitHub's machines.
+- **7 Oct, morning:** with the owner's yes, checks ran on a self-hosted runner
+  on the owner's Mac (free). **Undone the same day at the owner's request:**
+  the runner is stopped, removed from login items and unregistered from
+  GitHub, and the repository variable `CI_RUNNER` is deleted. `ci.yml` still
+  reads that variable, so a runner can be used again by setting it. The
+  inactive folder `~/actions-runner-docsscale` is still on the Mac; deleting
+  it needs the owner's approval.
+- **Open decision (the owner's):** a spending limit (the developer's
+  recommendation: USD 10 a month), waiting until 1 November, or making the
+  repository public. Before going public, read the developer's message of
+  7 Oct: no keys or passwords were found in the history, but commit `84f5fb3`
+  holds the original site's `lead-debug-log.txt` with four email addresses,
+  and the history shows how the site is built (CLAUDE.md, section 2).
+- **Until checks run again,** nothing can be merged or deployed under the
+  rules. Open and waiting: this handover update, and the updater's two pull
+  requests (#62, #63).
+- **CI runs once per change:** on pull requests and on pushes to `main`. A
+  full run costs about 20 minutes on GitHub's machines. Check the month's
+  total with `gh api orgs/docsscale/settings/billing/usage`.
 
 ## Rules and decisions the owner has approved
 
