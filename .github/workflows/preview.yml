@@ -72,6 +72,14 @@ jobs:
       - name: Build with drafts and upload
         if: steps.key.outputs.present == 'true'
         run: node scripts/deploy.mjs --target preview
+      # Hostinger keeps copies of pages in front of the site; without this an
+      # editor could be shown the page as it was before the save.
+      - name: Clear Hostinger's cache for the preview site
+        if: steps.key.outputs.present == 'true'
+        run: |
+          curl -sS --fail-with-body -X DELETE \
+            https://developers.hostinger.com/api/hosting/v1/accounts/u145389112/websites/preview.docsscale.com/cache/clear \
+            -H "Authorization: Bearer $HOSTINGER_API_TOKEN" -o /dev/null
       - name: Check the private addresses are still hidden
         if: steps.key.outputs.present == 'true'
         run: bash tests/server/hidden-sites.sh
