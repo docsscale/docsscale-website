@@ -6,7 +6,7 @@ v1.1.4 to v1.4.4. For the next session: read [../CLAUDE.md](../CLAUDE.md) first
 
 ## Where things stand
 
-- **Production: v1.4.5** on docsscale.com (deployed 7 Oct 2026; v1.4.4 on 6 Oct). `main` is at
+- **Production: v1.4.6** on docsscale.com (deployed 7 Oct 2026, with v1.4.5 the same day). `main` is at
   the `v1.4.4` tag plus this docs PR. No open pull requests besides it.
 - **Staging** (staging.docsscale.com) holds an older test build; redeploy before
   using it for a review.
