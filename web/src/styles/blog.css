@@ -61,3 +61,22 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+/* "On this page": beside the article when the panel is beside it, otherwise a
+   closed list at the top of the article. The panel wraps under the article
+   below about 1000px, so that is where the two swap. */
+.post-toc-inline {
+  display: none;
+}
+@media (max-width: 999px) {
+  .post-toc-inline {
+    display: block;
+  }
+  .post-toc-side {
+    display: none !important;
+  }
+}
+/* A long article: jumping to a section leaves room for the fixed header. */
+.post-body h2 {
+  scroll-margin-top: 96px;
+}

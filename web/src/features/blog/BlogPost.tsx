@@ -331,6 +331,20 @@ export function BlogPost({ post, related, offers }: { post: Post; related: Post[
             </div>
           )}
 
+          {/* Long posts on a phone: the side panel sits under the article there, so
+              the list of sections is offered here, closed until tapped. */}
+          {post.headings.length > 0 && (
+            <details
+              className="post-toc post-toc-inline"
+              style={{ ...card, borderRadius: 20, padding: '14px 18px' }}
+            >
+              <summary style={{ fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>On this page</summary>
+              <div style={{ paddingTop: 14 }}>
+                <Toc post={post} />
+              </div>
+            </details>
+          )}
+
           {Markdoc.renderers.react(post.body, React, { components })}
 
           {post.faqs.length > 0 && (
@@ -402,7 +416,7 @@ export function BlogPost({ post, related, offers }: { post: Post; related: Post[
           {post.headings.length > 0 && (
             <nav
               aria-label="On this page"
-              className="post-toc"
+              className="post-toc post-toc-side"
               style={{
                 ...card,
                 borderRadius: 20,
