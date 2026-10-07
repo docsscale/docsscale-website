@@ -1,0 +1,41 @@
+# Keeps the working copy (content/working, where the editing screen saves) up to
+# date with main. Without this a save does not rebuild the preview: GitHub runs
+# the workflows of the branch that was pushed to, so the working copy has to
+# carry the current ones (found on 7 Oct 2026, the owner's first save).
+# It only ever adds main's changes to the working copy; it never touches main.
+name: Keep the working copy current
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-working-copy
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Add main's changes to the working copy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { ref: content/working, fetch-depth: 0 }
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          if git merge-base --is-ancestor origin/main HEAD; then
+            echo "The working copy already has everything from main."
+            exit 0
+          fi
+          # A clash means the same content file was changed in both places; a
+          # person has to decide which wording wins.
+          git merge origin/main -m "Bring the working copy up to date with main" || {
+            echo "::error::main and the working copy changed the same file. The developer must merge by hand."
+            exit 1
+          }
+          git push origin HEAD:content/working
