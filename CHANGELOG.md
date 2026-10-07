@@ -6,6 +6,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 ## [Unreleased]
 
 - **Performance budget in CI** (completion plan, item 11; finishes stage A). A fifth CI job runs a lab test (Lighthouse, simulated phone) on every built page, three runs each, and judges the middle run. The 16 existing pages are held to "no worse than today": at most 6 points below their recorded score, the main content painted at most 15% later, no new layout shift, at most 3% heavier. Any page not in the record is new and must meet the plan's target: score 90 or more, main content within 2.5 seconds, no layout shift. Today's record is the middle of three CI runs on 7 Oct 2026 (scores 93–98, main content at 2.4–3.2 seconds, 260–409 KB per page). The deploy script now requires this job too. Lighthouse 13.5.0 is added as a test tool; it is never sent to visitors. Nothing on the site changes, so there is nothing to deploy.
+- **CI runs once per change, and on the owner's Mac until 1 Nov 2026.** October's free GitHub Actions minutes ran out on 7 Oct. Checks now run on pull requests and on pushes to `main` only (they ran twice for every push to a pull request), and the repository variable `CI_RUNNER` sends them to a runner on the owner's Mac, which costs nothing; deleting the variable returns them to GitHub's machines (`docs/HANDOVER.md`). Nothing on the site changes.
 
 ## [1.4.6] — 2026-10-07
 
