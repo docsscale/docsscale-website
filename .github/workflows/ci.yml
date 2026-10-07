@@ -1,5 +1,5 @@
 # Runs on every push and pull request. A pull request into main can only be
-# merged when all four jobs pass (see docs/CONTRIBUTING.md → Branches).
+# merged when all five jobs pass (see docs/CONTRIBUTING.md → Branches).
 name: CI
 
 on:
@@ -90,3 +90,24 @@ jobs:
             tests/visual/diff
             tests/visual/interactions
           retention-days: 14
+
+  performance:
+    name: Performance budget
+    needs: web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@v8
+        with: { name: web-out, path: web/out }
+      # A lab test of every built page on a simulated phone. Existing pages are
+      # held to "no worse than today", new pages to the target
+      # (tests/performance/budget.json; docs/COMPLETION-PLAN.md, section 5, item 11).
+      - run: node tests/performance/budget.mjs
+      # The measured numbers, kept so the "today" record can be re-recorded from CI.
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with: { name: performance-results, path: tests/performance/results.json, retention-days: 30 }

@@ -1,0 +1,17 @@
+{
+  "runs": 3,
+  "target": {
+    "score": 90,
+    "lcp": 2500,
+    "cls": 0.005,
+    "bytes": null
+  },
+  "allowance": {
+    "score": 5,
+    "lcpPercent": 15,
+    "cls": 0.01,
+    "bytesPercent": 3
+  },
+  "recorded": null,
+  "baseline": {}
+}
