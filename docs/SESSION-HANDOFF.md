@@ -1,17 +1,11 @@
 # Session handoff
 
-**Written 6 Oct 2026**, at the end of the working session that took the site from
-v1.1.4 to v1.4.4. For the next session: read [../CLAUDE.md](../CLAUDE.md) first
-(the rules), then this. Update this file at the end of each session.
-
-## Where things stand
-
-- **Production: v1.4.6** on docsscale.com (deployed 7 Oct 2026, with v1.4.5 the same day). `main` is at
-  the `v1.4.4` tag plus this docs PR. No open pull requests besides it.
-- **Staging** (staging.docsscale.com) holds an older test build; redeploy before
-  using it for a review.
-- **SEO pause lifted** by the owner on 6 Oct 2026. Phase 5C can start.
-- All CI checks are green on `main`.
+**Superseded on 7 Oct 2026 by [HANDOVER.md](HANDOVER.md), Part 1**, which is the
+current state of the project: what is live, open pull requests, the plan, the
+approved rules and decisions, what waits on the owner, and what is parked. Read
+[../CLAUDE.md](../CLAUDE.md) first, then HANDOVER.md. The rest of this file is
+the record of the session that took the site from v1.1.4 to v1.4.4 (30 Sep –
+6 Oct 2026) and is kept for history; its "Open items" are out of date.
 
 ## What shipped this session
 
