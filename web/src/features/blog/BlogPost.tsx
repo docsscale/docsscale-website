@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import React, { type ReactNode } from 'react';
 import Markdoc from '@markdoc/markdoc';
-import type { Post } from './posts';
+import { OffersPanel } from './OffersPanel';
+import type { Offer, Post } from './posts';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 import { PostCard } from './PostCard';
 
@@ -14,9 +15,9 @@ export const eyebrow = {
   letterSpacing: '.08em',
 } as const;
 const card = { background: T.surface, border: `1px solid ${T.hairline}`, borderRadius: 28 } as const;
-const prose = { margin: 0, fontSize: 17, lineHeight: 1.7, color: T.body } as const;
+const prose = { margin: 0, fontSize: 18, lineHeight: 1.75, color: '#3B3A36' } as const;
 const h2 = {
-  margin: '20px 0 0',
+  margin: '26px 0 0',
   fontWeight: 800,
   fontSize: 'clamp(24px,2.6vw,32px)',
   lineHeight: 1.15,
@@ -81,11 +82,12 @@ const components = {
       className="serif post-quote"
       style={{
         margin: '8px 0',
-        padding: '4px 0 4px 20px',
-        borderLeft: `3px solid ${T.teal}`,
-        fontSize: 'clamp(22px,2.4vw,28px)',
-        lineHeight: 1.3,
-        color: T.ink,
+        padding: 'clamp(22px,3vw,32px)',
+        background: T.peachBg,
+        borderRadius: 24,
+        fontSize: 'clamp(24px,3vw,34px)',
+        lineHeight: 1.25,
+        color: '#3F2410',
       }}
     >
       {children}
@@ -146,212 +148,289 @@ const components = {
   },
 };
 
-export function BlogPost({ post, related }: { post: Post; related: Post[] }) {
+export function BlogPost({ post, related, offers }: { post: Post; related: Post[]; offers: Offer[] }) {
   const accent = STAGE_COLORS[post.category?.stage ?? 'capture'];
   const author = post.author;
   const initials = (author?.name ?? '')
     .split(' ')
     .map((word) => word[0])
     .join('');
+  const meta = [post.published, post.updated && `Updated ${post.updated}`, `${post.minutes} min read`];
   return (
     <>
-      <div data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(36px,5vw,56px)' }}>
+      {/* Title, on the brand's teal tint; the cover photo overlaps its lower edge. */}
+      <div
+        data-screen-label="Hero"
+        style={{ background: T.tealTintBg, paddingBottom: post.cover ? 'clamp(110px,13vw,210px)' : 0 }}
+      >
         <div
           className="container"
-          style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 920 }}
+          style={{
+            maxWidth: 1000,
+            padding: 'clamp(32px,5vw,76px) clamp(20px,4vw,48px) clamp(28px,4vw,48px)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 22,
+          }}
         >
           <nav
             aria-label="Breadcrumb"
-            style={{ fontSize: 13, color: T.caption, display: 'flex', gap: 8, flexWrap: 'wrap' }}
-          >
-            <Link href="/">Home</Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/blog">Blog</Link>
-          </nav>
-          <span
             style={{
               ...eyebrow,
-              alignSelf: 'flex-start',
-              padding: '7px 12px',
-              borderRadius: 999,
-              background: accent.bg,
-              color: accent.fg,
+              fontSize: 13,
+              display: 'flex',
+              gap: 10,
+              alignItems: 'center',
+              flexWrap: 'wrap',
             }}
           >
-            {post.category?.name ?? 'Blog'}
-          </span>
+            <Link href="/blog" style={{ textDecoration: 'none', padding: '6px 0' }}>
+              Blog
+            </Link>
+            {post.category && (
+              <>
+                <span aria-hidden="true" style={{ color: '#8FB5B4' }}>
+                  /
+                </span>
+                <span
+                  style={{
+                    fontSize: 12,
+                    padding: '6px 12px',
+                    borderRadius: 999,
+                    background: accent.bg === T.tealTintBg ? T.surface : accent.bg,
+                    color: accent.fg,
+                  }}
+                >
+                  {post.category.name}
+                </span>
+              </>
+            )}
+          </nav>
           <h1
             style={{
               margin: 0,
               fontWeight: 800,
-              fontSize: 'clamp(34px,5vw,60px)',
-              lineHeight: 1.02,
+              fontSize: 'clamp(34px,5.2vw,64px)',
+              lineHeight: 1.04,
               letterSpacing: '-.04em',
               textWrap: 'balance',
             }}
           >
             {post.title}
           </h1>
-          <p style={{ margin: 0, fontSize: 'clamp(17px,1.6vw,20px)', lineHeight: 1.5, color: T.body }}>
-            {post.summary}
-          </p>
-          <div
+          <p
             style={{
-              display: 'flex',
-              gap: '6px 18px',
-              flexWrap: 'wrap',
-              fontSize: 13,
-              fontWeight: 600,
-              color: T.caption,
+              margin: 0,
+              fontSize: 'clamp(18px,1.6vw,21px)',
+              lineHeight: 1.55,
+              color: '#33514F',
+              maxWidth: 760,
             }}
           >
+            {post.summary}
+          </p>
+          <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', paddingTop: 4 }}>
             {author && (
-              <span>
-                {'By '}
-                <a href="#author" style={{ color: T.ink }}>
-                  {author.name}
-                </a>
+              <span
+                aria-hidden="true"
+                style={{
+                  flex: '0 0 auto',
+                  width: 44,
+                  height: 44,
+                  borderRadius: 999,
+                  background: T.surface,
+                  color: T.teal,
+                  display: 'grid',
+                  placeItems: 'center',
+                  fontWeight: 800,
+                  fontSize: 14,
+                }}
+              >
+                {initials}
               </span>
             )}
-            {post.published && <span>{`Published ${post.published}`}</span>}
-            {post.updated && <span>{`Updated ${post.updated}`}</span>}
-            <span>{`${post.minutes} min read`}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {author && (
+                <a
+                  href="#author"
+                  style={{ fontSize: 15, fontWeight: 700, color: T.ink, textDecoration: 'none' }}
+                >
+                  {author.name}
+                </a>
+              )}
+              <span style={{ fontSize: 13, color: '#33514F' }}>{meta.filter(Boolean).join(' · ')}</span>
+            </div>
           </div>
         </div>
       </div>
 
+      {post.cover && (
+        <div className="container post-overlap" style={{ maxWidth: 1240 }}>
+          <figure style={{ margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- static export; fixed-ratio box, no layout shift */}
+            <img
+              src={post.cover.src}
+              alt={post.cover.alt}
+              fetchPriority="high"
+              style={{
+                width: '100%',
+                aspectRatio: '16 / 8',
+                objectFit: 'cover',
+                display: 'block',
+                borderRadius: 'clamp(18px,2.4vw,28px)',
+                background: T.surface,
+                boxShadow: '0 24px 48px -28px rgba(15,95,99,.5)',
+              }}
+            />
+            {post.cover.caption && (
+              <figcaption style={{ fontSize: 13, color: T.caption }}>{post.cover.caption}</figcaption>
+            )}
+          </figure>
+        </div>
+      )}
+
       <div
         data-screen-label="Content"
-        style={{ background: T.band, padding: 'clamp(40px,5vw,72px) 0 clamp(56px,7vw,96px)' }}
+        className="container post-columns"
+        style={{ maxWidth: 1240, padding: 'clamp(36px,5vw,64px) clamp(20px,4vw,48px) clamp(48px,6vw,88px)' }}
       >
-        <div className="container post-layout">
-          <nav aria-label="On this page" className="post-toc post-toc-side">
-            <span style={{ ...eyebrow, color: T.caption, display: 'block', marginBottom: 14 }}>
-              On this page
-            </span>
-            <Toc post={post} />
-          </nav>
-
-          <article className="post-body" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            {post.takeaways.length > 0 && (
-              <div
+        <article
+          className="post-body post-main"
+          style={{ maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 22 }}
+        >
+          {post.takeaways.length > 0 && (
+            <div
+              style={{
+                ...card,
+                borderRadius: 20,
+                borderTop: `4px solid ${T.teal}`,
+                padding: 'clamp(20px,3vw,28px)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+              }}
+            >
+              <span style={{ ...eyebrow, color: T.teal }}>In short</span>
+              <ul
                 style={{
-                  ...card,
-                  padding: 'clamp(20px,3vw,28px)',
+                  margin: 0,
+                  paddingLeft: 20,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 12,
+                  gap: 10,
+                  fontSize: 17,
+                  lineHeight: 1.55,
+                  fontWeight: 600,
+                  color: T.ink,
                 }}
               >
-                <span style={{ ...eyebrow, color: accent.fg }}>In short</span>
-                <ul
-                  style={{
-                    margin: 0,
-                    paddingLeft: 20,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 8,
-                    fontSize: 16,
-                    lineHeight: 1.55,
-                    color: T.ink,
-                  }}
-                >
-                  {post.takeaways.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                {post.takeaways.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-            <details
-              className="post-toc post-toc-top"
-              style={{ ...card, borderRadius: 20, padding: '14px 18px' }}
+          {Markdoc.renderers.react(post.body, React, { components })}
+
+          {post.faqs.length > 0 && (
+            <>
+              <h2 id="questions" style={h2}>
+                Common questions
+              </h2>
+              <div style={{ borderTop: `1px solid ${T.hairline}` }}>
+                {post.faqs.map((faq, i) => (
+                  <details key={i} style={{ padding: '18px 0', borderBottom: `1px solid ${T.hairline}` }}>
+                    <summary style={{ fontWeight: 700, fontSize: 18, cursor: 'pointer' }}>
+                      {faq.question}
+                    </summary>
+                    <p style={{ ...prose, fontSize: 17, paddingTop: 10 }}>{faq.answer}</p>
+                  </details>
+                ))}
+              </div>
+            </>
+          )}
+
+          {author && (
+            <div
+              id="author"
+              style={{
+                display: 'flex',
+                gap: 18,
+                alignItems: 'flex-start',
+                marginTop: 30,
+                paddingTop: 30,
+                borderTop: `1px solid ${T.hairline}`,
+                scrollMarginTop: 96,
+              }}
             >
-              <summary style={{ fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>On this page</summary>
-              <div style={{ paddingTop: 14 }}>
-                <Toc post={post} />
-              </div>
-            </details>
-
-            {Markdoc.renderers.react(post.body, React, { components })}
-
-            {post.faqs.length > 0 && (
-              <>
-                <h2 id="questions" style={h2}>
-                  Common questions
-                </h2>
-                <div style={{ ...card, borderRadius: 20, padding: '4px 20px' }}>
-                  {post.faqs.map((faq, i) => (
-                    <details
-                      key={i}
-                      style={{ padding: '16px 0', borderTop: i ? `1px solid ${T.hairline}` : 'none' }}
-                    >
-                      <summary style={{ fontWeight: 700, fontSize: 16, cursor: 'pointer' }}>
-                        {faq.question}
-                      </summary>
-                      <p style={{ ...prose, fontSize: 16, paddingTop: 10 }}>{faq.answer}</p>
-                    </details>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {author && (
-              <div
-                id="author"
+              <span
+                aria-hidden="true"
                 style={{
-                  ...card,
-                  marginTop: 20,
-                  padding: 'clamp(20px,3vw,28px)',
-                  display: 'flex',
-                  gap: 18,
-                  alignItems: 'flex-start',
-                  scrollMarginTop: 96,
+                  flex: '0 0 auto',
+                  width: 72,
+                  height: 72,
+                  borderRadius: 999,
+                  background: accent.bg,
+                  color: accent.fg,
+                  display: 'grid',
+                  placeItems: 'center',
+                  fontWeight: 800,
+                  fontSize: 20,
                 }}
               >
-                <span
-                  aria-hidden="true"
-                  style={{
-                    flex: '0 0 auto',
-                    width: 56,
-                    height: 56,
-                    borderRadius: 999,
-                    background: accent.bg,
-                    color: accent.fg,
-                    display: 'grid',
-                    placeItems: 'center',
-                    fontWeight: 800,
-                  }}
-                >
-                  {initials}
-                </span>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <span style={{ ...eyebrow, color: T.caption }}>Written by</span>
-                  <strong style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>
-                    {author.name}
-                  </strong>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: T.caption }}>{author.role}</span>
-                  <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: T.body }}>{author.bio}</p>
-                  {post.reviewed && (
-                    <span style={{ fontSize: 13, color: T.caption }}>{`Last reviewed ${post.reviewed}`}</span>
-                  )}
-                </div>
+                {initials}
+              </span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <span style={{ ...eyebrow, color: T.caption }}>Written by</span>
+                <strong style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>
+                  {author.name}
+                </strong>
+                <span style={{ fontSize: 14, fontWeight: 600, color: T.caption }}>{author.role}</span>
+                <p style={{ margin: '4px 0 0', fontSize: 16, lineHeight: 1.6, color: T.body }}>
+                  {author.bio}
+                </p>
+                {post.reviewed && (
+                  <span style={{ fontSize: 13, color: T.caption }}>{`Last reviewed ${post.reviewed}`}</span>
+                )}
               </div>
-            )}
-          </article>
-        </div>
+            </div>
+          )}
+        </article>
+
+        <OffersPanel offers={offers}>
+          {post.headings.length > 0 && (
+            <nav
+              aria-label="On this page"
+              className="post-toc"
+              style={{
+                ...card,
+                borderRadius: 20,
+                padding: 22,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+              }}
+            >
+              <span style={{ ...eyebrow, color: T.caption }}>On this page</span>
+              <Toc post={post} />
+            </nav>
+          )}
+        </OffersPanel>
       </div>
 
       {related.length > 0 && (
-        <div data-screen-label="Related" style={{ padding: 'clamp(48px,6vw,80px) 0' }}>
-          <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div data-screen-label="Related" style={{ background: T.band, padding: 'clamp(40px,5vw,72px) 0' }}>
+          <div
+            className="container"
+            style={{ maxWidth: 1240, display: 'flex', flexDirection: 'column', gap: 26 }}
+          >
             <h2
               style={{
                 margin: 0,
                 fontWeight: 800,
-                fontSize: 'clamp(26px,3vw,40px)',
-                lineHeight: 1,
-                letterSpacing: '-.04em',
+                fontSize: 'clamp(24px,2.6vw,32px)',
+                letterSpacing: '-.03em',
               }}
             >
               Keep reading
