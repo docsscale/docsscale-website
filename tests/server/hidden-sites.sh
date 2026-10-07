@@ -30,6 +30,8 @@ done
 # by server/cms/.htaccess, before the app is installed.)
 check "https://cms.docsscale.com/" "302 307 308 403"
 check "https://cms.docsscale.com/keystatic" "200 401 403"
-check "https://cms.docsscale.com/blog/" "404 403"
+# (308: the app first drops the trailing slash, then answers "not found".)
+check "https://cms.docsscale.com/blog/" "404 308 403"
+check "https://cms.docsscale.com/blog" "404 403"
 check "https://cms.docsscale.com/robots.txt" "404 403"
 exit $fail
