@@ -102,6 +102,12 @@ it.**
      the workflow does nothing and says so. **The owner was sent the steps on
      7 Oct; until he adds it, refresh the preview by hand** (RELEASE.md, "The
      preview site").
+   - **The working copy must carry main's current workflows.** The owner's
+     first save (7 Oct) did not rebuild the preview, because GitHub runs the
+     workflow files of the branch pushed to and `content/working` was older
+     than the preview workflow. `.github/workflows/sync-working.yml` now adds
+     main's changes to the working copy after every change to main. If it
+     reports a clash, merge `main` into `content/working` by hand.
    - Next, in order: the publish workflow with the owner's approval (and its
      rule in CLAUDE.md, plan section 6); RSS, social images, the category
      filter; the remaining forms.
