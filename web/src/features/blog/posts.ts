@@ -20,6 +20,9 @@ export type Post = {
   author: { name: string; role: string; bio: string } | null;
   published: string | null;
   updated: string | null;
+  /** The same two dates as written in the file (2026-01-31), for search engines. */
+  publishedIso: string | null;
+  updatedIso: string | null;
   reviewed: string | null;
   minutes: number;
   takeaways: string[];
@@ -97,6 +100,8 @@ export async function getPosts(): Promise<Post[]> {
           author: author && { name: author.name, role: author.role, bio: author.bio },
           published: longDate(entry.published),
           updated: longDate(entry.updated),
+          publishedIso: entry.published,
+          updatedIso: entry.updated,
           reviewed: longDate(entry.reviewed),
           minutes: Math.max(1, Math.round(words / 220)),
           takeaways: [...entry.takeaways],
