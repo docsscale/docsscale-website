@@ -102,6 +102,13 @@ it.**
      the workflow does nothing and says so. **The owner was sent the steps on
      7 Oct; until he adds it, refresh the preview by hand** (RELEASE.md, "The
      preview site").
+   - **The preview must not be cached.** On 7 Oct the owner saved three
+     times and saw the old page each time although the upload had succeeded:
+     Hostinger's cache in front of the site (and the browser) may keep pages.
+     The preview's server rules now forbid caching of pages, and the workflow
+     clears Hostinger's cache for the preview site after every upload.
+     **Not confirmed as the cause**: the developer cannot sign in to look;
+     the owner was asked to test again.
    - **The working copy must carry main's current workflows.** The owner's
      first save (7 Oct) did not rebuild the preview, because GitHub runs the
      workflow files of the branch pushed to and `content/working` was older

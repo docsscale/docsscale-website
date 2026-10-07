@@ -12,3 +12,14 @@ Require valid-user
 <IfModule mod_headers.c>
     Header always set X-Robots-Tag "noindex, nofollow"
 </IfModule>
+
+# 3. Never kept in a cache: the preview must show the latest save at once, in
+#    the browser and in Hostinger's own cache in front of the site. (The site's
+#    fingerprinted files under /_next/static/ keep their long cache; their names
+#    change when their content does.)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|txt|xml|json)$">
+        Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header always set CDN-Cache-Control "no-store"
+    </FilesMatch>
+</IfModule>
