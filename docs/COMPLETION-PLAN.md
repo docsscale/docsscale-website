@@ -404,7 +404,7 @@ first CI runs showed:
   will sit on that line and fail some runs. Either the shared part gets
   lighter for the new templates, or the target is adjusted; decide with the
   blog design.
-- All pages are tested on every push (16 pages take about four minutes). When
+- All pages are tested on every push (the job takes about five and a half minutes for 16 pages). When
   the blog grows, narrow it to the changed pages and the key pages, as the
   plan says.
 - The booking calendar embedded in `/free-system/book-a-call/` is not counted
