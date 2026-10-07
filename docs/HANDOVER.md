@@ -1,5 +1,176 @@
 # Handover
 
+**Written 7 Oct 2026** for whoever picks this project up next, person or
+session. Part 1 is the state of the project. Part 2 is every account and
+service the website depends on and where each credential is kept (**never the
+credentials themselves**).
+
+Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
+
+# Part 1: where the project stands
+
+## What is live
+
+- **Production: v1.4.6** on https://docsscale.com, deployed 7 Oct 2026.
+  `https://docsscale.com/version.txt` shows it. All CI checks pass on `main`.
+- Released on 7 Oct: **v1.4.5** (the `/services` Local SEO card no longer
+  promises "a page per treatment and neighborhood"; build-tool security
+  updates) and **v1.4.6** (sitemap generated from the built pages with true
+  last-changed dates; automatic site checks in CI; routine dependency updates).
+  Every release is in [../CHANGELOG.md](../CHANGELOG.md).
+- **Staging** (staging.docsscale.com) holds an older build; redeploy before
+  using it for a review.
+- **Trial editing site:** https://cms-trial.docsscale.com (sign-in only,
+  `noindex`). It is the Keystatic trial, kept on purpose; see "Parked" below.
+
+## Open pull requests
+
+| PR | What | State |
+|---|---|---|
+| [#45](https://github.com/docsscale/docsscale-website/pull/45) | Service pages: layout and route, with a Local SEO sample | **Draft, on purpose.** The owner approved the structure on 6 Oct. It holds filler text and must not be merged until real, approved copy replaces it. See "Parked". |
+
+No other pull request is open. GitHub's updater opens new ones on Mondays
+(weekly dependency updates); they are routine work under the rule below.
+
+## The plan, and where it is
+
+The working plan is [COMPLETION-PLAN.md](COMPLETION-PLAN.md) (approved 6 Oct
+2026; its tracker and section 10 give the order). Its SEO command center part
+is [SEO-DASHBOARD-PLAN.md](SEO-DASHBOARD-PLAN.md). The keyword map is
+[seo/keywords/keyword-map.md](seo/keywords/keyword-map.md). Notes on the four
+industry pages are in [notes/industry-pages.md](notes/industry-pages.md).
+
+**Order (owner, 6 Oct): build the system first, then publish content through
+it.**
+
+| Stage | What | State |
+|---|---|---|
+| Done | CMS trial | Keystatic passed all six questions (plan, section 6) |
+| Done | Keyword map | Approved 6 Oct. Open until the owner's extra export: keywords for the websites, lead follow-up and reviews pages; the city-page decision |
+| **A** | Foundations | **Nearly done.** Done: service-page layout (draft #45), weekly dependency update PRs, generated sitemap, site checks in CI. **Left: the performance budget** (plan, section 5, item 11). |
+| **B** | The system: blog templates and the CMS at `cms.docsscale.com` | **Not started. This is next after the performance budget.** Build the publishing core first: content folder, blog templates (design to the owner for approval), the editing app, working copy and preview site, publish workflow with the owner's approval for posts, case studies and service pages. Then the remaining forms. |
+| **C** | First content, through the CMS | Waiting for B and for the owner's material. First pair: the local SEO page and the "Google Business Profile for dentists" post; then paid ads with "Facebook ads for chiropractors"; then reactivation with "dental recall messages". Publish the first pair as soon as the material and the publishing core both exist. |
+| **F** | SEO command center | Approved as the lighter first cut (about 15–18 build days). **Not started; it comes after the publishing core and the first two content pieces.** Half-day test done (dashboard plan, section 2). |
+| **D** | Handover package, remaining agency-review items, Safari in CI, WCAG pass | Not started |
+| **E** | Weekly SEO review | Replaced by the dashboard's weekly run; starts about four weeks after the first content |
+
+**The very next steps, in order**
+
+1. Performance budget in CI (finishes stage A). Existing pages are held to "no
+   worse than today"; new templates to the target in the plan.
+2. Show the owner the exact change for creating `cms.docsscale.com` and
+   `preview.docsscale.com` (new infrastructure: needs the owner's OK), and ask
+   for the Hostinger API token as a GitHub secret.
+3. Blog design, as before/after for the owner's approval.
+4. Publishing core, then the first two content pieces.
+
+## Rules and decisions the owner has approved
+
+The rules themselves are in [../CLAUDE.md](../CLAUDE.md). The ones added or
+changed on 6–7 Oct 2026:
+
+- **Routine invisible work may be merged and deployed without asking** when
+  every CI check passes, it is already in an approved plan, and nothing a
+  visitor sees changes. Still stop for: anything visible, anything that costs
+  money, anything not in an approved plan, file deletions, production releases
+  with visible changes, new accounts or infrastructure, DNS changes.
+- **Content quality rules for all new pages:** no scaled or templated pages;
+  service-and-industry pages only with real experience or a case study; city
+  pages only with real clients or results; every page says something only
+  DocsScale could say; a steady pace of two to three pages or posts a week;
+  flag pages that are too similar.
+- **The CRM platform may be named** in the Free System funnel, the Privacy
+  Policy, the Terms, and the one `llms.txt` line about the Free System. Nowhere
+  else. The site checks enforce exactly this.
+- The homepage and `llms.txt` lines about ranking "in the neighborhoods you
+  serve" stay as they are.
+- `/free-system/book-a-call/` is short on purpose; the checks don't warn on it.
+
+Decisions (full list at the top of [COMPLETION-PLAN.md](COMPLETION-PLAN.md) and
+in section 12 of [SEO-DASHBOARD-PLAN.md](SEO-DASHBOARD-PLAN.md)):
+
+| Topic | Decision |
+|---|---|
+| CMS | Keystatic with Keystatic Cloud sign-in; team `docsscale`, project `docsscale-website`; account owner is the owner's personal Gmail. Three free seats: the owner (admin), "Team DS" (the future SEO person, non-admin), one editor (name to come). |
+| Cost | USD 0 a month. Nothing is bought for two to three months; then confirm DataForSEO's current price first. |
+| Publishing | Preview before every edit. New posts, case studies and service pages need the owner's Publish in the CMS; SEO fields, FAQs and team updates go live after the checks. One setting switches the approval off later. |
+| Existing pages | Body copy stays in code; editors get SEO fields only. Service pages become CMS entries (the seven confirmed services only). |
+| Keywords | Primary keywords accepted as in the map. Chiropractic: "chiropractor marketing agency". "Missed call text back" is never a page's keyword. The cost page is on hold until the owner gives real price ranges. |
+| Geography | US-wide with a Texas layer. Real clients in Houston, Dallas and San Antonio; no city page is decided. |
+| Case studies | The four on `/results/` are real, with permission on file; reuse them unchanged on the matching industry pages. |
+| Practice software | Named only where we worked with it for a client in that specialty; plain text, no logos. |
+| First posts | The team supplies raw material, the developer drafts, the named author corrects, the owner approves. |
+| Dashboard | Lighter first cut; email-link sign-in for the SEO tabs; only the owner approves in the Fix queue at first (a setting can extend it to the SEO role); shortened IP addresses in the access log. |
+| Second GitHub owner | Ahmed Mustafa; the owner adds him. |
+
+## Waiting on the owner
+
+1. **Material for the local SEO page and the "Google Business Profile for
+   dentists" post** (lists in the keyword map's section 8 pairing and in the
+   developer's messages of 6–7 Oct: a real clinic example with numbers and
+   permission, the process step by step, what's included, who it suits, real
+   questions, the post's author with bio and photo). Wanted by about week 5.
+2. **One more Keyword Planner export:** websites, reviews, follow-up,
+   reactivation, agency wording and the Texas terms (seeds in the keyword map,
+   section 6).
+3. **A look at https://cms-trial.docsscale.com** signed in: do "New branch…",
+   "Create pull request" or the branch menu still show? They should be hidden.
+4. **Add Ahmed Mustafa as a second owner** of the GitHub organisation.
+5. **Confirm "Dependabot security updates" is switched on** in the repository
+   settings (the owner said he was doing it on 7 Oct; not verified here).
+6. **Industry pages:** the open questions at the end of
+   [notes/industry-pages.md](notes/industry-pages.md).
+7. Real price ranges, if the cost page is to be written.
+8. Older items, unchanged: GA4 admin setup (key events, custom dimensions,
+   Internal Traffic filter); About page team photos; deleting QA contacts in
+   the CRM; "Request indexing" for `/privacy/` and `/terms/`; the Gmail header
+   test; the security clean-up in "Owner to-dos" below.
+
+## Parked, and how to resume
+
+| What | Where | How to resume |
+|---|---|---|
+| **Service-page layout** | Branch `feat/service-pages-layout`, draft PR #45. `web/src/features/services/ServicePage.tsx`, sample entry in `web/src/content/service-pages.ts` (filler text, `noindex`). Screenshots in `review/service-layout/` on the owner's Mac. | Merge `main` into the branch (it predates the site checks). In stage B the entries move from that content file to CMS files; the layout stays. Never merge while any "Sample" text remains. |
+| **Keystatic trial** | Branches `trial/keystatic` (the editing app in `cms/`, with the SEO field that counts characters, the working-branch guard and the code that hides branch controls) and `trial/content` (two test saves). Live at `cms-trial.docsscale.com` on Node.js 24. | Use `cms/` as the starting point for the real admin app. The trial site also has a test route, `/api/trial/store`, behind a key held only in the site's Hostinger environment (`TRIAL_KEY`); remove both when the real `cms.docsscale.com` exists. **Removing the trial site or either branch needs the owner's approval.** |
+| **SEO command center** | Plan and mockup only: [SEO-DASHBOARD-PLAN.md](SEO-DASHBOARD-PLAN.md), [seo/dashboard-mockup.html](seo/dashboard-mockup.html) | After the publishing core and the first two content pieces |
+| **Industry pages** | [notes/industry-pages.md](notes/industry-pages.md) | Dental first, alone, after the owner's material; follow the note, not the prompt it describes |
+| **Wording and review items** | [BACKLOG.md](BACKLOG.md); agency review leftovers in the plan, section 9 | Stage D |
+
+Nothing is half-done or uncommitted. One old local stash exists on the owner's
+Mac (`git stash list`): it holds only build leftovers from the trial app and
+can be dropped.
+
+## Scheduled reminders (desktop app scheduled tasks)
+
+| Date | Task | What |
+|---|---|---|
+| 7 Oct 2026 | `docsscale-bing-data-check` | Read-only check of Bing Webmaster data and sitemap status. **Unknown whether it ran.** |
+| 15 Oct 2026 | `docsscale-web-vitals-review` | Real-user LCP, INP and CLS for the homepage and `/free-system/`; decide on the slow-hero fix (FE-1) |
+| 20 Oct 2026 | `docsscale-dmarc-review` | Three weeks of DMARC reports; plan the move to `p=quarantine` |
+
+## Facts that are easy to lose
+
+- **Deploying:** [RELEASE.md](RELEASE.md). Upload credentials come from the
+  Hostinger connector's "generate upload URL" operation for user `u145389112`,
+  domain `docsscale.com`, and expire within hours. Clear the website cache
+  after every production deploy, then run `bash tests/server/redirects.sh`.
+- **After any visible change is approved,** re-record the visual baseline on
+  the branch (`npm run visual:approve`) or CI's pixel check fails.
+- **After a page's copy changes,** run `npm run build && npm run sitemap` in
+  `web/` and commit `public/sitemap.xml` and `sitemap-state.json`, or CI's
+  sitemap check fails and names the pages.
+- **Site checks:** `npm run check:site` in `web/` after a build. Current
+  warnings, all known: three long titles (backlog), and two short pages
+  (`/about/`, `/industries/`).
+- **Node.js on Hostinger:** the admin app must state Node.js 24 in its package
+  file; the default is 20, which has no built-in SQLite.
+- **Search Console** had almost no data on 6 Oct (15 impressions in 90 days).
+- `/services/<industry>/…` must keep redirecting to `/industries/<industry>/`.
+- Opportunities in the CRM are created by the owner's own workflows there, not
+  by the site.
+
+# Part 2: accounts, access and monitoring
+
 Every account and service the website depends on, where each credential is kept (**never the credentials themselves**), and what's still open.
 
 ## Accounts and services
@@ -94,7 +265,7 @@ Record to set at each step (both names), for example: `v=DMARC1; p=quarantine; p
 
 ## Change process
 
-- **Every push goes through a branch and a pull request,** docs-only changes included, with no exceptions. Nothing is merged to `main` without the owner's explicit go-ahead for that merge, and nothing is deployed to production without the owner's explicit approval.
+- **Every push goes through a branch and a pull request,** docs-only changes included. Nothing visible is merged to `main` or deployed without the owner's explicit go-ahead. Since 7 Oct 2026, routine invisible work that is already in an approved plan may be merged and deployed once every CI check passes (CLAUDE.md, section 1).
 
 **Process log**
 

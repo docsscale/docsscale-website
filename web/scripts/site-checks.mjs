@@ -235,6 +235,9 @@ const shingles = (words) => {
 };
 const SIMILAR = 0.5;
 const SHORT = 250;
+// Pages that are short on purpose: a booking page is a calendar, not an article
+// (owner, 7 Oct 2026).
+const SHORT_ON_PURPOSE = new Set(['/free-system/book-a-call/']);
 const prepared = indexable
   .filter((p) => !['/privacy/', '/terms/'].includes(p.path))
   .map((p) => {
@@ -246,7 +249,8 @@ const prepared = indexable
     return { path: p.path, words: words.length, set: shingles(words) };
   });
 for (const page of prepared)
-  if (page.words < SHORT) warn(page.path, `short page: ${page.words} words of its own copy`);
+  if (page.words < SHORT && !SHORT_ON_PURPOSE.has(page.path))
+    warn(page.path, `short page: ${page.words} words of its own copy`);
 for (let i = 0; i < prepared.length; i++) {
   for (let j = i + 1; j < prepared.length; j++) {
     const [a, b] = [prepared[i], prepared[j]];
