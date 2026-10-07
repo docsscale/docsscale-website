@@ -2,6 +2,7 @@
 // the CMS (content/offers). Never outside ads.
 import Link from 'next/link';
 import { STAGE_COLORS, T } from '@/styles/tokens';
+import { Picture } from './Picture';
 import type { Offer } from './posts';
 
 const badge = {
@@ -40,14 +41,12 @@ export function OfferCard({ offer }: { offer: Offer }) {
         </span>
       )}
       {offer.image && (
-        // eslint-disable-next-line @next/next/no-img-element -- static export; fixed-ratio box, no layout shift
-        <img
-          src={offer.image.src}
-          alt={offer.image.alt}
-          loading="lazy"
-          decoding="async"
+        <Picture
+          picture={offer.image}
+          sizes="320px"
           style={{
             width: '100%',
+            height: 'auto',
             aspectRatio: '16 / 10',
             objectFit: 'cover',
             borderRadius: 16,

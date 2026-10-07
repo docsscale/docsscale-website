@@ -13,6 +13,9 @@ updates:
     ignore:
       # Major versions change behaviour; they are planned work, not routine updates.
       - { dependency-name: '*', update-types: ['version-update:semver-major'] }
+      # Must stay the exact version the CMS library uses, or the two disagree
+      # about the post format (tried 7 Oct 2026: the build fails).
+      - { dependency-name: '@markdoc/markdoc' }
   - package-ecosystem: npm
     directory: /
     schedule: { interval: weekly, day: monday, time: '06:00', timezone: America/Chicago }
@@ -29,6 +32,7 @@ updates:
       editing-app: { patterns: ['*'], update-types: [minor, patch] }
     ignore:
       - { dependency-name: '*', update-types: ['version-update:semver-major'] }
+      - { dependency-name: '@markdoc/markdoc' }
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly, day: monday, time: '06:00', timezone: America/Chicago }

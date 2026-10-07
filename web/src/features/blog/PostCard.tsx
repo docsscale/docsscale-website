@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { STAGE_COLORS } from '@/styles/tokens';
 import { T } from '@/styles/tokens';
+import { Picture } from './Picture';
 import type { Post } from './posts';
 
 export function PostCard({ post, level }: { post: Post; level: 'h2' | 'h3' }) {
@@ -10,14 +11,13 @@ export function PostCard({ post, level }: { post: Post; level: 'h2' | 'h3' }) {
   return (
     <article className="post-card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {post.cover ? (
-        // eslint-disable-next-line @next/next/no-img-element -- static export; fixed-ratio box, no layout shift
-        <img
-          src={post.cover.src}
-          alt=""
-          loading="lazy"
-          decoding="async"
+        <Picture
+          picture={post.cover}
+          decorative
+          sizes="(max-width: 700px) calc(100vw - 40px), 380px"
           style={{
             width: '100%',
+            height: 'auto',
             aspectRatio: '3 / 2',
             objectFit: 'cover',
             borderRadius: 18,

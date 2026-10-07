@@ -11,7 +11,9 @@
     "format:check": "prettier --check .",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "sitemap:check": "node scripts/generate-sitemap.mjs --check",
-    "check:site": "node scripts/site-checks.mjs"
+    "check:site": "node scripts/site-checks.mjs",
+    "prebuild": "node scripts/optimise-uploads.mjs",
+    "uploads": "node scripts/optimise-uploads.mjs"
   },
   "dependencies": {
     "gsap": "3.15.0",
@@ -31,6 +33,7 @@
     "eslint-config-next": "16.3.8",
     "node-html-parser": "9.0.4",
     "prettier": "3.9.9",
+    "sharp": "0.35.5",
     "typescript": "6.0.3"
   }
 }

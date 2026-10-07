@@ -110,8 +110,11 @@ offers (never outside ads; the owner asked for "ads of our offers"). The
 canvas is the owner's private design artifact; the built version is in
 `web/src/features/blog/` and on the preview site. Offers are entries in
 `content/offers/` so the owner can add more "like the Free System" himself.
-Not built yet: image resizing to AVIF/WebP (uploads are used as they are),
-the category filter, RSS, post schema, social images. The index heading,
+Built since: post schema and sharing tags; automatic fast versions of uploaded
+pictures (`web/scripts/optimise-uploads.mjs`, run before every build).
+Not built yet: the category filter, RSS, automatic social images. Note for the
+publish workflow: files in `web/public/uploads/` go out with every deploy, so
+a draft's pictures are reachable by address before the post is published. The index heading,
 introduction and search wording (`web/src/content/blog.ts`), the two
 call-to-action texts inside posts, and the three offers' wording need the
 owner's approval before anything is public.

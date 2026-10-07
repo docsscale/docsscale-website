@@ -1,5 +1,6 @@
 // Reads blog posts from /content (the files the editing screen writes) at build
 // time, with the CMS's own reader, and turns each into what the templates need.
+import fs from 'node:fs';
 import path from 'node:path';
 import Markdoc, { type Node, type RenderableTreeNode } from '@markdoc/markdoc';
 import { createReader } from '@keystatic/core/reader';
@@ -8,6 +9,32 @@ import type { Stage } from '@/styles/tokens';
 
 // `next build` runs in web/; the content folder is one level up.
 const reader = createReader(path.resolve(process.cwd(), '..'), schema);
+
+export type Picture = {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  /** The fast versions of an upload, when they exist. */
+  fast?: { base: string; widths: number[] };
+};
+
+// Written by scripts/optimise-uploads.mjs before every build.
+const uploadsFile = path.resolve(process.cwd(), '.uploads.json');
+const uploads: Record<string, { width: number; height: number; widths: number[]; base: string }> =
+  fs.existsSync(uploadsFile) ? JSON.parse(fs.readFileSync(uploadsFile, 'utf8')) : {};
+
+function picture(src: string, alt: string): Picture {
+  const upload = uploads[src];
+  if (!upload) return { src, alt };
+  return {
+    src,
+    alt,
+    width: upload.width,
+    height: upload.height,
+    fast: { base: upload.base, widths: upload.widths },
+  };
+}
 
 /** The preview site builds drafts too; the live site only what is published. */
 export const INCLUDE_DRAFTS = process.env.CONTENT_PREVIEW === '1';
@@ -28,7 +55,7 @@ export type Post = {
   takeaways: string[];
   faqs: { question: string; answer: string }[];
   seo: { title: string; description: string; noindex: boolean };
-  cover: { src: string; alt: string; caption: string } | null;
+  cover: (Picture & { caption: string }) | null;
   headings: { id: string; text: string }[];
   body: RenderableTreeNode;
   /** Publication date as written in the file, for ordering; drafts without one come first. */
@@ -47,6 +74,7 @@ const MARKDOC = {
     table: node('Table', Markdoc.nodes.table),
     th: node('Th', Markdoc.nodes.th),
     td: node('Td', Markdoc.nodes.td),
+    image: { render: 'Img', attributes: { picture: { type: Object }, title: { type: String } } },
   },
   tags: {
     cta: { render: 'Cta', selfClosing: true, attributes: { kind: { type: String, default: 'call' } } },
@@ -82,6 +110,9 @@ export async function getPosts(): Promise<Post[]> {
         const headings: Post['headings'] = [];
         // Section headings get an id for the "On this page" list.
         for (const child of node.walk()) {
+          // Pictures inside the post carry their size and fast versions along.
+          if (child.type === 'image')
+            child.attributes.picture = picture(child.attributes.src, child.attributes.alt ?? '');
           if (child.type === 'heading' && child.attributes.level === 2) {
             const text = textOf(child);
             const id = slugify(text);
@@ -106,7 +137,9 @@ export async function getPosts(): Promise<Post[]> {
           minutes: Math.max(1, Math.round(words / 220)),
           takeaways: [...entry.takeaways],
           faqs: entry.faqs.map((faq) => ({ ...faq })),
-          cover: entry.cover ? { src: entry.cover, alt: entry.coverAlt, caption: entry.coverCaption } : null,
+          cover: entry.cover
+            ? { ...picture(entry.cover, entry.coverAlt), caption: entry.coverCaption }
+            : null,
           seo: { ...entry.seo },
           headings,
           body: Markdoc.transform(node, MARKDOC),
@@ -124,7 +157,7 @@ export type Offer = {
   badge: string;
   figure: string;
   text: string;
-  image: { src: string; alt: string } | null;
+  image: Picture | null;
   buttonLabel: string;
   link: string;
   colour: Stage;
@@ -142,7 +175,7 @@ export async function getOffers(): Promise<Offer[]> {
       badge: entry.badge,
       figure: entry.figure,
       text: entry.text,
-      image: entry.image ? { src: entry.image, alt: entry.imageAlt } : null,
+      image: entry.image ? picture(entry.image, entry.imageAlt) : null,
       buttonLabel: entry.buttonLabel,
       link: entry.link,
       colour: entry.colour,
