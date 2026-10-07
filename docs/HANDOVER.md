@@ -88,6 +88,32 @@ app goes in, its sign-in redirect is already an accepted answer. The two
 these sites yet. Hostinger's own "Default page" file is still in each folder,
 unreachable behind the rules; removing it needs the owner's approval.
 
+**CI runs on the owner's Mac until 1 Nov 2026 (owner's decision, 7 Oct 2026)**
+
+The organisation used up October's 2,000 free GitHub Actions minutes on 7 Oct
+(200 runs in seven days; every push to a pull request was also tested twice).
+GitHub then refuses to start jobs on its own machines until the allowance
+resets on 1 November. The owner chose no spending limit and no pause, so:
+
+- **A self-hosted runner** (GitHub's official program, v2.338.0) is installed on
+  the owner's Mac in `~/actions-runner-docsscale`, registered to this
+  repository as `abdul-mac` with the label `docsscale-mac`. It runs as a
+  login service (`./svc.sh status | stop | start` in that folder). Self-hosted
+  minutes are free.
+- **The repository variable `CI_RUNNER`** is set to `docsscale-mac`; `ci.yml`
+  reads it. **To go back to GitHub's machines** (planned for 1 Nov): delete the
+  variable (`gh variable delete CI_RUNNER`). To remove the runner afterwards:
+  `./svc.sh stop && ./svc.sh uninstall`, then `./config.sh remove` with a
+  removal token; deleting the folder needs the owner's approval.
+- **While it is in use:** checks run only while the Mac is on and awake, one
+  job at a time. The Mac's PHP is 8.5 (GitHub's machines used 8.3). The
+  performance record was taken on GitHub's machines and the Mac is faster, so
+  that check is weaker until the switch back; re-record nothing from the Mac.
+- **CI now runs once per change:** on pull requests and on pushes to `main`,
+  not on pushes to other branches. Watch the month's total after the switch
+  back (`gh api orgs/docsscale/settings/billing/usage`); a full run costs
+  about 20 minutes on GitHub's machines.
+
 ## Rules and decisions the owner has approved
 
 The rules themselves are in [../CLAUDE.md](../CLAUDE.md). The ones added or
