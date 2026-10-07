@@ -1,9 +1,13 @@
-# Runs on every push and pull request. A pull request into main can only be
-# merged when all five jobs pass (see docs/CONTRIBUTING.md → Branches).
+# Runs on every pull request and on every push to main. A pull request into main
+# can only be merged when all five jobs pass (see docs/CONTRIBUTING.md → Branches).
+# Not on pushes to other branches: a branch with an open pull request used to be
+# tested twice per push, which used up the month's free Actions minutes
+# (2,000 on the free plan) on 7 Oct 2026.
 name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 concurrency:
