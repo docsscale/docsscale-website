@@ -35,7 +35,7 @@ npm run test:performance              # performance budget (a laptop is faster t
 
 ## Performance budget
 
-`tests/performance/budget.mjs` runs a lab test (Lighthouse, simulated phone) on every built page in CI, three runs each, and uses the middle run. Limits are in `tests/performance/budget.json`.
+`tests/performance/budget.mjs` runs a lab test (Lighthouse, simulated phone) on every built page in CI, three runs each, and judges the best run (noise only makes a run slower; a real slowdown shifts every run). Limits are in `tests/performance/budget.json`.
 
 - **A page listed under `baseline`** is held to "no worse than today": its recorded numbers plus the `allowance`. The allowance covers what the same build varies by between CI runs (measured 7 Oct 2026: up to 5 points and about 10% in paint time). If the job fails on a change that can't have affected speed, rerun it once before looking further.
 - **Any other page is new** and must meet `target`. Don't add a new page to the record to make it pass.
