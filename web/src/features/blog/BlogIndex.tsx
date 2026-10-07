@@ -5,6 +5,7 @@ import type { BlogIndexCopy } from '@/content/blog';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 import { eyebrow } from './BlogPost';
 import { OffersPanel } from './OffersPanel';
+import { Picture } from './Picture';
 import { PostCard } from './PostCard';
 import type { Offer, Post } from './posts';
 
@@ -65,12 +66,19 @@ export function BlogIndex({ posts, offers, copy }: { posts: Post[]; offers: Offe
           }}
         >
           {featured.cover ? (
-            // eslint-disable-next-line @next/next/no-img-element -- static export; the box sets the size
-            <img
-              src={featured.cover.src}
-              alt=""
-              fetchPriority="high"
-              style={{ flex: '1.2 1 380px', minHeight: 280, width: 0, objectFit: 'cover', display: 'block' }}
+            <Picture
+              picture={featured.cover}
+              decorative
+              priority
+              sizes="(max-width: 860px) calc(100vw - 40px), 620px"
+              style={{
+                flex: '1.2 1 380px',
+                minHeight: 280,
+                width: 0,
+                height: 'auto',
+                objectFit: 'cover',
+                display: 'block',
+              }}
             />
           ) : (
             <div aria-hidden="true" style={{ flex: '1.2 1 380px', minHeight: 280, background: accent.bg }} />

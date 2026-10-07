@@ -18,3 +18,7 @@ review/
 incoming/*
 !incoming/README.md
 tests/performance/results.json
+
+# Made from the uploads before every build (scripts/optimise-uploads.mjs)
+web/public/uploads/_fast/
+web/.uploads.json

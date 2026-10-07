@@ -4,7 +4,8 @@ import Link from 'next/link';
 import React, { type ReactNode } from 'react';
 import Markdoc from '@markdoc/markdoc';
 import { OffersPanel } from './OffersPanel';
-import type { Offer, Post } from './posts';
+import { Picture } from './Picture';
+import type { Offer, Picture as PictureData, Post } from './posts';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 import { PostCard } from './PostCard';
 
@@ -107,6 +108,16 @@ const components = {
   ),
   Td: ({ children }: Kids) => (
     <td style={{ padding: '14px 18px', borderTop: `1px solid ${T.hairline}`, color: T.body }}>{children}</td>
+  ),
+  Img: ({ picture, title }: { picture: PictureData; title?: string }) => (
+    <figure style={{ margin: '12px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <Picture
+        picture={picture}
+        sizes="(max-width: 800px) calc(100vw - 40px), 760px"
+        style={{ width: '100%', height: 'auto', borderRadius: 20, display: 'block' }}
+      />
+      {title && <figcaption style={{ fontSize: 13, lineHeight: 1.5, color: T.caption }}>{title}</figcaption>}
+    </figure>
   ),
   Cta: ({ kind }: { kind: string }) => {
     const cta = CTAS[kind === 'free-system' ? 'free-system' : 'call'];
@@ -267,13 +278,13 @@ export function BlogPost({ post, related, offers }: { post: Post; related: Post[
       {post.cover && (
         <div className="container post-overlap" style={{ maxWidth: 1240 }}>
           <figure style={{ margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element -- static export; fixed-ratio box, no layout shift */}
-            <img
-              src={post.cover.src}
-              alt={post.cover.alt}
-              fetchPriority="high"
+            <Picture
+              picture={post.cover}
+              sizes="(max-width: 1240px) calc(100vw - 40px), 1144px"
+              priority
               style={{
                 width: '100%',
+                height: 'auto',
                 aspectRatio: '16 / 8',
                 objectFit: 'cover',
                 display: 'block',
