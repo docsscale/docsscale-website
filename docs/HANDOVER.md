@@ -71,15 +71,21 @@ it.**
      `content-schema.ts`, the same file in `web/src/content/` and `cms/`; CI
      fails if the two differ. The working copy is the branch
      `content/working` (created from `main` on 7 Oct).
-   - **Waiting for the owner's yes (asked 7 Oct):** installing the app at
-     `cms.docsscale.com`. Installing overwrites the two files there
-     (Hostinger's default page and `server/cms/.htaccess`). How: zip `cms/`
-     without `node_modules` and `.next`, upload it with that site's upload
-     credentials, then Hostinger's "start Node.js build" for the site with
-     Node.js 24, framework Next.js, build script `build`, output `.next`.
-     Then run `bash tests/server/hidden-sites.sh`, and have the owner sign in.
-     Keystatic Cloud may need the new address allowed in its project settings
-     (the owner's step).
+   - **Installed 7 Oct 2026** at `cms.docsscale.com` (the owner answered
+     "continue" to the request). How, for the next time the app changes: zip
+     `cms/` without `node_modules` and `.next`; upload the zip to that site's
+     `public_html` with upload credentials generated for the domain
+     `cms.docsscale.com`; start Hostinger's Node.js build for the site from
+     that archive (Node.js 24, framework Next.js, build script `build`,
+     output `.next`). Hostinger keeps the site's `.htaccess` and appends its
+     own Passenger lines to it; our part is `server/cms/.htaccess` (the
+     `noindex` header). The first install needed the "closed to everyone"
+     rule taken out of that file by hand. Checked signed out: the address
+     redirects to the sign-in screen, every response is `noindex`, and the
+     content API answers "not found". **Not checked signed in** (the
+     developer does not enter passwords): the owner was asked to sign in and
+     try a save. If Keystatic Cloud refuses the address, it must be allowed
+     in the project's settings there (the owner's step).
    - Done 7 Oct: `node scripts/deploy.mjs --target preview` builds with
      drafts and uploads to `preview.docsscale.com` (RELEASE.md, "The preview
      site"). First upload made the same day from `main`: the draft sample
@@ -119,7 +125,7 @@ part, or the target needs the owner's decision (plan, section 5, item 11).
 
 | Address | Folder on the server | State |
 |---|---|---|
-| `cms.docsscale.com` | `/home/u145389112/domains/cms.docsscale.com/public_html` | **Closed:** every request gets 403 and `noindex` (`server/cms/.htaccess`). Becomes the Node.js editing app (Node.js 24), whose own sign-in replaces that file. |
+| `cms.docsscale.com` | `/home/u145389112/domains/cms.docsscale.com/public_html` (the app itself runs from `hbuilds/` beside it) | **The editing app, since 7 Oct 2026** (Node.js 24). Sign-in through Keystatic Cloud; `noindex` on every response. |
 | `preview.docsscale.com` | `/home/u145389112/domains/preview.docsscale.com/public_html` | **Password-protected** with the staging login (the same `.htpasswd` file) and `noindex` (`server/preview/.htaccess`). Holds the preview build (drafts included) since 7 Oct 2026. |
 
 Both are separate sites on the existing Business plan (no cost), each in its

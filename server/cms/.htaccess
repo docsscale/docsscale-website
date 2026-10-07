@@ -1,11 +1,12 @@
-# cms.docsscale.com: the address of the editing screen (docs/COMPLETION-PLAN.md,
-# section 6). Until the editing app is installed here, the address answers
-# nothing at all. The app replaces this file with its own sign-in.
+# cms.docsscale.com: the editing screen (docs/COMPLETION-PLAN.md, section 6).
+# The app signs editors in itself (Keystatic Cloud) and sends noindex on every
+# response; the header below covers anything the web server answers on its own.
 
-# 1. Closed to everyone.
-Require all denied
-
-# 2. Never indexed, even if a link leaks.
+# Never indexed, even if a link leaks.
 <IfModule mod_headers.c>
     Header always set X-Robots-Tag "noindex, nofollow"
 </IfModule>
+
+# Below this line Hostinger adds its own lines for the Node.js app when the app
+# is installed (Passenger settings). They are the host's, kept as it wrote them;
+# this file in the repository holds only our part.
