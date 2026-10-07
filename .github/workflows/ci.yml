@@ -33,6 +33,10 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run format:check
+      # The preview site's build (drafts included) must work too; the live build
+      # that follows replaces its output.
+      - run: npm run build
+        env: { CONTENT_PREVIEW: '1' }
       - run: npm run build
       # The sitemap is generated from the built pages; a page's date moves only
       # when its own copy changes. Fails if the committed files are out of date.

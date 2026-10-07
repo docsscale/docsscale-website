@@ -62,7 +62,23 @@ it.**
    token as a GitHub secret is asked for when the publish workflow is ready,
    not before.
 3. Blog design, as before/after for the owner's approval.
-4. Publishing core, then the first two content pieces.
+4. Publishing core, then the first two content pieces. **Started 7 Oct 2026.**
+   Done: posts, categories and team members as files in `/content`; the site
+   reads and renders them (`web/src/features/blog/`); the live build has a
+   blog only when a post is published, the preview build
+   (`CONTENT_PREVIEW=1 npm run build`) shows drafts. Next, in order: the
+   editing app at `cms.docsscale.com` (start from `cms/` on `trial/keystatic`,
+   sharing `web/src/content/cms-schema.ts`); the working copy and the preview
+   workflow; the publish workflow with the owner's approval; post images,
+   schema, RSS, social images; then the remaining forms.
+
+**Blog design (step 3):** screenshots of the post page and the index went to
+the owner on 7 Oct 2026 (branch `feat/blog-design`, sample text). The owner
+answered "do what you think is best", so the templates are built on it; it
+still gets a before/after before anything is public. Not built yet from that
+design: the category filter and images on the index. The index heading,
+introduction and search wording (`web/src/content/blog.ts`) and the two
+call-to-action texts in posts are placeholders that need the owner's wording.
 
 **Open question for the blog design (step 3):** in the lab test the lightest
 existing page already paints its main content at 2.4–2.5 seconds, right at the
