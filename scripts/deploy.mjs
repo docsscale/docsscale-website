@@ -4,6 +4,7 @@
 //   node scripts/deploy.mjs --target staging            (web build + server files → staging)
 //   node scripts/deploy.mjs --target production --yes   (same → docsscale.com; guarded)
 //   node scripts/deploy.mjs --target staging --dry-run  (assemble release/<target>/ only)
+//   node scripts/deploy.mjs --target preview            (drafts included → preview.docsscale.com)
 //   node scripts/deploy.mjs --target production --prune (report only: files on the
 //        server that are not in this release. Uploads nothing, deletes nothing.
 //        The list is saved to release/<target>-prune.txt.)
@@ -23,6 +24,8 @@
 //
 // What goes where on the server:
 //   production → public_html/              (never touches public_html/staging_html/)
+//   preview    → preview.docsscale.com's own public_html (upload credentials for
+//                 that domain): the site built with drafts, password, noindex, no PHP
 //   staging    → public_html/staging_html/ (+ password .htaccess, noindex robots,
 //                                           _server/environment.php → private-staging/)
 // Files are uploaded over existing ones; a deploy never deletes anything. Files
@@ -45,7 +48,8 @@ const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
 const option = (name) => args[args.indexOf(`--${name}`) + 1];
 const target = option('target');
-if (!['staging', 'production'].includes(target)) fail('Use --target staging or --target production');
+if (!['staging', 'production', 'preview'].includes(target))
+  fail('Use --target staging, --target production or --target preview');
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const release = path.join(root, 'release', target);
@@ -79,7 +83,13 @@ if (target === 'production' && !flag('dry-run') && !rollbackOriginal && !pruneRe
 }
 
 // 2. Build the site (static export → web/out).
-if (!flag('skip-build') && !rollbackOriginal) execSync('npm run build', { cwd: path.join(root, 'web'), stdio: 'inherit' });
+// The preview site shows drafts too (CONTENT_PREVIEW), every page noindex.
+if (!flag('skip-build') && !rollbackOriginal)
+  execSync('npm run build', {
+    cwd: path.join(root, 'web'),
+    stdio: 'inherit',
+    env: { ...process.env, ...(target === 'preview' ? { CONTENT_PREVIEW: '1' } : {}) },
+  });
 
 // 3. Assemble the release folder.
 fs.rmSync(release, { recursive: true, force: true });
@@ -93,7 +103,19 @@ if (rollbackOriginal) {
   }
 } else {
   copyDir(path.join(root, 'web/out'), release);
-  copyDir(path.join(root, 'server/public_html'), release);
+  // The preview site is for reading content: it has no lead handler, so its
+  // forms cannot send anything anywhere.
+  if (target !== 'preview') copyDir(path.join(root, 'server/public_html'), release);
+}
+if (target === 'preview') {
+  // Production's rules (redirects, the 404 page) followed by the password and noindex.
+  fs.writeFileSync(
+    path.join(release, '.htaccess'),
+    fs.readFileSync(path.join(root, 'server/public_html/.htaccess'), 'utf8') +
+      '\n' +
+      fs.readFileSync(path.join(root, 'server/preview/.htaccess'), 'utf8'),
+  );
+  fs.copyFileSync(path.join(root, 'server/staging/robots.txt'), path.join(release, 'robots.txt'));
 }
 if (target === 'staging') {
   // Hostinger does not apply public_html/.htaccess to the subdomain folder, so
