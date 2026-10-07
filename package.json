@@ -9,6 +9,7 @@
     "visual:compare": "node tests/visual/compare.mjs",
     "test:e2e": "node tests/visual/interactions.mjs && node tests/visual/nav-behaviour.mjs && node tests/visual/form-a11y.mjs && node tests/visual/web-vitals.mjs && node tests/visual/tracking.mjs && node tests/visual/clarity.mjs && node tests/visual/hero-journey.mjs && node tests/visual/funnel-stats.mjs",
     "test:performance": "node tests/performance/budget.mjs",
+    "test:hidden-sites": "bash tests/server/hidden-sites.sh",
     "test:redirects": "bash tests/server/redirects.sh",
     "visual:approve": "node scripts/approve-visual.mjs"
   },

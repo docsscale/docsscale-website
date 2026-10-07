@@ -1,0 +1,14 @@
+# preview.docsscale.com: the private copy of the site that editors check before
+# a change goes live (docs/COMPLETION-PLAN.md, section 5, item 7). Lives in its
+# own folder on the server, apart from the live site.
+
+# 1. Password protection: the same login as staging (stored outside any web root).
+AuthType Basic
+AuthName "DocsScale preview"
+AuthUserFile /home/u145389112/domains/docsscale.com/private-staging/.htpasswd
+Require valid-user
+
+# 2. Never indexed, even if a link leaks.
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>

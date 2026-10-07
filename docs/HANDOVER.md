@@ -57,12 +57,10 @@ it.**
 **The very next steps, in order**
 
 1. ~~Performance budget in CI~~ Done 7 Oct 2026.
-2. ~~Create `cms.docsscale.com` and `preview.docsscale.com`~~ Created 7 Oct
-   2026 with the owner's approval (see "The two new addresses" below). Still
-   to do there: sign-in or password and `noindex` on both, and the CI check
-   that they stay hidden (plan, section 5, item 7). The Hostinger API token
-   as a GitHub secret is asked for when the publish workflow is ready, not
-   before.
+2. ~~Create `cms.docsscale.com` and `preview.docsscale.com`, and close them~~
+   Done 7 Oct 2026 (see "The two new addresses" below). The Hostinger API
+   token as a GitHub secret is asked for when the publish workflow is ready,
+   not before.
 3. Blog design, as before/after for the owner's approval.
 4. Publishing core, then the first two content pieces.
 
@@ -75,15 +73,20 @@ part, or the target needs the owner's decision (plan, section 5, item 11).
 
 | Address | Folder on the server | State |
 |---|---|---|
-| `cms.docsscale.com` | `/home/u145389112/domains/cms.docsscale.com/public_html` | Empty: shows Hostinger's default page over HTTPS. Becomes the Node.js editing app (Node.js 24). |
-| `preview.docsscale.com` | `/home/u145389112/domains/preview.docsscale.com/public_html` | Empty: shows Hostinger's default page over HTTPS. Becomes the password-protected preview site. |
+| `cms.docsscale.com` | `/home/u145389112/domains/cms.docsscale.com/public_html` | **Closed:** every request gets 403 and `noindex` (`server/cms/.htaccess`). Becomes the Node.js editing app (Node.js 24), whose own sign-in replaces that file. |
+| `preview.docsscale.com` | `/home/u145389112/domains/preview.docsscale.com/public_html` | **Password-protected** with the staging login (the same `.htpasswd` file) and `noindex` (`server/preview/.htaccess`). Empty behind the password until the preview workflow uploads to it. |
 
 Both are separate sites on the existing Business plan (no cost), each in its
 own folder, apart from the live site. Hostinger pointed both names at its CDN
 and issued the certificates itself; no record was added to the DNS zone we
 manage, and none was changed (the zone was read before and after: identical).
-**Neither is protected or `noindex` yet.** Nothing links to them and they hold
-no content, but do that first, before anything is uploaded.
+CI asks both addresses on every push (`tests/server/hidden-sites.sh`) and
+fails if either answers with content or without `noindex`; when the editing
+app goes in, its sign-in redirect is already an accepted answer. The two
+`.htaccess` files were uploaded by hand through Hostinger's upload API
+(credentials for that site's own domain); `scripts/deploy.mjs` does not know
+these sites yet. Hostinger's own "Default page" file is still in each folder,
+unreachable behind the rules; removing it needs the owner's approval.
 
 ## Rules and decisions the owner has approved
 
