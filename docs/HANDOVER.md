@@ -128,13 +128,11 @@ seven days; every push to a pull request was also tested twice, fixed the same
 day). GitHub refuses to start jobs on its machines until the allowance resets
 on 1 November or the owner sets a spending limit.
 
-- **7 Oct, morning:** with the owner's yes, checks ran on a self-hosted runner
-  on the owner's Mac (free). **Undone the same day at the owner's request:**
-  the runner is stopped, removed from login items and unregistered from
-  GitHub, and the repository variable `CI_RUNNER` is deleted. `ci.yml` still
-  reads that variable, so a runner can be used again by setting it. The
-  inactive folder `~/actions-runner-docsscale` is still on the Mac; deleting
-  it needs the owner's approval.
+- **7 Oct:** for a few hours checks ran on a runner program on the owner's
+  Mac. The owner did not want it; it is completely removed the same day (the
+  service, the registration with GitHub, the folder and its logs, the
+  repository variable, and the workflow's support for it). **Do not install
+  anything on the owner's Mac for CI again.**
 - **Open decision (the owner's):** a spending limit (the developer's
   recommendation: USD 10 a month), waiting until 1 November, or making the
   repository public. Before going public, read the developer's message of
