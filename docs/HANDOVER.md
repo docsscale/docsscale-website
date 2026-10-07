@@ -57,9 +57,12 @@ it.**
 **The very next steps, in order**
 
 1. ~~Performance budget in CI~~ Done 7 Oct 2026.
-2. Show the owner the exact change for creating `cms.docsscale.com` and
-   `preview.docsscale.com` (new infrastructure: needs the owner's OK), and ask
-   for the Hostinger API token as a GitHub secret.
+2. ~~Create `cms.docsscale.com` and `preview.docsscale.com`~~ Created 7 Oct
+   2026 with the owner's approval (see "The two new addresses" below). Still
+   to do there: sign-in or password and `noindex` on both, and the CI check
+   that they stay hidden (plan, section 5, item 7). The Hostinger API token
+   as a GitHub secret is asked for when the publish workflow is ready, not
+   before.
 3. Blog design, as before/after for the owner's approval.
 4. Publishing core, then the first two content pieces.
 
@@ -67,6 +70,20 @@ it.**
 existing page already paints its main content at 2.4–2.5 seconds, right at the
 2.5-second target for new templates. The blog template needs a lighter shared
 part, or the target needs the owner's decision (plan, section 5, item 11).
+
+**The two new addresses (created 7 Oct 2026, owner's approval the same day)**
+
+| Address | Folder on the server | State |
+|---|---|---|
+| `cms.docsscale.com` | `/home/u145389112/domains/cms.docsscale.com/public_html` | Empty: shows Hostinger's default page over HTTPS. Becomes the Node.js editing app (Node.js 24). |
+| `preview.docsscale.com` | `/home/u145389112/domains/preview.docsscale.com/public_html` | Empty: shows Hostinger's default page over HTTPS. Becomes the password-protected preview site. |
+
+Both are separate sites on the existing Business plan (no cost), each in its
+own folder, apart from the live site. Hostinger pointed both names at its CDN
+and issued the certificates itself; no record was added to the DNS zone we
+manage, and none was changed (the zone was read before and after: identical).
+**Neither is protected or `noindex` yet.** Nothing links to them and they hold
+no content, but do that first, before anything is uploaded.
 
 ## Rules and decisions the owner has approved
 
@@ -197,6 +214,7 @@ Every account and service the website depends on, where each credential is kept 
 | **UptimeRobot** | Uptime monitoring and email alerts. See [Uptime monitoring](#uptime-monitoring) | Free plan, account info@docsscale.com (created 30 Sep 2026) | Owner's password manager; API key **only** in `~/DocsScale-Secure/uptimerobot-api-key.txt` (owner-only permissions) |
 | **Microsoft Clarity** | Heatmaps and visit recordings (after consent, forms masked). See [TRACKING.md](TRACKING.md#microsoft-clarity-heatmaps-and-recordings) | Project ID `yr9lxbtgy0` (not a secret; in `web/src/content/analytics.ts`) | Owner's Microsoft account (clarity.microsoft.com) |
 | **Keystatic Cloud** | Sign-in for the content editing screen (free plan, up to 3 users). See [COMPLETION-PLAN.md](COMPLETION-PLAN.md), section 6 | Team `docsscale`, project `docsscale-website`, connected to the `docsscale-website` repository only (set up 6 Oct 2026). Account owner: the owner's personal Gmail account | Owner's password manager |
+| **Editing site and preview site** | `cms.docsscale.com` and `preview.docsscale.com`: two sites on the same Hostinger plan (created 7 Oct 2026), empty so far. See Part 1, "The two new addresses" | Hosting user `u145389112` | None yet |
 | **Trial editing site** | `cms-trial.docsscale.com`: the CMS trial, a Node.js site on the same Hostinger plan (created 6 Oct 2026). Temporary; removing it needs the owner's approval | Hosting user `u145389112` | No credential of its own |
 | **Bing Webmaster Tools** | Bing search data (read-only use). See [Bing Webmaster API](#bing-webmaster-api) | Site `https://docsscale.com/` (verified; imported from Search Console on 29 Sep 2026). **Sitemap `https://docsscale.com/sitemap.xml` submitted on 30 Sep 2026** | API key: **only** in `~/DocsScale-Secure/bing-webmaster-api-key.txt` (owner's Mac, owner-only permissions) |
 
