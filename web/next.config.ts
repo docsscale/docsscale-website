@@ -18,6 +18,9 @@ const hasPosts =
   });
 
 const nextConfig: NextConfig = {
+  // Preview builds keep one build name, so a page whose content did not change
+  // is the same file as last time and need not be uploaded again.
+  ...(process.env.CONTENT_PREVIEW === '1' ? { generateBuildId: async () => 'preview' } : {}),
   pageExtensions: ['tsx', 'ts', ...(hasPosts ? ['blog.tsx'] : [])],
   output: 'export',
   trailingSlash: true,
