@@ -48,7 +48,7 @@ it.**
 | Done | CMS trial | Keystatic passed all six questions (plan, section 6) |
 | Done | Keyword map | Approved 6 Oct. Open until the owner's extra export: keywords for the websites, lead follow-up and reviews pages; the city-page decision |
 | **A** | Foundations | **Done 7 Oct 2026.** Service-page layout (draft #45), weekly dependency update PRs, generated sitemap, site checks in CI, performance budget in CI (plan, section 5, item 11, with what the first runs showed). |
-| **B** | The system: blog templates and the CMS at `cms.docsscale.com` | **Not started. This is next.** Build the publishing core first: content folder, blog templates (design to the owner for approval), the editing app, working copy and preview site, publish workflow with the owner's approval for posts, case studies and service pages. Then the remaining forms. |
+| **B** | The system: blog templates and the CMS at `cms.docsscale.com` | **In progress since 7 Oct 2026.** Posts as files and the blog templates are built; the editing app is in the repository and waits to be installed. See "The very next steps", item 4. |
 | **C** | First content, through the CMS | Waiting for B and for the owner's material. First pair: the local SEO page and the "Google Business Profile for dentists" post; then paid ads with "Facebook ads for chiropractors"; then reactivation with "dental recall messages". Publish the first pair as soon as the material and the publishing core both exist. |
 | **F** | SEO command center | Approved as the lighter first cut (about 15–18 build days). **Not started; it comes after the publishing core and the first two content pieces.** Half-day test done (dashboard plan, section 2). |
 | **D** | Handover package, remaining agency-review items, Safari in CI, WCAG pass | Not started |
@@ -63,14 +63,31 @@ it.**
    not before.
 3. Blog design, as before/after for the owner's approval.
 4. Publishing core, then the first two content pieces. **Started 7 Oct 2026.**
-   Done: posts, categories and team members as files in `/content`; the site
-   reads and renders them (`web/src/features/blog/`); the live build has a
-   blog only when a post is published, the preview build
-   (`CONTENT_PREVIEW=1 npm run build`) shows drafts. Next, in order: the
-   editing app at `cms.docsscale.com` (start from `cms/` on `trial/keystatic`,
-   sharing `web/src/content/cms-schema.ts`); the working copy and the preview
-   workflow; the publish workflow with the owner's approval; post images,
-   schema, RSS, social images; then the remaining forms.
+   - Done: posts, categories and team members are files in `/content`; the
+     site reads and renders them (`web/src/features/blog/`). The live build
+     has a blog only when a post is published; the preview build
+     (`CONTENT_PREVIEW=1 npm run build`) shows drafts, all `noindex`.
+   - Done: the editing app is in `cms/` (README there). Its content model is
+     `content-schema.ts`, the same file in `web/src/content/` and `cms/`; CI
+     fails if the two differ. The working copy is the branch
+     `content/working` (created from `main` on 7 Oct).
+   - **Waiting for the owner's yes (asked 7 Oct):** installing the app at
+     `cms.docsscale.com`. Installing overwrites the two files there
+     (Hostinger's default page and `server/cms/.htaccess`). How: zip `cms/`
+     without `node_modules` and `.next`, upload it with that site's upload
+     credentials, then Hostinger's "start Node.js build" for the site with
+     Node.js 24, framework Next.js, build script `build`, output `.next`.
+     Then run `bash tests/server/hidden-sites.sh`, and have the owner sign in.
+     Keystatic Cloud may need the new address allowed in its project settings
+     (the owner's step).
+   - Next, in order: the preview workflow (builds the working copy to
+     `preview.docsscale.com`; needs the Hostinger API token as a GitHub
+     secret, created by the owner); the publish workflow with the owner's
+     approval; post images, schema, RSS, social images; the remaining forms.
+   - Known: `npm audit` reports one advisory with no fixed version yet
+     (`braces`, reached through the CMS library and, in `web/`, through the
+     lint tools). Neither is sent to visitors; the weekly updater will bring
+     the fix.
 
 **Blog design (step 3):** screenshots of the post page and the index went to
 the owner on 7 Oct 2026 (branch `feat/blog-design`, sample text). The owner
