@@ -38,6 +38,7 @@ const REQUIRED_CHECKS = [
   'Lead handler tests (PHP)',
   'Dependency audit',
   'Pixel + behaviour parity with the live build',
+  'Performance budget',
 ];
 
 const args = process.argv.slice(2);

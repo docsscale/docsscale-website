@@ -24,6 +24,7 @@ brand/               official logo, icon and social image (see brand/README.md)
 reference/           frozen builds: live-2026-09-25 (original site), approved (visual baseline)
 tests/visual/        pixel and behaviour tests (Playwright)
 tests/server/        lead-handler tests (PHP)
+tests/performance/   performance budget (lab test of every built page)
 scripts/             deploy, visual approval, image optimisation
 docs/                everything else: architecture, runbooks, guides, reports
 ```

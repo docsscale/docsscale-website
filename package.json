@@ -8,6 +8,7 @@
     "visual:candidate": "node tests/visual/capture.mjs --site web/out --out tests/visual/candidate",
     "visual:compare": "node tests/visual/compare.mjs",
     "test:e2e": "node tests/visual/interactions.mjs && node tests/visual/nav-behaviour.mjs && node tests/visual/form-a11y.mjs && node tests/visual/web-vitals.mjs && node tests/visual/tracking.mjs && node tests/visual/clarity.mjs && node tests/visual/hero-journey.mjs && node tests/visual/funnel-stats.mjs",
+    "test:performance": "node tests/performance/budget.mjs",
     "test:redirects": "bash tests/server/redirects.sh",
     "visual:approve": "node scripts/approve-visual.mjs"
   },
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
+    "lighthouse": "13.5.0",
     "pixelmatch": "7.2.0",
     "playwright": "1.63.0",
     "pngjs": "7.0.0"

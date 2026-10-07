@@ -1,0 +1,114 @@
+{
+  "runs": 3,
+  "target": {
+    "score": 90,
+    "lcp": 2500,
+    "cls": 0.005,
+    "bytes": null
+  },
+  "allowance": {
+    "score": 6,
+    "lcpPercent": 15,
+    "cls": 0.01,
+    "bytesPercent": 3
+  },
+  "recorded": "2026-10-07",
+  "baseline": {
+    "/": {
+      "score": 94,
+      "lcp": 3018,
+      "cls": 0,
+      "bytes": 318162
+    },
+    "/about/": {
+      "score": 96,
+      "lcp": 2746,
+      "cls": 0,
+      "bytes": 307909
+    },
+    "/book-a-call/": {
+      "score": 94,
+      "lcp": 3102,
+      "cls": 0,
+      "bytes": 329445
+    },
+    "/free-system/": {
+      "score": 93,
+      "lcp": 3229,
+      "cls": 0,
+      "bytes": 418933
+    },
+    "/free-system/book-a-call/": {
+      "score": 96,
+      "lcp": 2744,
+      "cls": 0,
+      "bytes": 332274
+    },
+    "/free-system/thank-you/": {
+      "score": 96,
+      "lcp": 2768,
+      "cls": 0,
+      "bytes": 340500
+    },
+    "/how-it-works/": {
+      "score": 95,
+      "lcp": 2929,
+      "cls": 0,
+      "bytes": 310517
+    },
+    "/industries/": {
+      "score": 94,
+      "lcp": 2968,
+      "cls": 0,
+      "bytes": 331608
+    },
+    "/industries/chiropractic/": {
+      "score": 96,
+      "lcp": 2784,
+      "cls": 0,
+      "bytes": 335834
+    },
+    "/industries/dental/": {
+      "score": 95,
+      "lcp": 2930,
+      "cls": 0,
+      "bytes": 335973
+    },
+    "/industries/med-spa/": {
+      "score": 95,
+      "lcp": 2788,
+      "cls": 0,
+      "bytes": 335856
+    },
+    "/industries/physical-therapy/": {
+      "score": 94,
+      "lcp": 3056,
+      "cls": 0,
+      "bytes": 335945
+    },
+    "/privacy/": {
+      "score": 97,
+      "lcp": 2527,
+      "cls": 0,
+      "bytes": 265910
+    },
+    "/results/": {
+      "score": 93,
+      "lcp": 3179,
+      "cls": 0,
+      "bytes": 310132
+    },
+    "/services/": {
+      "score": 94,
+      "lcp": 3076,
+      "cls": 0,
+      "bytes": 326141
+    },
+    "/terms/": {
+      "score": 98,
+      "lcp": 2441,
+      "cls": 0,
+      "bytes": 273627
+    }
+  }
+}

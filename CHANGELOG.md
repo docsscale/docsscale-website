@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Performance budget in CI** (completion plan, item 11; finishes stage A). A fifth CI job runs a lab test (Lighthouse, simulated phone) on every built page, three runs each, and judges the middle run. The 16 existing pages are held to "no worse than today": at most 6 points below their recorded score, the main content painted at most 15% later, no new layout shift, at most 3% heavier. Any page not in the record is new and must meet the plan's target: score 90 or more, main content within 2.5 seconds, no layout shift. Today's record is the middle of three CI runs on 7 Oct 2026 (scores 93–98, main content at 2.4–3.2 seconds, 260–409 KB per page). The deploy script now requires this job too. Lighthouse 13.5.0 is added as a test tool; it is never sent to visitors. Nothing on the site changes, so there is nothing to deploy.
+
 ## [1.4.6] — 2026-10-07
 
 - **The sitemap is generated from the built pages** (agency review SEO-2). Every indexable page is listed automatically, and each page's `lastmod` is the day its own copy last changed; a change to the header or footer moves no dates. 13 of the 15 dates were stale and are corrected from the change history. CI fails if the committed sitemap is out of date.
