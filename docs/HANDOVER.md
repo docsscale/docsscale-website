@@ -80,6 +80,12 @@ it.**
      Then run `bash tests/server/hidden-sites.sh`, and have the owner sign in.
      Keystatic Cloud may need the new address allowed in its project settings
      (the owner's step).
+   - Done 7 Oct: `node scripts/deploy.mjs --target preview` builds with
+     drafts and uploads to `preview.docsscale.com` (RELEASE.md, "The preview
+     site"). First upload made the same day from `main`: the draft sample
+     post is at `/blog/sample-post/` behind the staging login. Not checked
+     signed in (the developer does not enter passwords); the owner was asked
+     to look.
    - Next, in order: the preview workflow (builds the working copy to
      `preview.docsscale.com`; needs the Hostinger API token as a GitHub
      secret, created by the owner); the publish workflow with the owner's
@@ -107,7 +113,7 @@ part, or the target needs the owner's decision (plan, section 5, item 11).
 | Address | Folder on the server | State |
 |---|---|---|
 | `cms.docsscale.com` | `/home/u145389112/domains/cms.docsscale.com/public_html` | **Closed:** every request gets 403 and `noindex` (`server/cms/.htaccess`). Becomes the Node.js editing app (Node.js 24), whose own sign-in replaces that file. |
-| `preview.docsscale.com` | `/home/u145389112/domains/preview.docsscale.com/public_html` | **Password-protected** with the staging login (the same `.htpasswd` file) and `noindex` (`server/preview/.htaccess`). Empty behind the password until the preview workflow uploads to it. |
+| `preview.docsscale.com` | `/home/u145389112/domains/preview.docsscale.com/public_html` | **Password-protected** with the staging login (the same `.htpasswd` file) and `noindex` (`server/preview/.htaccess`). Holds the preview build (drafts included) since 7 Oct 2026. |
 
 Both are separate sites on the existing Business plan (no cost), each in its
 own folder, apart from the live site. Hostinger pointed both names at its CDN

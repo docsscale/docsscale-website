@@ -17,6 +17,10 @@
 6. **Purge the CDN cache** (hPanel → Websites → docsscale.com → Performance → CDN → Purge all).
 7. Run the "After deploying to production" part of the QA checklist.
 
+## The preview site
+
+`node scripts/deploy.mjs --target preview` builds the site with drafts included and uploads it to `preview.docsscale.com` (its own folder on the server, the staging login, `noindex`). It carries no lead handler, so its forms send nothing. The upload credentials must be generated for the domain `preview.docsscale.com`, not `docsscale.com`. It is not a release: no tag, no changelog, no approval needed, because nothing public changes.
+
 ## Upload credentials
 
 - The deploy script uploads through Hostinger's file-upload API. It needs `HOSTINGER_UPLOAD_URL`, `HOSTINGER_AUTH` and `HOSTINGER_REST` in the environment, generated per session (they expire after about 6 hours) from Hostinger's "generate upload URL" endpoint for account `u145389112`, domain `docsscale.com`.
