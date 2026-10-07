@@ -27,7 +27,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
-        with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
+        # No npm cache on the Mac runner: it would upload the Mac's whole npm cache.
+        with: { node-version: 22, cache: "${{ runner.environment == 'github-hosted' && 'npm' || '' }}", cache-dependency-path: web/package-lock.json }
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
@@ -71,7 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
-        with: { node-version: 22, cache: npm }
+        with: { node-version: 22, cache: "${{ runner.environment == 'github-hosted' && 'npm' || '' }}" }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@v8
@@ -109,7 +110,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
-        with: { node-version: 22, cache: npm }
+        with: { node-version: 22, cache: "${{ runner.environment == 'github-hosted' && 'npm' || '' }}" }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@v8
