@@ -11,6 +11,13 @@ check() {
   local headers status
   headers=$(curl -s -o /dev/null -D - --max-time 20 "$url")
   status=$(printf '%s' "$headers" | awk 'NR==1 {print $2}')
+  # Hostinger's own protection sometimes refuses a request outright (403, seen
+  # from GitHub's machines on 7 Oct 2026). A refusal shows nothing and gives a
+  # search engine nothing to index, so it passes whatever its headers say.
+  if [[ "$status" == "403" ]]; then
+    echo "ok   $url  403, refused"
+    return
+  fi
   if [[ ! " $want " =~ " $status " ]]; then
     echo "FAIL $url answered ${status:-nothing}, expected one of: $want"
     fail=1
