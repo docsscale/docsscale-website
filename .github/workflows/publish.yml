@@ -1,0 +1,105 @@
+# Publishes approved blog posts from the working copy (where the editing screen
+# saves) to the live site. SWITCHED OFF unless the repository variable
+# CONTENT_PUBLISHING is "on" (the owner's decision; docs/HANDOVER.md).
+#
+# What may be published is decided by scripts/publish-content.mjs: only content,
+# only posts set to "published", and only when that was done in the editing
+# screen by an approver (repository variable CONTENT_APPROVERS). Every check
+# runs before anything is copied; if one fails, the live site is not touched.
+name: Publish content
+
+on:
+  push:
+    branches: [content/working]
+  workflow_dispatch:
+
+permissions:
+  contents: write # commits the published post to main
+  actions: write # starts the usual checks on that commit
+
+# One publish at a time, never cut short halfway.
+concurrency:
+  group: publish-content
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish approved posts
+    if: vars.CONTENT_PUBLISHING == 'on'
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CONTENT_APPROVERS: ${{ vars.CONTENT_APPROVERS }}
+      HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with: { ref: main, fetch-depth: 0 }
+      - run: git fetch origin content/working
+      - name: Decide what may be published
+        id: decide
+        run: |
+          node scripts/publish-content.mjs --apply | tee decision.txt
+          echo "posts=$(grep '^PUBLISH=' decision.txt | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+          echo "approver=$(grep '^APPROVED_BY=' decision.txt | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+          rm decision.txt
+      - if: steps.decide.outputs.posts != ''
+        uses: actions/setup-node@v7
+        with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
+      # The same checks every change to the site goes through, on the site as it
+      # would be with these posts live.
+      - name: Build and check the site with the new posts
+        if: steps.decide.outputs.posts != ''
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
+          npm run sitemap
+          npm run check:site
+      - name: Record the publish in the live copy
+        if: steps.decide.outputs.posts != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content web/public/uploads web/public/sitemap.xml web/sitemap-state.json
+          git commit -m "Publish: ${{ steps.decide.outputs.posts }}" -m "Approved in the editing screen by ${{ steps.decide.outputs.approver }}."
+          git push origin HEAD:main
+      - name: Get upload credentials for the live site
+        if: steps.decide.outputs.posts != ''
+        run: |
+          response=$(curl -sS --fail-with-body -X POST https://developers.hostinger.com/api/hosting/v1/files/upload-urls \
+            -H "Authorization: Bearer $HOSTINGER_API_TOKEN" -H "Content-Type: application/json" \
+            -d '{"username":"u145389112","domain":"docsscale.com"}')
+          for field in url auth_key rest_auth_key; do
+            value=$(printf '%s' "$response" | node -e "process.stdin.on('data', (d) => process.stdout.write(String(JSON.parse(d)['$field'] ?? '')))")
+            [ -n "$value" ] || { echo "::error::Hostinger did not return upload credentials."; exit 1; }
+            echo "::add-mask::$value"
+            case $field in
+              url) echo "HOSTINGER_UPLOAD_URL=$value" >> "$GITHUB_ENV" ;;
+              auth_key) echo "HOSTINGER_AUTH=$value" >> "$GITHUB_ENV" ;;
+              rest_auth_key) echo "HOSTINGER_REST=$value" >> "$GITHUB_ENV" ;;
+            esac
+          done
+      - name: Upload to the live site
+        if: steps.decide.outputs.posts != ''
+        run: node scripts/deploy.mjs --target production --yes --skip-build --checked-by-publish-workflow
+      - name: Clear the website cache
+        if: steps.decide.outputs.posts != ''
+        run: |
+          curl -sS --fail-with-body -X DELETE \
+            https://developers.hostinger.com/api/hosting/v1/accounts/u145389112/websites/docsscale.com/cache/clear \
+            -H "Authorization: Bearer $HOSTINGER_API_TOKEN" -o /dev/null
+      - name: Check the posts are live
+        if: steps.decide.outputs.posts != ''
+        run: |
+          sleep 20
+          for slug in $(echo "${{ steps.decide.outputs.posts }}" | tr ',' ' '); do
+            status=$(curl -s -o /dev/null -w '%{http_code}' "https://docsscale.com/blog/$slug/")
+            echo "https://docsscale.com/blog/$slug/ answered $status"
+            [ "$status" = 200 ] || { echo "::error::$slug is not answering on the live site."; exit 1; }
+          done
+          bash tests/server/redirects.sh
+      # A push made by a workflow does not start other workflows, so the usual
+      # checks are started here; the deploy script needs them on main's commit.
+      - name: Start the usual checks on the new commit
+        if: steps.decide.outputs.posts != ''
+        run: gh workflow run CI --ref main
