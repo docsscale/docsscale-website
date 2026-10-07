@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation';
 import { SPECIALTY_LINKS } from '@/content/specialties';
 import { BlogPost } from '@/features/blog/BlogPost';
 import { postSchema } from '@/features/blog/post-schema';
-import { getOffers, getPosts, INCLUDE_DRAFTS } from '@/features/blog/posts';
+import { OFFERS } from '@/content/offers';
+import { getPosts, INCLUDE_DRAFTS } from '@/features/blog/posts';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
@@ -51,11 +52,7 @@ export default async function BlogPostPage({ params }: Props) {
       ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <main>
-        <BlogPost
-          post={post}
-          related={posts.filter((item) => item !== post).slice(0, 3)}
-          offers={await getOffers()}
-        />
+        <BlogPost post={post} related={posts.filter((item) => item !== post).slice(0, 3)} offers={OFFERS} />
       </main>
     </>
   );

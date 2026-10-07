@@ -150,34 +150,3 @@ export async function getPosts(): Promise<Post[]> {
   // Newest first; posts without a date (drafts) lead on the preview site.
   return posts.sort((a, b) => b.sort.localeCompare(a.sort));
 }
-
-export type Offer = {
-  slug: string;
-  title: string;
-  badge: string;
-  figure: string;
-  text: string;
-  image: Picture | null;
-  buttonLabel: string;
-  link: string;
-  colour: Stage;
-};
-
-/** The offers beside every post and the blog list, in the order the editor set. */
-export async function getOffers(): Promise<Offer[]> {
-  const entries = await reader.collections.offers.all();
-  return entries
-    .filter(({ entry }) => entry.active)
-    .sort((a, b) => (a.entry.order ?? 0) - (b.entry.order ?? 0))
-    .map(({ slug, entry }) => ({
-      slug,
-      title: entry.title,
-      badge: entry.badge,
-      figure: entry.figure,
-      text: entry.text,
-      image: entry.image ? picture(entry.image, entry.imageAlt) : null,
-      buttonLabel: entry.buttonLabel,
-      link: entry.link,
-      colour: entry.colour,
-    }));
-}

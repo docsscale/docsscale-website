@@ -117,47 +117,6 @@ export function contentCollections(seoText: SeoText) {
         description: fields.text({ label: 'Description', multiline: true }),
       },
     }),
-    // The cards beside every post and the blog list: our own offers, never outside ads.
-    offers: collection({
-      label: 'Offers',
-      path: 'content/offers/*',
-      slugField: 'title',
-      format: 'yaml',
-      columns: ['title', 'active', 'order'],
-      schema: {
-        title: fields.slug({ name: { label: 'Title', validation: { isRequired: true } } }),
-        active: fields.checkbox({ label: 'Show this offer', defaultValue: true }),
-        order: fields.integer({ label: 'Position (1 is first)', defaultValue: 1 }),
-        badge: fields.text({ label: 'Small label above the title', description: 'For example "Free".' }),
-        figure: fields.text({
-          label: 'Big number (optional)',
-          description: 'Only a real, proven figure, for example from a case study.',
-        }),
-        text: fields.text({ label: 'One or two lines of text', multiline: true }),
-        image: fields.image({
-          label: 'Picture (optional)',
-          directory: 'web/public/uploads/offers',
-          publicPath: '/uploads/offers/',
-        }),
-        imageAlt: fields.text({ label: 'Picture: description (alt text)' }),
-        buttonLabel: fields.text({ label: 'Button text', validation: { isRequired: true } }),
-        link: fields.text({
-          label: 'Where the button goes',
-          description: 'A page on this site, for example /free-system/',
-          validation: { isRequired: true },
-        }),
-        colour: fields.select({
-          label: 'Colour',
-          options: [
-            { label: 'Peach', value: 'attract' },
-            { label: 'Teal (solid)', value: 'capture' },
-            { label: 'Lavender', value: 'convert' },
-            { label: 'Green', value: 'retain' },
-          ],
-          defaultValue: 'attract',
-        }),
-      },
-    }),
     team: collection({
       label: 'Team members',
       path: 'content/team/*',

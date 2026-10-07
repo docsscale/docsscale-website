@@ -108,8 +108,10 @@ fourth ("it's good"): teal-tint title band, overlapping cover photo, one
 reading column, coloured blocks, and a right-hand panel with DocsScale's own
 offers (never outside ads; the owner asked for "ads of our offers"). The
 canvas is the owner's private design artifact; the built version is in
-`web/src/features/blog/` and on the preview site. Offers are entries in
-`content/offers/` so the owner can add more "like the Free System" himself.
+`web/src/features/blog/` and on the preview site. **Offers live in code**
+(`web/src/content/offers.ts`), not in the editing screen: the owner decided
+the same day that the editing screen is for posts and SEO only, and that he
+asks the developer when a new offer or funnel is needed.
 Built since: post schema and sharing tags; automatic fast versions of uploaded
 pictures (`web/scripts/optimise-uploads.mjs`, run before every build).
 Not built yet: the category filter, RSS, automatic social images. Note for the
@@ -117,7 +119,8 @@ publish workflow: files in `web/public/uploads/` go out with every deploy, so
 a draft's pictures are reachable by address before the post is published. The index heading,
 introduction and search wording (`web/src/content/blog.ts`), the two
 call-to-action texts inside posts, and the three offers' wording need the
-owner's approval before anything is public.
+owner's approval before anything is public. **The owner signed in to
+`cms.docsscale.com` on 7 Oct 2026 and confirmed it works.**
 
 **Open question for the blog design (step 3):** in the lab test the lightest
 existing page already paints its main content at 2.4–2.5 seconds, right at the

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 import { Picture } from './Picture';
-import type { Offer } from './posts';
+import type { Offer } from '@/content/offers';
 
 const badge = {
   alignSelf: 'flex-start',
@@ -89,7 +89,7 @@ export function OffersPanel({ offers, children }: { offers: Offer[]; children?: 
     <aside aria-label="DocsScale offers" className="post-aside">
       {children}
       {offers.map((offer) => (
-        <OfferCard key={offer.slug} offer={offer} />
+        <OfferCard key={offer.title} offer={offer} />
       ))}
     </aside>
   );
