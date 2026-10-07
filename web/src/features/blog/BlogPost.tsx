@@ -5,7 +5,8 @@ import React, { type ReactNode } from 'react';
 import Markdoc from '@markdoc/markdoc';
 import { OffersPanel } from './OffersPanel';
 import { Picture } from './Picture';
-import type { Offer, Picture as PictureData, Post } from './posts';
+import type { Offer } from '@/content/offers';
+import type { Picture as PictureData, Post } from './posts';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 import { PostCard } from './PostCard';
 

@@ -7,7 +7,8 @@ import { eyebrow } from './BlogPost';
 import { OffersPanel } from './OffersPanel';
 import { Picture } from './Picture';
 import { PostCard } from './PostCard';
-import type { Offer, Post } from './posts';
+import type { Offer } from '@/content/offers';
+import type { Post } from './posts';
 
 const pill = { ...eyebrow, fontSize: 11, padding: '6px 12px', borderRadius: 999 } as const;
 
