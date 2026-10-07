@@ -8,13 +8,15 @@ brief. Read it fully before doing anything, then read
 If a rule here and a new instruction from the owner disagree, ask which applies.
 If you are unsure whether something needs the owner's sign-off, stop and ask.
 
-## 1. Approval rules (no exceptions)
+## 1. Approval rules
 
 - **Every change goes on a branch and through a pull request**, docs-only changes
   included. Never push to `main`.
 - **Never merge to `main` without the owner's go-ahead for that PR.** An earlier
-  approval does not carry over to the next PR.
+  approval does not carry over to the next PR. The one standing exception is
+  routine invisible work, below.
 - **Never deploy to production without the owner's go-ahead** for that release.
+  Same exception.
 - **Anything visible gets a before/after first** (desktop 1440, tablet 768,
   mobile 375), and the owner approves it before it is merged. A recording too if
   it moves. Invisible changes still need the PR and the go-ahead, but no
@@ -25,6 +27,15 @@ If you are unsure whether something needs the owner's sign-off, stop and ask.
   the repo. Never delete anything unless it is proven unused.
 - To cut interruptions: build and test several items, open their PRs, then ask
   once with a short summary of each.
+- **Routine invisible work may be merged and deployed without asking** (owner,
+  7 Oct 2026), when all of these hold: every CI check passes; the work is
+  already in an approved plan (`docs/COMPLETION-PLAN.md`,
+  `docs/SEO-DASHBOARD-PLAN.md`); and it changes nothing a visitor sees. It
+  still goes on a branch and through a pull request, and is reported
+  afterwards. **Always stop for the owner's approval on:** anything visible;
+  anything that costs money; anything not already in an approved plan; file
+  deletions; production releases that carry visible changes; and, as before,
+  new accounts or infrastructure and DNS changes.
 - No new paid service, account or infrastructure without asking. Don't create
   accounts or enter passwords; the owner does that.
 - **DNS:** show the exact change first; never change a record unasked.
@@ -129,7 +140,7 @@ production deploy and needs the owner's go-ahead unless the site is down.
 | Images and their sizes | `web/public/`, `web/src/content/images.ts`, `scripts/optimise-images.sh`; originals and licences in `incoming/` (not committed, except its README) |
 | Lead handler (PHP) and server rules | `server/public_html/_server/`, `server/public_html/.htaccess` |
 | Deploy script | `scripts/deploy.mjs` |
-| Tests | `tests/visual/*.mjs` (`npm run test:e2e`), `tests/server/*.sh` |
+| Tests | `tests/visual/*.mjs` (`npm run test:e2e`), `tests/server/*.sh`; site checks and sitemap: `web/scripts/` (`npm run check:site`, `npm run sitemap` in `web/`) |
 | Approved visual baseline | `reference/approved/` |
 
 Docs (`docs/`):
@@ -139,6 +150,7 @@ Docs (`docs/`):
 | `SESSION-HANDOFF.md` | Where everything stands right now |
 | `HANDOVER.md` | Accounts, access, email authentication, monitoring, owner to-dos |
 | `../CHANGELOG.md` | Every release, in plain language |
+| `COMPLETION-PLAN.md` | **The working plan** (approved 6 Oct 2026): order of work, tracker, decisions. `SEO-DASHBOARD-PLAN.md` is its SEO command center part; `seo/` holds the keyword map and the owner's SEO operating document |
 | `PHASE5-PLAN.md` | The growth plan, with the **status tracker** at the top (update it in every release PR) |
 | `TRACKING.md` | GA4 events, consent, UTM standard, Clarity, attribution |
 | `SERVER.md` | Lead handler, CRM fields, backups, failure email, cron |
