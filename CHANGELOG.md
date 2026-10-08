@@ -19,6 +19,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 - **Preview updates by itself** (`.github/workflows/preview.yml`): every save in the editing screen, and every change to the site's code, rebuilds the private preview site with drafts included. It needs a Hostinger access key stored as a GitHub secret, which the owner adds; until then it does nothing.
 - **Preview site: about a minute instead of six, and no manual refresh.** The preview upload now sends only the files that changed since the last one, several at a time (a first full upload took 26 seconds instead of over five minutes; an unchanged one 3 seconds). Preview pages carry a small bar that shows when the preview was built and reloads the page by itself when a newer one arrives. The bar exists only in preview builds, never on the live site.
 - **Blog: a feed and topic pages.** `/blog/rss.xml` lists every published post for feed readers. A topic (category) gets its own page and a place in the filter row on the blog list once it has three posts, so there are no thin pages; a topic page without its own description stays out of search engines. Preview only until a post is published.
+- **Blog page wording** (the owner's instruction, 8 Oct 2026: the developer chooses the search-optimised wording): heading "How clinics get found, booked and re-booked", a one-line introduction, and the title and description for search results. Not public until the first post is published.
 
 ## [1.4.6] — 2026-10-07
 
