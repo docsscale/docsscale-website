@@ -257,6 +257,8 @@ export const STRUCTURED_DATA = {
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
+      name: 'Dental marketing',
+      url: 'https://docsscale.com/industries/dental/',
       serviceType: 'Dental clinic marketing',
       provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
@@ -295,6 +297,8 @@ export const STRUCTURED_DATA = {
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
+      name: 'Chiropractic marketing',
+      url: 'https://docsscale.com/industries/chiropractic/',
       serviceType: 'Chiropractic clinic marketing',
       provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
@@ -333,6 +337,8 @@ export const STRUCTURED_DATA = {
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
+      name: 'Physical therapy marketing',
+      url: 'https://docsscale.com/industries/physical-therapy/',
       serviceType: 'Physical Therapy clinic marketing',
       provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',
@@ -371,6 +377,8 @@ export const STRUCTURED_DATA = {
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
+      name: 'Med spa marketing',
+      url: 'https://docsscale.com/industries/med-spa/',
       serviceType: 'Med Spa clinic marketing',
       provider: { '@id': 'https://docsscale.com/#organization' },
       areaServed: 'US',

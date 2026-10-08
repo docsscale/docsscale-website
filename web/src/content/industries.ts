@@ -1,6 +1,6 @@
 // Copy for the /industries/ overview. The industry cards come from specialties.ts.
 export const INDUSTRIES_PAGE = {
-  title: 'Industries We Serve: Dental, Chiropractic, Physical Therapy, Med Spa | DocsScale',
+  title: 'Industries We Serve | DocsScale',
   metaDescription:
     'One patient-growth system, set up around your specialty. See how DocsScale works for dental, chiropractic, physical therapy and med spa clinics.',
   eyebrow: 'Industries',

@@ -26,6 +26,7 @@ export function SpecialtyPage({ specialty: s }: { specialty: Specialty }) {
       <PainPoints specialty={s} lower={lower} />
       <System specialty={s} lower={lower} />
       <Services specialty={s} lower={lower} />
+      <CaseStudy specialty={s} lower={lower} />
       <Cta specialty={s} lower={lower} />
     </>
   );
@@ -459,6 +460,226 @@ function Services({ specialty: s, lower }: { specialty: Specialty; lower: string
               </p>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+// The specialty's real case from /results/, so the page carries proof only
+// DocsScale has (and a link into the full case). Copy lives in specialties.ts.
+function CaseStudy({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
+  const c = s.caseStudy;
+  const label = {
+    fontSize: 12,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '.06em',
+    color: T.caption,
+  } as const;
+  return (
+    <div
+      data-screen-label="Case study"
+      style={{
+        padding: 'clamp(56px,7vw,96px) 0 0',
+      }}
+    >
+      <div
+        className="container"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'clamp(28px,3.5vw,40px)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'end',
+            gap: 24,
+            flexWrap: 'wrap',
+          }}
+        >
+          <h2
+            style={{
+              ...sectionH2,
+              maxWidth: 700,
+              textWrap: 'balance',
+            }}
+          >
+            {'A real '}
+            {lower}
+            {' practice, in numbers.'}
+          </h2>
+          <Link
+            href={c.href}
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: T.teal,
+            }}
+          >
+            See the full case →
+          </Link>
+        </div>
+        <div
+          className="two"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,320px),1fr))',
+            gap: 14,
+          }}
+        >
+          <div
+            style={{
+              background: s.accentBg,
+              color: s.accentFg,
+              borderRadius: 28,
+              padding: 'clamp(26px,3vw,40px)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: 24,
+              minHeight: 340,
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: 12,
+                flexWrap: 'wrap',
+                ...eyebrow,
+              }}
+            >
+              <span>{c.meta}</span>
+              <span>{c.period}</span>
+            </div>
+            <div>
+              <div
+                style={{
+                  fontWeight: 800,
+                  fontSize: 'clamp(64px,7vw,110px)',
+                  lineHeight: 0.9,
+                  letterSpacing: '-.05em',
+                }}
+              >
+                {c.stat}
+              </div>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: 18,
+                  marginTop: 12,
+                  letterSpacing: '-.02em',
+                }}
+              >
+                {c.statLine}
+              </div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: 6,
+                flexWrap: 'wrap',
+              }}
+            >
+              {c.tags.map((tag) => (
+                <span
+                  key={tag}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: 999,
+                    background: white,
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div
+            style={{
+              gridColumn: 'span 2',
+              background: white,
+              border: `1px solid ${T.hairline}`,
+              borderRadius: 28,
+              padding: 'clamp(26px,3vw,40px)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: 24,
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+              }}
+            >
+              <span style={label}>Result</span>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 'clamp(18px,1.6vw,22px)',
+                  fontWeight: 700,
+                  lineHeight: 1.4,
+                  letterSpacing: '-.01em',
+                }}
+              >
+                {c.result}
+              </p>
+            </div>
+            <figure
+              style={{
+                margin: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
+                paddingTop: 20,
+                borderTop: `1px solid ${T.hairline}`,
+              }}
+            >
+              <blockquote
+                style={{
+                  margin: 0,
+                  fontSize: 15,
+                  lineHeight: 1.5,
+                  color: T.body,
+                  maxWidth: 520,
+                  fontStyle: 'italic',
+                }}
+              >
+                {`\u201C${c.quote}\u201D`}
+              </blockquote>
+              <figcaption
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                  }}
+                >
+                  {c.name}
+                </span>
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: T.caption,
+                  }}
+                >
+                  {c.role}
+                </span>
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </div>
