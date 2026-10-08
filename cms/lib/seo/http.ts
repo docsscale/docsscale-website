@@ -1,6 +1,5 @@
 import crypto from 'node:crypto';
-import fs from 'node:fs';
-import { seoConfig } from './config';
+import { googleKey } from './config';
 
 // Small helpers shared by the data sources. Keys never appear in an error
 // message: errors quote the address without its query string.
@@ -24,8 +23,9 @@ let cached: { token: string; until: number } | null = null;
 
 export async function googleToken(): Promise<string> {
   if (cached && cached.until > Date.now() + 60_000) return cached.token;
-  if (!seoConfig.googleKeyJson && !seoConfig.googleKeyFile) throw new Error('No Google key is set on the server.');
-  const key = JSON.parse(seoConfig.googleKeyJson || fs.readFileSync(seoConfig.googleKeyFile, 'utf8')) as {
+  const raw = googleKey();
+  if (!raw) throw new Error('No Google key is set on the server.');
+  const key = JSON.parse(raw) as {
     client_email: string; private_key: string; private_key_id: string; token_uri: string;
   };
   const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString('base64url');

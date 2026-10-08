@@ -1,4 +1,4 @@
-import { seoConfig } from './config';
+import { bingKey, googleKey, seoConfig } from './config';
 import { collectAnalytics } from './sources/analytics';
 import { collectBing } from './sources/bing';
 import { collectContent } from './sources/content';
@@ -31,8 +31,8 @@ const JOBS: Record<Job, SourceName[]> = {
 };
 
 function notSetUp(name: SourceName): string | null {
-  if ((name === 'search-console' || name === 'analytics') && !seoConfig.googleKeyJson && !seoConfig.googleKeyFile) return 'The Google key is not set on the server.';
-  if (name === 'bing' && !seoConfig.bingKey) return 'The Bing key is not set on the server.';
+  if ((name === 'search-console' || name === 'analytics') && !googleKey()) return 'The Google key is not set on the server.';
+  if (name === 'bing' && !bingKey()) return 'The Bing key is not set on the server.';
   return null;
 }
 

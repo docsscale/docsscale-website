@@ -1,4 +1,4 @@
-import { seoConfig } from '../config';
+import { bingKey, seoConfig } from '../config';
 import { daysAgo, getJson, isoDay } from '../http';
 
 // Bing Webmaster API. The key could also submit addresses; this code only
@@ -25,7 +25,7 @@ const day = (v: unknown) => {
 };
 
 async function call(method: string): Promise<Raw[]> {
-  const url = `https://ssl.bing.com/webmaster/api.svc/json/${method}?siteUrl=${encodeURIComponent(seoConfig.bingSite)}&apikey=${encodeURIComponent(seoConfig.bingKey)}`;
+  const url = `https://ssl.bing.com/webmaster/api.svc/json/${method}?siteUrl=${encodeURIComponent(seoConfig.bingSite)}&apikey=${encodeURIComponent(bingKey())}`;
   return ((await getJson<{ d?: Raw[] }>(url)).d ?? []) as Raw[];
 }
 
@@ -37,7 +37,7 @@ const ISSUES: [number, string][] = [
 ];
 
 export async function collectBing(): Promise<BingData> {
-  if (!seoConfig.bingKey) throw new Error('No Bing key is set on the server.');
+  if (!bingKey()) throw new Error('No Bing key is set on the server.');
   const [traffic, queries, pages, crawl, issues] = await Promise.all([
     call('GetRankAndTrafficStats'), call('GetQueryStats'), call('GetPageStats'), call('GetCrawlStats'), call('GetCrawlIssues'),
   ]);

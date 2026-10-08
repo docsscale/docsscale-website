@@ -3,7 +3,7 @@ import { settingsPresence } from '../../../../lib/seo/config';
 import { SOURCES, recentRuns } from '../../../../lib/seo/run';
 import { sourceRows } from '../../../../lib/seo/store';
 import { runNow } from '../../actions';
-import { Badge, H1, Section, Source, Table, button, when } from '../../ui';
+import { Badge, H1, Section, Source, Table, button, link, when } from '../../ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,7 +47,7 @@ export default async function Sources({ searchParams }: { searchParams: Promise<
       </Section>
 
       {canSee(user, 'admin') && (
-        <Section title="Settings on the server" note="Keys live only in the server's environment and its private folder. This screen shows whether each is set, never its value.">
+        <Section title="Settings on the server" note={<>Keys live only in the server's private folder (given on the <a href="/seo/settings" style={link}>Settings</a> tab) or its environment. This screen shows whether each is set, never its value.</>}>
           <Table head={['Setting', 'State']} rows={settingsPresence().map((s) => [s.name, <Badge key="b" tone={s.set ? 'good' : 'neutral'}>{s.set ? 'Set' : 'Not set'}</Badge>])} />
           <Source>Read from the server when this page loaded</Source>
         </Section>

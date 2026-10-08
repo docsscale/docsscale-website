@@ -1,4 +1,4 @@
-import { seoConfig } from '../config';
+import { githubToken, seoConfig } from '../config';
 import { getJson } from '../http';
 import { store } from '../store';
 
@@ -27,12 +27,12 @@ export type ContentData = { repo: string; posts: PostRow[]; newEdits: number; pe
 
 const gh = <T>(path: string) =>
   getJson<T>(`https://api.github.com/repos/${seoConfig.githubRepo}${path}`, {
-    headers: { Accept: 'application/vnd.github+json', ...(seoConfig.githubToken ? { Authorization: `Bearer ${seoConfig.githubToken}` } : {}) },
+    headers: { Accept: 'application/vnd.github+json', ...(githubToken() ? { Authorization: `Bearer ${githubToken()}` } : {}) },
   });
 
 async function raw(ref: string, file: string): Promise<string | null> {
   const res = await fetch(`https://raw.githubusercontent.com/${seoConfig.githubRepo}/${ref}/${file}`, {
-    headers: seoConfig.githubToken ? { Authorization: `Bearer ${seoConfig.githubToken}` } : {},
+    headers: githubToken() ? { Authorization: `Bearer ${githubToken()}` } : {},
     signal: AbortSignal.timeout(30_000),
   });
   return res.ok ? res.text() : null;
