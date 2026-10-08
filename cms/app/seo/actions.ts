@@ -1,8 +1,9 @@
 'use server';
 
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createSignInLink, redeemSignInLink, requireUser, signOut } from '../../lib/seo/auth';
-import { saveSecret } from '../../lib/seo/config';
+import { IS_PRODUCTION, createReadKey, saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
 import { startRun } from '../../lib/seo/run';
 import { now, store } from '../../lib/seo/store';
@@ -78,10 +79,19 @@ export async function saveKeys(form: FormData) {
   redirect(changed ? '/seo/settings?saved=1' : '/seo/settings?error=nothing');
 }
 
+/** A read-only key for Claude (app/api/seo/read). Shown once, on the next
+ *  page load, through a one-minute cookie; the app keeps only its hash. */
+export async function makeReadKey() {
+  await requireUser('/seo/settings (make read-only key)', 'admin');
+  const key = createReadKey();
+  (await cookies()).set('ds_seo_newkey', key, { httpOnly: true, sameSite: 'lax', secure: IS_PRODUCTION, path: '/seo/settings', maxAge: 60 });
+  redirect('/seo/settings?saved=1');
+}
+
 export async function clearKey(form: FormData) {
   await requireUser('/seo/settings (remove key)', 'admin');
   const name = String(form.get('name'));
-  if (name === 'googleKey' || name === 'bingKey' || name === 'pagespeedKey' || name === 'githubToken') saveSecret(name, '');
+  if (name === 'googleKey' || name === 'bingKey' || name === 'pagespeedKey' || name === 'githubToken' || name === 'readKeyHash') saveSecret(name, '');
   redirect('/seo/settings?saved=1');
 }
 
