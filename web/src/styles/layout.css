@@ -7,3 +7,33 @@
   content: 'Sample figures. Replace with verified numbers before launch.';
   visibility: hidden;
 }
+
+/* "From the blog" on the home page. The blog's own stylesheet only loads on
+   blog pages, so the card link rules from blog.css are repeated here. Columns
+   keep their width when there are fewer posts than columns (auto-fill), so a
+   single post does not stretch across the page: three on desktop, two on
+   tablet, one on phones. */
+.post-card a {
+  color: inherit;
+  text-decoration: none;
+}
+.post-card a:hover {
+  color: var(--teal);
+}
+.home-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 40px 24px;
+}
+/* "All posts" button on the teal blog section. */
+.btn-light-to-tint {
+  transition: background 0.2s;
+}
+.btn-light-to-tint:hover {
+  background: var(--tealtint-bg) !important;
+}
+/* The site's teal focus ring would vanish on the teal; white instead. */
+.btn-light-to-tint:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}

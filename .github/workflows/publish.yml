@@ -98,6 +98,12 @@ jobs:
             [ "$status" = 200 ] || { echo "::error::$slug is not answering on the live site."; exit 1; }
           done
           bash tests/server/redirects.sh
+      # Ask Bing and the other IndexNow engines to crawl the new posts now
+      # (scripts/indexnow.mjs). Google reads the sitemap instead. Never fails
+      # the publish: the posts are already live.
+      - name: Tell search engines about the new posts
+        if: steps.decide.outputs.posts != ''
+        run: node scripts/indexnow.mjs --posts "${{ steps.decide.outputs.posts }}"
       # A push made by a workflow does not start other workflows, so the usual
       # checks are started here; the deploy script needs them on main's commit.
       - name: Start the usual checks on the new commit
