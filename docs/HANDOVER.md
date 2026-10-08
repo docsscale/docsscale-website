@@ -112,6 +112,20 @@ it.**
      **Confirmed by the owner on 8 Oct 2026:** after this fix a save shows on
      the preview by itself ("updating perfectly"). A full update takes about
      a minute; preview pages reload themselves when it is complete.
+   - **After a release that publishes a post, sync the working copy by
+     hand.** The post exists as "published" on `main` and as "draft" on
+     `content/working`, so the automatic sync stops on a clash (first seen
+     after v1.5.0, 8 Oct). Merge `main` into `content/working` and take
+     `main`'s version of that post; the editing screen then shows it as
+     Published. This goes away once posts are published by the publish
+     workflow instead of a release branch.
+   - **Second post drafted 8 Oct:** `facebook-ads-for-chiropractors` on
+     `content/working`, status draft. The portfolio has no chiropractic ads
+     case, so the post is "fix this before you spend": the Tampa
+     chiropractic reactivation, the Las Vegas med spa Meta campaign and the
+     Denver physical therapy callbacks, as published on `/results/`, and it
+     says so. Its section on Meta's ad rules is from general knowledge; the
+     owner was asked to have it checked.
    - **The working copy must carry main's current workflows.** The owner's
      first save (7 Oct) did not rebuild the preview, because GitHub runs the
      workflow files of the branch pushed to and `content/working` was older
