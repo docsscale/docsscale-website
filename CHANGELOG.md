@@ -5,7 +5,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
-- **Publishing from the editing screen is built and switched off** (`.github/workflows/publish.yml`, `scripts/publish-content.mjs`). When the owner switches it on, a post set to "published" in the editing screen by an approver is checked, copied to the live copy and released, with no developer; anything else is refused. Nothing changes until then.
+- **Publishing from the editing screen** (`.github/workflows/publish.yml`, `scripts/publish-content.mjs`), switched on by the owner on 8 Oct 2026. A post the owner sets to "Published" in the editing screen is checked, copied to the live copy and released with no developer; anyone else's Publish, and anything that is not a post, is refused. The rule is in CLAUDE.md.
 
 ## [1.5.0] — 2026-10-08
 
