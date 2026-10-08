@@ -7,6 +7,7 @@
 // neither can import from the other's folder. CI fails if the two differ, so
 // change one and copy it over the other.
 import { collection, fields, type BasicFormField } from '@keystatic/core';
+import { block } from '@keystatic/core/content-components';
 
 /** The two SEO text fields are supplied by the caller: the editing app passes
  *  fields that count characters while typing, the site plain text fields. Both
@@ -93,6 +94,24 @@ export function contentCollections(seoText: SeoText) {
         body: fields.markdoc({
           label: 'Body',
           options: { image: { directory: 'web/public/uploads/posts', publicPath: '/uploads/posts/' } },
+          // Blocks an editor can insert into a post. Their look and wording are
+          // fixed in the site's code; the editor only chooses which one.
+          components: {
+            cta: block({
+              label: 'Call to action',
+              description: 'A box that invites the reader to act. The wording is fixed.',
+              schema: {
+                kind: fields.select({
+                  label: 'Which one',
+                  options: [
+                    { label: 'Book a strategy call', value: 'call' },
+                    { label: 'Get the Free System', value: 'free-system' },
+                  ],
+                  defaultValue: 'call',
+                }),
+              },
+            }),
+          },
         }),
       },
     }),
