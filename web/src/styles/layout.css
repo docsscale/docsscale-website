@@ -7,3 +7,18 @@
   content: 'Sample figures. Replace with verified numbers before launch.';
   visibility: hidden;
 }
+
+/* Post cards outside the blog ("From the blog" on the home page); the blog's
+   own stylesheet only loads on blog pages. Same rules as blog.css. */
+.post-card a {
+  color: inherit;
+  text-decoration: none;
+}
+.post-card a:hover {
+  color: var(--teal);
+}
+.post-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 40px 24px;
+}

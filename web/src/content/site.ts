@@ -78,6 +78,7 @@ export const FOOTER_COLUMNS = [
       { label: 'How it works', href: '/how-it-works' },
       { label: 'Results', href: '/results' },
       { label: 'About', href: '/about' },
+      { label: 'Blog', href: '/blog' },
       { label: 'FAQ', href: '/#faq' },
       { label: 'Book a strategy call', href: '/book-a-call' },
     ],
