@@ -56,6 +56,17 @@ for (const page of pages) {
         `brand rule: the CRM platform is named outside the Free System funnel ("${match[0]}")`,
       );
   }
+  // A draft's open points ("TO ADD: a real client example …") and layout
+  // samples must never reach a published page. Preview builds show drafts on
+  // purpose, so there it is only a warning.
+  const unfinished = `${page.title} ${page.bodyText}`.match(
+    /\bTO ADD\b|\bSample (?:post|paragraph|summary|category)\b/,
+  );
+  if (unfinished)
+    (process.env.CONTENT_PREVIEW === '1' ? warn : error)(
+      page.path,
+      `unfinished text on the page ("${unfinished[0]}"): a draft's open point or a layout sample`,
+    );
   const age = page.bodyText.match(AGE_WORDING);
   if (age) error(page.path, `brand rule: wording that describes DocsScale as new ("${age[0]}")`);
 }
