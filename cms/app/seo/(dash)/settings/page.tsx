@@ -63,7 +63,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
         </div>
       </Section>
 
-      <Section title="Scheduled runs" note="Hostinger's cron runs these two commands (daily at 10:20 UTC, Mondays at 10:40 UTC). The script and its token are made by the app in its private folder, so nothing is typed in.">
+      <Section title="Scheduled runs" note="The app keeps its own schedule: the daily sources once a day from 10:00 UTC, PageSpeed once a week. Any call to its run address, such as Hostinger's cron, also starts a run that is due. If you prefer a cron job of your own, these commands work (the script and its token are made by the app in its private folder).">
         <Table head={['Job', 'Command']} rows={[['Daily', <code key="d" style={{ fontSize: 12 }}>{cronCommand('daily')}</code>], ['Weekly', <code key="w" style={{ fontSize: 12 }}>{cronCommand('weekly')}</code>]]} />
         <p style={{ fontSize: 13, color: T.body }}>Private folder: <code>{seoConfig.dataDir}</code></p>
       </Section>
