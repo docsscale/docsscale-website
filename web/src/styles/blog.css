@@ -80,3 +80,9 @@
 .post-body h2 {
   scroll-margin-top: 96px;
 }
+
+.post-topics {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
