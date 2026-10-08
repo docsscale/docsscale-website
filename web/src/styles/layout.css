@@ -25,3 +25,15 @@
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 40px 24px;
 }
+/* "All posts" button on the teal blog section. */
+.btn-light-to-tint {
+  transition: background 0.2s;
+}
+.btn-light-to-tint:hover {
+  background: var(--tealtint-bg) !important;
+}
+/* The site's teal focus ring would vanish on the teal; white instead. */
+.btn-light-to-tint:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
