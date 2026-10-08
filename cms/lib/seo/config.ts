@@ -20,6 +20,8 @@ export const seoConfig = {
   /** "console" prints sign-in links instead of sending them; refused in production. */
   mailMode: env('SEO_MAIL_MODE') || 'sendmail',
   cronToken: env('SEO_CRON_TOKEN'),
+  /** The read-only key, either as the JSON itself (a server setting) or a path to the file. */
+  googleKeyJson: env('GOOGLE_SERVICE_ACCOUNT_JSON'),
   googleKeyFile: env('GOOGLE_SERVICE_ACCOUNT_FILE'),
   gscSite: env('GSC_SITE') || 'sc-domain:docsscale.com',
   ga4Property: env('GA4_PROPERTY') || 'properties/556073979',
@@ -36,7 +38,7 @@ export function settingsPresence() {
   return [
     { name: 'Admin addresses', set: seoConfig.adminEmails.length > 0 },
     { name: 'Scheduled run token', set: Boolean(seoConfig.cronToken) },
-    { name: 'Google service account key file', set: Boolean(seoConfig.googleKeyFile) },
+    { name: 'Google service account key', set: Boolean(seoConfig.googleKeyJson || seoConfig.googleKeyFile) },
     { name: 'Bing Webmaster API key', set: Boolean(seoConfig.bingKey) },
     { name: 'PageSpeed API key (optional)', set: Boolean(seoConfig.pagespeedKey) },
     { name: 'GitHub read token (needed once the repository is private)', set: Boolean(seoConfig.githubToken) },
