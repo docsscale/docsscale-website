@@ -135,7 +135,15 @@ it.**
    - Next, in order: the publish workflow with the owner's approval (and its
      rule in CLAUDE.md, plan section 6); RSS, social images, the category
      filter; the remaining forms.
-   - **Built 7 Oct, switched OFF: the publish workflow**
+   - **Publishing from the editing screen was switched ON on 8 Oct 2026**
+     by the owner's decision ("yes and it should be automatic"; he merged
+     the workflow himself). The rule is in CLAUDE.md, section 1. The
+     approver is the address the owner's own saves carry. **The first real
+     publish must be watched**: none had run when this was written. If one
+     goes wrong, delete the repository variable `CONTENT_PUBLISHING` and
+     release by hand (RELEASE.md).
+   - How it was built (7 Oct, then switched off until the above):
+     the publish workflow
      (`.github/workflows/publish.yml`, rules in `scripts/publish-content.mjs`).
      It runs only when the repository variable `CONTENT_PUBLISHING` is `on`,
      and publishes only posts set to "published" in the editing screen by an
