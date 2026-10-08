@@ -5,6 +5,8 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+- **Homepage: a blog section; footer: a Blog link** (owner's instruction, 8 Oct 2026: a section on the home page, no link in the header, a link in the footer). The section sits between Results and the questions, shows up to the three newest posts, and appears only while at least one post is published.
+
 - **Publishing from the editing screen is built and switched off** (`.github/workflows/publish.yml`, `scripts/publish-content.mjs`). When the owner switches it on, a post set to "published" in the editing screen by an approver is checked, copied to the live copy and released, with no developer; anything else is refused. Nothing changes until then.
 
 ## [1.5.0] — 2026-10-08

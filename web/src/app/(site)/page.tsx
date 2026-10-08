@@ -2,6 +2,7 @@ import { SPECIALTY_LINKS } from '@/content/specialties';
 import { STRUCTURED_DATA } from '@/content/structured-data';
 import { Faq } from '@/features/home/Faq';
 import { FinalCta } from '@/features/home/FinalCta';
+import { FromTheBlog } from '@/features/home/FromTheBlog';
 import { Gaps } from '@/features/home/Gaps';
 import { Hero } from '@/features/home/Hero';
 import { HowItWorks } from '@/features/home/HowItWorks';
@@ -36,6 +37,7 @@ export default function HomePage() {
           <Services />
           <HowItWorks />
           <Results />
+          <FromTheBlog />
           <Faq />
           <FinalCta />
         </SpecialtyProvider>
