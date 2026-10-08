@@ -136,7 +136,8 @@ the same day that the editing screen is for posts and SEO only, and that he
 asks the developer when a new offer or funnel is needed.
 Built since: post schema and sharing tags; automatic fast versions of uploaded
 pictures (`web/scripts/optimise-uploads.mjs`, run before every build).
-Not built yet: the category filter, RSS, automatic social images. Note for the
+Built 8 Oct: the feed (`/blog/rss.xml`) and topic pages with the filter row
+(a topic needs three posts). Not built yet: automatic social images. Note for the
 publish workflow: files in `web/public/uploads/` go out with every deploy, so
 a draft's pictures are reachable by address before the post is published. The index heading,
 introduction and search wording (`web/src/content/blog.ts`), the two

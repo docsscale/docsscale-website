@@ -8,11 +8,21 @@ import { OffersPanel } from './OffersPanel';
 import { Picture } from './Picture';
 import { PostCard } from './PostCard';
 import type { Offer } from '@/content/offers';
-import type { Post } from './posts';
+import type { Post, Topic } from './posts';
 
 const pill = { ...eyebrow, fontSize: 11, padding: '6px 12px', borderRadius: 999 } as const;
 
-export function BlogIndex({ posts, offers, copy }: { posts: Post[]; offers: Offer[]; copy: BlogIndexCopy }) {
+type Props = {
+  posts: Post[];
+  offers: Offer[];
+  copy: BlogIndexCopy;
+  /** Topics that have their own page; the filter row appears when there is one. */
+  topics?: Topic[];
+  /** The topic this page lists, on a topic page. */
+  activeTopic?: string;
+};
+
+export function BlogIndex({ posts, offers, copy, topics = [], activeTopic }: Props) {
   const [featured, ...rest] = posts;
   if (!featured) return null;
   const accent = STAGE_COLORS[featured.category?.stage ?? 'attract'];
@@ -128,10 +138,38 @@ export function BlogIndex({ posts, offers, copy }: { posts: Post[]; offers: Offe
         className="container post-columns"
         style={{ maxWidth: 1240, padding: 'clamp(44px,6vw,80px) clamp(20px,4vw,48px) clamp(48px,6vw,88px)' }}
       >
-        <div className="post-main post-cards">
-          {rest.map((post) => (
-            <PostCard key={post.slug} post={post} level="h2" />
-          ))}
+        <div className="post-main" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+          {topics.length > 0 && (
+            <nav aria-label="Topics" className="post-topics">
+              {[{ slug: '', name: 'All posts' }, ...topics].map((topic) => {
+                const current = topic.slug === (activeTopic ?? '');
+                return (
+                  <Link
+                    key={topic.slug}
+                    href={topic.slug ? `/blog/category/${topic.slug}` : '/blog'}
+                    aria-current={current ? 'page' : undefined}
+                    style={{
+                      textDecoration: 'none',
+                      padding: '11px 18px',
+                      borderRadius: 999,
+                      fontSize: 14,
+                      fontWeight: current ? 700 : 600,
+                      border: `1px solid ${current ? T.ink : T.hairline}`,
+                      background: current ? T.ink : T.surface,
+                      color: current ? T.bg : T.ink,
+                    }}
+                  >
+                    {topic.name}
+                  </Link>
+                );
+              })}
+            </nav>
+          )}
+          <div className="post-cards">
+            {rest.map((post) => (
+              <PostCard key={post.slug} post={post} level="h2" />
+            ))}
+          </div>
         </div>
         <OffersPanel offers={offers} />
       </div>
