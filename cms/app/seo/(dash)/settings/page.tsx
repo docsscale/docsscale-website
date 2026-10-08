@@ -1,7 +1,8 @@
+import { cookies } from 'next/headers';
 import { requireUser } from '../../../../lib/seo/auth';
-import { bingKey, githubToken, googleKey, googleKeyAccount, pagespeedKey, seoConfig, settingsPresence } from '../../../../lib/seo/config';
+import { bingKey, githubToken, googleKey, googleKeyAccount, hasReadKey, pagespeedKey, seoConfig, settingsPresence } from '../../../../lib/seo/config';
 import { cronCommand, ensureServerFiles } from '../../../../lib/seo/server-files';
-import { clearKey, saveKeys } from '../../actions';
+import { clearKey, makeReadKey, saveKeys } from '../../actions';
 import { Badge, H1, Section, Source, T, Table, button, input } from '../../ui';
 
 export const dynamic = 'force-dynamic';
@@ -16,6 +17,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
   await requireUser('/seo/settings', 'admin');
   ensureServerFiles();
   const { saved, error } = await searchParams;
+  const newKey = (await cookies()).get('ds_seo_newkey')?.value;
   const keys: { name: 'bingKey' | 'pagespeedKey' | 'githubToken'; label: string; note: string; set: boolean }[] = [
     { name: 'bingKey', label: 'Bing Webmaster API key', note: 'Bing Webmaster Tools → Settings → API access.', set: Boolean(bingKey()) },
     { name: 'pagespeedKey', label: 'PageSpeed API key (optional)', note: 'Without one, PageSpeed uses a shared quota and may answer "try later" on busy days.', set: Boolean(pagespeedKey()) },
@@ -60,6 +62,25 @@ export default async function Settings({ searchParams }: { searchParams: Promise
               <button type="submit" style={{ ...button, background: T.surface, color: T.body, borderWidth: 1, borderStyle: 'solid', borderColor: T.hairline }}>Remove the {k.label}</button>
             </form>
           ))}
+        </div>
+      </Section>
+
+      <Section title="Read-only access for Claude" note="A key that lets Claude read what the tabs show (never change anything). Make one, copy it into the cloud environment's secrets as SEO_READ_TOKEN, and it is never shown again. Every read appears in the Access log.">
+        {newKey && (
+          <p style={{ margin: '0 0 12px', padding: 12, background: '#fff8e6', borderRadius: 8, fontSize: 14 }}>
+            Copy this now; it is shown only once:<br />
+            <code style={{ fontSize: 14, userSelect: 'all' }}>{newKey}</code>
+          </p>
+        )}
+        <p style={{ margin: '0 0 12px' }}>State: <Badge tone={hasReadKey() ? 'good' : 'neutral'}>{hasReadKey() ? 'A key exists' : 'No key'}</Badge></p>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <form action={makeReadKey}><button type="submit" style={button}>{hasReadKey() ? 'Make a new key (replaces the old one)' : 'Make a read-only key'}</button></form>
+          {hasReadKey() && (
+            <form action={clearKey}>
+              <input type="hidden" name="name" value="readKeyHash" />
+              <button type="submit" style={{ ...button, background: T.surface, color: T.body, borderWidth: 1, borderStyle: 'solid', borderColor: T.hairline }}>Remove the key</button>
+            </form>
+          )}
         </div>
       </Section>
 

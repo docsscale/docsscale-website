@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -54,7 +55,7 @@ export const seoConfig = {
 
 /** The keys an admin saves on the Settings tab, in the private folder, read
  *  by the owner of the app only (mode 600). Values never leave the server. */
-export type SecretName = 'googleKey' | 'bingKey' | 'pagespeedKey' | 'githubToken';
+export type SecretName = 'googleKey' | 'bingKey' | 'pagespeedKey' | 'githubToken' | 'readKeyHash';
 const SECRETS_FILE = () => path.join(seoConfig.dataDir, 'settings.json');
 
 function savedSecrets(): Partial<Record<SecretName, string>> {
@@ -94,6 +95,26 @@ export function cronToken(): string {
   } catch {
     return '';
   }
+}
+
+/** The read-only key for Claude (app/api/seo/read): only its hash is kept, in
+ *  the same private file. The environment's SEO_READ_TOKEN also works. */
+const hash = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
+
+export function createReadKey(): string {
+  const key = 'seo_read_' + crypto.randomBytes(24).toString('hex');
+  saveSecret('readKeyHash', hash(key));
+  return key;
+}
+
+export const hasReadKey = () => Boolean(env('SEO_READ_TOKEN') || savedSecrets().readKeyHash);
+
+export function readKeyMatches(given: string): boolean {
+  const expected = env('SEO_READ_TOKEN') ? hash(env('SEO_READ_TOKEN')) : savedSecrets().readKeyHash;
+  if (!expected) return false;
+  const a = Buffer.from(hash(given));
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 /** The account the Google key belongs to (not a secret), for the Settings tab. */
