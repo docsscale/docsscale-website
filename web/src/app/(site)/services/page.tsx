@@ -13,7 +13,7 @@ import { ServicesSpecialtyLinks } from '@/features/services/ServicesSpecialtyLin
 import { Nav } from '@/features/site-chrome/Nav';
 
 export const metadata = pageMetadata({
-  title: 'Clinic Marketing Services: Ads, SEO, Websites, Follow-Up | DocsScale',
+  title: 'Healthcare Marketing Services for Clinics | DocsScale',
   description:
     'Eight services, four stages, one team. See exactly what DocsScale does to get your clinic more booked, showed-up patients.',
   path: '/services/',

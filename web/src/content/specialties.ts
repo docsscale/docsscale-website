@@ -16,6 +16,21 @@ export type Specialty = {
   painPoints: { title: string; body: string }[];
   stages: { label: string; title: string; body: string; tags: string[] }[];
   services: { title: string; body: string }[];
+  /** This specialty's case from /results/. Owner-approved, with permission on
+   *  file (6 Oct 2026): every string is copied exactly from ResultsCases.tsx,
+   *  so change both together. */
+  caseStudy: {
+    meta: string;
+    period: string;
+    stat: string;
+    statLine: string;
+    tags: string[];
+    result: string;
+    quote: string;
+    name: string;
+    role: string;
+    href: string;
+  };
 };
 
 export const SPECIALTIES: Specialty[] = [
@@ -85,6 +100,19 @@ export const SPECIALTIES: Specialty[] = [
         body: "Automated outreach for six-month cleanings and patients who've drifted, without discounting the visit.",
       },
     ],
+    caseStudy: {
+      meta: 'Dental · Dallas, TX',
+      period: 'Jan–Jun 2026',
+      stat: '184',
+      statLine: 'new patients booked in six months. 91% showed.',
+      tags: ['Implants', 'Full system'],
+      result:
+        '184 new patients booked, 167 showed, $48k attributed in the last month measured. Hiring a third hygienist.',
+      quote: 'The weekly report is the only marketing email I actually open.',
+      name: 'Dr. Kevin Patel',
+      role: 'Owner, dental practice · Dallas, TX',
+      href: '/results/',
+    },
   },
   {
     slug: 'chiropractic',
@@ -152,6 +180,18 @@ export const SPECIALTIES: Specialty[] = [
         body: 'Outreach to patients who finished acute care and never got invited back to maintenance visits.',
       },
     ],
+    caseStudy: {
+      meta: 'Chiropractic · Tampa, FL',
+      period: 'Aug 2026',
+      stat: '31',
+      statLine: 'dormant patients rebooked in the first month. Zero ad spend.',
+      tags: ['Reactivation', 'Retain only'],
+      result: '31 rebooked in month one, 19 new Google reviews, zero ad spend.',
+      quote: "Patients we assumed had moved away. They just hadn't been asked.",
+      name: 'Dr. Stephanie Carter',
+      role: 'Owner, chiropractic · Tampa, FL',
+      href: '/results/',
+    },
   },
   {
     slug: 'physical-therapy',
@@ -219,6 +259,19 @@ export const SPECIALTIES: Specialty[] = [
         body: "Condition and post-op pages that answer the insurance question up front, so the visit doesn't stall on price confusion.",
       },
     ],
+    caseStudy: {
+      meta: 'Physical therapy · Denver, CO',
+      period: 'Feb–Jul 2026',
+      stat: '2.4×',
+      statLine: 'more post-op evaluations on the same ad budget.',
+      tags: ['Post-op rehab', 'Growth'],
+      result:
+        '2.4× more evaluations booked, cost per booked visit down 41%, two new referring surgeons who found them through the page.',
+      quote: 'Four-minute callbacks did more than the new ads did.',
+      name: 'Dr. Emily Foster',
+      role: 'Owner, physical therapy · Denver, CO',
+      href: '/results/',
+    },
   },
   {
     slug: 'med-spa',
@@ -286,6 +339,18 @@ export const SPECIALTIES: Specialty[] = [
         body: "Automated touch-up reminders timed to each treatment, so rebooking doesn't rely on patients remembering.",
       },
     ],
+    caseStudy: {
+      meta: 'Med spa · Las Vegas, NV',
+      period: 'Q1 2026',
+      stat: '62',
+      statLine: 'booked consults from one injectables campaign.',
+      tags: ['Injectables', 'Growth'],
+      result: '62 booked consults in the quarter, 54 showed, and a 38% treatment acceptance on first visit.',
+      quote: 'Same followers, same budget. The difference was somebody answering at 9 pm.',
+      name: 'Dr. Nicole Ramirez',
+      role: 'Owner, med spa · Las Vegas, NV',
+      href: '/results/',
+    },
   },
 ];
 
