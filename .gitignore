@@ -22,3 +22,6 @@ tests/performance/results.json
 # Made from the uploads before every build (scripts/optimise-uploads.mjs)
 web/public/uploads/_fast/
 web/.uploads.json
+
+# The SEO dashboard's private store on a developer machine (lib/seo/config.ts)
+.seo-data/

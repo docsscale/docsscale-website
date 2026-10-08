@@ -1,8 +1,11 @@
 # SEO command center: plan
 
 Status: **approved by the owner on 6 Oct 2026, with the lighter first cut**
-(decisions in section 12). Nothing is built yet; it comes after the publishing
-core and the first two content pieces. A clickable mockup of the main tabs is in
+(decisions in section 12). **Phase 1 started on 8 Oct 2026** on the owner's
+updated plan of action ("we need to work on it"), which also brings the site
+checks, the page linter, PageSpeed and the edit log into phase 1. The code is
+in `cms/` (see its README); the paid tools and the fix queue stay in later
+phases. A clickable mockup of the main tabs is in
 [seo/dashboard-mockup.html](seo/dashboard-mockup.html); every number in it is
 example data and is labelled so.
 
