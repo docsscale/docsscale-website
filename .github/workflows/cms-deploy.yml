@@ -9,6 +9,11 @@ on:
     branches: [main]
     paths: ['cms/**', '.github/workflows/cms-deploy.yml']
   workflow_dispatch:
+    inputs:
+      admin_email:
+        description: 'SEO dashboard admin address(es), comma-separated. Only needed once: the app keeps them.'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -33,6 +38,16 @@ jobs:
         run: |
           [ -n "$HOSTINGER_API_TOKEN" ] || { echo "::error::No HOSTINGER_API_TOKEN secret, so the editing app was not installed."; exit 1; }
       - uses: actions/checkout@v7
+      - name: Name the SEO dashboard admins (from the input or the SEO_ADMIN_EMAILS variable)
+        env:
+          ADMINS: ${{ inputs.admin_email || vars.SEO_ADMIN_EMAILS || '' }}
+        run: |
+          if [ -n "$ADMINS" ]; then
+            node -e "require('fs').writeFileSync('cms/seo-settings.json', JSON.stringify({ adminEmails: process.env.ADMINS.split(',').map((s) => s.trim()).filter(Boolean) }))"
+            echo "Admins named for this install (the app keeps them for later installs)."
+          else
+            echo "No admins named; the app keeps the ones it already has."
+          fi
       - name: Zip the app (without dependencies and builds)
         run: cd cms && zip -qr ../cms-app.zip . -x 'node_modules/*' '.next/*' '.seo-data/*' && ls -l ../cms-app.zip
       - name: Get upload credentials

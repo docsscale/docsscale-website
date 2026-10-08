@@ -1,4 +1,4 @@
-import { seoConfig } from './config';
+import { bingKey, googleKey, seoConfig } from './config';
 import { collectAnalytics } from './sources/analytics';
 import { collectBing } from './sources/bing';
 import { collectContent } from './sources/content';
@@ -31,8 +31,8 @@ const JOBS: Record<Job, SourceName[]> = {
 };
 
 function notSetUp(name: SourceName): string | null {
-  if ((name === 'search-console' || name === 'analytics') && !seoConfig.googleKeyJson && !seoConfig.googleKeyFile) return 'The Google key is not set on the server.';
-  if (name === 'bing' && !seoConfig.bingKey) return 'The Bing key is not set on the server.';
+  if ((name === 'search-console' || name === 'analytics') && !googleKey()) return 'The Google key is not set on the server.';
+  if (name === 'bing' && !bingKey()) return 'The Bing key is not set on the server.';
   return null;
 }
 
@@ -74,6 +74,22 @@ export function startRun(job: Job, startedBy: string): number | null {
     db.prepare('UPDATE runs SET finished = ?, ok = ? WHERE id = ?').run(now(), ok ? 1 : 0, id);
   })();
   return id;
+}
+
+/** The app's own schedule, so no cron job has to be set up by hand (owner,
+ *  8 Oct 2026): the daily sources once a day from 10:00 UTC, PageSpeed once a
+ *  week. Checked every few minutes while the app runs, and whenever anything
+ *  calls /api/seo/run, which is what Hostinger's cron does; a caller can only
+ *  make a run happen that was due anyway. */
+export function runIfDue(): Job | null {
+  const db = store();
+  const last = (jobs: string[]) =>
+    (db.prepare(`SELECT MAX(started) AS at FROM runs WHERE job IN (${jobs.map(() => '?').join(',')})`).get(...jobs) as { at: string | null }).at;
+  const hoursSince = (iso: string | null) => (iso ? (Date.now() - Date.parse(iso)) / 3600_000 : Infinity);
+  const utcHour = new Date().getUTCHours();
+  if (utcHour >= 10 && hoursSince(last(['daily', 'all'])) > 20) return startRun('daily', 'schedule') ? 'daily' : null;
+  if (utcHour >= 10 && hoursSince(last(['weekly', 'all'])) > 6.5 * 24) return startRun('weekly', 'schedule') ? 'weekly' : null;
+  return null;
 }
 
 export type RunRow = { id: number; job: string; started: string; finished: string | null; ok: number | null; started_by: string };

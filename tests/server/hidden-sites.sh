@@ -40,5 +40,15 @@ check "https://cms.docsscale.com/keystatic" "200 401 403"
 # (308: the app first drops the trailing slash, then answers "not found".)
 check "https://cms.docsscale.com/blog/" "404 308 403"
 check "https://cms.docsscale.com/blog" "404 403"
-check "https://cms.docsscale.com/robots.txt" "404 403"
+# robots.txt is the one page the app answers for everyone, and it must turn
+# every crawler away (cms/app/robots.ts, since 8 Oct 2026).
+robots=$(curl -s -D - --max-time 20 "https://cms.docsscale.com/robots.txt")
+if printf '%s' "$robots" | awk 'NR==1 {exit !($2 == "403")}'; then
+  echo "ok   https://cms.docsscale.com/robots.txt  403, refused"
+elif printf '%s' "$robots" | grep -qi '^x-robots-tag:.*noindex' && printf '%s' "$robots" | grep -qi '^disallow: */ *$'; then
+  echo "ok   https://cms.docsscale.com/robots.txt  disallows everything, noindex"
+else
+  echo "FAIL https://cms.docsscale.com/robots.txt does not turn every crawler away"
+  fail=1
+fi
 exit $fail

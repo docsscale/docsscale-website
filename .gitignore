@@ -25,3 +25,5 @@ web/.uploads.json
 
 # The SEO dashboard's private store on a developer machine (lib/seo/config.ts)
 .seo-data/
+# The SEO dashboard admins named at install time (.github/workflows/cms-deploy.yml)
+cms/seo-settings.json

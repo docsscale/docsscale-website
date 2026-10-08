@@ -21,7 +21,14 @@ const TABS: { group: string; items: { href: string; label: string; role: Role }[
       { href: '/seo/technical', label: 'Technical health', role: 'seo' },
     ],
   },
-  { group: 'Admin', items: [{ href: '/seo/sources', label: 'Data sources', role: 'seo' }, { href: '/seo/access', label: 'Access log', role: 'admin' }] },
+  {
+    group: 'Admin',
+    items: [
+      { href: '/seo/sources', label: 'Data sources', role: 'seo' },
+      { href: '/seo/settings', label: 'Settings', role: 'admin' },
+      { href: '/seo/access', label: 'Access log', role: 'admin' },
+    ],
+  },
 ];
 
 export default async function DashLayout({ children }: { children: ReactNode }) {

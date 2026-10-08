@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { createSignInLink, redeemSignInLink, requireUser, signOut } from '../../lib/seo/auth';
+import { saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
 import { startRun } from '../../lib/seo/run';
 import { now, store } from '../../lib/seo/store';
@@ -48,6 +49,40 @@ export async function addPerson(form: FormData) {
       .run(email, role, now(), user.email);
   }
   redirect('/seo/access');
+}
+
+/** Keys given on the Settings tab go to the private folder (lib/seo/config.ts);
+ *  the Google key is checked to be a service account key before it is kept. */
+export async function saveKeys(form: FormData) {
+  await requireUser('/seo/settings (save keys)', 'admin');
+  let changed = false;
+  const file = form.get('googleKeyFile');
+  if (file instanceof File && file.size > 0) {
+    let parsed: { type?: unknown; client_email?: unknown; private_key?: unknown } = {};
+    try {
+      parsed = JSON.parse(await file.text()) as typeof parsed;
+    } catch {
+      redirect('/seo/settings?error=google');
+    }
+    if (parsed.type !== 'service_account' || typeof parsed.client_email !== 'string' || typeof parsed.private_key !== 'string') redirect('/seo/settings?error=google');
+    saveSecret('googleKey', JSON.stringify(parsed));
+    changed = true;
+  }
+  for (const name of ['bingKey', 'pagespeedKey', 'githubToken'] as const) {
+    const value = String(form.get(name) ?? '').trim();
+    if (value) {
+      saveSecret(name, value);
+      changed = true;
+    }
+  }
+  redirect(changed ? '/seo/settings?saved=1' : '/seo/settings?error=nothing');
+}
+
+export async function clearKey(form: FormData) {
+  await requireUser('/seo/settings (remove key)', 'admin');
+  const name = String(form.get('name'));
+  if (name === 'googleKey' || name === 'bingKey' || name === 'pagespeedKey' || name === 'githubToken') saveSecret(name, '');
+  redirect('/seo/settings?saved=1');
 }
 
 export async function removePerson(form: FormData) {

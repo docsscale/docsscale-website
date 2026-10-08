@@ -50,6 +50,12 @@ export function store(): DatabaseSync {
   db = new DatabaseSync(path.join(seoConfig.dataDir, 'seo.sqlite'));
   db.exec('PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;');
   db.exec(SCHEMA);
+  // Admins named at install time are kept, so a later install that names
+  // none (an automatic one after a code change) keeps the same admins.
+  for (const email of seoConfig.adminEmails) {
+    db.prepare('INSERT INTO users (email, role, added_at, added_by) VALUES (?, ?, ?, ?) ON CONFLICT (email) DO UPDATE SET role = excluded.role')
+      .run(email, 'admin', now(), 'install');
+  }
   return db;
 }
 

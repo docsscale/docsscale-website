@@ -1,0 +1,77 @@
+import { requireUser } from '../../../../lib/seo/auth';
+import { bingKey, githubToken, googleKey, googleKeyAccount, pagespeedKey, seoConfig, settingsPresence } from '../../../../lib/seo/config';
+import { cronCommand, ensureServerFiles } from '../../../../lib/seo/server-files';
+import { clearKey, saveKeys } from '../../actions';
+import { Badge, H1, Section, Source, T, Table, button, input } from '../../ui';
+
+export const dynamic = 'force-dynamic';
+
+// Where the admin gives the app its keys, so nothing has to be typed into
+// hPanel (owner, 8 Oct 2026). Keys go to the private folder and are never
+// shown again: the screen only says whether each one is set.
+
+const label = { display: 'block', fontSize: 13, color: T.body, marginBottom: 4 } as const;
+
+export default async function Settings({ searchParams }: { searchParams: Promise<{ saved?: string; error?: string }> }) {
+  await requireUser('/seo/settings', 'admin');
+  ensureServerFiles();
+  const { saved, error } = await searchParams;
+  const keys: { name: 'bingKey' | 'pagespeedKey' | 'githubToken'; label: string; note: string; set: boolean }[] = [
+    { name: 'bingKey', label: 'Bing Webmaster API key', note: 'Bing Webmaster Tools → Settings → API access.', set: Boolean(bingKey()) },
+    { name: 'pagespeedKey', label: 'PageSpeed API key (optional)', note: 'Without one, PageSpeed uses a shared quota and may answer "try later" on busy days.', set: Boolean(pagespeedKey()) },
+    { name: 'githubToken', label: 'GitHub read token', note: 'Only needed once the repository is private again (read-only, contents scope).', set: Boolean(githubToken()) },
+  ];
+
+  return (
+    <>
+      <H1>Settings</H1>
+      {saved && <p><Badge tone="good">Saved. The next run will use it.</Badge></p>}
+      {error === 'google' && <p><Badge tone="bad">That file is not a Google service account key (it should be the JSON file downloaded from Google Cloud).</Badge></p>}
+      {error === 'nothing' && <p><Badge tone="neutral">Nothing was filled in.</Badge></p>}
+
+      <Section title="Google key (Search Console and Analytics)" note="The JSON key file of the read-only service account. It is kept in the private folder on the server and never shown again.">
+        <p style={{ margin: '0 0 12px' }}>
+          State: <Badge tone={googleKey() ? 'good' : 'neutral'}>{googleKey() ? `Set (${googleKeyAccount() || 'account unknown'})` : 'Not set'}</Badge>
+        </p>
+        <form action={saveKeys} style={{ display: 'grid', gap: 12, maxWidth: 520 }}>
+          <label style={label}>
+            Key file
+            <input type="file" name="googleKeyFile" accept=".json,application/json" style={{ ...input, padding: 8 }} />
+          </label>
+          <div><button type="submit" style={button}>Save the Google key</button></div>
+        </form>
+      </Section>
+
+      <Section title="Other keys" note="Paste a key and save. Leave a box empty to keep what is there.">
+        <form action={saveKeys} style={{ display: 'grid', gap: 14, maxWidth: 520 }}>
+          {keys.map((k) => (
+            <label key={k.name} style={label}>
+              {k.label} <Badge tone={k.set ? 'good' : 'neutral'}>{k.set ? 'Set' : 'Not set'}</Badge>
+              <input type="password" name={k.name} autoComplete="off" placeholder={k.set ? 'Set; paste a new one to replace it' : ''} style={{ ...input, marginTop: 4 }} />
+              <span style={{ fontSize: 12, color: T.caption }}>{k.note}</span>
+            </label>
+          ))}
+          <div><button type="submit" style={button}>Save keys</button></div>
+        </form>
+        <div style={{ display: 'flex', gap: 10, marginTop: 12, flexWrap: 'wrap' }}>
+          {([{ name: 'googleKey', label: 'Google key' }, ...keys] as { name: string; label: string }[]).map((k) => (
+            <form key={k.name} action={clearKey}>
+              <input type="hidden" name="name" value={k.name} />
+              <button type="submit" style={{ ...button, background: T.surface, color: T.body, borderWidth: 1, borderStyle: 'solid', borderColor: T.hairline }}>Remove the {k.label}</button>
+            </form>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Scheduled runs" note="The app keeps its own schedule: the daily sources once a day from 10:00 UTC, PageSpeed once a week. Any call to its run address, such as Hostinger's cron, also starts a run that is due. If you prefer a cron job of your own, these commands work (the script and its token are made by the app in its private folder).">
+        <Table head={['Job', 'Command']} rows={[['Daily', <code key="d" style={{ fontSize: 12 }}>{cronCommand('daily')}</code>], ['Weekly', <code key="w" style={{ fontSize: 12 }}>{cronCommand('weekly')}</code>]]} />
+        <p style={{ fontSize: 13, color: T.body }}>Private folder: <code>{seoConfig.dataDir}</code></p>
+      </Section>
+
+      <Section title="Everything the app needs">
+        <Table head={['Setting', 'State']} rows={settingsPresence().map((s) => [s.name, <Badge key="b" tone={s.set ? 'good' : 'neutral'}>{s.set ? 'Set' : 'Not set'}</Badge>])} />
+        <Source>Read from the server when this page loaded</Source>
+      </Section>
+    </>
+  );
+}

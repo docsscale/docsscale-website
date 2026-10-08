@@ -1,4 +1,4 @@
-import { seoConfig } from '../config';
+import { pagespeedKey, seoConfig } from '../config';
 import { getJson } from '../http';
 
 // PageSpeed Insights: lab scores on a simulated phone, plus real-visitor speed
@@ -37,7 +37,7 @@ export async function collectPageSpeed(): Promise<SpeedData> {
   for (const path of SPEED_PAGES) {
     const q = new URLSearchParams({ url: `${seoConfig.siteUrl}${path}`, strategy: 'mobile' });
     for (const c of ['performance', 'accessibility', 'best-practices', 'seo']) q.append('category', c);
-    if (seoConfig.pagespeedKey) q.set('key', seoConfig.pagespeedKey);
+    if (pagespeedKey()) q.set('key', pagespeedKey());
     try {
       const r = await getJson<{
         lighthouseResult: { categories: Record<string, { score: number | null }>; audits: Record<string, { numericValue?: number }> };
