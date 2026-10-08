@@ -19,7 +19,9 @@ export const metadata: Metadata = {
 
 export default function NotFoundPage() {
   preload('/fonts/plus-jakarta-sans-latin.woff2', { as: 'font', type: 'font/woff2', crossOrigin: '' });
-  preload('/fonts/instrument-serif-italic-latin.woff2', { as: 'font', type: 'font/woff2', crossOrigin: '' });
+  // Only the text font is fetched early here. Whatever this page asks for early
+  // is also asked for by every page of the blog, whose shell sits under this
+  // file, and a post's first screen has no italic.
   return (
     <>
       <Nav active="home" specialties={SPECIALTY_LINKS} />

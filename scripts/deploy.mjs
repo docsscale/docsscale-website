@@ -33,6 +33,7 @@
 // --delete-listed removes an approved list). Old pages must not stay reachable
 // meanwhile: redirect them in .htaccess, as for /services/<industry>/.
 import { execSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -226,7 +227,7 @@ async function upload(rel) {
     if (patched.status !== 204) throw new Error(`upload failed (${patched.status})`);
   }
 }
-for (const rel of files) {
+async function uploadWithRetries(rel) {
   for (let attempt = 1; ; attempt++) {
     try {
       await upload(rel);
@@ -238,7 +239,41 @@ for (const rel of files) {
     }
   }
   done++;
-  if (done % 25 === 0 || done === files.length) console.log(`  uploaded ${done}/${files.length}`);
+  if (done % 25 === 0 || done === queue.length) console.log(`  uploaded ${done}/${queue.length}`);
+}
+
+// The preview site is rebuilt on every save in the editing screen, so it only
+// sends the files that changed since the last upload (a list of each file's
+// fingerprint is kept on the server), several at a time. Staging and
+// production always send everything, one file at a time.
+let queue = files;
+const MANIFEST = '.deploy-manifest.json';
+if (target === 'preview') {
+  const fingerprint = (rel) =>
+    crypto.createHash('sha256').update(fs.readFileSync(path.join(release, rel))).digest('hex');
+  // version.txt carries the time of this build, so it always changes; it goes
+  // last and tells an open preview page that the new version is complete.
+  const now = Object.fromEntries(files.filter((rel) => rel !== 'version.txt').map((rel) => [rel, fingerprint(rel)]));
+  let before = {};
+  try {
+    const response = await fetch(`${base.replace('/api/tus/', '/api/raw/')}/${MANIFEST}`, { headers });
+    if (response.ok) before = await response.json();
+  } catch {
+    // No list yet, or unreadable: send everything.
+  }
+  queue = Object.keys(now).filter((rel) => before[rel] !== now[rel]);
+  console.log(`  ${queue.length} of ${files.length} files changed since the last preview`);
+  const waiting = [...queue];
+  await Promise.all(
+    Array.from({ length: 6 }, async () => {
+      while (waiting.length) await uploadWithRetries(waiting.shift());
+    }),
+  );
+  fs.writeFileSync(path.join(release, MANIFEST), JSON.stringify(now));
+  await uploadWithRetries(MANIFEST);
+  await uploadWithRetries('version.txt');
+} else {
+  for (const rel of files) await uploadWithRetries(rel);
 }
 console.log(`Deployed ${target}: ${version}`);
 

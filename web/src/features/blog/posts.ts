@@ -43,7 +43,7 @@ export type Post = {
   slug: string;
   title: string;
   summary: string;
-  category: { name: string; stage: Stage } | null;
+  category: { slug: string; name: string; stage: Stage; description: string } | null;
   author: { name: string; role: string; bio: string } | null;
   published: string | null;
   updated: string | null;
@@ -127,7 +127,12 @@ export async function getPosts(): Promise<Post[]> {
           slug,
           title: entry.title,
           summary: entry.summary,
-          category: category && { name: category.name, stage: category.stage },
+          category: category && {
+            slug: entry.category!,
+            name: category.name,
+            stage: category.stage,
+            description: category.description,
+          },
           author: author && { name: author.name, role: author.role, bio: author.bio },
           published: longDate(entry.published),
           updated: longDate(entry.updated),
@@ -149,4 +154,24 @@ export async function getPosts(): Promise<Post[]> {
   );
   // Newest first; posts without a date (drafts) lead on the preview site.
   return posts.sort((a, b) => b.sort.localeCompare(a.sort));
+}
+
+export type Topic = NonNullable<Post['category']> & { posts: Post[] };
+
+/** A topic gets its own page once it has this many posts (also in next.config.ts). */
+const TOPIC_PAGE_FROM = 3;
+
+/** The topics that have their own page, in alphabetical order. */
+export async function getTopics(): Promise<Topic[]> {
+  const posts = await getPosts();
+  const bySlug = new Map<string, Topic>();
+  for (const post of posts) {
+    if (!post.category) continue;
+    const topic = bySlug.get(post.category.slug) ?? { ...post.category, posts: [] };
+    topic.posts.push(post);
+    bySlug.set(post.category.slug, topic);
+  }
+  return [...bySlug.values()]
+    .filter((topic) => topic.posts.length >= TOPIC_PAGE_FROM)
+    .sort((a, b) => a.name.localeCompare(b.name));
 }

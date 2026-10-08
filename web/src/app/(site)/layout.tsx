@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { preload } from 'react-dom';
+import { PreviewStatus } from '@/features/preview/PreviewStatus';
 import { Footer } from '@/features/site-chrome/Footer';
 import '@/styles/fonts.css';
 import '@/styles/globals.css';
@@ -17,6 +18,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
     <>
       {children}
       <Footer />
+      <PreviewStatus />
     </>
   );
 }

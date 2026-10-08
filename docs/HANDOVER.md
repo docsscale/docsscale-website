@@ -11,7 +11,9 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 
 ## What is live
 
-- **Production: v1.4.6** on https://docsscale.com, deployed 7 Oct 2026.
+- **Production: v1.5.0** on https://docsscale.com, deployed 8 Oct 2026: the
+  blog (`/blog/`) with its first post, released on the owner's "publish".
+- Before that: v1.4.6, deployed 7 Oct 2026.
   `https://docsscale.com/version.txt` shows it. All CI checks pass on `main`.
 - Released on 7 Oct: **v1.4.5** (the `/services` Local SEO card no longer
   promises "a page per treatment and neighborhood"; build-tool security
@@ -102,8 +104,37 @@ it.**
      the workflow does nothing and says so. **The owner was sent the steps on
      7 Oct; until he adds it, refresh the preview by hand** (RELEASE.md, "The
      preview site").
-   - Preview workflow confirmed working on 7 Oct after the owner added the
-     secret (a full run: 276 files uploaded, no credentials in the log).
+   - **The preview must not be cached.** On 7 Oct the owner saved three
+     times and saw the old page each time although the upload had succeeded:
+     Hostinger's cache in front of the site (and the browser) may keep pages.
+     The preview's server rules now forbid caching of pages, and the workflow
+     clears Hostinger's cache for the preview site after every upload.
+     **Confirmed by the owner on 8 Oct 2026:** after this fix a save shows on
+     the preview by itself ("updating perfectly"). A full update takes about
+     a minute; preview pages reload themselves when it is complete.
+   - **After a release that publishes a post, sync the working copy by
+     hand.** The post exists as "published" on `main` and as "draft" on
+     `content/working`, so the automatic sync stops on a clash (first seen
+     after v1.5.0, 8 Oct). Merge `main` into `content/working` and take
+     `main`'s version of that post; the editing screen then shows it as
+     Published. This goes away once posts are published by the publish
+     workflow instead of a release branch.
+   - **Second post drafted 8 Oct:** `facebook-ads-for-chiropractors` on
+     `content/working`, status draft. The portfolio has no chiropractic ads
+     case, so the post is "fix this before you spend": the Tampa
+     chiropractic reactivation, the Las Vegas med spa Meta campaign and the
+     Denver physical therapy callbacks, as published on `/results/`, and it
+     says so. Its section on Meta's ad rules is from general knowledge; the
+     owner was asked to have it checked.
+   - **The working copy must carry main's current workflows.** The owner's
+     first save (7 Oct) did not rebuild the preview, because GitHub runs the
+     workflow files of the branch pushed to and `content/working` was older
+     than the preview workflow. `.github/workflows/sync-working.yml` now adds
+     main's changes to the working copy after every change to main. If it
+     reports a clash, merge `main` into `content/working` by hand.
+   - Next, in order: the publish workflow with the owner's approval (and its
+     rule in CLAUDE.md, plan section 6); RSS, social images, the category
+     filter; the remaining forms.
    - **Built 7 Oct, switched OFF: the publish workflow**
      (`.github/workflows/publish.yml`, rules in `scripts/publish-content.mjs`).
      It runs only when the repository variable `CONTENT_PUBLISHING` is `on`,
@@ -121,12 +152,6 @@ it.**
      production release with visible changes needs the owner's go-ahead and a
      before/after, and this replaces that, for blog posts only, with the
      owner's Publish in the editing screen.
-   - Before the first real post: the blog index wording
-     (`web/src/content/blog.ts`; the page stays `noindex` while its
-     description is empty), a "Blog" link in the menu (visible: needs the
-     owner's approval), and the offers' wording.
-   - Next, in order: RSS, social images, the category filter; the remaining
-     forms.
    - Known: `npm audit` reports one advisory with no fixed version yet
      (`braces`, reached through the CMS library and, in `web/`, through the
      lint tools). Neither is sent to visitors; the weekly updater will bring
@@ -145,7 +170,8 @@ the same day that the editing screen is for posts and SEO only, and that he
 asks the developer when a new offer or funnel is needed.
 Built since: post schema and sharing tags; automatic fast versions of uploaded
 pictures (`web/scripts/optimise-uploads.mjs`, run before every build).
-Not built yet: the category filter, RSS, automatic social images. Note for the
+Built 8 Oct: the feed (`/blog/rss.xml`) and topic pages with the filter row
+(a topic needs three posts). Not built yet: automatic social images. Note for the
 publish workflow: files in `web/public/uploads/` go out with every deploy, so
 a draft's pictures are reachable by address before the post is published. The index heading,
 introduction and search wording (`web/src/content/blog.ts`), the two

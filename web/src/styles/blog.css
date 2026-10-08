@@ -80,3 +80,20 @@
 .post-body h2 {
   scroll-margin-top: 96px;
 }
+
+.post-topics {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* The post's body arrives as one block inside the article; its paragraphs,
+   lists and headings are spaced here, like the article's own parts. */
+.post-body > article {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.post-body > article li + li {
+  margin-top: 8px;
+}
