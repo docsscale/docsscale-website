@@ -16,6 +16,7 @@
 5. **Deploy:** `node scripts/deploy.mjs --target production --yes`. The script refuses if the tree is dirty, the branch isn't `main`, `main` isn't pushed, or CI isn't green.
 6. **Purge the CDN cache** (hPanel → Websites → docsscale.com → Performance → CDN → Purge all).
 7. Run the "After deploying to production" part of the QA checklist.
+8. **New or changed pages: tell search engines.** `node scripts/indexnow.mjs --posts <slug,slug>` for blog posts (it adds `/blog/` and the home page), or `node scripts/indexnow.mjs https://docsscale.com/<page>/ …` for other pages; `--dry-run` shows what it would send. This reaches Bing and the other IndexNow engines, not Google (Google reads the sitemap). The publish workflow does this by itself for posts published from the editing screen. The key file `web/public/<key>.txt` is public by design; don't remove or rename it.
 
 ## The preview site
 
