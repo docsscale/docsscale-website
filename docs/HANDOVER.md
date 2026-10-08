@@ -31,7 +31,15 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 |---|---|---|
 | [#45](https://github.com/docsscale/docsscale-website/pull/45) | Service pages: layout and route, with a Local SEO sample | **Draft, on purpose.** The owner approved the structure on 6 Oct. It holds filler text and must not be merged until real, approved copy replaces it. See "Parked". |
 
-No other pull request is open. GitHub's updater opens new ones on Mondays
+| [#86](https://github.com/docsscale/docsscale-website/pull/86) | Home page "From the blog" section, Blog link in the footer, IndexNow on every post publish | Built 8 Oct 2026 in the cloud session. **Visible**: before/after shots were sent to the owner; release only after his approval. It touches the publish workflow, so the owner merges it himself. After approval, re-record the visual baseline (`npm run visual:approve`). |
+
+**Where the developer works (from 8 Oct 2026):** a cloud session in the
+project thread "Website (cloud)", so work continues when the owner's Mac is
+off. The earlier "website" thread ran on the Mac through Remote Control and
+has stopped building. A cloud session cannot open docsscale.com (its network
+blocks it), so live checks run from GitHub Actions or are asked of the owner.
+
+Apart from those, no pull request is open. GitHub's updater opens new ones on Mondays
 (weekly dependency updates); they are routine work under the rule below.
 
 ## The plan, and where it is
