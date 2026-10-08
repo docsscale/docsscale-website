@@ -6,7 +6,6 @@ import { OFFERS } from '@/content/offers';
 import { getPosts, getTopics } from '@/features/blog/posts';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
-import '@/styles/blog.css';
 
 export const metadata = {
   ...pageMetadata({

@@ -7,7 +7,6 @@ import { getPosts, INCLUDE_DRAFTS } from '@/features/blog/posts';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
-import '@/styles/blog.css';
 
 type Props = { params: Promise<{ slug: string }> };
 
