@@ -21,7 +21,10 @@ Run locally: `npm ci && npm run dev` in `cms/`, then open
 directly, with no sign-in.
 
 Deploying: it runs as a Node.js site on the existing hosting plan, Node.js 24.
-Steps are in [docs/HANDOVER.md](../docs/HANDOVER.md).
+The workflow `.github/workflows/cms-deploy.yml` zips this folder, uploads it
+to cms.docsscale.com and starts Hostinger's build; it runs on every change to
+`cms/` on `main` and can be started by hand. Server settings are set in hPanel
+(or through Hostinger's API), never in the repository.
 
 ## The SEO dashboard (`/seo`)
 
@@ -41,8 +44,8 @@ Access log. Code in `lib/seo/` and `app/seo/`.
   is tried on its own; the Data sources tab shows what each returned.
 - **Settings on the server** (environment, never in the repository):
   `SEO_DATA_DIR`, `SEO_ADMIN_EMAILS`, `SEO_CRON_TOKEN`,
-  `GOOGLE_SERVICE_ACCOUNT_FILE` (path to the read-only key, inside the private
-  folder), `BING_API_KEY`, `PAGESPEED_API_KEY`, and `SEO_GITHUB_TOKEN` (a
+  `GOOGLE_SERVICE_ACCOUNT_JSON` (the read-only key's JSON, or
+  `GOOGLE_SERVICE_ACCOUNT_FILE`, a path to it), `BING_API_KEY`, `PAGESPEED_API_KEY`, and `SEO_GITHUB_TOKEN` (a
   read-only token, needed once the repository is private again). Optional:
   `SEO_SITE_URL`, `SEO_PUBLIC_URL`, `GSC_SITE`, `GA4_PROPERTY`, `BING_SITE_URL`.
 - **Locally:** `SEO_MAIL_MODE=console SEO_ADMIN_EMAILS=you@example.com
