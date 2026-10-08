@@ -9,6 +9,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Started by the publish workflow for the commit it adds to main.
+  workflow_dispatch:
 
 # The repository is public (since 7 Oct 2026): jobs get read-only access and
 # no job needs more.

@@ -67,7 +67,15 @@ if (deleteList && !fs.existsSync(deleteList)) fail(`No such list: ${deleteList}`
 
 // 1. Safety checks for production (skipped for the emergency rollback, which
 //    must work even when main or CI is broken, and for the read-only prune report).
-if (target === 'production' && !flag('dry-run') && !rollbackOriginal && !pruneReport) {
+// The publish workflow (.github/workflows/publish.yml) has just built and
+// checked this exact commit itself, in the same job, before it existed on
+// GitHub; the CI gate below cannot apply to it. Honoured only inside that workflow.
+const publishedByWorkflow =
+  flag('checked-by-publish-workflow') && process.env.GITHUB_WORKFLOW === 'Publish content';
+if (flag('checked-by-publish-workflow') && !publishedByWorkflow)
+  fail('--checked-by-publish-workflow only works inside the "Publish content" workflow.');
+
+if (target === 'production' && !flag('dry-run') && !rollbackOriginal && !pruneReport && !publishedByWorkflow) {
   if (!flag('yes')) fail('Production deploy needs --yes (after checking staging).');
   if (git('status --porcelain')) fail('Working tree has uncommitted changes.');
   if (git('rev-parse --abbrev-ref HEAD') !== 'main') fail('Production deploys only from main.');
