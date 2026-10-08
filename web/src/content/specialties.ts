@@ -31,6 +31,10 @@ export type Specialty = {
     role: string;
     href: string;
   };
+  /** Questions this specialty's owners ask, with visible answers. Shown as a
+   *  section (and FAQPage schema) only once real, owner-approved entries exist;
+   *  leave empty rather than invent them. */
+  faqs?: { q: string; a: string }[];
 };
 
 export const SPECIALTIES: Specialty[] = [
