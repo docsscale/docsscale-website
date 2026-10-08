@@ -1,0 +1,90 @@
+# Installs the editing app and SEO dashboard (cms/) on cms.docsscale.com:
+# zips the folder, uploads it, starts Hostinger's Node.js build and waits for
+# it. Runs when cms/ changes on main, or by hand. The public site is untouched.
+# Needs the repository secret HOSTINGER_API_TOKEN (docs/HANDOVER.md).
+name: Editing app
+
+on:
+  push:
+    branches: [main]
+    paths: ['cms/**', '.github/workflows/cms-deploy.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cms-deploy
+  cancel-in-progress: false
+
+env:
+  ACCOUNT: u145389112
+  DOMAIN: cms.docsscale.com
+  API: https://developers.hostinger.com/api/hosting/v1
+
+jobs:
+  deploy:
+    name: Upload and build on Hostinger
+    runs-on: ubuntu-latest
+    env:
+      HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+    steps:
+      - name: Check for the Hostinger access key
+        run: |
+          [ -n "$HOSTINGER_API_TOKEN" ] || { echo "::error::No HOSTINGER_API_TOKEN secret, so the editing app was not installed."; exit 1; }
+      - uses: actions/checkout@v7
+      - name: Zip the app (without dependencies and builds)
+        run: cd cms && zip -qr ../cms-app.zip . -x 'node_modules/*' '.next/*' '.seo-data/*' && ls -l ../cms-app.zip
+      - name: Get upload credentials
+        run: |
+          response=$(curl -sS --fail-with-body -X POST "$API/files/upload-urls" \
+            -H "Authorization: Bearer $HOSTINGER_API_TOKEN" -H "Content-Type: application/json" \
+            -d "{\"username\":\"$ACCOUNT\",\"domain\":\"$DOMAIN\"}")
+          for field in url auth_key rest_auth_key; do
+            value=$(printf '%s' "$response" | node -e "process.stdin.on('data', (d) => process.stdout.write(String(JSON.parse(d)['$field'] ?? '')))")
+            [ -n "$value" ] || { echo "::error::Hostinger did not return upload credentials."; exit 1; }
+            echo "::add-mask::$value"
+            case $field in
+              url) echo "UPLOAD_URL=$value" >> "$GITHUB_ENV" ;;
+              auth_key) echo "UPLOAD_AUTH=$value" >> "$GITHUB_ENV" ;;
+              rest_auth_key) echo "UPLOAD_REST=$value" >> "$GITHUB_ENV" ;;
+            esac
+          done
+      - name: Upload the zip
+        run: |
+          size=$(stat -c%s cms-app.zip)
+          curl -sS --fail -o /dev/null -X POST "$UPLOAD_URL/cms-app.zip?override=true" \
+            -H "X-Auth: $UPLOAD_AUTH" -H "X-Auth-Rest: $UPLOAD_REST" -H "Tus-Resumable: 1.0.0" \
+            -H "Upload-Length: $size" -H "Upload-Offset: 0"
+          curl -sS --fail -o /dev/null -X PATCH "$UPLOAD_URL/cms-app.zip?override=true" \
+            -H "X-Auth: $UPLOAD_AUTH" -H "X-Auth-Rest: $UPLOAD_REST" -H "Tus-Resumable: 1.0.0" \
+            -H "Content-Type: application/offset+octet-stream" -H "Upload-Offset: 0" --data-binary @cms-app.zip
+      - name: Start the build and wait for it
+        run: |
+          auth=(-H "Authorization: Bearer $HOSTINGER_API_TOKEN" -H "Content-Type: application/json")
+          started=$(curl -sS --fail-with-body -X POST "$API/accounts/$ACCOUNT/websites/$DOMAIN/nodejs/builds" "${auth[@]}" \
+            -d '{"node_version":24,"app_type":"next","root_directory":".","output_directory":".next","build_script":"build","package_manager":"npm","source_type":"archive","source_options":{"archive_path":"cms-app.zip"}}')
+          uuid=$(printf '%s' "$started" | node -e "process.stdin.on('data', (d) => process.stdout.write(String(JSON.parse(d).uuid ?? JSON.parse(d).data?.uuid ?? '')))")
+          [ -n "$uuid" ] || { echo "::error::Hostinger did not start a build: $started"; exit 1; }
+          echo "Build $uuid started"
+          for i in $(seq 1 60); do
+            sleep 15
+            state=$(curl -sS "$API/accounts/$ACCOUNT/websites/$DOMAIN/nodejs/builds/$uuid" "${auth[@]}" \
+              | node -e "process.stdin.on('data', (d) => process.stdout.write(String(JSON.parse(d).state ?? JSON.parse(d).data?.state ?? '')))")
+            echo "  $state"
+            case $state in
+              completed) exit 0 ;;
+              failed)
+                curl -sS "$API/accounts/$ACCOUNT/websites/$DOMAIN/nodejs/builds/$uuid/logs" "${auth[@]}" | tail -c 4000
+                echo "::error::The build failed."; exit 1 ;;
+            esac
+          done
+          echo "::error::The build did not finish in 15 minutes."; exit 1
+      - name: Check the app answers and stays hidden
+        run: |
+          sleep 20
+          headers=$(curl -s -o /dev/null -D - --max-time 30 "https://$DOMAIN/seo/sign-in")
+          status=$(printf '%s' "$headers" | awk 'NR==1 {print $2}')
+          printf '%s\n' "$headers" | head -1
+          [ "$status" = "200" ] || [ "$status" = "403" ] || { echo "::error::/seo/sign-in answered $status"; exit 1; }
+          printf '%s' "$headers" | grep -qi '^x-robots-tag:.*noindex' || [ "$status" = "403" ] || { echo "::error::No noindex header"; exit 1; }
