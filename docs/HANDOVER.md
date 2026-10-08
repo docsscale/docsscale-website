@@ -11,9 +11,11 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 
 ## What is live
 
-- **Production: v1.5.0** on https://docsscale.com, deployed 8 Oct 2026: the
-  blog (`/blog/`) with its first post, released on the owner's "publish".
-- Before that: v1.4.6, deployed 7 Oct 2026.
+- **Production: v1.6.0** on https://docsscale.com, deployed 8 Oct 2026:
+  "From the blog" on the home page, Blog in the footer, the blog's new
+  heading, IndexNow in the publish workflow. Released on the owner's "Yes".
+- Before that: v1.5.0 (8 Oct 2026, the blog and its first post) and v1.4.6
+  (7 Oct 2026).
   `https://docsscale.com/version.txt` shows it. All CI checks pass on `main`.
 - Released on 7 Oct: **v1.4.5** (the `/services` Local SEO card no longer
   promises "a page per treatment and neighborhood"; build-tool security
@@ -31,15 +33,14 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 |---|---|---|
 | [#45](https://github.com/docsscale/docsscale-website/pull/45) | Service pages: layout and route, with a Local SEO sample | **Draft, on purpose.** The owner approved the structure on 6 Oct. It holds filler text and must not be merged until real, approved copy replaces it. See "Parked". |
 
-| [#86](https://github.com/docsscale/docsscale-website/pull/86) | Home page "From the blog" section, Blog link in the footer, IndexNow on every post publish | Built 8 Oct 2026 in the cloud session. **Visible**: before/after shots were sent to the owner; release only after his approval. It touches the publish workflow, so the owner merges it himself. After approval, re-record the visual baseline (`npm run visual:approve`). |
-
 **Where the developer works (from 8 Oct 2026):** a cloud session in the
 project thread "Website (cloud)", so work continues when the owner's Mac is
 off. The earlier "website" thread ran on the Mac through Remote Control and
-has stopped building. A cloud session cannot open docsscale.com (its network
-blocks it), so live checks run from GitHub Actions or are asked of the owner.
+has stopped building. A cloud session can open docsscale.com, but it cannot
+reach IndexNow (its network blocks api.indexnow.org); IndexNow runs from the
+publish workflow on GitHub instead.
 
-Apart from those, no pull request is open. GitHub's updater opens new ones on Mondays
+Apart from that, no pull request is open. GitHub's updater opens new ones on Mondays
 (weekly dependency updates); they are routine work under the rule below.
 
 ## The plan, and where it is
@@ -234,9 +235,15 @@ November, when the allowance resets.
   and the repository has no secrets).
 - **Told to the owner before the switch (7 Oct):** no keys or passwords were
   found in the history; commit `84f5fb3` holds the original site's
-  `lead-debug-log.txt` with four email addresses; the history and these notes
+  `lead-debug-log.txt` with two test email addresses; the history and these notes
   show how the site is built (CLAUDE.md, section 2); public copies cannot be
   taken back.
+- **The old debug log (checked 8 Oct, closed):** it holds two form tests
+  from 17 Sep (test entries named "testing", with made-up addresses and an
+  invalid phone number). No copy is left on the server (`public_html`,
+  `staging_html`) or in the owner's local folder, and the lead handler no
+  longer writes form contents to any log. The owner decided to leave the two
+  commits in the history rather than rewrite `main` and every tag.
 - **Before making it private again:** check the month's usage
   (`gh api orgs/docsscale/settings/billing/usage`). A full CI run costs about
   20 minutes on a private repository; CI runs once per change (pull requests
@@ -440,10 +447,9 @@ Record to set at each step (both names), for example: `v=DMARC1; p=quarantine; p
 ## Owner to-dos (in priority order)
 
 1. **Delete the Claude Code session logs** in `~/.claude/projects/-Users-abdulsamad-Downloads-docsscale/` once the project is finished. They contain the GoHighLevel token from the early audit, the Bing API key and the UptimeRobot API key. At the same time, **generate a fresh Bing API key** and update `~/DocsScale-Secure/bing-webmaster-api-key.txt` ([how](#bing-webmaster-api)), and **reset the UptimeRobot API key** and update `~/DocsScale-Secure/uptimerobot-api-key.txt` ([how](#uptime-monitoring)).
-2. **Check for old copies of `lead-debug-log.txt`.** The original site's debug log is no longer reachable (it returns 404, checked 27 Sep 2026). If a copy remains anywhere in hPanel → File Manager, delete it: it predates the hardening and may contain lead data.
-3. **GA4 admin setup:** mark the key events `generate_lead` and `book_call`, create the custom dimensions, and switch on the Internal Traffic filter after the team has opened `docsscale.com/?team=on` ([TRACKING.md](TRACKING.md)).
-4. **Screenshots and photos:** the funnel images, the three homepage/About placeholders and the team photos, in the sizes listed in [incoming/README.md](../incoming/README.md).
-5. **Ask the logo designer for the original vector file** (for print; [brand/README.md](../brand/README.md)).
+2. **GA4 admin setup:** mark the key events `generate_lead` and `book_call`, create the custom dimensions, and switch on the Internal Traffic filter after the team has opened `docsscale.com/?team=on` ([TRACKING.md](TRACKING.md)).
+3. **Screenshots and photos:** the funnel images, the three homepage/About placeholders and the team photos, in the sizes listed in [incoming/README.md](../incoming/README.md).
+4. **Ask the logo designer for the original vector file** (for print; [brand/README.md](../brand/README.md)).
 
 ## When the team grows
 
