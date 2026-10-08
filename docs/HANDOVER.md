@@ -11,9 +11,11 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 
 ## What is live
 
-- **Production: v1.5.0** on https://docsscale.com, deployed 8 Oct 2026: the
-  blog (`/blog/`) with its first post, released on the owner's "publish".
-- Before that: v1.4.6, deployed 7 Oct 2026.
+- **Production: v1.6.0** on https://docsscale.com, deployed 8 Oct 2026:
+  "From the blog" on the home page, Blog in the footer, the blog's new
+  heading, IndexNow in the publish workflow. Released on the owner's "Yes".
+- Before that: v1.5.0 (8 Oct 2026, the blog and its first post) and v1.4.6
+  (7 Oct 2026).
   `https://docsscale.com/version.txt` shows it. All CI checks pass on `main`.
 - Released on 7 Oct: **v1.4.5** (the `/services` Local SEO card no longer
   promises "a page per treatment and neighborhood"; build-tool security
@@ -31,15 +33,14 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 |---|---|---|
 | [#45](https://github.com/docsscale/docsscale-website/pull/45) | Service pages: layout and route, with a Local SEO sample | **Draft, on purpose.** The owner approved the structure on 6 Oct. It holds filler text and must not be merged until real, approved copy replaces it. See "Parked". |
 
-| [#86](https://github.com/docsscale/docsscale-website/pull/86) | Home page "From the blog" section, Blog link in the footer, IndexNow on every post publish | Built 8 Oct 2026 in the cloud session. **Visible**: before/after shots were sent to the owner; release only after his approval. It touches the publish workflow, so the owner merges it himself. After approval, re-record the visual baseline (`npm run visual:approve`). |
-
 **Where the developer works (from 8 Oct 2026):** a cloud session in the
 project thread "Website (cloud)", so work continues when the owner's Mac is
 off. The earlier "website" thread ran on the Mac through Remote Control and
-has stopped building. A cloud session cannot open docsscale.com (its network
-blocks it), so live checks run from GitHub Actions or are asked of the owner.
+has stopped building. A cloud session can open docsscale.com, but it cannot
+reach IndexNow (its network blocks api.indexnow.org); IndexNow runs from the
+publish workflow on GitHub instead.
 
-Apart from those, no pull request is open. GitHub's updater opens new ones on Mondays
+Apart from that, no pull request is open. GitHub's updater opens new ones on Mondays
 (weekly dependency updates); they are routine work under the rule below.
 
 ## The plan, and where it is
