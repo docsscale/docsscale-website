@@ -59,6 +59,11 @@ Access log. Code in `lib/seo/` and `app/seo/`.
      `settings.json` in the private folder and are never shown again.
   3. Nothing else: the app runs its own schedule. The two existing cron jobs
      (daily 10:20 UTC, Mondays 10:40 UTC) only nudge it.
+- **Read-only access for Claude** (owner, 8 Oct 2026): an admin makes a key
+  on the Settings tab (shown once; the app keeps its hash) and puts it in the
+  cloud environment's secrets as `SEO_READ_TOKEN`. `GET /api/seo/read?what=
+  sources|all|<source>` with `Authorization: Bearer <key>` returns the latest
+  data as JSON; every read is in the Access log. Nothing can be changed this way.
   The environment still wins when set: `SEO_DATA_DIR`, `SEO_ADMIN_EMAILS`,
   `SEO_CRON_TOKEN`, `GOOGLE_SERVICE_ACCOUNT_JSON` or
   `GOOGLE_SERVICE_ACCOUNT_FILE`, `BING_API_KEY`, `PAGESPEED_API_KEY`,
