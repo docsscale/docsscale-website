@@ -3,7 +3,9 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
-## [Unreleased]
+## [1.5.0] — 2026-10-08
+
+The blog and the system behind it. Visible to visitors: the blog page and its first post. Everything else in this list is the publishing system (editing screen, preview site, checks), which visitors do not see.
 
 - **Performance budget in CI** (completion plan, item 11; finishes stage A). A fifth CI job runs a lab test (Lighthouse, simulated phone) on every built page, three runs each, and judges the best run. The 16 existing pages are held to "no worse than today": at most 6 points below their recorded score, the main content painted at most 15% later, no new layout shift, at most 3% heavier. Any page not in the record is new and must meet the plan's target: score 90 or more, main content within 2.5 seconds, no layout shift. Today's record is the middle of three CI runs on 7 Oct 2026 (scores 93–98, main content at 2.4–3.2 seconds, 260–409 KB per page). The deploy script now requires this job too. Lighthouse 13.5.0 is added as a test tool; it is never sent to visitors. Nothing on the site changes, so there is nothing to deploy.
 - **Two new private addresses, both closed** (completion plan, section 5, item 7; created with the owner's approval on 7 Oct 2026). `preview.docsscale.com` asks for the staging login; `cms.docsscale.com` answers nothing until the editing app is installed. Both send `noindex` on every response. Each is its own site in its own folder on the existing hosting plan, apart from the live site; no cost. A new CI check (`tests/server/hidden-sites.sh`) asks both addresses on every push and fails if either answers with content or without `noindex`. The rules are in `server/preview/.htaccess` and `server/cms/.htaccess`. Nothing on docsscale.com changes.
@@ -21,6 +23,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 - **Blog: a feed and topic pages.** `/blog/rss.xml` lists every published post for feed readers. A topic (category) gets its own page and a place in the filter row on the blog list once it has three posts, so there are no thin pages; a topic page without its own description stays out of search engines. Preview only until a post is published.
 - **Blog page wording** (the owner's instruction, 8 Oct 2026: the developer chooses the search-optimised wording): heading "How clinics get found, booked and re-booked", a one-line introduction, and the title and description for search results. Not public until the first post is published.
 - **Editing screen: call-to-action blocks.** A post containing a call-to-action block could not be opened in the editing screen ("Missing component definition for cta"). The block is now part of the content model: an editor can insert it from the editor's menu and choose "Book a strategy call" or "Get the Free System"; the wording and look stay fixed in code.
+- **The blog goes live with its first post**: "Google Business Profile for dentists: what to fix first" (`/blog/google-business-profile-for-dentists/`), with the blog list at `/blog/` and the feed. The post's own example is the Dallas dental case study from the Results page, with the figures as published there. Author: Abdul Samad. The blog is not in the menu yet. Paragraph spacing inside posts corrected.
 
 ## [1.4.6] — 2026-10-07
 

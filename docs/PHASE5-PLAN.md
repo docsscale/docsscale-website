@@ -4,7 +4,7 @@ Status: **in progress.** Approved in principle on 27 Sep 2026; v1.0 went live on
 
 ## Status tracker
 
-**Last updated: 7 Oct 2026 (production is v1.4.6).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
+**Last updated: 8 Oct 2026 (production is v1.5.0).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
 
 Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's fine); the only estimates are the build-effort figures in "Phase order" below.
 
@@ -16,7 +16,7 @@ Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's f
 | **5B** Site structure | **Partly done** | Services and Industries menus, `/industries/` hub and four industry pages, 301s from `/services/<industry>/` (v1.2.0, 30 Sep) | Real service pages (`/services/<service>/`); seven-vs-eight services wording ([BACKLOG.md](BACKLOG.md)) | Waits for the 5C keyword map |
 | **5C** SEO / AEO / GEO | **Not started** (pause lifted 6 Oct 2026) | Search Console and Bing set up; sitemaps submitted; indexing requested by the owner for 9 of the 11 unindexed pages (6 Oct; `/privacy/` and `/terms/` can wait) | Keyword map, on-page, schema, FAQs, `llms.txt` rewrite, long page titles | Developer; owner approves copy |
 | **5D** Lead magnets app | Not started | — | All | — |
-| **5E** Blog | Not started | — | All | — |
+| **5E** Blog | **Live** (v1.5.0, 8 Oct) | Blog templates, editing screen at `cms.docsscale.com`, private preview site, checks, feed, topic pages; first post published 8 Oct | More posts at the agreed pace; "Blog" in the menu; the Publish step from the editing screen (built, switched off); automatic social images | Owner for material and approvals; developer |
 | **5F** Newsletter | Not started | — | All | — |
 | **5G** Content plan | Not started | — | All | — |
 

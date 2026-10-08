@@ -11,7 +11,9 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 
 ## What is live
 
-- **Production: v1.4.6** on https://docsscale.com, deployed 7 Oct 2026.
+- **Production: v1.5.0** on https://docsscale.com, deployed 8 Oct 2026: the
+  blog (`/blog/`) with its first post, released on the owner's "publish".
+- Before that: v1.4.6, deployed 7 Oct 2026.
   `https://docsscale.com/version.txt` shows it. All CI checks pass on `main`.
 - Released on 7 Oct: **v1.4.5** (the `/services` Local SEO card no longer
   promises "a page per treatment and neighborhood"; build-tool security

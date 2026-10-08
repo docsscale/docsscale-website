@@ -5,7 +5,6 @@ import { BlogIndex } from '@/features/blog/BlogIndex';
 import { getTopics, INCLUDE_DRAFTS } from '@/features/blog/posts';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
-import '@/styles/blog.css';
 
 // One page per topic that has at least three posts (next.config.ts decides
 // whether this file is part of the build at all).
