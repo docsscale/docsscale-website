@@ -107,8 +107,9 @@ it.**
      Hostinger's cache in front of the site (and the browser) may keep pages.
      The preview's server rules now forbid caching of pages, and the workflow
      clears Hostinger's cache for the preview site after every upload.
-     **Not confirmed as the cause**: the developer cannot sign in to look;
-     the owner was asked to test again.
+     **Confirmed by the owner on 8 Oct 2026:** after this fix a save shows on
+     the preview by itself ("updating perfectly"). A full update takes about
+     a minute; preview pages reload themselves when it is complete.
    - **The working copy must carry main's current workflows.** The owner's
      first save (7 Oct) did not rebuild the preview, because GitHub runs the
      workflow files of the branch pushed to and `content/working` was older
