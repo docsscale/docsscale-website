@@ -7,7 +7,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 - **"From the blog" on the home page, and Blog in the footer** (owner's decision, 8 Oct 2026; no link in the header). Between Results and the questions, on the brand teal, the home page shows the newest posts (up to three) on white cards, with the blog's heading and an "All posts" button; with no published post the section is not there. The footer's Company column gains "Blog". Visible: needs the owner's approval before release.
 - **IndexNow: search engines hear about new posts straight away** (completion plan, section 3, item 5). `scripts/indexnow.mjs` sends a post's address, the blog list and the home page to IndexNow, which Bing and its partners read (Google does not take part; it reads the sitemap). The publish workflow runs it after every post it publishes; for releases it is a step in `docs/RELEASE.md`. It never fails a release. A key file is added at the site's root, public by design. Nothing a visitor sees changes.
-- **Publishing from the editing screen is built and switched off** (`.github/workflows/publish.yml`, `scripts/publish-content.mjs`). When the owner switches it on, a post set to "published" in the editing screen by an approver is checked, copied to the live copy and released, with no developer; anything else is refused. Nothing changes until then.
+- **Publishing from the editing screen** (`.github/workflows/publish.yml`, `scripts/publish-content.mjs`), switched on by the owner on 8 Oct 2026. A post the owner sets to "Published" in the editing screen is checked, copied to the live copy and released with no developer; anyone else's Publish, and anything that is not a post, is refused. The rule is in CLAUDE.md.
 
 ## [1.5.0] — 2026-10-08
 

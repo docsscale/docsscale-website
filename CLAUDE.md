@@ -36,6 +36,18 @@ If you are unsure whether something needs the owner's sign-off, stop and ask.
   anything that costs money; anything not already in an approved plan; file
   deletions; production releases that carry visible changes; and, as before,
   new accounts or infrastructure and DNS changes.
+- **Blog posts published from the editing screen are the one exception to the
+  rules above** (owner, 8 Oct 2026). When the owner sets a post to
+  "Published" at `cms.docsscale.com`, it goes live once every check passes,
+  with no pull request, no before/after and no developer. The owner's own
+  Publish is the approval. Only the owner's sign-in counts (the repository
+  variable `CONTENT_APPROVERS`); anyone else's is refused. This covers the
+  post, its pictures, and the categories and team members beside it, and
+  nothing else: any change to code, to other pages, to what the editing
+  screen can edit, to the checks or to the publish workflow itself follows
+  the rules above without exception. The developer never uses this route to
+  ship code or copy. To stop it, delete the repository variable
+  `CONTENT_PUBLISHING`.
 - No new paid service, account or infrastructure without asking. Don't create
   accounts or enter passwords; the owner does that.
 - **DNS:** show the exact change first; never change a record unasked.
