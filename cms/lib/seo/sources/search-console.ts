@@ -62,16 +62,23 @@ export async function collectSearchConsole(sitemapUrls: string[]): Promise<Searc
 
   const sm = await (await fetch(`${base}/sitemaps`, { headers: auth })).json() as { sitemap?: SearchConsoleData['sitemaps'] };
 
-  // Index status of every page in the sitemap (URL inspection allows 2,000 a day).
+  // Index status of every page in the sitemap (URL inspection allows 2,000 a
+  // day). Google sometimes answers 500 for one page (seen on the first live
+  // run, 8 Oct 2026); that page is recorded as "Unknown" rather than losing
+  // the whole day's search data.
   const index: SearchConsoleData['index'] = [];
   for (const url of sitemapUrls) {
-    const r = await postJson<{ inspectionResult?: { indexStatusResult?: { verdict?: string; coverageState?: string; lastCrawlTime?: string } } }>(
-      'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect',
-      { inspectionUrl: url, siteUrl: seoConfig.gscSite },
-      auth,
-    );
-    const s = r.inspectionResult?.indexStatusResult ?? {};
-    index.push({ url, verdict: s.verdict ?? 'Unknown', coverage: s.coverageState ?? 'Unknown', lastCrawl: s.lastCrawlTime ?? null });
+    try {
+      const r = await postJson<{ inspectionResult?: { indexStatusResult?: { verdict?: string; coverageState?: string; lastCrawlTime?: string } } }>(
+        'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect',
+        { inspectionUrl: url, siteUrl: seoConfig.gscSite },
+        auth,
+      );
+      const s = r.inspectionResult?.indexStatusResult ?? {};
+      index.push({ url, verdict: s.verdict ?? 'Unknown', coverage: s.coverageState ?? 'Unknown', lastCrawl: s.lastCrawlTime ?? null });
+    } catch (e) {
+      index.push({ url, verdict: 'Unknown', coverage: `Google did not answer: ${(e as Error).message.slice(0, 120)}`, lastCrawl: null });
+    }
   }
 
   return {
