@@ -58,7 +58,7 @@ export async function FromTheBlog() {
             All posts →
           </Link>
         </div>
-        <div className="post-cards">
+        <div className="home-posts">
           {posts.map((post) => (
             <PostCard key={post.slug} post={post} level="h3" />
           ))}
