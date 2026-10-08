@@ -3,6 +3,10 @@
 All notable changes to docsscale.com. Versions follow [Semantic Versioning](https://semver.org/):
 major = a redesign or URL-structure change, minor = new pages or features, patch = fixes and copy edits.
 
+## [Unreleased]
+
+- **Publishing from the editing screen is built and switched off** (`.github/workflows/publish.yml`, `scripts/publish-content.mjs`). When the owner switches it on, a post set to "published" in the editing screen by an approver is checked, copied to the live copy and released, with no developer; anything else is refused. Nothing changes until then.
+
 ## [1.5.0] — 2026-10-08
 
 The blog and the system behind it. Visible to visitors: the blog page and its first post. Everything else in this list is the publishing system (editing screen, preview site, checks), which visitors do not see.

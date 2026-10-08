@@ -135,6 +135,23 @@ it.**
    - Next, in order: the publish workflow with the owner's approval (and its
      rule in CLAUDE.md, plan section 6); RSS, social images, the category
      filter; the remaining forms.
+   - **Built 7 Oct, switched OFF: the publish workflow**
+     (`.github/workflows/publish.yml`, rules in `scripts/publish-content.mjs`).
+     It runs only when the repository variable `CONTENT_PUBLISHING` is `on`,
+     and publishes only posts set to "published" in the editing screen by an
+     address listed in the variable `CONTENT_APPROVERS`. It refuses anything
+     that is not content, any save GitHub cannot confirm as coming from the
+     sign-in service, and taking a live post down. On a publish it builds and
+     runs the site checks, commits the post to `main`, uploads to production,
+     clears the Hostinger cache, checks the post answers, and starts CI on
+     the new commit. The rules were tested on made-up cases (wrong person,
+     save from outside the editing screen, unconfirmed save, code in the
+     working copy, draft); **a real publish has never run.** Switching it on
+     is the owner's decision and needs the rule in CLAUDE.md first (wording
+     in the plan, section 6, "The rule change in CLAUDE.md"): today a
+     production release with visible changes needs the owner's go-ahead and a
+     before/after, and this replaces that, for blog posts only, with the
+     owner's Publish in the editing screen.
    - Known: `npm audit` reports one advisory with no fixed version yet
      (`braces`, reached through the CMS library and, in `web/`, through the
      lint tools). Neither is sent to visitors; the weekly updater will bring
