@@ -12,3 +12,11 @@ export const BLOG_INDEX: BlogIndexCopy = {
   description:
     'Practical marketing guides for dental, chiropractic, physical therapy and med spa practices: local SEO, ads, follow-up, reviews and patient recall.',
 };
+
+/** The "from the blog" section on the homepage (shown once a post is published). */
+export const HOME_BLOG = {
+  eyebrow: 'Blog',
+  heading: 'Practical guides for clinic owners',
+  allPosts: 'All posts',
+  read: 'Read the post',
+} as const;
