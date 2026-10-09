@@ -5,8 +5,10 @@ import { redirect } from 'next/navigation';
 import { createSignInLink, redeemSignInLink, requireUser, signOut } from '../../lib/seo/auth';
 import { IS_PRODUCTION, createReadKey, saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
+import { parseCsv } from '../../lib/seo/csv';
+import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
 import { startRun } from '../../lib/seo/run';
-import { now, store } from '../../lib/seo/store';
+import { now, saveSetting, store } from '../../lib/seo/store';
 
 export async function requestLink(form: FormData) {
   const made = await createSignInLink(String(form.get('email') ?? ''));
@@ -99,4 +101,107 @@ export async function removePerson(form: FormData) {
   await requireUser('/seo/access (remove person)', 'admin');
   store().prepare('DELETE FROM users WHERE email = ?').run(String(form.get('email') ?? ''));
   redirect('/seo/access');
+}
+
+// Phase 2 (docs/SEO-DASHBOARD-PLAN.md, sections 6 to 8). Every action checks
+// the role again, and every change to the queue is logged with who made it.
+
+const back = (to: string) => redirect(to);
+
+/** Approve, Save for later or Reject: the owner's three decisions. Only the
+ *  admin, unless Settings extends it to the SEO role (decision 3). */
+export async function decideFinding(form: FormData) {
+  const user = await requireUser('/seo/queue (decide)', approverRole());
+  const to = String(form.get('to'));
+  if (to === 'Approved' || to === 'Saved for later' || to === 'Rejected' || to === 'Recommended') {
+    moveFinding(Number(form.get('id')), to, user.email, String(form.get('note') ?? '').trim());
+  }
+  back(String(form.get('back') || '/seo/queue'));
+}
+
+/** In progress, Done, or back to Approved: progress noted by the SEO role. A
+ *  Done item reopens only with a written reason (plan, section 7). */
+export async function progressFinding(form: FormData) {
+  const user = await requireUser('/seo/queue (progress)', 'seo');
+  const to = String(form.get('to'));
+  const reason = String(form.get('reason') ?? '').trim();
+  if (to === 'In progress' || to === 'Done' || to === 'Approved') moveFinding(Number(form.get('id')), to, user.email, '', reason);
+  back(String(form.get('back') || '/seo/queue'));
+}
+
+export async function saveFindingNote(form: FormData) {
+  const user = await requireUser('/seo/queue (note)', 'seo');
+  const h = Number(form.get('horizon'));
+  noteFinding(Number(form.get('id')), String(form.get('note') ?? '').trim().slice(0, 2000), user.email, [30, 60, 90].includes(h) ? h : null);
+  back(String(form.get('back') || '/seo/queue'));
+}
+
+/** The Overview's written summary (the weekly run's judgement) and the
+ *  "what to ignore" list, kept between weeks. */
+export async function writeNote(form: FormData) {
+  const user = await requireUser('/seo (note)', 'seo');
+  const kind = String(form.get('kind')) === 'ignore' ? 'ignore' : 'overview';
+  const text = String(form.get('text') ?? '').trim().slice(0, 8000);
+  if (text) store().prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run(kind, now(), user.email, text, String(form.get('reason') ?? '').trim().slice(0, 500));
+  back('/seo');
+}
+
+export async function removeNote(form: FormData) {
+  await requireUser('/seo (remove note)', 'seo');
+  store().prepare('UPDATE notes SET removed = ? WHERE id = ?').run(now(), Number(form.get('id')));
+  back('/seo');
+}
+
+export async function addPlanItem(form: FormData) {
+  const user = await requireUser('/seo/plan (add)', 'seo');
+  const h = Number(form.get('horizon'));
+  const text = String(form.get('text') ?? '').trim().slice(0, 500);
+  if (text && [30, 60, 90].includes(h)) store().prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(h, text, user.email, now());
+  back('/seo/plan');
+}
+
+export async function donePlanItem(form: FormData) {
+  await requireUser('/seo/plan (done)', 'seo');
+  store().prepare('UPDATE plan_items SET done_at = ? WHERE id = ?').run(now(), Number(form.get('id')));
+  back('/seo/plan');
+}
+
+/** The manual AI-check log: the one place a person types a result, and it is
+ *  labelled as manual (plan, section 9). */
+export async function addAiCheck(form: FormData) {
+  const user = await requireUser('/seo/ai (log)', 'seo');
+  const assistant = String(form.get('assistant') ?? '').trim().slice(0, 60);
+  const question = String(form.get('question') ?? '').trim().slice(0, 300);
+  if (assistant && question) {
+    store().prepare('INSERT INTO ai_checks (at, by, assistant, question, cited, detail) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(now(), user.email, assistant, question, form.get('cited') === 'yes' ? 1 : 0, String(form.get('detail') ?? '').trim().slice(0, 500));
+  }
+  back('/seo/ai');
+}
+
+/** CSV only, 2 MB at most, the first 5,000 rows kept; stamped with source,
+ *  date and who uploaded it. Never served back as a page. */
+export async function importCsv(form: FormData) {
+  const user = await requireUser('/seo/imports (upload)', 'seo');
+  const file = form.get('file');
+  const source = String(form.get('source') ?? '').trim().slice(0, 80) || 'Other';
+  if (!(file instanceof File) || file.size === 0) return back('/seo/imports?error=nothing');
+  if (file.size > 2_000_000 || !/\.csv$/i.test(file.name)) back('/seo/imports?error=csv');
+  const parsed = parseCsv(await file.text());
+  if (!parsed.columns.length) back('/seo/imports?error=csv');
+  store().prepare('INSERT INTO imports (at, by, source, filename, note, rows, columns, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+    .run(now(), user.email, source, file.name.slice(0, 120), String(form.get('note') ?? '').trim().slice(0, 500), parsed.rows.length, JSON.stringify(parsed.columns), JSON.stringify(parsed.rows.slice(0, 5000)));
+  back('/seo/imports?saved=1');
+}
+
+/** Settings the admin changes on screen, each with a reason (plan, section 9). */
+export async function saveQueueSettings(form: FormData) {
+  const user = await requireUser('/seo/settings (queue)', 'admin');
+  const reason = String(form.get('reason') ?? '').trim().slice(0, 300) || 'No reason given';
+  saveSetting('approvers', form.get('approvers') === 'seo' ? 'seo' : 'admin', user.email, reason);
+  for (const [key, min, max] of [['threshold.minImpressions', 1, 10000], ['threshold.lostClicksPct', 10, 90], ['threshold.staleDays', 30, 1000]] as const) {
+    const v = Number(form.get(key));
+    if (Number.isFinite(v) && v >= min && v <= max) saveSetting(key, String(Math.round(v)), user.email, reason);
+  }
+  back('/seo/settings?saved=1');
 }

@@ -2,7 +2,9 @@ import { cookies } from 'next/headers';
 import { requireUser } from '../../../../lib/seo/auth';
 import { bingKey, githubToken, googleKey, googleKeyAccount, hasReadKey, pagespeedKey, seoConfig, settingsPresence } from '../../../../lib/seo/config';
 import { cronCommand, ensureServerFiles } from '../../../../lib/seo/server-files';
-import { clearKey, makeReadKey, saveKeys } from '../../actions';
+import { thresholds } from '../../../../lib/seo/findings';
+import { setting, store } from '../../../../lib/seo/store';
+import { clearKey, makeReadKey, saveKeys, saveQueueSettings } from '../../actions';
 import { Badge, H1, Section, Source, T, Table, button, input } from '../../ui';
 
 export const dynamic = 'force-dynamic';
@@ -87,6 +89,32 @@ export default async function Settings({ searchParams }: { searchParams: Promise
       <Section title="Scheduled runs" note="The app keeps its own schedule: the daily sources once a day from 10:00 UTC, PageSpeed once a week. Any call to its run address, such as Hostinger's cron, also starts a run that is due. If you prefer a cron job of your own, these commands work (the script and its token are made by the app in its private folder).">
         <Table head={['Job', 'Command']} rows={[['Daily', <code key="d" style={{ fontSize: 12 }}>{cronCommand('daily')}</code>], ['Weekly', <code key="w" style={{ fontSize: 12 }}>{cronCommand('weekly')}</code>]]} />
         <p style={{ fontSize: 13, color: T.body }}>Private folder: <code>{seoConfig.dataDir}</code></p>
+      </Section>
+
+      <Section title="Fix queue: who approves, and the thresholds" note="Owner's decision 3 (6 Oct 2026): only the owner approves unless extended here to the SEO role. Thresholds follow SEO-OS section 6; every change is logged with its reason.">
+        <form action={saveQueueSettings} style={{ display: 'grid', gap: 12, maxWidth: 520 }}>
+          <label style={label}>Who may approve, save for later and reject
+            <select name="approvers" defaultValue={setting('approvers', 'admin')} style={{ ...input, marginTop: 4 }}>
+              <option value="admin">The owner (admin) only</option>
+              <option value="seo">The owner and the SEO role</option>
+            </select>
+          </label>
+          <label style={label}>Least impressions before a phrase becomes a finding<input type="number" name="threshold.minImpressions" defaultValue={thresholds().minImpressions} min={1} max={10000} style={{ ...input, marginTop: 4 }} /></label>
+          <label style={label}>Lost clicks: a page is flagged when its clicks fall by this much (%)<input type="number" name="threshold.lostClicksPct" defaultValue={thresholds().lostClicksPct} min={10} max={90} style={{ ...input, marginTop: 4 }} /></label>
+          <label style={label}>A post counts as stale after this many days without an update<input type="number" name="threshold.staleDays" defaultValue={thresholds().staleDays} min={30} max={1000} style={{ ...input, marginTop: 4 }} /></label>
+          <label style={label}>Reason for the change (kept with it)<input name="reason" required style={{ ...input, marginTop: 4 }} /></label>
+          <div><button type="submit" style={button}>Save</button></div>
+        </form>
+        <Table head={['Setting', 'Value', 'Changed', 'By', 'Reason']} rows={(store().prepare('SELECT * FROM settings ORDER BY key').all() as { key: string; value: string; changed_at: string; changed_by: string; reason: string }[]).map((r) => [r.key, r.value, r.changed_at.slice(0, 10), r.changed_by, r.reason])} empty="Defaults in use; nothing changed yet." />
+      </Section>
+
+      <Section title="Paid connectors (off)" note="Prepared in the plan, switched on only when the owner buys a tool (nothing for the first two to three months; DataForSEO first, about USD 50 once, price to confirm). Each needs its key here once bought.">
+        <Table head={['Tool', 'What it would add', 'State']} rows={[
+          ['DataForSEO', 'Daily positions for the keyword map, search volumes, competitor gap, backlinks, mentions in assistants', <Badge key="a" tone="neutral">Off: not bought</Badge>],
+          ['SE Ranking', 'Daily positions, site audit, backlinks, AI search visibility', <Badge key="b" tone="neutral">Off: not bought</Badge>],
+          ['Ahrefs', 'Backlink detail, competitor keywords', <Badge key="c" tone="neutral">Off: not bought</Badge>],
+          ['Moz', 'Domain and page authority', <Badge key="d" tone="neutral">Off: not bought</Badge>],
+        ]} />
       </Section>
 
       <Section title="Everything the app needs">
