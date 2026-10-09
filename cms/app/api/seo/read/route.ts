@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { deviceOf, shortIp } from '../../../../lib/seo/auth';
 import { readKeyMatches } from '../../../../lib/seo/config';
-import { autoSummary, findings } from '../../../../lib/seo/findings';
+import { autoSummary, findings, moveFinding, noteFinding } from '../../../../lib/seo/findings';
 import { SOURCES, recentRuns, type SourceName } from '../../../../lib/seo/run';
 import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/store';
 
@@ -10,9 +10,11 @@ import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/stor
 // dashboard?"). An admin makes a read-only key on the Settings tab and keeps
 // it in the cloud environment's secrets; the app keeps only its hash.
 // GET /api/seo/read?what=<source>|sources|all with "Authorization: Bearer
-// <key>". Every read is in the Access log. The one thing the key can write
-// is the Overview's weekly summary (POST, plain text), which the plan gives
-// to the weekly run (section 6); it cannot touch the queue, keys or people.
+// <key>". Every read is in the Access log. POST lets the weekly run act as
+// the SEO role does on screen (owner, 9 Oct 2026: "give write access too"):
+// write the Overview summary, note progress on queue items, add plan lines,
+// the ignore list and manual AI checks. It cannot approve or reject (the
+// owner's decision 3), nor touch keys, people or settings.
 export const dynamic = 'force-dynamic';
 
 const sha = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
@@ -50,14 +52,60 @@ export async function GET(request: NextRequest) {
   return Response.json({ error: `Unknown "what"; one of: sources, all, queue, overview, ${names.join(', ')}` }, { status: 400 });
 }
 
-/** The weekly run's written summary for the Overview: plain text, 8,000
- *  characters at most, stamped "Claude (weekly run)". */
+const BY = 'Claude (weekly run)';
+type Body = { action?: string; text?: string; id?: number; to?: string; reason?: string; note?: string; horizon?: number; assistant?: string; question?: string; cited?: boolean; detail?: string };
+
+/** Writes the weekly run may make. A plain-text body is the Overview
+ *  summary; JSON chooses an action: summary, move (In progress, Done,
+ *  Recommended, or Approved only to reopen a Done item with a reason), note,
+ *  plan, ignore, ai-check. Everything is logged under the run's name. */
 export async function POST(request: NextRequest) {
   const key = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
   if (!key || !readKeyMatches(key)) return new Response('Not found', { status: 404 });
-  logRead(request, key, '/api/seo/read (overview summary written)');
-  const text = (await request.text()).trim().slice(0, 8000);
-  if (!text) return Response.json({ error: 'Send the summary as plain text in the body.' }, { status: 400 });
-  store().prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('overview', now(), 'Claude (weekly run)', text, '');
-  return Response.json({ ok: true, at: now() });
+  const raw = (await request.text()).trim();
+  let body: Body = { action: 'summary', text: raw };
+  if (raw.startsWith('{')) { try { body = JSON.parse(raw) as Body; } catch { return Response.json({ error: 'The body is not valid JSON.' }, { status: 400 }); } }
+  const action = body.action ?? 'summary';
+  logRead(request, key, `/api/seo/read (${action} written)`);
+  const db = store();
+  const text = String(body.text ?? '').trim();
+  const bad = (m: string) => Response.json({ error: m }, { status: 400 });
+
+  if (action === 'summary') {
+    if (!text) return bad('Send the summary as plain text, or JSON {"action":"summary","text":…}.');
+    db.prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('overview', now(), BY, text.slice(0, 8000), '');
+    return Response.json({ ok: true, at: now() });
+  }
+  if (action === 'move') {
+    const to = String(body.to ?? '');
+    if (!['In progress', 'Done', 'Recommended', 'Approved'].includes(to)) return bad('to must be In progress, Done, Recommended, or Approved (to reopen a Done item, with a reason).');
+    const f = db.prepare('SELECT status FROM findings WHERE id = ?').get(Number(body.id)) as { status: string } | undefined;
+    if (!f) return bad('No such item.');
+    // Approving is the owner's (decision 3): the key may only use "Approved" to reopen a done item.
+    if (to === 'Approved' && !['Done', 'Outcome measured'].includes(f.status)) return bad('Only the owner approves items; the key may not.');
+    const ok = moveFinding(Number(body.id), to as 'In progress', BY, String(body.note ?? ''), String(body.reason ?? ''));
+    return ok ? Response.json({ ok: true }) : bad('That move is not allowed (reopening a done item needs a reason).');
+  }
+  if (action === 'note') {
+    const h = Number(body.horizon);
+    noteFinding(Number(body.id), text.slice(0, 2000), BY, [30, 60, 90].includes(h) ? h : null);
+    return Response.json({ ok: true });
+  }
+  if (action === 'plan') {
+    const h = Number(body.horizon);
+    if (!text || ![30, 60, 90].includes(h)) return bad('plan needs text and horizon 30, 60 or 90.');
+    db.prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(h, text.slice(0, 500), BY, now());
+    return Response.json({ ok: true });
+  }
+  if (action === 'ignore') {
+    if (!text) return bad('ignore needs text (and reason).');
+    db.prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('ignore', now(), BY, text.slice(0, 500), String(body.reason ?? '').slice(0, 500));
+    return Response.json({ ok: true });
+  }
+  if (action === 'ai-check') {
+    if (!body.assistant || !body.question) return bad('ai-check needs assistant, question, cited (true/false) and optional detail.');
+    db.prepare('INSERT INTO ai_checks (at, by, assistant, question, cited, detail) VALUES (?, ?, ?, ?, ?, ?)').run(now(), BY, String(body.assistant).slice(0, 60), String(body.question).slice(0, 300), body.cited ? 1 : 0, String(body.detail ?? '').slice(0, 500));
+    return Response.json({ ok: true });
+  }
+  return bad('Unknown action; one of: summary, move, note, plan, ignore, ai-check.');
 }
