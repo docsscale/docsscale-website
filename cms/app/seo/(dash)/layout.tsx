@@ -29,6 +29,7 @@ const TABS: { group: string; items: { href: string; label: string; role: Role; i
     group: 'Site',
     items: [
       { href: '/seo/analytics', label: 'Analytics and leads', role: 'seo', icon: 'analytics' },
+      { href: '/seo/leads', label: 'Leads and sources', role: 'seo', icon: 'leads' },
       { href: '/seo/content', label: 'Content inventory', role: 'editor', icon: 'content' },
       { href: '/seo/edits', label: 'Edit log', role: 'editor', icon: 'edits' },
       { href: '/seo/technical', label: 'Technical health', role: 'seo', icon: 'technical' },

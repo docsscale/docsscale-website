@@ -388,6 +388,22 @@ you choose to buy.
 | — | Buying a tool | Nothing for two to three months; then confirm DataForSEO's current price before any purchase |
 | — | Priority | The publishing core and the first two content pieces come before any dashboard work |
 
+## 13. Automations added 9 Oct 2026 (owner: "yeah all 5")
+
+After the redesign the owner asked for anything left and more automation. Five
+items, all free, all built in one pull request:
+
+| # | What | Where it lives |
+|---|---|---|
+| 1 | **Approved wording fixes become pull requests on their own.** The Monday and Thursday run drafts the new title, description or heading for each Approved item that changes words, opens a pull request with a before/after, and notes the link on the item. The owner still approves anything visible before it is merged. | The routine's prompt (cloud thread "SEO dashboard"); nothing in code |
+| 2 | **Monthly report**, once the first Monday of the month has come: 28 days against the 28 before, index count, visitors and leads (GA4 and the CRM), site health, what was marked done and what it changed, the top open items. Kept on History and outcomes; emailed unless switched off on Settings. | `cms/lib/seo/report.ts`, called after the daily run |
+| 3 | **SEO checks in the post editor.** Posts have a "Focus keyword" field under Search engines (SEO). The dashboard runs the live-page checks on every post that is not live yet, from the working copy, and lists what to fix on the Content inventory tab ("Before you publish"); "Check my drafts now" reads the editor's latest saves. A live post's keyword also feeds the live-page linter. | `cms/lib/seo/post-lint.ts`, `sources/content.ts`, the content schema (both copies) |
+| 4 | **"Still not indexed" nudge.** A page the queue has shown out of Google's index for 14 days, and still out on this run, gets one email naming it with the Search Console link and "Request indexing"; again every 28 days while it stays out. Logged on the item. | `nudgeNotIndexed` in `cms/lib/seo/run.ts` |
+| 5 | **Leads matched with the CRM.** A read-only CRM token and account id on Settings; the daily run counts leads added in the last 56 days by source, channel (from the UTM tags the lead handler saves), landing page and campaign, and shows each landing page with the phrases Search Console shows it for. Counts only: no name, email or phone is copied. New tab "Leads and sources". | `cms/lib/seo/sources/crm.ts`, `app/seo/(dash)/leads` |
+
+Data rules kept: equal 28-day periods, "not enough data" under 100
+impressions, nothing invented. The CRM is named only as "the CRM" on screen.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:

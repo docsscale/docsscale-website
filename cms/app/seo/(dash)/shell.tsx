@@ -21,6 +21,7 @@ const ICONS: Record<string, ReactNode> = {
   questions: <><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01" /></>,
   ai: <><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z" /><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" /></>,
   analytics: <><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></>,
+  leads: <><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M15.5 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4.5-6.2" /></>,
   content: <><path d="M6 3h9l5 5v13H6z" /><path d="M14 3v6h6M9 13h6M9 17h6" /></>,
   edits: <><path d="M4 20h4l10-10-4-4L4 16z" /><path d="m12 8 4 4" /></>,
   technical: <><path d="m9 7-5 5 5 5M15 7l5 5-5 5" /></>,

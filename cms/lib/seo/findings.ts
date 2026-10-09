@@ -2,6 +2,7 @@ import { FOCUS_KEYWORDS } from './keywords';
 import type { AnalyticsData } from './sources/analytics';
 import type { BingData } from './sources/bing';
 import type { ContentData } from './sources/content';
+import type { CrmData } from './sources/crm';
 import type { SearchConsoleData } from './sources/search-console';
 import type { SiteData } from './sources/site';
 import { latestSnapshot, now, setting, snapshotBefore, store } from './store';
@@ -273,6 +274,8 @@ export function autoSummary() {
     moved.push(trend('Visitors who accepted cookies', ga.data.totals.current.totalUsers, ga.data.totals.previous.totalUsers));
     moved.push(trend('Leads recorded by GA4', ga.data.leads.current, ga.data.leads.previous));
   }
+  const crm = latestSnapshot<CrmData>('crm');
+  if (crm) moved.push(trend('Leads in the CRM (the count of record)', crm.data.totals.current, crm.data.totals.previous) + (crm.data.website.current ? ` ${crm.data.website.current} came through the website.` : ''));
   const open = findings("status IN ('Detected', 'Recommended', 'Approved', 'In progress')");
   const top = open.slice(0, 3);
   const risks: string[] = [];

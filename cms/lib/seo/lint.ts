@@ -47,7 +47,9 @@ function schemaTypes(root: HTMLElement): { types: string[]; broken: number } {
   return { types: [...new Set(types)], broken };
 }
 
-export function lintPage(url: string, html: string, siteUrl: string): PageLint {
+/** `postKeyword` is the focus keyword an editor gave a post in the editing
+ *  screen; the keyword map wins for the pages it names. */
+export function lintPage(url: string, html: string, siteUrl: string, postKeyword: string | null = null): PageLint {
   const root = parse(html);
   const path = new URL(url).pathname;
   const title = clean(root.querySelector('title')?.textContent ?? '');
@@ -55,7 +57,7 @@ export function lintPage(url: string, html: string, siteUrl: string): PageLint {
   const h1s = root.querySelectorAll('h1').map((h) => clean(h.textContent));
   const canonical = root.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? '';
   const robots = (root.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '').toLowerCase();
-  const keyword = FOCUS_KEYWORDS[path] ?? null;
+  const keyword = FOCUS_KEYWORDS[path] ?? postKeyword ?? null;
 
   const main = root.querySelector('main') ?? root.querySelector('body') ?? root;
   const text = main.clone() as HTMLElement;
@@ -85,10 +87,10 @@ export function lintPage(url: string, html: string, siteUrl: string): PageLint {
     { id: 'description-length', label: 'Description is 70 to 160 characters', weight: 5, pass: description.length >= 70 && description.length <= 160, detail: `${description.length} characters` },
     { id: 'h1', label: 'Exactly one main heading (H1)', weight: 10, pass: h1s.length === 1, detail: h1s.length === 1 ? h1s[0] : `${h1s.length} found` },
     { id: 'headings', label: 'Has subheadings, with no level skipped', weight: 10, pass: levels.includes(2) && !skipped, detail: !levels.includes(2) ? 'No H2' : skipped ? 'A heading level is skipped' : `${levels.length} headings` },
-    { id: 'kw-title', label: 'Focus keyword in the title', weight: 10, pass: keyword ? has(title, keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map' },
-    { id: 'kw-h1', label: 'Focus keyword in the main heading', weight: 10, pass: keyword ? has(h1s.join(' '), keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map' },
-    { id: 'kw-description', label: 'Focus keyword in the description', weight: 5, pass: keyword ? has(description, keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map' },
-    { id: 'kw-intro', label: 'Focus keyword in the opening paragraphs', weight: 5, pass: keyword ? has(intro, keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map' },
+    { id: 'kw-title', label: 'Focus keyword in the title', weight: 10, pass: keyword ? has(title, keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map or in the post' },
+    { id: 'kw-h1', label: 'Focus keyword in the main heading', weight: 10, pass: keyword ? has(h1s.join(' '), keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map or in the post' },
+    { id: 'kw-description', label: 'Focus keyword in the description', weight: 5, pass: keyword ? has(description, keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map or in the post' },
+    { id: 'kw-intro', label: 'Focus keyword in the opening paragraphs', weight: 5, pass: keyword ? has(intro, keyword) : null, detail: keyword ?? 'Unknown: no keyword on the keyword map or in the post' },
     { id: 'internal-links', label: 'Links to at least three other pages of the site', weight: 10, pass: internal.size >= 3, detail: `${internal.size} ${internal.size === 1 ? 'page' : 'pages'} linked` },
     { id: 'alt', label: 'Every image has alt text', weight: 10, pass: noAlt === 0, detail: images.length ? `${noAlt} of ${images.length} images without alt text` : 'No images' },
     { id: 'schema', label: 'Structured data present and readable', weight: 10, pass: schema.types.length > 0 && schema.broken === 0, detail: schema.broken ? `${schema.broken} block(s) could not be read` : schema.types.join(', ') || 'None' },

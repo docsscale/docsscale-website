@@ -1,5 +1,7 @@
 import { githubToken, seoConfig } from '../config';
 import { getJson } from '../http';
+import type { Check } from '../lint';
+import { lintPost } from '../post-lint';
 import { store } from '../store';
 
 // Content history and the edit log, built from the content files and their git
@@ -22,6 +24,11 @@ export type PostRow = {
   words: number;
   seoTitle: string;
   seoDescription: string;
+  /** The focus keyword the editor gave the post (Search engines (SEO) → Focus keyword). */
+  keyword: string;
+  /** The pre-publish checks on the content file (lib/seo/post-lint.ts) and their score. */
+  score: number;
+  checks: Check[];
 };
 export type ContentData = { repo: string; posts: PostRow[]; newEdits: number; pendingEdits: boolean; editsError: string | null };
 
@@ -61,10 +68,22 @@ const scalar = (fields: Map<string, string>, key: string) => {
   return text.replace(/^['"]|['"]$/g, '');
 };
 
+/** A field inside an object field (seo.title). A folded value (">-", "|")
+ *  continues on the more-indented lines that follow it. */
 const nested = (fields: Map<string, string>, key: string, sub: string) => {
-  const v = fields.get(key) ?? '';
-  const line = new RegExp(`^\\s+${sub}:\\s*(.*)$`, 'm').exec(v)?.[1] ?? '';
-  return line.replace(/^['"]|['"]$/g, '').trim();
+  const lines = (fields.get(key) ?? '').split('\n');
+  const at = lines.findIndex((l) => new RegExp(`^\\s+${sub}:`).test(l));
+  if (at < 0) return '';
+  const head = lines[at];
+  const indent = /^\s*/.exec(head)![0].length;
+  const inline = head.replace(/^[^:]+:\s*/, '').trim();
+  if (inline && !/^[>|]-?$/.test(inline)) return inline.replace(/^['"]|['"]$/g, '').trim();
+  const rest: string[] = [];
+  for (const l of lines.slice(at + 1)) {
+    if (l.trim() && (/^\s*/.exec(l)![0].length <= indent)) break;
+    rest.push(l.trim());
+  }
+  return rest.join(' ').trim();
 };
 
 /** Words a reader sees: Markdoc tags, markup and links' addresses left out. */
@@ -76,8 +95,13 @@ export const countWords = (body: string) =>
     .split(/\s+/)
     .filter((w) => /\w/.test(w)).length;
 
-function postFromFile(slug: string, text: string, live: boolean): PostRow {
+export function postFromFile(slug: string, text: string, live: boolean): PostRow {
   const { fields, body } = splitFile(text);
+  const keyword = nested(fields, 'seo', 'focusKeyword');
+  const lint = lintPost({
+    title: scalar(fields, 'title'), summary: scalar(fields, 'summary'), seoTitle: nested(fields, 'seo', 'title'), seoDescription: nested(fields, 'seo', 'description'),
+    keyword, body, hasCover: Boolean(scalar(fields, 'cover')), coverAlt: scalar(fields, 'coverAlt'),
+  });
   return {
     slug,
     path: `/blog/${slug}/`,
@@ -90,6 +114,9 @@ function postFromFile(slug: string, text: string, live: boolean): PostRow {
     words: countWords(body),
     seoTitle: nested(fields, 'seo', 'title'),
     seoDescription: nested(fields, 'seo', 'description'),
+    keyword,
+    score: lint.score,
+    checks: lint.checks,
   };
 }
 
@@ -145,7 +172,8 @@ async function collectEdits(): Promise<{ added: number; pending: boolean; error:
   return { added, pending, error };
 }
 
-export async function collectContent(): Promise<ContentData> {
+/** Every post, from the live branch and the working copy (a live post wins). */
+export async function collectPosts(): Promise<PostRow[]> {
   const posts = new Map<string, PostRow>();
   for (const branch of BRANCHES) {
     const tree = await gh<{ tree: { path: string; type: string }[] }>(`/git/trees/${encodeURIComponent(branch)}?recursive=1`);
@@ -157,6 +185,11 @@ export async function collectContent(): Promise<ContentData> {
       if (text) posts.set(slug, postFromFile(slug, text, branch === 'main' && /^status:\s*published\s*$/m.test(text)));
     }
   }
+  return [...posts.values()];
+}
+
+export async function collectContent(): Promise<ContentData> {
+  const posts = await collectPosts();
   const edits = await collectEdits();
-  return { repo: seoConfig.githubRepo, posts: [...posts.values()], newEdits: edits.added, pendingEdits: edits.pending, editsError: edits.error };
+  return { repo: seoConfig.githubRepo, posts, newEdits: edits.added, pendingEdits: edits.pending, editsError: edits.error };
 }

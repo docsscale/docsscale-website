@@ -1,6 +1,8 @@
 import { seoConfig } from '../config';
 import { getText } from '../http';
 import { lintPage, type PageLint } from '../lint';
+import { latestSnapshot } from '../store';
+import type { ContentData } from './content';
 
 // Reads our own public site, slowly, one page at a time: robots.txt, the
 // sitemap, llms.txt, and every page in the sitemap. It never crawls other sites.
@@ -34,6 +36,9 @@ export async function collectSite(): Promise<SiteData> {
     { name: 'llms.txt answers', pass: llms.status === 200, detail: `HTTP ${llms.status}` },
   ];
 
+  // A post's focus keyword comes from the editing screen (the content files
+  // read on the previous run); the keyword map still names the site's pages.
+  const postKeywords = new Map((latestSnapshot<ContentData>('content')?.data.posts ?? []).filter((p) => p.keyword).map((p) => [p.path, p.keyword]));
   const pages: SitePage[] = [];
   const failing: SiteData['failing'] = [];
   for (const e of entries) {
@@ -42,7 +47,7 @@ export async function collectSite(): Promise<SiteData> {
       failing.push({ url: e.loc, status: r.status, redirect: r.location });
       continue;
     }
-    pages.push({ ...lintPage(e.loc, r.text, site), status: r.status, lastmod: e.lastmod, headerNoindex: (r.robots ?? '').includes('noindex') });
+    pages.push({ ...lintPage(e.loc, r.text, site, postKeywords.get(new URL(e.loc).pathname) ?? null), status: r.status, lastmod: e.lastmod, headerNoindex: (r.robots ?? '').includes('noindex') });
   }
   checks.push({ name: 'Every sitemap page answers 200', pass: failing.length === 0, detail: failing.length ? `${failing.length} do not` : `${pages.length} of ${entries.length}` });
   const noindexed = pages.filter((p) => p.noindex || p.headerNoindex);

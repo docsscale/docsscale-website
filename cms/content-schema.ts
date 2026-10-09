@@ -20,6 +20,11 @@ export function contentCollections(seoText: SeoText) {
     {
       title: seoText.title,
       description: seoText.description,
+      focusKeyword: fields.text({
+        label: 'Focus keyword',
+        description:
+          'The one search phrase this post should be found for, as people type it. The SEO dashboard checks the title, heading, description and opening paragraphs for it before the post is published.',
+      }),
       noindex: fields.checkbox({
         label: 'Hide from search engines',
         description: 'Removes the page from the sitemap. Leave off unless you are sure.',
