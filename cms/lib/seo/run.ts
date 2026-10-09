@@ -1,9 +1,11 @@
-import { bingKey, googleKey, seoConfig } from './config';
+import { bingKey, crmLocationId, crmToken, googleKey, seoConfig } from './config';
 import { findings, recordFindings } from './findings';
 import { notifyAdmins } from './mail';
+import { sendMonthlyIfDue } from './report';
 import { collectAnalytics } from './sources/analytics';
 import { collectBing } from './sources/bing';
 import { collectContent } from './sources/content';
+import { collectCrm } from './sources/crm';
 import { collectPageSpeed } from './sources/pagespeed';
 import { collectSearchConsole } from './sources/search-console';
 import { collectSite, type SiteData } from './sources/site';
@@ -22,19 +24,21 @@ export const SOURCES = {
   analytics: 'Google Analytics 4',
   bing: 'Bing Webmaster Tools',
   content: 'Content files and edit history (GitHub)',
+  crm: 'The CRM (leads and where they came from; counts only)',
   pagespeed: 'PageSpeed Insights',
 } as const;
 export type SourceName = keyof typeof SOURCES;
 
 const JOBS: Record<Job, SourceName[]> = {
-  daily: ['site', 'search-console', 'analytics', 'bing', 'content'],
+  daily: ['site', 'search-console', 'analytics', 'bing', 'content', 'crm'],
   weekly: ['pagespeed'],
-  all: ['site', 'search-console', 'analytics', 'bing', 'content', 'pagespeed'],
+  all: ['site', 'search-console', 'analytics', 'bing', 'content', 'crm', 'pagespeed'],
 };
 
 function notSetUp(name: SourceName): string | null {
   if ((name === 'search-console' || name === 'analytics') && !googleKey()) return 'The Google key is not set on the server.';
   if (name === 'bing' && !bingKey()) return 'The Bing key is not set on the server.';
+  if (name === 'crm' && !(crmToken() && crmLocationId())) return 'The CRM token and account are not set on the Settings tab.';
   return null;
 }
 
@@ -48,6 +52,7 @@ async function collect(name: SourceName): Promise<unknown> {
     case 'analytics': return collectAnalytics();
     case 'bing': return collectBing();
     case 'content': return collectContent();
+    case 'crm': return collectCrm();
     case 'pagespeed': return collectPageSpeed();
   }
 }
@@ -78,6 +83,10 @@ export function startRun(job: Job, startedBy: string): number | null {
     try { added = recordFindings().added; } catch (e) { ok = false; recordSource('findings', 'failing', (e as Error).message.slice(0, 400)); }
     db.prepare('UPDATE runs SET finished = ?, ok = ? WHERE id = ?').run(now(), ok ? 1 : 0, id);
     await alertIfNeeded(job, added);
+    if (job !== 'weekly') {
+      try { await nudgeNotIndexed(); } catch (e) { console.error(`[seo] indexing nudge failed: ${(e as Error).message}`); }
+      try { await sendMonthlyIfDue(); } catch (e) { console.error(`[seo] monthly report failed: ${(e as Error).message}`); }
+    }
   })();
   return id;
 }
@@ -108,6 +117,32 @@ async function alertIfNeeded(job: Job, added: number) {
     'Open the fix queue to decide what happens next.',
   ];
   await notifyAdmins('alert', `SEO dashboard: ${broken.length ? 'a data source stopped answering' : 'a new high-impact finding'}`, lines.join('\n'));
+}
+
+/** "Still not indexed" (owner, 9 Oct 2026, automation plan item 4): a page
+ *  the queue has shown as out of Google's index for 14 days, and that this
+ *  run saw out again, gets one email naming it and the one step that helps
+ *  (Google offers no free way to request indexing for it from here), then
+ *  again every 28 days while it stays out. Each nudge is in the item's log. */
+export async function nudgeNotIndexed(): Promise<number> {
+  const db = store();
+  const twoWeeks = new Date(Date.now() - 14 * 86400_000).toISOString();
+  const yesterday = new Date(Date.now() - 86400_000).toISOString();
+  const fourWeeks = new Date(Date.now() - 28 * 86400_000).toISOString();
+  const due = findings("rule = 'not-indexed' AND status IN ('Detected', 'Recommended', 'Approved', 'In progress') AND created <= ? AND last_seen >= ?", twoWeeks, yesterday)
+    .filter((f) => !db.prepare("SELECT 1 FROM finding_log WHERE finding = ? AND by = 'indexing nudge' AND at > ?").get(f.id, fourWeeks));
+  if (!due.length) return 0;
+  const inspect = (page: string) => `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent(seoConfig.gscSite)}&id=${encodeURIComponent(seoConfig.siteUrl + page)}`;
+  const lines = [
+    `${due.length === 1 ? 'One page is' : `${due.length} pages are`} still out of Google's index two weeks after the dashboard first noticed. Google has no free way for us to request indexing on your behalf; it takes one click from you, per page:`,
+    '',
+    ...due.flatMap((f) => [`- ${f.page}: open ${inspect(f.page ?? '/')} and press "Request indexing".`, `  Google said: ${f.evidence.replace(/^.*?inspection on \d{4}-\d\d-\d\d: /, '').slice(0, 160)}`]),
+    '',
+    'Links from other pages of the site help too; the fix queue lists those as separate items.',
+  ];
+  const sent = await notifyAdmins('alert', `SEO dashboard: ${due.length === 1 ? 'a page is' : `${due.length} pages are`} still not in Google after two weeks`, lines.join('\n'));
+  if (sent) for (const f of due) db.prepare('INSERT INTO finding_log (finding, at, by, from_status, to_status, note) VALUES (?, ?, ?, ?, ?, ?)').run(f.id, now(), 'indexing nudge', f.status, f.status, 'Emailed the admins: still not indexed after two weeks, with the Search Console step.');
+  return sent ? due.length : 0;
 }
 
 export function runIfDue(): Job | null {
