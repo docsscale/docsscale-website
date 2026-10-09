@@ -1,7 +1,7 @@
 import { requireUser } from '../../../../lib/seo/auth';
 import type { AnalyticsData } from '../../../../lib/seo/sources/analytics';
 import { latestSnapshot } from '../../../../lib/seo/store';
-import { Change, DailyChart, Empty, H1, Section, Source, T, Table, Tile, fmt, tiles, when } from '../../ui';
+import { Change, DailyChart, Empty, H1, Section, Source, T, Table, Tile, fmt, when } from '../../ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +18,7 @@ export default async function Analytics() {
       <p style={{ color: T.body, marginTop: 0 }}>
         GA4 only counts visitors who press &ldquo;Accept&rdquo;, so it undercounts. The CRM stays the lead count of record.
       </p>
-      <div style={tiles}>
+      <div className="sx-tiles">
         <Tile label="Sessions" value={fmt(d.totals.current.sessions)} sub={<Change now={d.totals.current.sessions} before={d.totals.previous.sessions} />} source="Last 28 days" />
         <Tile label="Visitors" value={fmt(d.totals.current.totalUsers)} sub={<Change now={d.totals.current.totalUsers} before={d.totals.previous.totalUsers} />} source="Last 28 days" />
         <Tile label="Engaged sessions" value={fmt(d.totals.current.engagedSessions)} source="Stayed 10 seconds, saw 2 pages or acted" />

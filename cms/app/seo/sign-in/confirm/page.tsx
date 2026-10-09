@@ -1,5 +1,6 @@
 import { confirmLink } from '../../actions';
 import { T, button } from '../../ui';
+import { SignInFrame } from '../frame';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,12 +9,12 @@ export const dynamic = 'force-dynamic';
 export default async function Confirm({ searchParams }: { searchParams: Promise<{ t?: string }> }) {
   const { t = '' } = await searchParams;
   return (
-    <main style={{ maxWidth: 420, margin: '10vh auto', padding: '0 16px', fontFamily: 'system-ui, sans-serif', color: T.ink }}>
-      <h1 style={{ fontSize: 24, fontWeight: 600 }}>DocsScale SEO dashboard</h1>
+    <SignInFrame>
+      <p style={{ margin: '0 0 16px', color: T.body }}>Press the button to finish signing in.</p>
       <form action={confirmLink}>
         <input type="hidden" name="t" value={t} />
-        <button type="submit" style={button}>Sign in</button>
+        <button type="submit" style={{ ...button, padding: '11px 16px', width: '100%' }}>Sign in</button>
       </form>
-    </main>
+    </SignInFrame>
   );
 }

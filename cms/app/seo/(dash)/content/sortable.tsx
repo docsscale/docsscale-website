@@ -20,24 +20,22 @@ export function SortableTable({ head, rows, filterLabel }: { head: string[]; row
       return (typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y))) * sort.dir;
     });
   }, [rows, sort, filter]);
+  const numeric = head.map((_, j) => rows.some((r) => typeof r[j] === 'number') && rows.every((r) => r[j] == null || typeof r[j] === 'number' || r[j] === 'Unknown'));
 
   return (
     <div>
-      <label style={{ display: 'block', fontSize: 13, color: '#5C5A55', marginBottom: 8 }}>
-        {filterLabel}{' '}
-        <input value={filter} onChange={(e) => setFilter(e.target.value)} style={{ borderWidth: 1, borderStyle: 'solid', borderColor: '#E6E3DC', borderRadius: 6, padding: '6px 8px', fontSize: 14, maxWidth: 260, width: '100%' }} />
+      <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: '#5C5A55', marginBottom: 10, flexWrap: 'wrap' }}>
+        {filterLabel}
+        <input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Type to filter" style={{ borderWidth: 1, borderStyle: 'solid', borderColor: '#E6E3DC', borderRadius: 9, padding: '7px 10px', fontSize: 13.5, maxWidth: 280, width: '100%' }} />
+        <span style={{ fontSize: 12, color: '#6C6962' }}>{shown.length} of {rows.length} shown</span>
       </label>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+      <div className="sx-table-wrap">
+        <table className="sx-table">
           <thead>
             <tr>
               {head.map((h, i) => (
-                <th key={h} style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '1px solid #E6E3DC', whiteSpace: 'nowrap' }}>
-                  <button
-                    type="button"
-                    onClick={() => setSort((s) => ({ col: i, dir: s?.col === i && s.dir === 1 ? -1 : 1 }))}
-                    style={{ background: 'none', border: 0, padding: 0, font: 'inherit', fontWeight: 600, color: '#5C5A55', cursor: 'pointer' }}
-                  >
+                <th key={h} className={numeric[i] ? 'sx-num' : undefined}>
+                  <button type="button" className="sx-sort" onClick={() => setSort((s) => ({ col: i, dir: s?.col === i && s.dir === 1 ? -1 : 1 }))} aria-sort={sort?.col === i ? (sort.dir === 1 ? 'ascending' : 'descending') : undefined}>
                     {h}{sort?.col === i ? (sort.dir === 1 ? ' ▲' : ' ▼') : ''}
                   </button>
                 </th>
@@ -48,7 +46,7 @@ export function SortableTable({ head, rows, filterLabel }: { head: string[]; row
             {shown.map((r, i) => (
               <tr key={i}>
                 {r.map((c, j) => (
-                  <td key={j} style={{ padding: '8px 10px', borderBottom: '1px solid #E6E3DC', verticalAlign: 'top' }}>
+                  <td key={j} className={numeric[j] ? 'sx-num' : undefined}>
                     {c == null ? 'Unknown' : typeof c === 'number' ? c.toLocaleString('en-US') : c}
                   </td>
                 ))}
@@ -57,7 +55,6 @@ export function SortableTable({ head, rows, filterLabel }: { head: string[]; row
           </tbody>
         </table>
       </div>
-      <p style={{ fontSize: 12, color: '#6C6962' }}>{shown.length} of {rows.length} shown</p>
     </div>
   );
 }

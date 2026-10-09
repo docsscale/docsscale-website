@@ -25,8 +25,7 @@ export default async function Plan() {
 
   return (
     <>
-      <H1>30/60/90-day plan</H1>
-      <p style={{ color: T.body, marginTop: 0, fontSize: 14 }}>Approved work by horizon. An item lands in the horizon its effort suggests (small: 30 days, medium: 60, large: 90) unless set by hand on the <a href="/seo/queue" style={link}>fix queue</a>.</p>
+      <H1 lede={<>Approved work by horizon. An item lands in the horizon its effort suggests (small: 30 days, medium: 60, large: 90) unless set by hand on the <a href="/seo/queue" style={link}>fix queue</a>.</>}>30/60/90-day plan</H1>
       {[30, 60, 90].map((h) => {
         const q = approved.filter((f) => (f.horizon ?? (f.effort === 'Small' ? 30 : f.effort === 'Medium' ? 60 : 90)) === h);
         const p = items.filter((i) => i.horizon === h);

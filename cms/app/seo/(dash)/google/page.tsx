@@ -1,7 +1,7 @@
 import { requireUser } from '../../../../lib/seo/auth';
 import type { QueryRow, SearchConsoleData } from '../../../../lib/seo/sources/search-console';
 import { latestSnapshot } from '../../../../lib/seo/store';
-import { Badge, Change, DailyChart, Empty, H1, Section, Source, T, Table, Tile, fmt, tiles, when } from '../../ui';
+import { Badge, Change, DailyChart, Empty, H1, Section, Source, T, Table, Tile, fmt, when } from '../../ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +20,7 @@ export default async function Google() {
   return (
     <>
       <H1>Google Search</H1>
-      <div style={tiles}>
+      <div className="sx-tiles">
         <Tile label="Clicks" value={fmt(d.totals.current.clicks)} sub={<Change now={d.totals.current.clicks} before={d.totals.previous.clicks} />} source="Last 28 days" />
         <Tile label="Impressions" value={fmt(d.totals.current.impressions)} sub={<Change now={d.totals.current.impressions} before={d.totals.previous.impressions} min={100} />} source="Last 28 days" />
         <Tile label="Click rate" value={`${fmt(d.totals.current.ctr * 100, 1)}%`} source="Clicks ÷ impressions" />

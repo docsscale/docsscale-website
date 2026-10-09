@@ -1,7 +1,7 @@
 import { requireUser } from '../../../../lib/seo/auth';
 import type { BingData } from '../../../../lib/seo/sources/bing';
 import { latestSnapshot } from '../../../../lib/seo/store';
-import { Change, DailyChart, Empty, H1, Section, Source, T, Table, Tile, fmt, tiles, when } from '../../ui';
+import { Change, DailyChart, Empty, H1, Section, Source, T, Table, Tile, fmt, when } from '../../ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +15,7 @@ export default async function Bing() {
   return (
     <>
       <H1>Bing</H1>
-      <div style={tiles}>
+      <div className="sx-tiles">
         <Tile label="Clicks" value={fmt(d.totals.current.clicks)} sub={<Change now={d.totals.current.clicks} before={d.totals.previous.clicks} />} source="Last 28 days" />
         <Tile label="Impressions" value={fmt(d.totals.current.impressions)} sub={<Change now={d.totals.current.impressions} before={d.totals.previous.impressions} min={100} />} source="Last 28 days" />
         <Tile label="Pages in Bing's index" value={d.crawl.length ? fmt(d.crawl[d.crawl.length - 1].inIndex) : 'Unknown'} source="Latest crawl report" />
