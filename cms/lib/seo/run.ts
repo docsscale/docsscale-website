@@ -1,12 +1,13 @@
 import { bingKey, googleKey, seoConfig } from './config';
-import { recordFindings } from './findings';
+import { findings, recordFindings } from './findings';
+import { notifyAdmins } from './mail';
 import { collectAnalytics } from './sources/analytics';
 import { collectBing } from './sources/bing';
 import { collectContent } from './sources/content';
 import { collectPageSpeed } from './sources/pagespeed';
 import { collectSearchConsole } from './sources/search-console';
 import { collectSite, type SiteData } from './sources/site';
-import { latestSnapshot, now, recordSource, saveSnapshot, store } from './store';
+import { latestSnapshot, now, recordSource, saveSnapshot, sourceRows, store } from './store';
 
 // The collector jobs. Hostinger's cron calls /api/seo/run once a day ("daily")
 // and once a week ("weekly"); an admin can also start a run from the screen.
@@ -73,8 +74,10 @@ export function startRun(job: Job, startedBy: string): number | null {
       }
     }
     // After the data, the rule-based findings for the fix queue (plan, section 7).
-    try { recordFindings(); } catch (e) { ok = false; recordSource('findings', 'failing', (e as Error).message.slice(0, 400)); }
+    let added = 0;
+    try { added = recordFindings().added; } catch (e) { ok = false; recordSource('findings', 'failing', (e as Error).message.slice(0, 400)); }
     db.prepare('UPDATE runs SET finished = ?, ok = ? WHERE id = ?').run(now(), ok ? 1 : 0, id);
+    await alertIfNeeded(job, added);
   })();
   return id;
 }
@@ -84,8 +87,34 @@ export function startRun(job: Job, startedBy: string): number | null {
  *  week. Checked every few minutes while the app runs, and whenever anything
  *  calls /api/seo/run, which is what Hostinger's cron does; a caller can only
  *  make a run happen that was due anyway. */
+/** Only what is new or worse goes to the inbox (owner's rule, 7 Oct 2026):
+ *  a source that stopped answering (PageSpeed's shared quota is not news),
+ *  or a new High-impact finding. One email per run, at most. */
+async function alertIfNeeded(job: Job, added: number) {
+  const since = new Date(Date.now() - 2 * 3600_000).toISOString();
+  // "Stopped answering" means it worked within the last day and a half and
+  // failed in this run; a source that has been failing for days, or was never
+  // set up, is on the Data sources tab, not in the inbox every morning.
+  const wasFine = new Date(Date.now() - 36 * 3600_000).toISOString();
+  const broken = sourceRows().filter((s) => s.status === 'failing' && !(s.name === 'pagespeed' && /429/.test(s.message ?? '')) && (s.last_attempt ?? '') > since && (s.last_success ?? '') > wasFine);
+  const urgent = added ? findings("status = 'Detected' AND impact = 'High' AND created > ?", since) : [];
+  if (!broken.length && !urgent.length) return;
+  const lines = [
+    `The ${job} run of the SEO dashboard found something new.`,
+    '',
+    ...broken.map((s) => `- ${s.name} stopped answering: ${(s.message ?? '').slice(0, 200)}`),
+    ...urgent.map((f) => `- New, high impact: ${f.what}`),
+    '',
+    'Open the fix queue to decide what happens next.',
+  ];
+  await notifyAdmins('alert', `SEO dashboard: ${broken.length ? 'a data source stopped answering' : 'a new high-impact finding'}`, lines.join('\n'));
+}
+
 export function runIfDue(): Job | null {
   const db = store();
+  // A run the app was restarted under (an install, for instance) never writes
+  // its end; close it so the Data sources tab does not show it running forever.
+  db.prepare('UPDATE runs SET finished = started, ok = 0 WHERE finished IS NULL AND started < ?').run(new Date(Date.now() - 30 * 60_000).toISOString());
   const last = (jobs: string[]) =>
     (db.prepare(`SELECT MAX(started) AS at FROM runs WHERE job IN (${jobs.map(() => '?').join(',')})`).get(...jobs) as { at: string | null }).at;
   const hoursSince = (iso: string | null) => (iso ? (Date.now() - Date.parse(iso)) / 3600_000 : Infinity);

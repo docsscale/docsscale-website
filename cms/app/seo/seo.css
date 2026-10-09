@@ -93,7 +93,7 @@
 .sx-top {
   position: sticky; top: 0; z-index: 20; height: 56px;
   display: flex; align-items: center; gap: 12px; padding: 0 28px;
-  background: rgba(250, 249, 246, 0.86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  background: rgba(250, 249, 246, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--sx-hairline);
 }
 .sx-crumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--sx-caption); min-width: 0; }

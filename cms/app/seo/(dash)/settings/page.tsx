@@ -4,7 +4,7 @@ import { bingKey, githubToken, googleKey, googleKeyAccount, hasReadKey, pagespee
 import { cronCommand, ensureServerFiles } from '../../../../lib/seo/server-files';
 import { thresholds } from '../../../../lib/seo/findings';
 import { setting, store } from '../../../../lib/seo/store';
-import { clearKey, makeReadKey, saveKeys, saveQueueSettings } from '../../actions';
+import { clearKey, makeReadKey, saveEmailSettings, saveKeys, saveQueueSettings } from '../../actions';
 import { Badge, H1, Section, Source, T, Table, button, input } from '../../ui';
 
 export const dynamic = 'force-dynamic';
@@ -89,6 +89,14 @@ export default async function Settings({ searchParams }: { searchParams: Promise
       <Section title="Scheduled runs" note="The app keeps its own schedule: the daily sources once a day from 10:00 UTC, PageSpeed once a week. Any call to its run address, such as Hostinger's cron, also starts a run that is due. If you prefer a cron job of your own, these commands work (the script and its token are made by the app in its private folder).">
         <Table head={['Job', 'Command']} rows={[['Daily', <code key="d" style={{ fontSize: 12 }}>{cronCommand('daily')}</code>], ['Weekly', <code key="w" style={{ fontSize: 12 }}>{cronCommand('weekly')}</code>]]} />
         <p style={{ fontSize: 13, color: T.body }}>Private folder: <code>{seoConfig.dataDir}</code></p>
+      </Section>
+
+      <Section title="Emails" note={`Sent from ${seoConfig.mailFrom} to every admin (${seoConfig.adminEmails.join(', ') || 'none set'}). Only what is new goes out: the weekly summary when it is written, and an alert when a data source stops answering or a high-impact finding appears.`}>
+        <form action={saveEmailSettings} style={{ display: 'grid', gap: 10, maxWidth: 520 }}>
+          <label style={{ ...label, display: 'flex', gap: 10, alignItems: 'center' }}><input type="checkbox" name="email.summary" defaultChecked={setting('email.summary', 'on') === 'on'} /> The weekly summary, when the run writes it (Mondays)</label>
+          <label style={{ ...label, display: 'flex', gap: 10, alignItems: 'center' }}><input type="checkbox" name="email.alert" defaultChecked={setting('email.alert', 'on') === 'on'} /> Alerts: a source stopped answering, or a new high-impact finding</label>
+          <div><button type="submit" style={button}>Save</button></div>
+        </form>
       </Section>
 
       <Section title="Fix queue: who approves, and the thresholds" note="Owner's decision 3 (6 Oct 2026): only the owner approves unless extended here to the SEO role. Thresholds follow SEO-OS section 6; every change is logged with its reason.">
