@@ -1,0 +1,92 @@
+# Releases main to the live site (docs/RELEASE.md, steps 3 to 8), started by
+# hand from the Actions tab once the owner has given the go-ahead for that
+# release. The developer's cloud session cannot upload to Hostinger (its
+# uploads are refused); GitHub can, with the key the publish workflow uses.
+# The deploy script keeps its own guards: main, clean, every CI check green on
+# this exact commit.
+name: Release to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, as in CHANGELOG.md (for example v1.6.0)'
+        required: true
+      pages:
+        description: 'Live addresses that changed, for IndexNow (space-separated; optional)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write # pushes the version tag
+
+# One upload to the live site at a time, never cut short halfway; shared with
+# the publish workflow, which uploads to the same place.
+concurrency:
+  group: publish-content
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release main to docsscale.com
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+      VERSION: ${{ inputs.version }}
+      PAGES: ${{ inputs.pages }}
+    steps:
+      - uses: actions/checkout@v7
+        with: { ref: main, fetch-depth: 0 }
+      - name: Check the version is in the changelog and not released yet
+        run: |
+          [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::The version must look like v1.6.0."; exit 1; }
+          grep -q "^## \[${VERSION#v}\]" CHANGELOG.md || { echo "::error::CHANGELOG.md has no ## [${VERSION#v}] section."; exit 1; }
+          if git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null; then echo "::error::$VERSION is already tagged."; exit 1; fi
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
+      - name: Install the site's tools
+        working-directory: web
+        run: npm ci
+      # Tagged before the upload so the deploy writes this version into
+      # version.txt; the tag is pushed only once the upload has worked.
+      - name: Tag the release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "$VERSION"
+      - name: Get upload credentials for the live site
+        run: |
+          response=$(curl -sS --fail-with-body -X POST https://developers.hostinger.com/api/hosting/v1/files/upload-urls \
+            -H "Authorization: Bearer $HOSTINGER_API_TOKEN" -H "Content-Type: application/json" \
+            -d '{"username":"u145389112","domain":"docsscale.com"}')
+          for field in url auth_key rest_auth_key; do
+            value=$(printf '%s' "$response" | node -e "process.stdin.on('data', (d) => process.stdout.write(String(JSON.parse(d)['$field'] ?? '')))")
+            [ -n "$value" ] || { echo "::error::Hostinger did not return upload credentials."; exit 1; }
+            echo "::add-mask::$value"
+            case $field in
+              url) echo "HOSTINGER_UPLOAD_URL=$value" >> "$GITHUB_ENV" ;;
+              auth_key) echo "HOSTINGER_AUTH=$value" >> "$GITHUB_ENV" ;;
+              rest_auth_key) echo "HOSTINGER_REST=$value" >> "$GITHUB_ENV" ;;
+            esac
+          done
+      - name: Upload to the live site
+        run: node scripts/deploy.mjs --target production --yes
+      - name: Push the tag
+        run: git push origin "refs/tags/$VERSION"
+      - name: Clear the website cache
+        run: |
+          curl -sS --fail-with-body -X DELETE \
+            https://developers.hostinger.com/api/hosting/v1/accounts/u145389112/websites/docsscale.com/cache/clear \
+            -H "Authorization: Bearer $HOSTINGER_API_TOKEN" -o /dev/null
+      - name: Check the live site
+        run: |
+          sleep 20
+          live=$(curl -s https://docsscale.com/version.txt)
+          echo "version.txt: $live"
+          [[ "$live" == "production $VERSION "* ]] || { echo "::error::The live site does not report $VERSION."; exit 1; }
+          bash tests/server/redirects.sh
+      # Never fails the release: the pages are already live.
+      - name: Tell search engines about the changed pages
+        if: env.PAGES != ''
+        run: node scripts/indexnow.mjs $PAGES
