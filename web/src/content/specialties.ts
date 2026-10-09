@@ -31,6 +31,10 @@ export type Specialty = {
     role: string;
     href: string;
   };
+  /** Questions this specialty's owners ask, with visible answers. Shown as a
+   *  section (and FAQPage schema) only once real, owner-approved entries exist;
+   *  leave empty rather than invent them. */
+  faqs?: { q: string; a: string }[];
 };
 
 export const SPECIALTIES: Specialty[] = [
@@ -113,6 +117,36 @@ export const SPECIALTIES: Specialty[] = [
       role: 'Owner, dental practice · Dallas, TX',
       href: '/results/',
     },
+    faqs: [
+      {
+        q: 'How much should a dental practice spend on marketing?',
+        a: "There is no standard figure. The percentages you'll see quoted are consultants' rules of thumb. Start from your own numbers: what a new patient is worth to you, how many more you can see each week, and what you can afford to spend to win one. Then look at the patients you already have before buying more ads, because your cheapest new visit is usually someone who already trusts you and is overdue for a cleaning. The ad budget itself is paid to Google or Meta from your own account.",
+      },
+      {
+        q: 'Is a dental marketing agency worth it?',
+        a: "Only if you can see what it brings in. Judge any agency, us included, by new inquiries, booked appointments, patients who showed up and the revenue they brought. Clicks and impressions can climb while the schedule stays empty. Before working with us, our Dallas client had an ad agency reporting clicks. We send one report every Monday with inquiries, booked, showed and revenue. In the Dallas owner's words: “The weekly report is the only marketing email I actually open.”",
+      },
+      {
+        q: 'What should we ask a dental marketing company before signing?',
+        a: "Four questions. Who owns the website pages, ad accounts and data if we leave? How long is the contract, and what does it take to end it? Who answers the inquiries your ads create, especially after 5 pm? Can you show a real dental result with a place and a date on it? Our answers: everything stays in your accounts, it's month to month with 30 days' notice, every inquiry is answered within minutes, day or night, and the Dallas case is on this page.",
+      },
+      {
+        q: 'Should a dental practice advertise on Google or Facebook?',
+        a: "Usually both, because they do different jobs. Google Ads reach people who are already searching, for example “dentist near me” or “dental implants near me”. Facebook and Instagram reach people who aren't searching yet, which suits elective treatments such as clear aligners and cosmetic work. Give each treatment its own campaign and judge each one by booked patients, not clicks. We run Meta and Google campaigns split by treatment, in your own ad accounts.",
+      },
+      {
+        q: "Why don't our dental implant leads book?",
+        a: 'Implant patients take longer to decide and usually want answers about cost and financing before they come in. A generic ad and a slow callback lose them. Give implants their own campaign and landing page, answer the financing question up front, and ask a few screening questions so your team calls the people who are ready first. For our Dallas client we built one implant funnel with three screening questions, Meta and Google campaigns in their own accounts, text-back on every missed call, reminders, and a recall campaign for 412 dormant patients. The result: 184 new patients booked in six months. 91% showed.',
+      },
+      {
+        q: 'What can a dental practice say in its ads?',
+        a: "Your state dental board sets the rules, and they vary from state to state. The common trouble spots are a general dentist advertising as a “specialist”, patient photos or before-and-afters used without the patient's written permission, and price ads without the disclosures some states require. We don't run discount specials, the compliance rules for dental advertising are part of every review, and nothing goes live until you approve it.",
+      },
+      {
+        q: 'How should we reply to patient reviews without breaking HIPAA?',
+        a: 'Thank the reviewer, keep it short, and never confirm they are a patient or mention their treatment, even if they mentioned it first. The U.S. Department of Health and Human Services has penalized dental practices for revealing patient details in replies to online reviews. For an unhappy review, invite them to call the office so it can be handled privately. We ask for a review after every visit and reply within 24 hours in your voice.',
+      },
+    ],
   },
   {
     slug: 'chiropractic',
@@ -356,4 +390,4 @@ export const SPECIALTIES: Specialty[] = [
 
 export const SPECIALTY_LINKS = SPECIALTIES.map(({ slug, name }) => ({ slug, name }));
 
-export const industryHref = (slug: string) => `/industries/${slug}`;
+export { industryHref } from './industry-href';
