@@ -8,7 +8,8 @@ import { sendSignInLink } from '../../lib/seo/mail';
 import { parseCsv } from '../../lib/seo/csv';
 import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
 import { startRun } from '../../lib/seo/run';
-import { now, saveSetting, store } from '../../lib/seo/store';
+import { collectContent } from '../../lib/seo/sources/content';
+import { now, recordSource, saveSetting, saveSnapshot, store } from '../../lib/seo/store';
 
 export async function requestLink(form: FormData) {
   const made = await createSignInLink(String(form.get('email') ?? ''));
@@ -71,7 +72,7 @@ export async function saveKeys(form: FormData) {
     saveSecret('googleKey', JSON.stringify(parsed));
     changed = true;
   }
-  for (const name of ['bingKey', 'pagespeedKey', 'githubToken'] as const) {
+  for (const name of ['bingKey', 'pagespeedKey', 'githubToken', 'crmToken', 'crmLocationId'] as const) {
     const value = String(form.get(name) ?? '').trim();
     if (value) {
       saveSecret(name, value);
@@ -94,6 +95,7 @@ export async function clearKey(form: FormData) {
   await requireUser('/seo/settings (remove key)', 'admin');
   const name = String(form.get('name'));
   if (name === 'googleKey' || name === 'bingKey' || name === 'pagespeedKey' || name === 'githubToken' || name === 'readKeyHash') saveSecret(name, '');
+  if (name === 'crmToken') { saveSecret('crmToken', ''); saveSecret('crmLocationId', ''); }
   redirect('/seo/settings?saved=1');
 }
 
@@ -197,7 +199,7 @@ export async function importCsv(form: FormData) {
 /** Settings the admin changes on screen, each with a reason (plan, section 9). */
 export async function saveEmailSettings(form: FormData) {
   const user = await requireUser('/seo/settings (emails)', 'admin');
-  for (const key of ['email.summary', 'email.alert']) saveSetting(key, form.get(key) ? 'on' : 'off', user.email, 'Changed on the Settings tab');
+  for (const key of ['email.summary', 'email.alert', 'email.monthly']) saveSetting(key, form.get(key) ? 'on' : 'off', user.email, 'Changed on the Settings tab');
   back('/seo/settings?saved=1');
 }
 
@@ -210,4 +212,19 @@ export async function saveQueueSettings(form: FormData) {
     if (Number.isFinite(v) && v >= min && v <= max) saveSetting(key, String(Math.round(v)), user.email, reason);
   }
   back('/seo/settings?saved=1');
+}
+
+/** "Check my drafts now" on the Content tab: reads the content files again
+ *  (the daily run would otherwise show the morning's copy) and runs the
+ *  pre-publish checks on every post. */
+export async function refreshContent() {
+  await requireUser('/seo/content (check drafts)', 'editor');
+  try {
+    saveSnapshot('content', await collectContent());
+    recordSource('content', 'ok', 'Returned data (checked from the Content tab)');
+  } catch (e) {
+    recordSource('content', 'failing', (e as Error).message.slice(0, 400));
+    back('/seo/content?checked=error');
+  }
+  back('/seo/content?checked=1');
 }

@@ -20,6 +20,8 @@ export type SearchConsoleData = {
   positions11to20: QueryRow[];
   cannibalization: { query: string; pages: PageRow[] }[];
   pages: PageRow[];
+  /** The phrases each page is shown for (the top ones), so leads can be matched with the phrases that bring their landing page visitors. Missing in snapshots from before 9 Oct 2026. */
+  pageQueries?: { page: string; query: string; clicks: number; impressions: number; position: number }[];
   sitemaps: { path: string; lastSubmitted?: string; lastDownloaded?: string; errors?: string; warnings?: string }[];
   index: { url: string; verdict: string; coverage: string; lastCrawl: string | null }[];
 };
@@ -92,6 +94,10 @@ export async function collectSearchConsole(sitemapUrls: string[]): Promise<Searc
     positions11to20: queries.filter((q) => q.position > 10 && q.position <= 20),
     cannibalization: [...byQuery].filter(([, p]) => p.length > 1).map(([q, p]) => ({ query: q, pages: p })),
     pages: pages.map((r) => ({ page: r.keys![0], clicks: r.clicks, impressions: r.impressions, position: round(r.position) })),
+    pageQueries: [...pairs]
+      .sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions)
+      .slice(0, 600)
+      .map((r) => ({ page: r.keys![1], query: r.keys![0], clicks: r.clicks, impressions: r.impressions, position: round(r.position) })),
     sitemaps: (sm.sitemap ?? []).map((s) => ({ path: s.path, lastSubmitted: s.lastSubmitted, lastDownloaded: s.lastDownloaded, errors: s.errors, warnings: s.warnings })),
     index,
   };

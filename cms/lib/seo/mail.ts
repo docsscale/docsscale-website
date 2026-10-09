@@ -48,7 +48,8 @@ export async function sendSignInLink(to: string, link: string) {
  *  Settings tab (owner, 9 Oct 2026: "I just visit the dashboard", so the
  *  dashboard comes to the inbox only when there is something to read).
  *  Never throws: a mail fault must not fail the run that caused it. */
-export async function notifyAdmins(kind: 'summary' | 'alert', subject: string, body: string): Promise<boolean> {
+export type MailKind = 'summary' | 'alert' | 'monthly';
+export async function notifyAdmins(kind: MailKind, subject: string, body: string): Promise<boolean> {
   if (setting(`email.${kind}`, 'on') !== 'on') return false;
   const footer = `\n\n—\nThe DocsScale SEO dashboard: ${seoConfig.publicUrl}/seo\nSwitch these emails off on the Settings tab.`;
   let sent = false;
