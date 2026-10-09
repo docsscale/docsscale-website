@@ -43,6 +43,7 @@ const TABS: { group: string; items: { href: string; label: string; role: Role; i
       { href: '/seo/plan', label: '30/60/90 plan', role: 'editor', icon: 'plan' },
       { href: '/seo/history', label: 'History and outcomes', role: 'editor', icon: 'history' },
       { href: '/seo/imports', label: 'Imports', role: 'seo', icon: 'imports' },
+      { href: '/seo/help', label: 'How to use it', role: 'editor', icon: 'help' },
     ],
   },
   {

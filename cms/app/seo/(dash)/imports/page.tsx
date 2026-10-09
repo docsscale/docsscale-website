@@ -15,7 +15,7 @@ type ImportRow = { id: number; at: string; by: string; source: string; filename:
 // (owner, 9 Oct 2026: shared tools, uploaded by hand).
 const SOURCES = [
   'Semrush: positions', 'Semrush: backlinks', 'Semrush: keyword magic', 'Ahrefs: organic keywords', 'Ahrefs: backlinks', 'Ahrefs: keywords explorer',
-  'DataForSEO', 'SE Ranking', 'Moz', 'Keyword Planner', 'Search Console: performance', 'Search Console: links', 'Bing: AI citations', 'Bing: links', 'Competitor backlinks', 'Other',
+  'Ubersuggest', 'DataForSEO', 'SE Ranking', 'Moz', 'Keyword Planner', 'Search Console: performance', 'Search Console: links', 'Bing: AI citations', 'Bing: links', 'Competitor backlinks', 'Other',
 ];
 
 export default async function Imports({ searchParams }: { searchParams: Promise<{ saved?: string; error?: string; view?: string }> }) {
