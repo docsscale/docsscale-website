@@ -17,6 +17,12 @@ live site (production v1.4.6) and `main` on that date.
   Services, homepage, Results), and the Dallas case is quoted exactly. Left out
   on purpose: practice software names, treatments as our experience beyond
   those the page already names, new Dallas details, and spend benchmarks.
+- **Chiropractic, physical therapy and med spa questions** (9 Oct): the owner
+  asked for the same on the other pages. Six questions each, researched per
+  specialty (not dental questions with the name swapped). Each quotes its own
+  Results case exactly and reuses only claims already on the site. Left out on
+  purpose: unsourced percentages, exact dollar limits, Meta's current
+  before-and-after rule, and anything about texting.
   Draft and sources: `reviews/dental-faq/` in the project files.
 - **Next:** physical therapy, chiropractic and med spa get their own questions,
   one page at a time. Don't copy the dental questions with the specialty

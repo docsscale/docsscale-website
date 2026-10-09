@@ -20,8 +20,8 @@
     "priority": "0.85"
   },
   "/industries/chiropractic/": {
-    "lastmod": "2026-10-08",
-    "hash": "53085835fe810630",
+    "lastmod": "2026-10-09",
+    "hash": "80f76212a21e9bf3",
     "priority": "0.85"
   },
   "/industries/dental/": {
@@ -30,13 +30,13 @@
     "priority": "0.85"
   },
   "/industries/med-spa/": {
-    "lastmod": "2026-10-08",
-    "hash": "b634d6899f1c9cf0",
+    "lastmod": "2026-10-09",
+    "hash": "a872e600a26673fd",
     "priority": "0.85"
   },
   "/industries/physical-therapy/": {
-    "lastmod": "2026-10-08",
-    "hash": "62ae474a3d2d80c2",
+    "lastmod": "2026-10-09",
+    "hash": "bee71390f5a7657c",
     "priority": "0.85"
   },
   "/book-a-call/": {
