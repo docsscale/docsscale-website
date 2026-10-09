@@ -4,7 +4,7 @@ import { deviceOf, shortIp } from '../../../../lib/seo/auth';
 import { readKeyMatches } from '../../../../lib/seo/config';
 import { notifyAdmins } from '../../../../lib/seo/mail';
 import { autoSummary, findings, moveFinding, noteFinding, selfApprovable } from '../../../../lib/seo/findings';
-import { indexingLog, indexingRows } from '../../../../lib/seo/indexing';
+import { announce, indexingLog, indexingRows, watchSitemap } from '../../../../lib/seo/indexing';
 import { SOURCES, recentRuns, type SourceName } from '../../../../lib/seo/run';
 import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/store';
 
@@ -62,7 +62,9 @@ type Body = { action?: string; text?: string; id?: number; to?: string; reason?:
 /** Writes the weekly run may make. A plain-text body is the Overview
  *  summary; JSON chooses an action: summary, move (In progress, Done,
  *  Recommended, or Approved only to reopen a Done item with a reason), note,
- *  plan, ignore, ai-check. Everything is logged under the run's name. */
+ *  plan, ignore, ai-check, send-pages (tell Bing and Google about every
+ *  page in the sitemap, as the Technical health button does; owner, 9 Oct
+ *  2026: "do what you recommend"). Everything is logged under the run's name. */
 export async function POST(request: NextRequest) {
   const key = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
   if (!key || !readKeyMatches(key)) return new Response('Not found', { status: 404 });
@@ -115,5 +117,11 @@ export async function POST(request: NextRequest) {
     db.prepare('INSERT INTO ai_checks (at, by, assistant, question, cited, detail) VALUES (?, ?, ?, ?, ?, ?)').run(now(), BY, String(body.assistant).slice(0, 60), String(body.question).slice(0, 300), body.cited ? 1 : 0, String(body.detail ?? '').slice(0, 500));
     return Response.json({ ok: true });
   }
-  return bad('Unknown action; one of: summary, move, note, plan, ignore, ai-check.');
+  if (action === 'send-pages') {
+    if (!indexingRows().length) { try { await watchSitemap(BY); } catch (e) { return bad(`The sitemap could not be read: ${(e as Error).message}`); } }
+    const urls = indexingRows().map((r) => r.url);
+    const result = await announce(urls, BY);
+    return Response.json({ ok: true, pages: urls.length, ...result });
+  }
+  return bad('Unknown action; one of: summary, move, note, plan, ignore, ai-check, send-pages.');
 }
