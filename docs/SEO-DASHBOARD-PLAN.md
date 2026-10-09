@@ -497,6 +497,30 @@ first two are here.
 - **Read API:** `?what=write-next` (the top 50 with reasons), for the
   Monday routine's summary.
 
+## 17. Link building and off-page, 9 Oct 2026 (owner: "will need help in off page SEO, backlinking etc")
+
+Without a paid backlink tool, the Links and authority tab now holds the three
+things the dashboard can keep for free (`cms/lib/seo/links.ts`):
+
+- **Link building list** (table `outreach`): sites to be listed on or to ask
+  for a link, each with kind (Directory, Guest post, Partner, Local, Other),
+  the page it should point to, a note and a status (To do, Contacted, Live,
+  Declined) moved along by hand. When the table is empty it is seeded once
+  with the starter list: the three profiles with copy ready in the project
+  files (LinkedIn, Clutch, DesignRush) and six free directories (GoodFirms,
+  UpCity, Crunchbase, Bing Places, Yelp, Better Business Bureau). Google
+  Business Profile stays off the list (owner, 8 Oct 2026).
+- **Links that disappeared:** the owner's newest two backlink exports (any
+  tool, uploaded on Imports) are compared; referring domains in the previous
+  one that are missing from the newest become a `lost-link` finding in the
+  fix queue ("Ask X to restore its link", who: You, High when the tool's
+  authority is 30 or more), kind Links on the Today tab.
+- **Sites linking to a competitor but not to us:** a competitor's backlink
+  export uploaded with the source "Competitor backlinks" (or the word
+  competitor in the note) is never read as ours; its referring domains that
+  are not in our newest export and not on the list are shown strongest
+  first with an "Add to list" button.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:

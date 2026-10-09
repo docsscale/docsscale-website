@@ -85,6 +85,8 @@ export function parseCitations(columns: string[], rows: string[][]): CitationRow
 export function latestImport<T>(kind: Exclude<ImportKind, 'other'>): { meta: ImportRow; rows: T[] } | null {
   const list = store().prepare('SELECT id, at, by, source, filename, note, rows, columns FROM imports ORDER BY id DESC LIMIT 200').all() as ImportRow[];
   for (const meta of list) {
+    // A competitor's backlink export (source or note says so) is never "ours".
+    if (/competitor/i.test(meta.source) || /competitor/i.test(meta.note)) continue;
     const columns = JSON.parse(meta.columns) as string[];
     if (classify(columns) !== kind) continue;
     const data = (store().prepare('SELECT data FROM imports WHERE id = ?').get(meta.id) as { data: string }).data;
