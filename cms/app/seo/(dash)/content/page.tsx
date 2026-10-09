@@ -16,7 +16,7 @@ export default async function ContentHistory() {
   const content = latestSnapshot<ContentData>('content');
   const site = latestSnapshot<SiteData>('site');
   const gsc = latestSnapshot<SearchConsoleData>('search-console');
-  if (!content && !site) return (<><H1>Content history</H1><Empty>Nothing collected yet. See the Data sources tab.</Empty></>);
+  if (!content && !site) return (<><H1>Content inventory</H1><Empty>Nothing collected yet. See the Data sources tab.</Empty></>);
 
   const edits = new Map(
     (store().prepare("SELECT file, COUNT(DISTINCT sha) AS n, MIN(at) AS first, MAX(at) AS last FROM edits GROUP BY file").all() as { file: string; n: number; first: string; last: string }[])
@@ -51,7 +51,7 @@ export default async function ContentHistory() {
 
   return (
     <>
-      <H1>Content history</H1>
+      <H1>Content inventory</H1>
       <Section
         title="Every page and post"
         note="Posts come from the content files and their history; site pages from the live site. Pages built in code have no edit history here, so their Created and Edits read Unknown. Words count the page's main text only."

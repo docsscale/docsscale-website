@@ -11,14 +11,33 @@ export const dynamic = 'force-dynamic';
 // (docs/SEO-DASHBOARD-PLAN.md, section 8). Each page checks the role again.
 const TABS: { group: string; items: { href: string; label: string; role: Role }[] }[] = [
   { group: '', items: [{ href: '/seo', label: 'Overview', role: 'editor' }] },
-  { group: 'Search', items: [{ href: '/seo/google', label: 'Google', role: 'seo' }, { href: '/seo/bing', label: 'Bing', role: 'seo' }] },
+  {
+    group: 'Search',
+    items: [
+      { href: '/seo/google', label: 'Google', role: 'seo' },
+      { href: '/seo/bing', label: 'Bing', role: 'seo' },
+      { href: '/seo/keywords', label: 'Keywords and rankings', role: 'editor' },
+      { href: '/seo/questions', label: 'Questions and gaps', role: 'editor' },
+      { href: '/seo/ai', label: 'AI visibility', role: 'seo' },
+    ],
+  },
   {
     group: 'Site',
     items: [
       { href: '/seo/analytics', label: 'Analytics and leads', role: 'seo' },
-      { href: '/seo/content', label: 'Content history', role: 'editor' },
+      { href: '/seo/content', label: 'Content inventory', role: 'editor' },
       { href: '/seo/edits', label: 'Edit log', role: 'editor' },
       { href: '/seo/technical', label: 'Technical health', role: 'seo' },
+      { href: '/seo/links', label: 'Links', role: 'seo' },
+    ],
+  },
+  {
+    group: 'Actions',
+    items: [
+      { href: '/seo/queue', label: 'Fix queue', role: 'seo' },
+      { href: '/seo/plan', label: '30/60/90 plan', role: 'editor' },
+      { href: '/seo/history', label: 'History and outcomes', role: 'editor' },
+      { href: '/seo/imports', label: 'Imports', role: 'seo' },
     ],
   },
   {

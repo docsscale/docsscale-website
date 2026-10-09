@@ -91,6 +91,21 @@ export function Hero() {
               textWrap: 'balance',
             }}
           >
+            <span
+              style={{
+                display: 'block',
+                marginBottom: 18,
+                fontSize: 12,
+                // Strings: AnimatedHeading writes numbers as px.
+                fontWeight: '700',
+                lineHeight: '1.2',
+                letterSpacing: '.08em',
+                textTransform: 'uppercase',
+                color: T.caption,
+              }}
+            >
+              {HERO.kicker}
+            </span>{' '}
             {HERO.headline}
             <em
               className="serif-accent"
