@@ -1,5 +1,6 @@
 import { bingKey, crmLocationId, crmToken, googleKey, seoConfig } from './config';
 import { findings, recordFindings } from './findings';
+import { refreshIndexState, watchSitemapIfDue } from './indexing';
 import { notifyAdmins } from './mail';
 import { sendMonthlyIfDue } from './report';
 import { collectAnalytics } from './sources/analytics';
@@ -78,6 +79,8 @@ export function startRun(job: Job, startedBy: string): number | null {
         recordSource(name, 'failing', (e as Error).message.slice(0, 400));
       }
     }
+    // What Google and Bing show for each page, for the Indexing panel.
+    if (job !== 'weekly') { try { await refreshIndexState(); } catch (e) { console.error(`[seo] index state refresh failed: ${(e as Error).message}`); } }
     // After the data, the rule-based findings for the fix queue (plan, section 7).
     let added = 0;
     try { added = recordFindings().added; } catch (e) { ok = false; recordSource('findings', 'failing', (e as Error).message.slice(0, 400)); }
@@ -147,6 +150,8 @@ export async function nudgeNotIndexed(): Promise<number> {
 
 export function runIfDue(): Job | null {
   const db = store();
+  // The sitemap watch rides the same ten-minute check (lib/seo/indexing.ts).
+  try { watchSitemapIfDue(); } catch (e) { console.error(`[seo] sitemap watch could not start: ${(e as Error).message}`); }
   // A run the app was restarted under (an install, for instance) never writes
   // its end; close it so the Data sources tab does not show it running forever.
   db.prepare('UPDATE runs SET finished = started, ok = 0 WHERE finished IS NULL AND started < ?').run(new Date(Date.now() - 30 * 60_000).toISOString());
