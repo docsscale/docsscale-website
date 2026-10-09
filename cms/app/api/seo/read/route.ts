@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { deviceOf, shortIp } from '../../../../lib/seo/auth';
 import { readKeyMatches } from '../../../../lib/seo/config';
-import { autoSummary, findings, moveFinding, noteFinding } from '../../../../lib/seo/findings';
+import { autoSummary, findings, moveFinding, noteFinding, selfApprovable } from '../../../../lib/seo/findings';
 import { SOURCES, recentRuns, type SourceName } from '../../../../lib/seo/run';
 import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/store';
 
@@ -13,8 +13,9 @@ import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/stor
 // <key>". Every read is in the Access log. POST lets the weekly run act as
 // the SEO role does on screen (owner, 9 Oct 2026: "give write access too"):
 // write the Overview summary, note progress on queue items, add plan lines,
-// the ignore list and manual AI checks. It cannot approve or reject (the
-// owner's decision 3), nor touch keys, people or settings.
+// the ignore list and manual AI checks, and approve the invisible fixes
+// listed in selfApprovable (owner, 9 Oct 2026). It cannot approve anything
+// a visitor would see, nor reject, nor touch keys, people or settings.
 export const dynamic = 'force-dynamic';
 
 const sha = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
@@ -79,10 +80,11 @@ export async function POST(request: NextRequest) {
   if (action === 'move') {
     const to = String(body.to ?? '');
     if (!['In progress', 'Done', 'Recommended', 'Approved'].includes(to)) return bad('to must be In progress, Done, Recommended, or Approved (to reopen a Done item, with a reason).');
-    const f = db.prepare('SELECT status FROM findings WHERE id = ?').get(Number(body.id)) as { status: string } | undefined;
+    const f = db.prepare('SELECT status, rule, key FROM findings WHERE id = ?').get(Number(body.id)) as { status: string; rule: string; key: string } | undefined;
     if (!f) return bad('No such item.');
-    // Approving is the owner's (decision 3): the key may only use "Approved" to reopen a done item.
-    if (to === 'Approved' && !['Done', 'Outcome measured'].includes(f.status)) return bad('Only the owner approves items; the key may not.');
+    // Approving is the owner's (decision 3), except the invisible fixes the
+    // owner let the run approve itself (9 Oct 2026), and reopening a done item.
+    if (to === 'Approved' && !['Done', 'Outcome measured'].includes(f.status) && !selfApprovable(f)) return bad('Only the owner approves this kind of item; the key may approve only invisible fixes.');
     const ok = moveFinding(Number(body.id), to as 'In progress', BY, String(body.note ?? ''), String(body.reason ?? ''));
     return ok ? Response.json({ ok: true }) : bad('That move is not allowed (reopening a done item needs a reason).');
   }

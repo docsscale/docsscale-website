@@ -90,8 +90,10 @@ log. Code in `lib/seo/` and `app/seo/`.
   text in the body is the weekly summary (shown on the Overview as written by
   "Claude (weekly run)"); JSON `{"action": …}` chooses `move` (an item to In
   progress or Done, or reopen a done one with a reason), `note`, `plan`,
-  `ignore` or `ai-check`. It cannot approve or reject (decision 3), nor change
-  keys, people or settings; every use is in the Access log.
+  `ignore` or `ai-check`. It may approve only the invisible fixes named in
+  `selfApprovable` (owner, 9 Oct 2026); every other approval and every
+  rejection is the owner's (decision 3), and keys, people and settings are
+  out of reach; every use is in the Access log.
   The environment still wins when set: `SEO_DATA_DIR`, `SEO_ADMIN_EMAILS`,
   `SEO_CRON_TOKEN`, `GOOGLE_SERVICE_ACCOUNT_JSON` or
   `GOOGLE_SERVICE_ACCOUNT_FILE`, `BING_API_KEY`, `PAGESPEED_API_KEY`,
