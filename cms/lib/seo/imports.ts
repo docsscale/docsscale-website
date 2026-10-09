@@ -2,8 +2,8 @@ import { store } from './store';
 
 // Uploaded exports feed the tabs (owner, 9 Oct 2026: "I'll use shared tools
 // and upload data"). A file is recognised by its columns, whatever the tool
-// (Semrush, Ahrefs, DataForSEO, SE Ranking, Moz, Keyword Planner, Search
-// Console), so no tool-specific format has to be kept up to date:
+// (Semrush, Ahrefs, Ubersuggest, DataForSEO, SE Ranking, Moz, Keyword
+// Planner, Search Console), so no tool-specific format has to be kept up to date:
 //   keywords  : a keyword column plus a position and/or a volume column
 //   backlinks : a referring (source) page column plus a target or authority column
 //   citations : a query or page column with a count of citations or AI mentions
@@ -98,8 +98,8 @@ export function latestImport<T>(kind: Exclude<ImportKind, 'other'>): { meta: Imp
 }
 
 export const KIND_LABEL: Record<ImportKind, string> = {
-  keywords: 'Keyword positions and volumes (shown on Keywords and rankings)',
-  backlinks: 'Backlinks (shown on Links)',
+  keywords: 'Keyword positions and volumes (Keywords and rankings, What to write next, and the fix queue: phrases just off page one and drops)',
+  backlinks: 'Backlinks (Links: referring domains, links that disappeared, competitor gaps)',
   citations: 'AI citations (shown on AI visibility)',
   other: 'Kept as a table only: no keyword, position, volume or referring-page column was recognised',
 };
