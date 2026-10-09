@@ -5,6 +5,12 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.7.0] — 2026-10-09
+
+Questions owners ask, on the other three industry pages. Visible to visitors: a new questions section on the chiropractic, physical therapy and med spa pages.
+
+- **Chiropractic, physical therapy and med spa pages: questions owners ask** (owner's approval of the before/after, 9 Oct 2026; #102). `/industries/chiropractic/`, `/industries/physical-therapy/` and `/industries/med-spa/` each gain a section, "What … owners ask us.", with six questions and answers between the case and the closing box, marked up as a FAQ for search engines. This is the same section the dental page received in 1.6.0; each specialty's questions were researched on their own.
+
 ## [1.6.0] — 2026-10-09
 
 The blog on the home page, real cases on the industry pages, and the homepage in the words people search for. Visible to visitors: the "From the blog" section on the home page, "Blog" in the footer, the blog's new heading, a real case on each of the four industry pages, seven questions with answers on the dental page, shorter titles for `/services/` and `/industries/`, and the homepage's new title, heading line and description. IndexNow and the Publish step are behind the scenes.
