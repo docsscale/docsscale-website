@@ -4,6 +4,7 @@ import { deviceOf, shortIp } from '../../../../lib/seo/auth';
 import { readKeyMatches } from '../../../../lib/seo/config';
 import { notifyAdmins } from '../../../../lib/seo/mail';
 import { autoSummary, findings, moveFinding, noteFinding, selfApprovable } from '../../../../lib/seo/findings';
+import { indexingLog, indexingRows } from '../../../../lib/seo/indexing';
 import { SOURCES, recentRuns, type SourceName } from '../../../../lib/seo/run';
 import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/store';
 
@@ -41,6 +42,7 @@ export async function GET(request: NextRequest) {
   if (what === 'all') return Response.json(Object.fromEntries(names.map((n) => [n, latestSnapshot(n)])));
   if (names.includes(what as SourceName)) return Response.json(latestSnapshot(what) ?? { taken: null, data: null });
   if (what === 'queue') return Response.json({ findings: findings() });
+  if (what === 'indexing') return Response.json({ pages: indexingRows(), log: indexingLog() });
   if (what === 'overview') {
     const db = store();
     return Response.json({
@@ -51,7 +53,7 @@ export async function GET(request: NextRequest) {
       imports: db.prepare('SELECT id, at, by, source, filename, note, rows FROM imports ORDER BY id DESC LIMIT 50').all(),
     });
   }
-  return Response.json({ error: `Unknown "what"; one of: sources, all, queue, overview, ${names.join(', ')}` }, { status: 400 });
+  return Response.json({ error: `Unknown "what"; one of: sources, all, queue, overview, indexing, ${names.join(', ')}` }, { status: 400 });
 }
 
 const BY = 'Claude (weekly run)';

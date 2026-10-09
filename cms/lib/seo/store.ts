@@ -68,6 +68,17 @@ CREATE TABLE IF NOT EXISTS imports (
   id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by TEXT NOT NULL, source TEXT NOT NULL, filename TEXT NOT NULL,
   note TEXT NOT NULL, rows INTEGER NOT NULL, columns TEXT NOT NULL, data TEXT NOT NULL
 );
+-- Automatic indexing (owner, 9 Oct 2026): every sitemap page, when it changed,
+-- when Bing (IndexNow) and Google (sitemap) were told, and what each shows.
+CREATE TABLE IF NOT EXISTS indexing (
+  page TEXT PRIMARY KEY, url TEXT NOT NULL, lastmod TEXT, first_seen TEXT NOT NULL, changed_at TEXT NOT NULL,
+  indexnow_at TEXT, indexnow_status TEXT, sitemap_at TEXT, sitemap_status TEXT,
+  google_verdict TEXT, google_coverage TEXT, google_crawl TEXT, google_checked TEXT,
+  bing_crawl TEXT, bing_status TEXT, bing_checked TEXT, gone_at TEXT
+);
+CREATE TABLE IF NOT EXISTS indexing_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by TEXT NOT NULL, action TEXT NOT NULL, pages TEXT NOT NULL, result TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY, value TEXT NOT NULL, changed_at TEXT NOT NULL, changed_by TEXT NOT NULL, reason TEXT NOT NULL
 );

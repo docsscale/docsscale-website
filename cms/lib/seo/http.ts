@@ -19,9 +19,13 @@ export async function postJson<T = unknown>(url: string, body: unknown, headers:
 
 /** Read-only Google access token from the service account key file, minted with
  *  Node's own crypto (no Google library): Search Console and GA4, read scopes only. */
-let cached: { token: string; until: number } | null = null;
+const cache = new Map<string, { token: string; until: number }>();
+const READ_SCOPES = 'https://www.googleapis.com/auth/webmasters.readonly https://www.googleapis.com/auth/analytics.readonly';
+/** Only for resubmitting the sitemap (lib/seo/indexing.ts); nothing else asks for it. */
+export const SITEMAP_SCOPE = 'https://www.googleapis.com/auth/webmasters';
 
-export async function googleToken(): Promise<string> {
+export async function googleToken(scope: string = READ_SCOPES): Promise<string> {
+  const cached = cache.get(scope);
   if (cached && cached.until > Date.now() + 60_000) return cached.token;
   const raw = googleKey();
   if (!raw) throw new Error('No Google key is set on the server.');
@@ -33,7 +37,7 @@ export async function googleToken(): Promise<string> {
   const head = b64({ alg: 'RS256', typ: 'JWT', kid: key.private_key_id });
   const claims = b64({
     iss: key.client_email,
-    scope: 'https://www.googleapis.com/auth/webmasters.readonly https://www.googleapis.com/auth/analytics.readonly',
+    scope,
     aud: key.token_uri,
     iat,
     exp: iat + 3600,
@@ -46,8 +50,8 @@ export async function googleToken(): Promise<string> {
   });
   if (!res.ok) throw new Error(`Google refused the key (${res.status}).`);
   const json = (await res.json()) as { access_token: string; expires_in: number };
-  cached = { token: json.access_token, until: Date.now() + json.expires_in * 1000 };
-  return cached.token;
+  cache.set(scope, { token: json.access_token, until: Date.now() + json.expires_in * 1000 });
+  return json.access_token;
 }
 
 export const isoDay = (d: Date) => d.toISOString().slice(0, 10);

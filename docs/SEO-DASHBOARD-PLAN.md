@@ -404,6 +404,39 @@ items, all free, all built in one pull request:
 Data rules kept: equal 28-day periods, "not enough data" under 100
 impressions, nothing invented. The CRM is named only as "the CRM" on screen.
 
+## 14. Automatic indexing, 9 Oct 2026 (owner: "live pages and published blogs should auto index in Bing and Search Console and update the dashboard")
+
+The dashboard now tells the search engines about new and changed pages on
+its own, and shows what each engine makes of every page.
+
+- **Watch.** Every two hours (checked with the ten-minute schedule) the app
+  reads `https://docsscale.com/sitemap.xml` and keeps one row per page with
+  its sitemap date. A page that is new, or whose date moved, is announced.
+  The very first watch only records what exists and sends nothing.
+- **Bing and the other IndexNow engines** (Yandex, Seznam, Naver) get the
+  changed addresses at once through IndexNow, with the key the site already
+  publishes at `/569a0945ac9445c41f98e5e73eb6ff3c.txt`.
+- **Google** is told by resubmitting the sitemap through the Search Console
+  API, the only route Google offers for ordinary pages (its Indexing API is
+  for job postings and live events only). That call needs the dashboard's
+  Google account to be a **Full** user of the property; a Restricted one is
+  refused with 403, and the Technical health tab then shows what to change.
+- **What the engines show** comes back with the daily run: Google's verdict,
+  coverage and last crawl from the URL inspection already in the Search
+  Console snapshot; Bing's last crawl from its UrlInfo call, one per page.
+- **Where to see it.** Technical health, "Indexing": page, sitemap date, when
+  Bing and Google were told (and whether they accepted), Google's state and
+  last crawl, Bing's last crawl, and a log of what was sent and why. Two
+  buttons: "Look at the sitemap now" (any signed-in user) and "Send every
+  page now" (admin), which announces the whole sitemap.
+- **Read API:** `GET /api/seo/read?what=indexing` returns the rows and log.
+
+Code: `cms/lib/seo/indexing.ts` (watch, announce, state refresh), tables
+`indexing` and `indexing_log` in `cms/lib/seo/store.ts`, the hooks in
+`cms/lib/seo/run.ts`. The release workflow's own IndexNow ping and the post
+publish workflow's ping stay as they are; the watch catches anything they
+miss.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:

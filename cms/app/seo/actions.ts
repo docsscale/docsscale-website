@@ -7,6 +7,7 @@ import { IS_PRODUCTION, createReadKey, saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
 import { parseCsv } from '../../lib/seo/csv';
 import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
+import { announce, indexingRows, watchSitemap } from '../../lib/seo/indexing';
 import { startRun } from '../../lib/seo/run';
 import { collectContent } from '../../lib/seo/sources/content';
 import { now, recordSource, saveSetting, saveSnapshot, store } from '../../lib/seo/store';
@@ -227,4 +228,20 @@ export async function refreshContent() {
     back('/seo/content?checked=error');
   }
   back('/seo/content?checked=1');
+}
+
+/** Technical health → Indexing: look at the sitemap now (new and changed
+ *  pages are sent), or send every page to both engines on request. */
+export async function watchSitemapNow() {
+  await requireUser('/seo/technical (watch sitemap)', 'seo');
+  try { await watchSitemap('Technical health tab'); } catch (e) { back(`/seo/technical?indexing=${encodeURIComponent((e as Error).message.slice(0, 120))}`); }
+  back('/seo/technical?indexing=watched');
+}
+
+export async function sendAllPages() {
+  const user = await requireUser('/seo/technical (send all pages)', 'admin');
+  const urls = indexingRows().map((r) => r.url);
+  if (!urls.length) { try { await watchSitemap(user.email); } catch { /* reported on the panel */ } }
+  await announce(indexingRows().map((r) => r.url), user.email);
+  back('/seo/technical?indexing=sent');
 }
