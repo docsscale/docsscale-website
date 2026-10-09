@@ -226,6 +226,32 @@ export const SPECIALTIES: Specialty[] = [
       role: 'Owner, chiropractic · Tampa, FL',
       href: '/results/',
     },
+    faqs: [
+      {
+        q: 'How do we get more chiropractic patients without spending more on ads?',
+        a: "Start with the patients you already have. Most practices have years of people in their software who finished care and were never invited back, and they already know you. Write to them in the doctor's own voice. For our Tampa client we sent a reactivation campaign to 640 patients not seen in 12+ months, with a review request after every completed visit. The result: 31 rebooked in month one, 19 new Google reviews, zero ad spend. In the owner's words: “Patients we assumed had moved away. They just hadn't been asked.”",
+      },
+      {
+        q: 'Should a chiropractor advertise on Google or Facebook?',
+        a: "Google first for most practices, because someone searching for back pain, sciatica or neck pain wants relief this week. Facebook and Instagram reach people who aren't searching yet, which suits wellness and maintenance care better than acute pain. Google doesn't allow ads targeted by health condition, so an ad that follows people around can't hint at their pain. We build campaigns around specific complaints rather than generic “chiropractic care”, and judge them by booked visits, not clicks.",
+      },
+      {
+        q: 'Can we advertise a free or discounted first exam?',
+        a: "Check your state chiropractic board's rules first. Several states require the ad to list every charge that can follow the free exam, x-rays included, and some require a signed disclosure in the office. For Medicare and Medicaid patients, free services can count as an improper inducement under federal law. We don't run discount specials. We would rather answer every inquiry within minutes, day or night, so the person in pain books with you before they call someone else.",
+      },
+      {
+        q: 'How should we market maintenance care?',
+        a: "Be clear about what it is and who pays for it. Medicare pays for active, corrective care only, so maintenance visits are usually paid by the patient, and they should know that before they commit. If you sell prepaid or wellness plans, some states regulate them, with rules on written terms and refunds. Then invite people back at the right time. We set up recall timed to each patient's treatment plan, so maintenance care doesn't depend on patients remembering.",
+      },
+      {
+        q: 'What can a chiropractor claim in ads?',
+        a: "Say what you treat and how. Don't promise what it cures. The Federal Trade Commission requires competent and reliable scientific evidence for any claim about treating disease, and in 2020 it warned chiropractors who advertised that their care could prevent or treat COVID-19. Some state boards also treat superlatives such as “best chiropractor in town” as misleading. Every ad we write gets your sign-off before it goes live, and the compliance rules for your specialty are part of every review.",
+      },
+      {
+        q: 'How do we get more Google reviews, and can we offer a reward for them?',
+        a: "Ask every patient, every time, after a good visit, with a direct link to your Google profile. Don't post fake reviews, offer a reward only for positive ones, or have staff review the practice without saying who they are. A federal rule in force since October 2024 bans all three, and Google's own rules don't allow rewards for reviews at all. When you reply, never confirm the reviewer is a patient. We send a review request after every visit and reply within 24 hours in your voice.",
+      },
+    ],
   },
   {
     slug: 'physical-therapy',
@@ -306,6 +332,32 @@ export const SPECIALTIES: Specialty[] = [
       role: 'Owner, physical therapy · Denver, CO',
       href: '/results/',
     },
+    faqs: [
+      {
+        q: "Can patients come to physical therapy without a doctor's referral?",
+        a: "Yes, in every state, though the rules differ. Some states allow it without limits, others cap the number of visits or days before a referral is needed. Medicare doesn't require a referral either, but a physician still has to certify the plan of care for the visits to be paid. So a direct-access campaign should name the conditions you treat and say plainly whether a patient needs a referral in your state. We run direct-access ads and local search for the conditions and post-op categories you actually treat.",
+      },
+      {
+        q: 'Why do our post-op leads go cold?',
+        a: "Usually because nobody calls them back fast enough. A patient fresh out of surgery is comparing wait times, and a callback the next business day is often too late. Our Denver client was referral-dependent, with a Google Ads account nobody had touched in a year, and web form leads were called back the next business day. We built a post-surgery rehab landing page with insurance screening, rebuilt their Google campaigns, and set up a callback within four minutes on every form. The result: 2.4× more evaluations booked and cost per booked visit down 41%. In the owner's words: “Four-minute callbacks did more than the new ads did.”",
+      },
+      {
+        q: 'How do we get more referrals from orthopedic surgeons?',
+        a: "Make it easy and safe for a surgeon's office to send patients to you. That means a fast callback, so their patient is booked before leaving the parking lot, a clear page for each type of surgery you rehab, and updates on how their patients are doing. Be careful with gifts. Federal anti-kickback and self-referral rules limit what you can give someone who refers Medicare patients, so check with a healthcare attorney first. After we built our Denver client's post-surgery page, two new referring surgeons found them through it.",
+      },
+      {
+        q: 'How do we answer insurance questions without losing the patient?',
+        a: "Answer them before the patient has to ask. Unclear coverage is one of the most common reasons an evaluation request never becomes a visit. List the plans you're in network with, give a self-pay price if you have one, and add a short screening question to the form so your team can check benefits before calling back. We build condition and post-op pages that answer the insurance question up front, so the booking doesn't stall on price.",
+      },
+      {
+        q: 'How do we keep patients through their full plan of care?',
+        a: "Measure it first. The drop-off percentages you'll see quoted online rarely come from a published study, so track your own: visits attended against visits planned, by therapist and by condition. Then tell each patient at the evaluation how many visits they need and why, book ahead, and send reminders between visits. We set up plan-of-care reminders that reduce drop-off mid-treatment, and the Monday report shows booked and showed visits so you can see the trend.",
+      },
+      {
+        q: 'Can we use patient success stories in our marketing?',
+        a: "Yes, with the patient's written permission, signed before you post. HIPAA requires a written authorization to use a patient's story, name, photo or video in marketing, and the U.S. Department of Health and Human Services has settled with a physical therapy provider that posted testimonials without one. Show results that are typical for your patients, not only your best case, because a “results may vary” line is no longer enough for the Federal Trade Commission. We don't post anything about a patient without your sign-off.",
+      },
+    ],
   },
   {
     slug: 'med-spa',
@@ -385,6 +437,32 @@ export const SPECIALTIES: Specialty[] = [
       role: 'Owner, med spa · Las Vegas, NV',
       href: '/results/',
     },
+    faqs: [
+      {
+        q: "Why don't our Instagram followers turn into booked consults?",
+        a: "Usually because nobody answers fast enough. Injectables and aesthetics clients compare several providers at once, and a DM answered the next day has often booked elsewhere. Our Las Vegas client had a strong Instagram following and a weak calendar, with DMs answered the next day, if at all. We built an injectables consult funnel, Instagram and Meta campaigns, DM and form replies within minutes, and a reminder sequence with a same-day reschedule for no-shows. The result: 62 booked consults in the quarter, 54 showed, and a 38% treatment acceptance on first visit. In the owner's words: “Same followers, same budget. The difference was somebody answering at 9 pm.”",
+      },
+      {
+        q: 'How do we cut no-shows for consults?',
+        a: "Confirm the booking right away, remind them before the visit, and have a plan for the ones who miss. A consult booked from an ad is easy to forget, so a quick confirmation and a reminder the day before do most of the work. When someone does miss, offer a new time the same day while they're still interested. For our Las Vegas client we set up a reminder sequence with a same-day reschedule for no-shows, and 54 of 62 booked consults showed.",
+      },
+      {
+        q: 'Can we use before-and-after photos in our ads and posts?',
+        a: "Only with the client's written consent for that specific use, kept separate from their treatment consent. Show results that are typical, not just your best one: the Federal Trade Commission no longer treats a “results may vary” line as enough. Meta and Google also have their own rules for cosmetic procedure ads, including age targeting, and they change often, so check them before every campaign. Every ad, post and page we make gets your sign-off before it goes live.",
+      },
+      {
+        q: 'Can a med spa advertise Botox and fillers by name?',
+        a: "Carefully. Botox is a registered trademark and a prescription drug, so the rules are stricter than for a facial. Google requires certification before you can advertise prescription drug keywords in the U.S. The FDA has sent warning letters to med spas over misleading claims about the drugs they offer. Never call an off-label use “FDA-approved”, and ask your attorney or your medical director how your state's rules apply to brand names. We build campaigns around the treatments you want to grow, and compliance rules are part of every review.",
+      },
+      {
+        q: 'When should we remind clients to rebook neurotoxin?',
+        a: "Around three months after the treatment. The FDA label for Botox Cosmetic puts results for frown lines at about three to four months and says not to treat more often than every three months, so a reminder at about twelve weeks lands at the right time. Other brands and other treatments follow their own timing. We set up touch-up recall timed to each treatment, so rebooking doesn't rely on clients remembering.",
+      },
+      {
+        q: 'Should a med spa sell treatments on Groupon or deal sites?',
+        a: "Think twice. The American Med Spa Association warns that deal-site vouchers can count as fee-splitting in states where a physician must own the practice, because the site takes a cut of a medical fee. Deals also tend to bring in one-time bargain hunters rather than clients who come back. We don't run discount specials. We would rather fill the calendar by answering every inquiry fast and bringing past clients back when they're due.",
+      },
+    ],
   },
 ];
 
