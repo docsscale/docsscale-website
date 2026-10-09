@@ -52,6 +52,12 @@ log. Code in `lib/seo/` and `app/seo/`.
   what to ignore) comes from the data; the written summary is typed on the
   tab or sent by the weekly run (below) and is flagged when older than eight
   days.
+- **Imports feed the tabs** (owner, 9 Oct 2026: shared tools, exports
+  uploaded by hand): `lib/seo/imports.ts` recognises an upload by its
+  columns, not the tool. A keyword column with a position or volume column
+  shows on Keywords and rankings; a referring-page column with a target or
+  authority column on Links; a query or page column with a citation count
+  on AI visibility. The newest upload of each kind is shown, with its stamp.
 - **Paid connectors** are listed on Settings as off; nothing is bought.
 
 - **Sign-in:** a one-time email link (owner's decision, 6 Oct 2026), sent with

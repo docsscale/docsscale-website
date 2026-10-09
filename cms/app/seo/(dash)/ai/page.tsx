@@ -1,4 +1,5 @@
 import { requireUser } from '../../../../lib/seo/auth';
+import { latestImport, stamp, type CitationRow } from '../../../../lib/seo/imports';
 import type { AnalyticsData } from '../../../../lib/seo/sources/analytics';
 import { latestSnapshot, store } from '../../../../lib/seo/store';
 import { addAiCheck } from '../../actions';
@@ -20,6 +21,7 @@ export default async function Ai() {
   const checks = store().prepare('SELECT * FROM ai_checks ORDER BY id DESC LIMIT 200').all() as Check[];
   const citations = store().prepare("SELECT id, at, by, source, filename, rows FROM imports WHERE source LIKE '%AI%' OR source LIKE '%citation%' ORDER BY id DESC LIMIT 10").all() as { id: number; at: string; by: string; source: string; filename: string; rows: number }[];
   const cited = checks.filter((c) => c.cited).length;
+  const cit = latestImport<CitationRow>('citations');
 
   return (
     <>
@@ -42,7 +44,13 @@ export default async function Ai() {
         <Source>Manual log; nothing here is measured by a tool</Source>
       </Section>
 
-      <Section title="Bing's AI citations" note="Bing Webmaster Tools has an AI performance report with no API yet. Export it as CSV and upload it on the Imports tab with the source “Bing AI citations”.">
+      <Section title="AI citations from an uploaded export" note="Bing's AI performance report, or any tool's AI-visibility export with a query or page column and a citation count, uploaded on the Imports tab; the newest one is shown.">
+        {cit && (
+          <>
+            <Table head={['Query or page', 'Citations']} rows={[...cit.rows].sort((a, b) => b.count - a.count).slice(0, 100).map((r) => [r.label, fmt(r.count)])} />
+            <Source>{stamp(cit.meta)} · {fmt(cit.rows.reduce((s, r) => s + r.count, 0))} citations over {fmt(cit.rows.length)} rows</Source>
+          </>
+        )}
         <Table head={['When', 'Source', 'File', 'Rows', 'By']} rows={citations.map((i) => [when(i.at), i.source, <a key="f" href={`/seo/imports?view=${i.id}`} style={link}>{i.filename}</a>, fmt(i.rows), i.by])} empty="No export uploaded yet." />
       </Section>
       {!ga && <Empty>GA4 has not been read yet. See the Data sources tab.</Empty>}
