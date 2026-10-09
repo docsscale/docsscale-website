@@ -7,6 +7,7 @@ import { autoSummary, findings, moveFinding, noteFinding, selfApprovable } from 
 import { lastResearch, pastTopics, research } from '../../../../lib/seo/ideas';
 import { announce, indexingLog, indexingRows, watchSitemap } from '../../../../lib/seo/indexing';
 import { kindOf, rankOpen } from '../../../../lib/seo/today';
+import { whatToWriteNext } from '../../../../lib/seo/write-next';
 import { SOURCES, recentRuns, type SourceName } from '../../../../lib/seo/run';
 import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/store';
 
@@ -47,6 +48,7 @@ export async function GET(request: NextRequest) {
   if (what === 'indexing') return Response.json({ pages: indexingRows(), log: indexingLog() });
   // The Today tab's order, with each item's kind, for the weekly run.
   if (what === 'today') return Response.json({ items: rankOpen(findings("status IN ('Detected', 'Recommended', 'Approved', 'In progress')")).map((f) => ({ ...f, kind: kindOf(f) })) });
+  if (what === 'write-next') return Response.json(whatToWriteNext(50));
   if (what === 'ideas') { const topic = request.nextUrl.searchParams.get('topic') ?? ''; return Response.json(topic ? (lastResearch(topic) ?? { error: 'No lookup for this topic yet.' }) : { topics: pastTopics(50) }); }
   if (what === 'overview') {
     const db = store();

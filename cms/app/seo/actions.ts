@@ -8,6 +8,7 @@ import { sendSignInLink } from '../../lib/seo/mail';
 import { parseCsv } from '../../lib/seo/csv';
 import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
 import { research } from '../../lib/seo/ideas';
+import { groupKey } from '../../lib/seo/write-next';
 import { announce, indexingRows, watchSitemap } from '../../lib/seo/indexing';
 import { startRun } from '../../lib/seo/run';
 import { collectContent } from '../../lib/seo/sources/content';
@@ -180,6 +181,23 @@ export async function planIdea(form: FormData) {
   const topic = String(form.get('topic') ?? '').trim().slice(0, 120);
   if (phrase) store().prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(30, `Write or strengthen a page for "${phrase}"`, user.email, now());
   back(`/seo/keywords?topic=${encodeURIComponent(topic)}&planned=${encodeURIComponent(phrase)}#ideas`);
+}
+
+/** "Add to plan" and "Not for us" on the Content tab's What to write next. */
+export async function planSuggestion(form: FormData) {
+  const user = await requireUser('/seo/content (plan)', 'seo');
+  const phrase = String(form.get('phrase') ?? '').trim().slice(0, 200);
+  const kind = String(form.get('kind') ?? '').trim();
+  if (phrase) store().prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(30, `Write a ${kind === 'Blog post' ? 'post' : 'page'} for "${phrase}"`, user.email, now());
+  back(`/seo/content?planned=${encodeURIComponent(phrase)}#write-next`);
+}
+
+export async function skipSuggestion(form: FormData) {
+  const user = await requireUser('/seo/content (skip)', 'seo');
+  const phrase = String(form.get('phrase') ?? '').trim().slice(0, 200);
+  const key = groupKey(phrase);
+  if (key) store().prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('skip-topic', now(), user.email, key, phrase);
+  back('/seo/content#write-next');
 }
 
 export async function donePlanItem(form: FormData) {

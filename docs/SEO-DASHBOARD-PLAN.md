@@ -470,6 +470,33 @@ first two are here.
   (past topics) and `?what=ideas&topic=…`; `POST {"action":"research",
   "text":"topic"}` runs a lookup, so the weekly run can research topics.
 
+## 16. What to write next, 9 Oct 2026 (owner: "what blogs should we write based on the research from different sources, keywords, demands")
+
+- **Where:** the top of the Content inventory tab, "What to write next". One
+  ranked list of pages and posts worth writing, strongest first. Each line is
+  one piece of writing (near-duplicate phrases are grouped: "dental marketing
+  ideas" and "best dental marketing ideas" are one line, the others shown as
+  "also covers"), with a Blog post / Service or industry page badge, the
+  reasons with their numbers and sources, "Add to plan" (a 30-day plan line)
+  and "Not for us" (hides that topic for good; kept in `notes` as
+  `skip-topic`).
+- **Sources and scores** (`cms/lib/seo/write-next.ts`, `whatToWriteNext`):
+  the approved keyword map's pages not live yet (first, always); keyword ideas
+  from every lookup (Bing searches a month, Google suggests it, Search Console
+  impressions); questions people searched on Google or Bing that no heading on
+  the site answers; Search Console phrases shown 20 or more times with no page
+  about them (position past 20); the newest uploaded keyword export (volume
+  with no ranking or a ranking past 20). Left out: phrases we already rank in
+  the top 10 for, phrases on the keyword map, phrases a heading already
+  answers, and job, course, sign-in and other-country phrases (counted in the
+  note under the list).
+- **Kept fresh by itself:** the daily run looks up the seed topics (the nine
+  served specialties plus the agency's own services, `SEED_TOPICS`) once a
+  week each (`refreshSeedIdeas`), so the list moves without anyone typing.
+  Uploads and the daily search data feed it the same day.
+- **Read API:** `?what=write-next` (the top 50 with reasons), for the
+  Monday routine's summary.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:
