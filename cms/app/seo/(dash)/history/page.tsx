@@ -1,6 +1,6 @@
 import { requireUser } from '../../../../lib/seo/auth';
 import { findings, outcomeOf } from '../../../../lib/seo/findings';
-import { Badge, Empty, H1, Section, Source, T, Table, day } from '../../ui';
+import { Badge, Empty, H1, Section, Source, Table, day } from '../../ui';
 import { FindingCard } from '../queue/finding';
 
 export const dynamic = 'force-dynamic';
@@ -18,8 +18,7 @@ export default async function History() {
 
   return (
     <>
-      <H1>History and outcomes</H1>
-      <p style={{ color: T.body, marginTop: 0, fontSize: 14 }}>Each change is checked 28 days after it was done (60 for a new page), over equal 28-day periods of Search Console data. Under 100 impressions in both periods the honest verdict is &ldquo;no effect: insufficient data&rdquo;.</p>
+      <H1 lede={<>Each change is checked 28 days after it was done (60 for a new page), over equal 28-day periods of Search Console data. Under 100 impressions in both periods the honest verdict is &ldquo;no effect: insufficient data&rdquo;.</>}>History and outcomes</H1>
       <Section title="Done">
         <Table
           head={['Change', 'Done', 'Check', 'Outcome', 'Detail']}

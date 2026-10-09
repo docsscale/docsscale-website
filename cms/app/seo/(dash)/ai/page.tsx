@@ -3,7 +3,7 @@ import { latestImport, stamp, type CitationRow } from '../../../../lib/seo/impor
 import type { AnalyticsData } from '../../../../lib/seo/sources/analytics';
 import { latestSnapshot, store } from '../../../../lib/seo/store';
 import { addAiCheck } from '../../actions';
-import { Badge, Empty, H1, Section, Source, T, Table, Tile, button, fmt, input, link, tiles, when } from '../../ui';
+import { Badge, Empty, H1, Section, Source, T, Table, Tile, button, fmt, input, link, when } from '../../ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,7 +26,7 @@ export default async function Ai() {
   return (
     <>
       <H1>AI visibility</H1>
-      <div style={tiles}>
+      <div className="sx-tiles">
         <Tile label="Visits from AI assistants" value={ga ? fmt(ai?.sessions ?? 0) : 'Unknown'} sub={ga && <span>Previous 28 days: {fmt(ai?.previous ?? 0)}</span>} source={ga ? `GA4, ${ga.data.current[0]} to ${ga.data.current[1]}; referrals from ChatGPT, Perplexity, Gemini, Copilot, Claude and others. Visits from the assistants' apps often carry no referrer, so this undercounts.` : 'GA4 · not collected yet'} />
         <Tile label="Leads from AI assistants" value={ga ? fmt(ai?.keyEvents ?? 0) : 'Unknown'} source="GA4 key events on those visits. The CRM is the count of record." />
         <Tile label="Manual checks: cited" value={checks.length ? `${cited} of ${checks.length}` : 'None yet'} source="Typed in by hand below; labelled as manual" />

@@ -2,13 +2,13 @@ import type { User } from '../../../../lib/seo/auth';
 import { canSee } from '../../../../lib/seo/auth';
 import { approverRole, findingLog, type Finding } from '../../../../lib/seo/findings';
 import { decideFinding, progressFinding, saveFindingNote } from '../../actions';
-import { Badge, T, button, day, input } from '../../ui';
+import { Badge, T, button, day, input, quietButton } from '../../ui';
 
 // One item of the fix queue with its evidence, its three decisions and the
 // instruction note (docs/SEO-DASHBOARD-PLAN.md, section 7).
 
 const small = { ...button, padding: '6px 10px', fontSize: 13 } as const;
-const quiet = { ...small, background: T.surface, color: T.body, borderWidth: 1, borderStyle: 'solid', borderColor: T.hairline } as const;
+const quiet = { ...quietButton, padding: '6px 10px', fontSize: 13 } as const;
 
 export const tone = (s: string): 'good' | 'bad' | 'neutral' =>
   s === 'Done' || s === 'Outcome measured' || s === 'Approved' ? 'good' : s === 'Rejected' ? 'bad' : 'neutral';
@@ -19,11 +19,11 @@ export function FindingCard({ f, user, back, open = false }: { f: Finding; user:
   const stale = f.last_seen < new Date(Date.now() - 2 * 86400_000).toISOString() && !['Done', 'Outcome measured', 'Rejected'].includes(f.status);
   const log = findingLog(f.id);
   return (
-    <details open={open} style={{ background: T.surface, border: `1px solid ${T.hairline}`, borderRadius: 12, padding: '12px 16px', margin: '10px 0' }}>
-      <summary style={{ cursor: 'pointer', fontSize: 15, color: T.ink, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-        <Badge tone={f.impact === 'High' ? 'bad' : f.impact === 'Medium' ? 'neutral' : 'good'}>{f.impact} impact</Badge>
+    <details open={open} className="sx-finding" style={{ background: T.surface, border: `1px solid ${T.hairline}`, borderLeft: `4px solid ${f.impact === 'High' ? T.peachFg : f.impact === 'Medium' ? T.amberFg : T.sageFg}`, borderRadius: '6px 12px 12px 6px', padding: '12px 16px' }}>
+      <summary style={{ cursor: 'pointer', fontSize: 14.5, color: T.ink, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', fontWeight: 500 }}>
+        <span style={{ flex: '1 1 320px' }}>{f.what}</span>
+        <Badge tone={f.impact === 'High' ? 'bad' : f.impact === 'Medium' ? 'warn' : 'good'}>{f.impact} impact</Badge>
         <Badge tone={tone(f.status)}>{f.status === 'Approved' ? 'Approved, waiting for the next run' : f.status}</Badge>
-        <span>{f.what}</span>
         {stale && <Badge tone="neutral">No longer detected</Badge>}
       </summary>
       <div style={{ fontSize: 14, color: T.body, marginTop: 10, display: 'grid', gap: 6 }}>
@@ -36,7 +36,7 @@ export function FindingCard({ f, user, back, open = false }: { f: Finding; user:
           {f.done_at && <> <strong>Done:</strong> {day(f.done_at)}; outcome check {day(f.check_date)}.</>}
           {f.outcome && <> <strong>Outcome:</strong> {f.outcome}. {f.outcome_detail}</>}
         </div>
-        {f.note && <div style={{ background: '#fff8e6', borderRadius: 8, padding: 8 }}><strong>Instruction note:</strong> {f.note}</div>}
+        {f.note && <div style={{ background: T.amberBg, color: T.amberFg, borderRadius: 8, padding: '8px 10px' }}><strong>Instruction note:</strong> {f.note}</div>}
 
         {maySeo && (
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>

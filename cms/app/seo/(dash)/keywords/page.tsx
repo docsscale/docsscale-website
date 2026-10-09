@@ -5,7 +5,7 @@ import type { BingData } from '../../../../lib/seo/sources/bing';
 import type { SearchConsoleData } from '../../../../lib/seo/sources/search-console';
 import type { SiteData } from '../../../../lib/seo/sources/site';
 import { latestSnapshot } from '../../../../lib/seo/store';
-import { Badge, Empty, H1, Section, Source, T, Table, fmt, link, when } from '../../ui';
+import { Badge, Empty, H1, Section, Source, Table, fmt, link, when } from '../../ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,8 +39,7 @@ export default async function Keywords() {
 
   return (
     <>
-      <H1>Keywords and rankings</H1>
-      <p style={{ color: T.body, marginTop: 0, fontSize: 14 }}>One primary keyword per page, from the approved keyword map. &ldquo;Average position&rdquo; is Google&rsquo;s average over 28 days for the exact phrase; daily tracking needs a paid connector, which is off.</p>
+      <H1 lede={<>One primary keyword per page, from the approved keyword map. &ldquo;Average position&rdquo; is Google&rsquo;s average over 28 days for the exact phrase; daily tracking needs a paid connector, which is off.</>}>Keywords and rankings</H1>
       <Section title="The keyword map and where each phrase stands">
         <Table
           head={['Page', 'Primary keyword', 'Page live', 'Google average position', 'Google impressions', 'Google clicks (phrase)', 'Bing average position', 'Tool position', 'Searches a month (tool)', 'Page clicks, all phrases']}
