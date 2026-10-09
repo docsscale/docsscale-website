@@ -99,9 +99,13 @@ export function whatToWriteNext(limit = 25): { items: Suggestion[]; notes: strin
   for (const { topic } of pastTopics(100)) {
     const r = lastResearch(topic);
     if (!r) continue;
+    // Lookups stored before 9 Oct 2026 still hold Bing's broad matches
+    // (brand names sharing one word with the topic); the same every-word
+    // test the lookup now applies is applied here.
+    const topicWords = topic.split(' ');
     for (const i of r.ideas) {
       ideasSeen++;
-      if (i.mapped || ranks(i.phrase)) continue;
+      if (i.mapped || ranks(i.phrase) || !topicWords.every((w) => i.phrase.includes(w))) continue;
       const parts: string[] = [];
       let score = 0;
       if (i.bing != null && i.bing > 0) { parts.push(`${i.bing.toLocaleString('en-US')} searches a month on Bing`); score += Math.min(i.bing, 3000) / 10; }

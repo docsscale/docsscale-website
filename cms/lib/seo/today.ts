@@ -8,7 +8,7 @@ export const KINDS: Kind[] = ['Content', 'On-page', 'Technical', 'Indexing', 'Li
 const KIND_OF: Record<string, Kind> = {
   'missing-page': 'Content', stale: 'Content', 'near-page-one': 'Content',
   lint: 'On-page', 'no-clicks': 'On-page', cannibalization: 'On-page',
-  orphan: 'Links',
+  orphan: 'Links', 'lost-link': 'Links',
   'site-check': 'Technical', 'page-status': 'Technical', 'bing-issue': 'Technical', 'lost-clicks': 'Technical',
   'not-indexed': 'Indexing',
 };
