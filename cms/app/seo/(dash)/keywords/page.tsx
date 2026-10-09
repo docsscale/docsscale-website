@@ -1,4 +1,5 @@
 import { requireUser } from '../../../../lib/seo/auth';
+import { latestImport, stamp, type KeywordRow } from '../../../../lib/seo/imports';
 import { FOCUS_KEYWORDS } from '../../../../lib/seo/keywords';
 import type { BingData } from '../../../../lib/seo/sources/bing';
 import type { SearchConsoleData } from '../../../../lib/seo/sources/search-console';
@@ -26,6 +27,11 @@ export default async function Keywords() {
   const bq = new Map((bing?.data.queries ?? []).map((q) => [q.query.toLowerCase(), q]));
   const pageClicks = new Map((gsc?.data.pages ?? []).map((p) => [pathOf(p.page), p]));
   const pos = (p: number | null | undefined, impressions: number | undefined) => (p == null || !impressions ? 'Insufficient data' : fmt(p, 1));
+  // A rank tracker's export, uploaded on the Imports tab (owner, 9 Oct 2026: shared tools, uploaded by hand).
+  const tool = latestImport<KeywordRow>('keywords');
+  const toolRows = new Map((tool?.rows ?? []).map((r) => [r.keyword.toLowerCase(), r]));
+  const toolPos = (kw: string) => { const r = toolRows.get(kw.toLowerCase()); return !tool ? 'No upload' : !r ? 'Not in the upload' : r.position == null ? 'Not ranking' : fmt(r.position); };
+  const toolVol = (kw: string) => { const r = toolRows.get(kw.toLowerCase()); return !tool ? 'No upload' : !r || r.volume == null ? 'Unknown' : fmt(r.volume); };
 
   const mapped = new Set(Object.keys(FOCUS_KEYWORDS));
   const unmapped = [...live].filter((p) => !mapped.has(p) && !['/', '/industries/', '/how-it-works/', '/results/', '/about/', '/book-a-call/', '/free-system/', '/privacy/', '/terms/', '/blog/'].includes(p));
@@ -37,7 +43,7 @@ export default async function Keywords() {
       <p style={{ color: T.body, marginTop: 0, fontSize: 14 }}>One primary keyword per page, from the approved keyword map. &ldquo;Average position&rdquo; is Google&rsquo;s average over 28 days for the exact phrase; daily tracking needs a paid connector, which is off.</p>
       <Section title="The keyword map and where each phrase stands">
         <Table
-          head={['Page', 'Primary keyword', 'Page live', 'Google average position', 'Google impressions', 'Google clicks (phrase)', 'Bing average position', 'Page clicks, all phrases']}
+          head={['Page', 'Primary keyword', 'Page live', 'Google average position', 'Google impressions', 'Google clicks (phrase)', 'Bing average position', 'Tool position', 'Searches a month (tool)', 'Page clicks, all phrases']}
           rows={Object.entries(FOCUS_KEYWORDS).map(([path, kw]) => {
             const g = gq.get(kw.toLowerCase());
             const b = bq.get(kw.toLowerCase());
@@ -46,12 +52,26 @@ export default async function Keywords() {
               <Badge key="l" tone={live.has(path) ? 'good' : 'neutral'}>{site ? (live.has(path) ? 'Yes' : 'Not yet') : 'Unknown'}</Badge>,
               gsc ? pos(g?.position, g?.impressions) : 'Unknown', gsc ? fmt(g?.impressions ?? 0) : 'Unknown', gsc ? fmt(g?.clicks ?? 0) : 'Unknown',
               bing ? pos(b?.position, b?.impressions) : 'Unknown',
+              toolPos(kw), toolVol(kw),
               gsc ? fmt(pageClicks.get(path)?.clicks ?? 0) : 'Unknown',
             ];
           })}
         />
-        <Source>{src}. Google hides rare phrases, so a phrase with no row may still have been searched.</Source>
+        <Source>{src} · Tool columns: {tool ? stamp(tool.meta) : 'no keyword export uploaded yet (Imports tab)'}. Google hides rare phrases, so a phrase with no row may still have been searched.</Source>
       </Section>
+
+      {tool && (
+        <Section title="Every keyword in the uploaded export" note="Top 200 by searches a month, as the tool reported them. Position is the tool's, on the day of the export.">
+          <Table
+            head={['Keyword', 'Position', 'Previous', 'Searches a month', 'Page', 'Mapped to']}
+            rows={[...tool.rows].sort((a, b) => (b.volume ?? 0) - (a.volume ?? 0)).slice(0, 200).map((r) => [
+              r.keyword, r.position == null ? 'Not ranking' : fmt(r.position), r.previous == null ? '—' : fmt(r.previous), r.volume == null ? 'Unknown' : fmt(r.volume),
+              r.url ? pathOf(r.url) : '—', Object.entries(FOCUS_KEYWORDS).find(([, kw]) => kw.toLowerCase() === r.keyword.toLowerCase())?.[0] ?? '—',
+            ])}
+          />
+          <Source>{stamp(tool.meta)} · {fmt(tool.rows.length)} rows</Source>
+        </Section>
+      )}
 
       <Section title="Coverage" note="Keyword-map rows with no live page, and live pages with no keyword of their own.">
         <p style={{ fontSize: 14, margin: '0 0 8px' }}>
