@@ -1,6 +1,7 @@
 import { bingKey, crmLocationId, crmToken, googleKey, seoConfig } from './config';
 import { findings, recordFindings } from './findings';
 import { refreshIndexState, watchSitemapIfDue } from './indexing';
+import { refreshSeedIdeas } from './write-next';
 import { notifyAdmins } from './mail';
 import { sendMonthlyIfDue } from './report';
 import { collectAnalytics } from './sources/analytics';
@@ -89,6 +90,8 @@ export function startRun(job: Job, startedBy: string): number | null {
     if (job !== 'weekly') {
       try { await nudgeNotIndexed(); } catch (e) { console.error(`[seo] indexing nudge failed: ${(e as Error).message}`); }
       try { await sendMonthlyIfDue(); } catch (e) { console.error(`[seo] monthly report failed: ${(e as Error).message}`); }
+      // Keyword ideas for the specialties, once a week each, so What to write next stays fresh.
+      try { await refreshSeedIdeas('Daily run'); } catch (e) { console.error(`[seo] seed keyword ideas failed: ${(e as Error).message}`); }
     }
   })();
   return id;

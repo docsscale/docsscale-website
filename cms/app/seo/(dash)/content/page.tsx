@@ -4,17 +4,19 @@ import type { ContentData } from '../../../../lib/seo/sources/content';
 import type { SearchConsoleData } from '../../../../lib/seo/sources/search-console';
 import type { SiteData } from '../../../../lib/seo/sources/site';
 import { latestSnapshot, store } from '../../../../lib/seo/store';
-import { refreshContent } from '../../actions';
-import { Badge, Empty, H1, Section, Source, T, button, when } from '../../ui';
+import { whatToWriteNext } from '../../../../lib/seo/write-next';
+import { planSuggestion, refreshContent, skipSuggestion } from '../../actions';
+import { Badge, Empty, H1, Section, Source, T, button, quietButton, when } from '../../ui';
 import { SortableTable, type Cell } from './sortable';
 
 export const dynamic = 'force-dynamic';
 
 const HEAD = ['Page', 'Kind', 'Status', 'Created', 'Last changed', 'Edits', 'Words', 'SEO score', 'Focus keyword', 'Structured data', 'In Google', 'Google clicks (28 days)'];
 
-export default async function ContentHistory({ searchParams }: { searchParams: Promise<{ checked?: string }> }) {
-  await requireUser('/seo/content');
-  const { checked } = await searchParams;
+export default async function ContentHistory({ searchParams }: { searchParams: Promise<{ checked?: string; planned?: string }> }) {
+  const user = await requireUser('/seo/content');
+  const { checked, planned } = await searchParams;
+  const next = whatToWriteNext(12);
   const content = latestSnapshot<ContentData>('content');
   const site = latestSnapshot<SiteData>('site');
   const gsc = latestSnapshot<SearchConsoleData>('search-console');
@@ -63,6 +65,37 @@ export default async function ContentHistory({ searchParams }: { searchParams: P
       <H1 actions={checkNow}>Content inventory</H1>
       {checked === '1' && <p><Badge tone="good">Checked just now against the editing screen's latest saves.</Badge></p>}
       {checked === 'error' && <p><Badge tone="bad">The content files could not be read; see the Data sources tab.</Badge></p>}
+      <Section
+        title="What to write next"
+        note="Pages and posts worth writing, strongest first, from the keyword map, keyword ideas, questions people searched with no answer on the site, Search Console and your uploaded exports. Each line is one piece of writing; the phrases under it are what the same piece would cover. Add to plan puts it on the 30-day plan; Not for us hides the topic for good."
+        style={{ scrollMarginTop: 80 }}
+      >
+        <div id="write-next" />
+        {planned && <p style={{ margin: '0 0 10px' }}><Badge tone="good">Added to the 30-day plan: {planned}</Badge></p>}
+        {next.items.length === 0 ? <Empty>{next.notes[0] ?? 'Nothing to suggest yet. The list fills from the weekly keyword lookups and the search data.'}</Empty> : (
+          <ol style={{ margin: 0, paddingLeft: 24, display: 'grid', gap: 12, fontSize: 14 }}>
+            {next.items.map((s) => (
+              <li key={s.key} style={{ paddingLeft: 4 }}>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <strong style={{ fontSize: 15 }}>{s.keyword}</strong>
+                  <Badge tone={s.kind === 'Blog post' ? 'info' : 'neutral'}>{s.kind}</Badge>
+                  {user.role !== 'editor' && (
+                    <span style={{ display: 'flex', gap: 6, marginLeft: 'auto' }}>
+                      <form action={planSuggestion}><input type="hidden" name="phrase" value={s.keyword} /><input type="hidden" name="kind" value={s.kind} /><button type="submit" style={{ ...button, padding: '4px 10px', fontSize: 12 }}>Add to plan</button></form>
+                      <form action={skipSuggestion}><input type="hidden" name="phrase" value={s.keyword} /><button type="submit" style={{ ...quietButton, padding: '4px 10px', fontSize: 12 }}>Not for us</button></form>
+                    </span>
+                  )}
+                </div>
+                <ul style={{ margin: '4px 0 0', paddingLeft: 18, color: T.body, display: 'grid', gap: 2 }}>
+                  {s.why.map((w) => <li key={w}>{w.charAt(0).toUpperCase() + w.slice(1)}.</li>)}
+                </ul>
+                {s.also.length > 0 && <div style={{ marginTop: 4, fontSize: 13, color: T.caption }}>Also covers: {s.also.join(' · ')}</div>}
+              </li>
+            ))}
+          </ol>
+        )}
+        <Source>{next.notes.join(' ')}{next.notes.length ? ' · ' : ''}Keyword map · keyword ideas (Bing, Google) · Search Console · Bing · uploaded exports · phrases the site already answers or ranks in the top 10 for are left out</Source>
+      </Section>
       <Section
         title="Before you publish"
         note="The same checks the live pages get, run on each post that is not live yet, from what the editing screen last saved. Fix them in the editor and press Check my drafts now; a post with every check passing goes live without turning up in the fix queue."
