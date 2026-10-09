@@ -5,7 +5,7 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
-- **Homepage names what we are in the words people search for** (waiting for the owner's approval of the before/after). The SEO dashboard scored the homepage 67 of 100 because "healthcare marketing agency" was missing from its title, main heading and description. The title becomes "Healthcare Marketing Agency for Clinics | DocsScale" (was "Healthcare Clinic Marketing Agency | DocsScale"); the description starts "DocsScale is a healthcare marketing agency that runs your clinic's marketing end to end…" (same promise, reworded around the phrase); and a small grey line, "Healthcare marketing agency", sits above the headline as part of the main heading. The headline and the paragraph under it are unchanged.
+- **Homepage names what we are in the words people search for** (owner's approval of the before/after, 9 Oct 2026). The SEO dashboard scored the homepage 67 of 100 because "healthcare marketing agency" was missing from its title, main heading and description. The title becomes "Healthcare Marketing Agency for Clinics | DocsScale" (was "Healthcare Clinic Marketing Agency | DocsScale"); the description starts "DocsScale is a healthcare marketing agency that runs your clinic's marketing end to end…" (same promise, reworded around the phrase); and a small grey line, "Healthcare marketing agency", sits above the headline as part of the main heading. The headline and the paragraph under it are unchanged.
 
 ## [1.6.0] — 2026-10-08
 
