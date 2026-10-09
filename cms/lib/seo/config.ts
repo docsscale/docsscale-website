@@ -51,6 +51,10 @@ export const seoConfig = {
   ga4Property: env('GA4_PROPERTY') || 'properties/556073979',
   bingSite: env('BING_SITE_URL') || 'https://docsscale.com/',
   githubRepo: env('GITHUB_REPO') || 'docsscale/docsscale-website',
+  /** The IndexNow key: public by design (served at /<key>.txt on the site;
+   *  web/public holds the file). It proves the addresses are ours and gives
+   *  no access to anything, so it is not a secret. */
+  indexNowKey: env('INDEXNOW_KEY') || '569a0945ac9445c41f98e5e73eb6ff3c',
 };
 
 /** The keys an admin saves on the Settings tab, in the private folder, read
