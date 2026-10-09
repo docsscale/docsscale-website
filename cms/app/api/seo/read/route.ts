@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { deviceOf, shortIp } from '../../../../lib/seo/auth';
 import { readKeyMatches } from '../../../../lib/seo/config';
+import { notifyAdmins } from '../../../../lib/seo/mail';
 import { autoSummary, findings, moveFinding, noteFinding, selfApprovable } from '../../../../lib/seo/findings';
 import { SOURCES, recentRuns, type SourceName } from '../../../../lib/seo/run';
 import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/store';
@@ -75,7 +76,10 @@ export async function POST(request: NextRequest) {
   if (action === 'summary') {
     if (!text) return bad('Send the summary as plain text, or JSON {"action":"summary","text":…}.');
     db.prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('overview', now(), BY, text.slice(0, 8000), '');
-    return Response.json({ ok: true, at: now() });
+    // The owner reads it in the inbox too (switch on the Settings tab).
+    const s = autoSummary();
+    const emailed = await notifyAdmins('summary', 'This week in plain language: your SEO summary', [text.slice(0, 8000), '', s.top.length ? 'What matters most:' : '', ...s.top.slice(0, 3).map((f, i) => `${i + 1}. ${f.what}`), '', `${s.openCount} items are open in the fix queue.`].join('\n'));
+    return Response.json({ ok: true, at: now(), emailed });
   }
   if (action === 'move') {
     const to = String(body.to ?? '');

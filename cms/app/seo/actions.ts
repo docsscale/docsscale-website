@@ -195,6 +195,12 @@ export async function importCsv(form: FormData) {
 }
 
 /** Settings the admin changes on screen, each with a reason (plan, section 9). */
+export async function saveEmailSettings(form: FormData) {
+  const user = await requireUser('/seo/settings (emails)', 'admin');
+  for (const key of ['email.summary', 'email.alert']) saveSetting(key, form.get(key) ? 'on' : 'off', user.email, 'Changed on the Settings tab');
+  back('/seo/settings?saved=1');
+}
+
 export async function saveQueueSettings(form: FormData) {
   const user = await requireUser('/seo/settings (queue)', 'admin');
   const reason = String(form.get('reason') ?? '').trim().slice(0, 300) || 'No reason given';
