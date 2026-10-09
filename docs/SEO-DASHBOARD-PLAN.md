@@ -521,6 +521,24 @@ things the dashboard can keep for free (`cms/lib/seo/links.ts`):
   are not in our newest export and not on the list are shown strongest
   first with an "Add to list" button.
 
+## 18. Uploads become tasks, and the How-to-use tab, 9 Oct 2026 (owner: "when I will add reports from Ahrefs, SEMRush, Ubersuggest etc then the tasks will update", "guide me how to properly use dashboard")
+
+- **Uploads become tasks.** The newest keyword export of any tool (Ubersuggest
+  is now in the source list; files are recognised by their columns as before)
+  feeds two new rules in `findings.ts`: `export-push` (position 11 to 20,
+  volume 20 or more or unknown: "Push the page on to page one", On-page on
+  Today) and `export-drop` (a previous-position column and a fall of five or
+  more places while still in the top 50: "Find out why we dropped", who: You,
+  High when the volume is 200 or more). Backlink exports feed `lost-link`
+  (section 17). The rules run the moment a file is uploaded (`importCsv`
+  calls `recordFindings`), so the queue shows the new tasks that day; the
+  daily run refreshes them after.
+- **How to use it** (`/seo/help`, every role): what runs by itself, the
+  owner's week (Monday: Overview and Today; Tuesday: pick one line from What
+  to write next; Thursday: one row of Link building; monthly: upload exports),
+  what each tab is for, and the three rules (nothing invented, nothing
+  publishes here, free first). Kept beside the tabs so it cannot drift.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:

@@ -7,7 +7,7 @@ export type Kind = 'Content' | 'On-page' | 'Technical' | 'Indexing' | 'Links';
 export const KINDS: Kind[] = ['Content', 'On-page', 'Technical', 'Indexing', 'Links'];
 const KIND_OF: Record<string, Kind> = {
   'missing-page': 'Content', stale: 'Content', 'near-page-one': 'Content',
-  lint: 'On-page', 'no-clicks': 'On-page', cannibalization: 'On-page',
+  lint: 'On-page', 'no-clicks': 'On-page', cannibalization: 'On-page', 'export-push': 'On-page', 'export-drop': 'On-page',
   orphan: 'Links', 'lost-link': 'Links',
   'site-check': 'Technical', 'page-status': 'Technical', 'bing-issue': 'Technical', 'lost-clicks': 'Technical',
   'not-indexed': 'Indexing',

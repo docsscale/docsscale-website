@@ -6,7 +6,7 @@ import { createSignInLink, redeemSignInLink, requireUser, signOut } from '../../
 import { IS_PRODUCTION, createReadKey, saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
 import { parseCsv } from '../../lib/seo/csv';
-import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
+import { approverRole, moveFinding, noteFinding, recordFindings } from '../../lib/seo/findings';
 import { research } from '../../lib/seo/ideas';
 import { groupKey } from '../../lib/seo/write-next';
 import { announce, indexingRows, watchSitemap } from '../../lib/seo/indexing';
@@ -248,6 +248,8 @@ export async function importCsv(form: FormData) {
   if (!parsed.columns.length) back('/seo/imports?error=csv');
   store().prepare('INSERT INTO imports (at, by, source, filename, note, rows, columns, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
     .run(now(), user.email, source, file.name.slice(0, 120), String(form.get('note') ?? '').trim().slice(0, 500), parsed.rows.length, JSON.stringify(parsed.columns), JSON.stringify(parsed.rows.slice(0, 5000)));
+  // The rules that read uploads run at once, so the queue shows the new tasks today, not after the next daily run.
+  try { recordFindings(); } catch (e) { console.error(`[seo] findings after upload failed: ${(e as Error).message}`); }
   back('/seo/imports?saved=1');
 }
 
