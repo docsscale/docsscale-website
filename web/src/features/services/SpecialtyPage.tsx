@@ -27,6 +27,7 @@ export function SpecialtyPage({ specialty: s }: { specialty: Specialty }) {
       <System specialty={s} lower={lower} />
       <Services specialty={s} lower={lower} />
       <CaseStudy specialty={s} lower={lower} />
+      {s.faqs?.length ? <Faqs specialty={s} lower={lower} /> : null}
       <Cta specialty={s} lower={lower} />
     </>
   );
@@ -680,6 +681,82 @@ function CaseStudy({ specialty: s, lower }: { specialty: Specialty; lower: strin
               </figcaption>
             </figure>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+// Owner-supplied questions for this specialty (same row style as the homepage
+// FAQ). The page's FAQPage schema is built from the same list, so the two match.
+function Faqs({ specialty: s, lower }: { specialty: Specialty; lower: string }) {
+  const faqs = s.faqs ?? [];
+  return (
+    <div
+      data-screen-label="FAQ"
+      style={{
+        padding: 'clamp(56px,7vw,96px) 0 0',
+      }}
+    >
+      <div
+        className="container"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'clamp(28px,3.5vw,40px)',
+        }}
+      >
+        <h2
+          style={{
+            ...sectionH2,
+            maxWidth: 760,
+            textWrap: 'balance',
+          }}
+        >
+          {'What '}
+          {lower}
+          {' owners ask us.'}
+        </h2>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            borderTop: `1px solid ${T.hairline}`,
+          }}
+        >
+          {faqs.map((f, i) => (
+            <div
+              key={f.q}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))',
+                gap: '12px 40px',
+                padding: '22px 0',
+                borderBottom: i < faqs.length - 1 ? `1px solid ${T.hairline}` : undefined,
+              }}
+            >
+              <h3
+                style={{
+                  margin: 0,
+                  fontWeight: 800,
+                  fontSize: 17,
+                  lineHeight: 1.35,
+                  letterSpacing: '-.01em',
+                }}
+              >
+                {f.q}
+              </h3>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 15,
+                  lineHeight: 1.6,
+                  color: T.body,
+                }}
+              >
+                {f.a}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

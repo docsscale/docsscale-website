@@ -4,6 +4,24 @@
 been built; this is a handover note. Everything here was checked against the
 live site (production v1.4.6) and `main` on that date.
 
+## Status (9 Oct 2026)
+
+- **All four pages** show their `/results/` case, quoted exactly (PR #89,
+  merged 8 Oct; `caseStudy` in `web/src/content/specialties.ts`).
+- **Questions section:** each specialty can carry a `faqs` list. The page shows
+  "What <specialty> owners ask us." and FAQPage schema built from the same
+  list, and shows nothing while the list is empty.
+- **Dental questions:** the owner had no list of his own and asked Claude to
+  research them (8 Oct). Seven questions were drafted from that research. Every
+  answer about DocsScale reuses claims already on the live site (How it works,
+  Services, homepage, Results), and the Dallas case is quoted exactly. Left out
+  on purpose: practice software names, treatments as our experience beyond
+  those the page already names, new Dallas details, and spend benchmarks.
+  Draft and sources: `reviews/dental-faq/` in the project files.
+- **Next:** physical therapy, chiropractic and med spa get their own questions,
+  one page at a time. Don't copy the dental questions with the specialty
+  swapped.
+
 ## Why this came up
 
 The owner received a prompt asking for two fixes, "then deploy to production":

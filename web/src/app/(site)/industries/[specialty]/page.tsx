@@ -39,11 +39,24 @@ export default async function SpecialtyRoute({ params }: Props) {
   const specialty = SPECIALTIES.find((s) => s.slug === slug);
   if (!specialty) notFound();
   const ldKey = STRUCTURED_DATA_KEY[specialty.slug as keyof typeof STRUCTURED_DATA_KEY];
+  // FAQPage only when the page shows questions; built from the same list.
+  const faqLd = specialty.faqs?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: specialty.faqs.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null;
   return (
     <>
       {STRUCTURED_DATA[ldKey].map((data, i) => (
         <JsonLd key={i} data={data} />
       ))}
+      {faqLd ? <JsonLd data={faqLd} /> : null}
       <Nav active="industries" specialties={SPECIALTY_LINKS} />
       <main>
         <SpecialtyPage specialty={specialty} />

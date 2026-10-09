@@ -16,7 +16,7 @@
 import Link from 'next/link';
 import { type FocusEvent, type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import { NAV_LINKS, type NavKey, SERVICE_STAGES, serviceHref } from '@/content/site';
-import { industryHref } from '@/content/specialties';
+import { industryHref } from '@/content/industry-href';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 import { BrandLogo } from './BrandLogo';
 
