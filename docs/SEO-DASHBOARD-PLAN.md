@@ -429,7 +429,9 @@ its own, and shows what each engine makes of every page.
   last crawl, Bing's last crawl, and a log of what was sent and why. Two
   buttons: "Look at the sitemap now" (any signed-in user) and "Send every
   page now" (admin), which announces the whole sitemap.
-- **Read API:** `GET /api/seo/read?what=indexing` returns the rows and log.
+- **Read API:** `GET /api/seo/read?what=indexing` returns the rows and log;
+  `POST` with `{"action":"send-pages"}` announces every page, as the button
+  does (owner, 9 Oct 2026: "do what you recommend only").
 
 Code: `cms/lib/seo/indexing.ts` (watch, announce, state refresh), tables
 `indexing` and `indexing_log` in `cms/lib/seo/store.ts`, the hooks in
