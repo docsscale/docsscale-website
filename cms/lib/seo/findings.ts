@@ -1,4 +1,5 @@
 import { FOCUS_KEYWORDS } from './keywords';
+import { lostLinks } from './links';
 import type { AnalyticsData } from './sources/analytics';
 import type { BingData } from './sources/bing';
 import type { ContentData } from './sources/content';
@@ -130,6 +131,13 @@ export function detect(): Detected[] {
       if (!last) continue;
       const age = Math.floor((Date.now() - Date.parse(last)) / 86400_000);
       if (age >= t.staleDays) add({ key: `stale:${p.path}`, rule: 'stale', page: p.path, what: `Review and refresh ${p.path}`, evidence: `Content files on GitHub: last updated ${last.slice(0, 10)}, ${age} days ago (threshold ${t.staleDays}).`, impact: 'Low', impact_reason: 'Older guides slowly lose rankings to fresher ones.', effort: 'Medium', who: 'Editor in the CMS' });
+    }
+  }
+  // Backlinks that disappeared between the owner's last two uploads.
+  const lost = lostLinks();
+  if (lost) {
+    for (const l of lost.lost.slice(0, 25)) {
+      add({ key: `lost-link:${l.domain}`, rule: 'lost-link', page: l.target ? pathOf(l.target) : null, what: `Ask ${l.domain} to restore its link${l.target ? ` to ${pathOf(l.target)}` : ''}`, evidence: `Backlink exports: ${l.domain} linked to us ${l.links === 1 ? 'once' : `${l.links} times`} in the ${lost.previous.source} export of ${lost.previous.at.slice(0, 10)} and not in the one of ${lost.newest.at.slice(0, 10)}${l.authority != null ? ` (authority ${l.authority})` : ''}.`, impact: l.authority != null && l.authority >= 30 ? 'High' : 'Medium', impact_reason: 'A link already earned is the cheapest one to keep.', effort: 'Small', who: 'You' });
     }
   }
   return out;

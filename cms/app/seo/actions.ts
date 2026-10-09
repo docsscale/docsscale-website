@@ -10,6 +10,7 @@ import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
 import { research } from '../../lib/seo/ideas';
 import { groupKey } from '../../lib/seo/write-next';
 import { announce, indexingRows, watchSitemap } from '../../lib/seo/indexing';
+import { OUTREACH_KINDS, OUTREACH_STATUSES, addOutreach, moveOutreach, type OutreachKind, type OutreachStatus } from '../../lib/seo/links';
 import { startRun } from '../../lib/seo/run';
 import { collectContent } from '../../lib/seo/sources/content';
 import { now, recordSource, saveSetting, saveSnapshot, store } from '../../lib/seo/store';
@@ -198,6 +199,22 @@ export async function skipSuggestion(form: FormData) {
   const key = groupKey(phrase);
   if (key) store().prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('skip-topic', now(), user.email, key, phrase);
   back('/seo/content#write-next');
+}
+
+/** The outreach list on the Links tab (owner, 9 Oct 2026: off-page and backlinks). */
+export async function addOutreachSite(form: FormData) {
+  const user = await requireUser('/seo/links (add site)', 'seo');
+  const site = String(form.get('site') ?? '').trim().slice(0, 120);
+  const kind = String(form.get('kind') ?? 'Other') as OutreachKind;
+  if (site) addOutreach({ site, url: String(form.get('url') ?? '').trim().slice(0, 300), kind: OUTREACH_KINDS.includes(kind) ? kind : 'Other', target: String(form.get('target') ?? '/').trim().slice(0, 200) || '/', note: String(form.get('note') ?? '').trim().slice(0, 300) }, user.email);
+  back('/seo/links#outreach');
+}
+
+export async function moveOutreachSite(form: FormData) {
+  await requireUser('/seo/links (move site)', 'seo');
+  const status = String(form.get('status') ?? '') as OutreachStatus;
+  if (OUTREACH_STATUSES.includes(status)) moveOutreach(Number(form.get('id')), status);
+  back('/seo/links#outreach');
 }
 
 export async function donePlanItem(form: FormData) {
