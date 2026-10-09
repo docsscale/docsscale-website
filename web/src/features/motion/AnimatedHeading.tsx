@@ -6,7 +6,9 @@
 //    paint (only when motion is allowed); styles/motion.css animates them.
 // React is told the heading's inner HTML is static (dangerouslySetInnerHTML),
 // so hydration never re-renders or "fixes" the split words.
-// Supported content: text and <em> (with className/style), like the headlines.
+// Supported content: text, <em> and <span> (with className/style), like the
+// headlines. Only text and <em> words animate; a <span> (the homepage kicker)
+// stays still.
 import { Children, isValidElement, type CSSProperties, type ReactElement, type ReactNode } from 'react';
 
 const escape = (text: string) =>
@@ -26,7 +28,8 @@ function toHtml(node: ReactNode): string {
         return (i > 0 && isText(child) && isText(node[i - 1]) ? '<!-- -->' : '') + toHtml(child);
       })
       .join('');
-  if (isValidElement(node) && node.type === 'em') {
+  if (isValidElement(node) && (node.type === 'em' || node.type === 'span')) {
+    const tag = node.type;
     const { className, style, children } = (
       node as ReactElement<{ className?: string; style?: CSSProperties; children?: ReactNode }>
     ).props;
@@ -35,10 +38,10 @@ function toHtml(node: ReactNode): string {
           .map(([k, v]) => cssValue(k, v as string | number))
           .join(';')
       : '';
-    return `<em${className ? ` class="${className}"` : ''}${css ? ` style="${escape(css)}"` : ''}>${toHtml(Children.toArray(children))}</em>`;
+    return `<${tag}${className ? ` class="${className}"` : ''}${css ? ` style="${escape(css)}"` : ''}>${toHtml(Children.toArray(children))}</${tag}>`;
   }
   if (isValidElement(node) && node.type === 'br') return '<br/>';
-  throw new Error('AnimatedHeading supports text, <em> and <br/> only');
+  throw new Error('AnimatedHeading supports text, <em>, <span> and <br/> only');
 }
 
 // Same structure and timing as the original GSAP split: a clipping span per word,
