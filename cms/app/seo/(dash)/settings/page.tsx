@@ -67,7 +67,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
         </div>
       </Section>
 
-      <Section title="Claude's key" note="Lets Claude read every tab and, like the SEO role, write the weekly summary, note progress on queue items, add plan lines, the ignore list and AI checks (owner, 9 Oct 2026). It cannot approve or reject items, nor change keys, people or settings. Make one, copy it into the cloud environment's secrets, and it is never shown again. Every use appears in the Access log.">
+      <Section title="Claude's key" note="Lets Claude read every tab and, like the SEO role, write the weekly summary, note progress on queue items, add plan lines, the ignore list and AI checks (owner, 9 Oct 2026). It may approve invisible fixes only (site checks, pages not answering, Bing crawl errors, structured data, canonical and noindex); anything with words on it still waits for your Approve. It cannot reject items, nor change keys, people or settings. Make one, copy it into the cloud environment's secrets, and it is never shown again. Every use appears in the Access log.">
         {newKey && (
           <p style={{ margin: '0 0 12px', padding: 12, background: '#fff8e6', borderRadius: 8, fontSize: 14 }}>
             Copy this now; it is shown only once:<br />

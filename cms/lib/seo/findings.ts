@@ -195,6 +195,17 @@ export const approverRole = () => (setting('approvers', 'admin') === 'seo' ? 'se
 
 const HORIZON: Record<Effort, number> = { Small: 30, Medium: 60, Large: 90 };
 
+/** Findings the weekly run may approve on its own (owner, 9 Oct 2026: "yes"
+ *  to self-approving the small invisible fixes). Only changes a visitor
+ *  cannot see: site-wide checks, pages that do not answer, Bing crawl
+ *  errors, and the linter's structured-data, canonical and noindex checks.
+ *  Anything with words on it (titles, descriptions, headings, links, new
+ *  pages) still waits for the owner's Approve. */
+export function selfApprovable(f: Pick<Finding, 'rule' | 'key'>): boolean {
+  if (['site-check', 'page-status', 'bing-issue'].includes(f.rule)) return true;
+  return f.rule === 'lint' && /:(schema|canonical|indexable)$/.test(f.key);
+}
+
 /** Moves an item on and logs it. Returns false when the move is not allowed. */
 export function moveFinding(id: number, to: Status, by: string, note: string, reopenReason = ''): boolean {
   const db = store();
