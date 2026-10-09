@@ -2,6 +2,7 @@ import { FOCUS_KEYWORDS } from './keywords';
 import type { AnalyticsData } from './sources/analytics';
 import type { BingData } from './sources/bing';
 import type { ContentData } from './sources/content';
+import type { CrmData } from './sources/crm';
 import type { SearchConsoleData } from './sources/search-console';
 import type { SiteData } from './sources/site';
 import { latestSnapshot, now, setting, snapshotBefore, store } from './store';
@@ -28,6 +29,8 @@ export type Detected = Omit<Finding, 'id' | 'status' | 'note' | 'horizon' | 'cre
 
 const pathOf = (u: string) => u.replace(/^https?:\/\/[^/]+/, '') || '/';
 const isPost = (p: string) => p.startsWith('/blog/') && p !== '/blog/';
+/** Linter checks a visitor cannot see; the weekly run may approve these on its own. */
+const TECHNICAL_CHECKS = new Set(['schema', 'canonical', 'indexable']);
 const whoFor = (p: string): Who => (isPost(p) ? 'Editor in the CMS' : 'Developer, with your OK');
 
 /** The thresholds of SEO-OS section 6, changeable in Settings. */
@@ -55,9 +58,18 @@ export function detect(): Detected[] {
     for (const f of site.data.failing) {
       add({ key: `page-status:${pathOf(f.url)}`, rule: 'page-status', page: pathOf(f.url), what: `Make ${pathOf(f.url)} answer 200 or take it out of the sitemap`, evidence: `${stamp}. The sitemap lists it but it answered ${f.status}${f.redirect ? `, going to ${f.redirect}` : ''}.`, impact: 'High', impact_reason: 'Search engines drop pages that do not answer.', effort: 'Small', who: 'Developer, with your OK' });
     }
+    // One item per page, not one per check, so the queue stays readable
+    // (9 Oct 2026: 30 single-check items hid the few that mattered). The
+    // technical checks (structured data, canonical, noindex) are a separate
+    // item because the weekly run may approve those on its own.
     for (const p of site.data.pages) {
-      for (const c of p.checks.filter((c) => c.pass === false && !c.declined)) {
-        add({ key: `lint:${p.path}:${c.id}`, rule: 'lint', page: p.path, what: `${p.path}: ${c.label.toLowerCase()}`, evidence: `${stamp}, page linter. ${c.detail}.`, impact: c.weight >= 10 ? 'Medium' : 'Low', impact_reason: c.weight >= 10 ? 'One of the on-page basics search engines read first.' : 'A small on-page point; worth doing when the page is next edited.', effort: 'Small', who: whoFor(p.path) });
+      const failing = p.checks.filter((c) => c.pass === false && !c.declined);
+      for (const [kind, checks] of [['technical', failing.filter((c) => TECHNICAL_CHECKS.has(c.id))], ['wording', failing.filter((c) => !TECHNICAL_CHECKS.has(c.id))]] as const) {
+        if (!checks.length) continue;
+        const labels = checks.map((c) => c.label.toLowerCase());
+        const what = checks.length === 1 ? `${p.path}: ${labels[0]}` : `${p.path}: ${checks.length} ${kind === 'technical' ? 'technical' : 'on-page'} checks to fix (${labels.join('; ')})`;
+        const important = checks.some((c) => c.weight >= 10);
+        add({ key: `lint:${p.path}:${kind}`, rule: 'lint', page: p.path, what, evidence: `${stamp}, page linter. ${checks.map((c) => `${c.label}: ${c.detail}`).join('. ')}.`, impact: important ? 'Medium' : 'Low', impact_reason: important ? 'Among them one of the on-page basics search engines read first.' : 'Small on-page points; worth doing when the page is next edited.', effort: checks.length > 3 ? 'Medium' : 'Small', who: whoFor(p.path) });
       }
     }
     // Orphans: pages no other page links to from its main text.
@@ -203,7 +215,7 @@ const HORIZON: Record<Effort, number> = { Small: 30, Medium: 60, Large: 90 };
  *  pages) still waits for the owner's Approve. */
 export function selfApprovable(f: Pick<Finding, 'rule' | 'key'>): boolean {
   if (['site-check', 'page-status', 'bing-issue'].includes(f.rule)) return true;
-  return f.rule === 'lint' && /:(schema|canonical|indexable)$/.test(f.key);
+  return f.rule === 'lint' && f.key.endsWith(':technical');
 }
 
 /** Moves an item on and logs it. Returns false when the move is not allowed. */
@@ -262,6 +274,8 @@ export function autoSummary() {
     moved.push(trend('Visitors who accepted cookies', ga.data.totals.current.totalUsers, ga.data.totals.previous.totalUsers));
     moved.push(trend('Leads recorded by GA4', ga.data.leads.current, ga.data.leads.previous));
   }
+  const crm = latestSnapshot<CrmData>('crm');
+  if (crm) moved.push(trend('Leads in the CRM (the count of record)', crm.data.totals.current, crm.data.totals.previous) + (crm.data.website.current ? ` ${crm.data.website.current} came through the website.` : ''));
   const open = findings("status IN ('Detected', 'Recommended', 'Approved', 'In progress')");
   const top = open.slice(0, 3);
   const risks: string[] = [];

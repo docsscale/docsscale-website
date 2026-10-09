@@ -388,6 +388,88 @@ you choose to buy.
 | — | Buying a tool | Nothing for two to three months; then confirm DataForSEO's current price before any purchase |
 | — | Priority | The publishing core and the first two content pieces come before any dashboard work |
 
+## 13. Automations added 9 Oct 2026 (owner: "yeah all 5")
+
+After the redesign the owner asked for anything left and more automation. Five
+items, all free, all built in one pull request:
+
+| # | What | Where it lives |
+|---|---|---|
+| 1 | **Approved wording fixes become pull requests on their own.** The Monday and Thursday run drafts the new title, description or heading for each Approved item that changes words, opens a pull request with a before/after, and notes the link on the item. The owner still approves anything visible before it is merged. | The routine's prompt (cloud thread "SEO dashboard"); nothing in code |
+| 2 | **Monthly report**, once the first Monday of the month has come: 28 days against the 28 before, index count, visitors and leads (GA4 and the CRM), site health, what was marked done and what it changed, the top open items. Kept on History and outcomes; emailed unless switched off on Settings. | `cms/lib/seo/report.ts`, called after the daily run |
+| 3 | **SEO checks in the post editor.** Posts have a "Focus keyword" field under Search engines (SEO). The dashboard runs the live-page checks on every post that is not live yet, from the working copy, and lists what to fix on the Content inventory tab ("Before you publish"); "Check my drafts now" reads the editor's latest saves. A live post's keyword also feeds the live-page linter. | `cms/lib/seo/post-lint.ts`, `sources/content.ts`, the content schema (both copies) |
+| 4 | **"Still not indexed" nudge.** A page the queue has shown out of Google's index for 14 days, and still out on this run, gets one email naming it with the Search Console link and "Request indexing"; again every 28 days while it stays out. Logged on the item. | `nudgeNotIndexed` in `cms/lib/seo/run.ts` |
+| 5 | **Leads matched with the CRM.** A read-only CRM token and account id on Settings; the daily run counts leads added in the last 56 days by source, channel (from the UTM tags the lead handler saves), landing page and campaign, and shows each landing page with the phrases Search Console shows it for. Counts only: no name, email or phone is copied. New tab "Leads and sources". | `cms/lib/seo/sources/crm.ts`, `app/seo/(dash)/leads` |
+
+Data rules kept: equal 28-day periods, "not enough data" under 100
+impressions, nothing invented. The CRM is named only as "the CRM" on screen.
+
+## 14. Automatic indexing, 9 Oct 2026 (owner: "live pages and published blogs should auto index in Bing and Search Console and update the dashboard")
+
+The dashboard now tells the search engines about new and changed pages on
+its own, and shows what each engine makes of every page.
+
+- **Watch.** Every two hours (checked with the ten-minute schedule) the app
+  reads `https://docsscale.com/sitemap.xml` and keeps one row per page with
+  its sitemap date. A page that is new, or whose date moved, is announced.
+  The very first watch only records what exists and sends nothing.
+- **Bing and the other IndexNow engines** (Yandex, Seznam, Naver) get the
+  changed addresses at once through IndexNow, with the key the site already
+  publishes at `/569a0945ac9445c41f98e5e73eb6ff3c.txt`.
+- **Google** is told by resubmitting the sitemap through the Search Console
+  API, the only route Google offers for ordinary pages (its Indexing API is
+  for job postings and live events only). That call needs the dashboard's
+  Google account to be a **Full** user of the property; a Restricted one is
+  refused with 403, and the Technical health tab then shows what to change.
+- **What the engines show** comes back with the daily run: Google's verdict,
+  coverage and last crawl from the URL inspection already in the Search
+  Console snapshot; Bing's last crawl from its UrlInfo call, one per page.
+- **Where to see it.** Technical health, "Indexing": page, sitemap date, when
+  Bing and Google were told (and whether they accepted), Google's state and
+  last crawl, Bing's last crawl, and a log of what was sent and why. Two
+  buttons: "Look at the sitemap now" (any signed-in user) and "Send every
+  page now" (admin), which announces the whole sitemap.
+- **Read API:** `GET /api/seo/read?what=indexing` returns the rows and log;
+  `POST` with `{"action":"send-pages"}` announces every page, as the button
+  does (owner, 9 Oct 2026: "do what you recommend only").
+
+Code: `cms/lib/seo/indexing.ts` (watch, announce, state refresh), tables
+`indexing` and `indexing_log` in `cms/lib/seo/store.ts`, the hooks in
+`cms/lib/seo/run.ts`. The release workflow's own IndexNow ping and the post
+publish workflow's ping stay as they are; the watch catches anything they
+miss.
+
+## 15. Keyword ideas and the Today tab, 9 Oct 2026 (owner: "can we also connect a keyword planner?", "do what you think is best")
+
+The owner asked for keyword research and for a daily view of what to do.
+Both built without a new account or paid tool. The larger plan he agreed
+to (keyword ideas, Today, "what to write next", backlinks and off-page,
+imports that become tasks, a how-to guide) is tracked in this thread; the
+first two are here.
+
+- **Keyword ideas** (Keywords and rankings tab, top): type a topic. Bing
+  Webmaster's keyword research (`GetKeyword`, `GetRelatedKeywords`, United
+  States, last 30 days, the Bing key already on Settings) gives how often
+  the topic and each related phrase were searched on Bing; Google's own
+  suggestion box (`suggestqueries.google.com`) adds the phrases Google
+  completes the topic and four natural variants to. Each phrase is matched
+  with Search Console (position, impressions, clicks) and with the keyword
+  map. "Add to plan" puts a 30-day line on the plan. Lookups are kept
+  (`keyword_ideas` table) and listed as chips. Honest limit, on screen: Bing
+  counts are Bing's, Google's are usually several times that.
+- **Google Keyword Planner itself** needs a Google Ads account with API
+  access (developer token) and shows exact volumes only with ad spend; the
+  owner was told and may ask for it later.
+- **Today** (new tab under Overview, SEO role): every open queue item in one
+  ranked list: approved or in-progress work first, then impact, then the
+  smaller effort, then the older item (`rankOpen` in `cms/lib/seo/today.ts`).
+  Filters: kind (Content, On-page, Technical, Indexing, Links; from the rule),
+  who, status, page. Each item is the same card as the fix queue, with its
+  buttons. Below it, the plan lines that are not queue items, with Done.
+- **Read API:** `?what=today` (the ranked list with kinds), `?what=ideas`
+  (past topics) and `?what=ideas&topic=…`; `POST {"action":"research",
+  "text":"topic"}` runs a lookup, so the weekly run can research topics.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:

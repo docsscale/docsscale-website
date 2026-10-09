@@ -51,11 +51,15 @@ export const seoConfig = {
   ga4Property: env('GA4_PROPERTY') || 'properties/556073979',
   bingSite: env('BING_SITE_URL') || 'https://docsscale.com/',
   githubRepo: env('GITHUB_REPO') || 'docsscale/docsscale-website',
+  /** The IndexNow key: public by design (served at /<key>.txt on the site;
+   *  web/public holds the file). It proves the addresses are ours and gives
+   *  no access to anything, so it is not a secret. */
+  indexNowKey: env('INDEXNOW_KEY') || '569a0945ac9445c41f98e5e73eb6ff3c',
 };
 
 /** The keys an admin saves on the Settings tab, in the private folder, read
  *  by the owner of the app only (mode 600). Values never leave the server. */
-export type SecretName = 'googleKey' | 'bingKey' | 'pagespeedKey' | 'githubToken' | 'readKeyHash';
+export type SecretName = 'googleKey' | 'bingKey' | 'pagespeedKey' | 'githubToken' | 'readKeyHash' | 'crmToken' | 'crmLocationId';
 const SECRETS_FILE = () => path.join(seoConfig.dataDir, 'settings.json');
 
 function savedSecrets(): Partial<Record<SecretName, string>> {
@@ -84,6 +88,11 @@ export const bingKey = () => env('BING_API_KEY') || savedSecrets().bingKey || ''
 export const pagespeedKey = () => env('PAGESPEED_API_KEY') || savedSecrets().pagespeedKey || '';
 /** Optional while the repository is public; needed once it is private again. */
 export const githubToken = () => env('SEO_GITHUB_TOKEN') || savedSecrets().githubToken || '';
+
+/** The CRM's read-only token (contacts and custom fields, read only) and the
+ *  account it reads, for the Leads tab (owner, 9 Oct 2026). Optional. */
+export const crmToken = () => env('SEO_CRM_TOKEN') || savedSecrets().crmToken || '';
+export const crmLocationId = () => env('SEO_CRM_LOCATION_ID') || savedSecrets().crmLocationId || '';
 
 /** The token Hostinger's cron sends to start a run: the environment, or one
  *  the app made itself and keeps in the private folder (the cron script
@@ -135,5 +144,6 @@ export function settingsPresence() {
     { name: 'Bing Webmaster API key', set: Boolean(bingKey()) },
     { name: 'PageSpeed API key (optional)', set: Boolean(pagespeedKey()) },
     { name: 'GitHub read token (needed once the repository is private)', set: Boolean(githubToken()) },
+    { name: 'CRM read-only token and account (optional, for the Leads tab)', set: Boolean(crmToken() && crmLocationId()) },
   ];
 }

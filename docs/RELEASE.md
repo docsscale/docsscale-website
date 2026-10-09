@@ -26,7 +26,7 @@
 
 - The deploy script uploads through Hostinger's file-upload API. It needs `HOSTINGER_UPLOAD_URL`, `HOSTINGER_AUTH` and `HOSTINGER_REST` in the environment, generated per session (they expire after about 6 hours) from Hostinger's "generate upload URL" endpoint for account `u145389112`, domain `docsscale.com`.
 - **Never commit them or paste them into tickets.**
-- Phase 5 replaces this with a Hostinger API token stored as a GitHub secret, for automatic deploys.
+- **From 9 Oct 2026 releases normally run from GitHub:** Actions → "Release to production" → Run workflow, with the version (for example `v1.6.0`) and, optionally, the changed live addresses for IndexNow. It uses the Hostinger API token stored as the secret `HOSTINGER_API_TOKEN`, does steps 3 to 8 below, and pushes the tag. The cloud session cannot upload to Hostinger itself (its uploads are refused). The owner's go-ahead is still needed before it is started.
 
 ## Rolling back
 

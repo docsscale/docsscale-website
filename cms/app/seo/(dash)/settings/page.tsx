@@ -1,10 +1,10 @@
 import { cookies } from 'next/headers';
 import { requireUser } from '../../../../lib/seo/auth';
-import { bingKey, githubToken, googleKey, googleKeyAccount, hasReadKey, pagespeedKey, seoConfig, settingsPresence } from '../../../../lib/seo/config';
+import { bingKey, crmLocationId, crmToken, githubToken, googleKey, googleKeyAccount, hasReadKey, pagespeedKey, seoConfig, settingsPresence } from '../../../../lib/seo/config';
 import { cronCommand, ensureServerFiles } from '../../../../lib/seo/server-files';
 import { thresholds } from '../../../../lib/seo/findings';
 import { setting, store } from '../../../../lib/seo/store';
-import { clearKey, makeReadKey, saveKeys, saveQueueSettings } from '../../actions';
+import { clearKey, makeReadKey, saveEmailSettings, saveKeys, saveQueueSettings } from '../../actions';
 import { Badge, H1, Section, Source, T, Table, button, input } from '../../ui';
 
 export const dynamic = 'force-dynamic';
@@ -20,10 +20,12 @@ export default async function Settings({ searchParams }: { searchParams: Promise
   ensureServerFiles();
   const { saved, error } = await searchParams;
   const newKey = (await cookies()).get('ds_seo_newkey')?.value;
-  const keys: { name: 'bingKey' | 'pagespeedKey' | 'githubToken'; label: string; note: string; set: boolean }[] = [
+  const keys: { name: 'bingKey' | 'pagespeedKey' | 'githubToken' | 'crmToken' | 'crmLocationId'; label: string; note: string; set: boolean }[] = [
     { name: 'bingKey', label: 'Bing Webmaster API key', note: 'Bing Webmaster Tools → Settings → API access.', set: Boolean(bingKey()) },
     { name: 'pagespeedKey', label: 'PageSpeed API key (optional)', note: 'Without one, PageSpeed uses a shared quota and may answer "try later" on busy days.', set: Boolean(pagespeedKey()) },
     { name: 'githubToken', label: 'GitHub read token', note: 'Only needed once the repository is private again (read-only, contents scope).', set: Boolean(githubToken()) },
+    { name: 'crmToken', label: 'CRM read-only token (for the Leads tab)', note: 'In the CRM: Settings → Private Integrations → new token with only "contacts: read only" and "custom fields: read only". The dashboard reads counts, sources and landing pages; no name or contact detail is copied.', set: Boolean(crmToken()) },
+    { name: 'crmLocationId', label: 'CRM account id (goes with the token)', note: 'The sub-account (location) id, from the CRM\'s Settings → Business profile.', set: Boolean(crmLocationId()) },
   ];
 
   return (
@@ -58,7 +60,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
           <div><button type="submit" style={button}>Save keys</button></div>
         </form>
         <div style={{ display: 'flex', gap: 10, marginTop: 12, flexWrap: 'wrap' }}>
-          {([{ name: 'googleKey', label: 'Google key' }, ...keys] as { name: string; label: string }[]).map((k) => (
+          {([{ name: 'googleKey', label: 'Google key' }, ...keys.filter((k) => k.name !== 'crmLocationId')] as { name: string; label: string }[]).map((k) => (
             <form key={k.name} action={clearKey}>
               <input type="hidden" name="name" value={k.name} />
               <button type="submit" style={{ ...button, background: T.surface, color: T.body, borderWidth: 1, borderStyle: 'solid', borderColor: T.hairline }}>Remove the {k.label}</button>
@@ -89,6 +91,15 @@ export default async function Settings({ searchParams }: { searchParams: Promise
       <Section title="Scheduled runs" note="The app keeps its own schedule: the daily sources once a day from 10:00 UTC, PageSpeed once a week. Any call to its run address, such as Hostinger's cron, also starts a run that is due. If you prefer a cron job of your own, these commands work (the script and its token are made by the app in its private folder).">
         <Table head={['Job', 'Command']} rows={[['Daily', <code key="d" style={{ fontSize: 12 }}>{cronCommand('daily')}</code>], ['Weekly', <code key="w" style={{ fontSize: 12 }}>{cronCommand('weekly')}</code>]]} />
         <p style={{ fontSize: 13, color: T.body }}>Private folder: <code>{seoConfig.dataDir}</code></p>
+      </Section>
+
+      <Section title="Emails" note={`Sent from ${seoConfig.mailFrom} to every admin (${seoConfig.adminEmails.join(', ') || 'none set'}). Only what is new goes out: the weekly summary when it is written, the monthly report on the first Monday of the month, and an alert when a data source stops answering, a high-impact finding appears, or a page is still out of Google's index after two weeks.`}>
+        <form action={saveEmailSettings} style={{ display: 'grid', gap: 10, maxWidth: 520 }}>
+          <label style={{ ...label, display: 'flex', gap: 10, alignItems: 'center' }}><input type="checkbox" name="email.summary" defaultChecked={setting('email.summary', 'on') === 'on'} /> The weekly summary, when the run writes it (Mondays)</label>
+          <label style={{ ...label, display: 'flex', gap: 10, alignItems: 'center' }}><input type="checkbox" name="email.monthly" defaultChecked={setting('email.monthly', 'on') === 'on'} /> The monthly report (first Monday of the month; always kept on the History tab)</label>
+          <label style={{ ...label, display: 'flex', gap: 10, alignItems: 'center' }}><input type="checkbox" name="email.alert" defaultChecked={setting('email.alert', 'on') === 'on'} /> Alerts: a source stopped answering, a new high-impact finding, or a page still not indexed after two weeks</label>
+          <div><button type="submit" style={button}>Save</button></div>
+        </form>
       </Section>
 
       <Section title="Fix queue: who approves, and the thresholds" note="Owner's decision 3 (6 Oct 2026): only the owner approves unless extended here to the SEO role. Thresholds follow SEO-OS section 6; every change is logged with its reason.">

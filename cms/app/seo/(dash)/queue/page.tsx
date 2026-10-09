@@ -1,7 +1,7 @@
 import { requireUser } from '../../../../lib/seo/auth';
 import { STATUSES, approverRole, findings, type Status } from '../../../../lib/seo/findings';
 import { recentRuns } from '../../../../lib/seo/run';
-import { Empty, H1, Section, Source, T, link, when } from '../../ui';
+import { Empty, H1, Section, Source, when } from '../../ui';
 import { FindingCard } from './finding';
 
 export const dynamic = 'force-dynamic';
@@ -26,23 +26,23 @@ export default async function Queue({ searchParams }: { searchParams: Promise<{ 
 
   return (
     <>
-      <H1>Fix queue</H1>
-      <p style={{ color: T.body, marginTop: 0, fontSize: 14 }}>
-        Findings the rules detected, each with its evidence. {approverRole() === 'admin' ? 'Only the owner approves' : 'The owner and the SEO role approve'}; an approved item waits for the next weekly run, which makes the editor task, draft or pull request. Nothing publishes from this screen.
-      </p>
-      <p style={{ fontSize: 13, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <a href="/seo/queue?show=open" style={{ ...link, fontWeight: show === 'open' ? 600 : 400 }}>Open ({OPEN.reduce((s, k) => s + (counts.get(k) ?? 0), 0)})</a>
-        {STATUSES.map((s) => <a key={s} href={`/seo/queue?show=${encodeURIComponent(s)}`} style={{ ...link, fontWeight: show === s ? 600 : 400 }}>{s} ({counts.get(s) ?? 0})</a>)}
-        <a href="/seo/queue?show=all" style={{ ...link, fontWeight: show === 'all' ? 600 : 400 }}>All</a>
-      </p>
+      <H1 lede={<>Findings the rules detected, each with its evidence. {approverRole() === 'admin' ? 'Only the owner approves' : 'The owner and the SEO role approve'}; an approved item waits for the next weekly run, which makes the editor task, draft or pull request. Nothing publishes from this screen.</>}>Fix queue</H1>
+      <div className="sx-chips" style={{ marginBottom: 10 }}>
+        <a href="/seo/queue?show=open" className="sx-chip" aria-current={show === 'open' || undefined}>Open <span className="sx-chip-n">{OPEN.reduce((s, k) => s + (counts.get(k) ?? 0), 0)}</span></a>
+        {STATUSES.map((s) => <a key={s} href={`/seo/queue?show=${encodeURIComponent(s)}`} className="sx-chip" aria-current={show === s || undefined}>{s} <span className="sx-chip-n">{counts.get(s) ?? 0}</span></a>)}
+        <a href="/seo/queue?show=all" className="sx-chip" aria-current={show === 'all' || undefined}>All</a>
+      </div>
       {rules.length > 1 && (
-        <p style={{ fontSize: 13, display: 'flex', gap: 12, flexWrap: 'wrap', color: T.caption }}>
-          Kind: <a href={`/seo/queue?show=${show}`} style={{ ...link, fontWeight: rule ? 400 : 600 }}>all</a>
-          {rules.map((r) => <a key={r} href={`/seo/queue?show=${show}&rule=${encodeURIComponent(r)}`} style={{ ...link, fontWeight: rule === r ? 600 : 400 }}>{r} ({list.filter((f) => f.rule === r).length})</a>)}
-        </p>
+        <div className="sx-chips" style={{ fontSize: 12, alignItems: 'center' }}>
+          <span style={{ color: '#6C6962', marginRight: 4 }}>Kind</span>
+          <a href={`/seo/queue?show=${show}`} className="sx-chip" aria-current={!rule || undefined}>all</a>
+          {rules.map((r) => <a key={r} href={`/seo/queue?show=${show}&rule=${encodeURIComponent(r)}`} className="sx-chip" aria-current={rule === r || undefined}>{r} <span className="sx-chip-n">{list.filter((f) => f.rule === r).length}</span></a>)}
+        </div>
       )}
       <Section title={`${shown.length} ${show === 'open' ? 'open items' : show === 'all' ? 'items' : show.toLowerCase() + ' items'}`} note="Highest impact first. Open an item for its evidence, the decisions and the instruction note.">
-        {shown.length === 0 ? <Empty>{lastRun ? 'Nothing here.' : 'No run has detected anything yet. Findings appear after the first daily run.'}</Empty> : shown.map((f) => <FindingCard key={f.id} f={f} user={user} back={back} />)}
+        <div style={{ display: 'grid', gap: 10 }}>
+          {shown.length === 0 ? <Empty>{lastRun ? 'Nothing here.' : 'No run has detected anything yet. Findings appear after the first daily run.'}</Empty> : shown.map((f) => <FindingCard key={f.id} f={f} user={user} back={back} />)}
+        </div>
         <Source>Rules run after every daily collection · last run {when(lastRun?.started)} · thresholds on the Settings tab</Source>
       </Section>
     </>

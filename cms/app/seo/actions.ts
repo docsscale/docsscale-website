@@ -7,8 +7,11 @@ import { IS_PRODUCTION, createReadKey, saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
 import { parseCsv } from '../../lib/seo/csv';
 import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
+import { research } from '../../lib/seo/ideas';
+import { announce, indexingRows, watchSitemap } from '../../lib/seo/indexing';
 import { startRun } from '../../lib/seo/run';
-import { now, saveSetting, store } from '../../lib/seo/store';
+import { collectContent } from '../../lib/seo/sources/content';
+import { now, recordSource, saveSetting, saveSnapshot, store } from '../../lib/seo/store';
 
 export async function requestLink(form: FormData) {
   const made = await createSignInLink(String(form.get('email') ?? ''));
@@ -71,7 +74,7 @@ export async function saveKeys(form: FormData) {
     saveSecret('googleKey', JSON.stringify(parsed));
     changed = true;
   }
-  for (const name of ['bingKey', 'pagespeedKey', 'githubToken'] as const) {
+  for (const name of ['bingKey', 'pagespeedKey', 'githubToken', 'crmToken', 'crmLocationId'] as const) {
     const value = String(form.get(name) ?? '').trim();
     if (value) {
       saveSecret(name, value);
@@ -94,6 +97,7 @@ export async function clearKey(form: FormData) {
   await requireUser('/seo/settings (remove key)', 'admin');
   const name = String(form.get('name'));
   if (name === 'googleKey' || name === 'bingKey' || name === 'pagespeedKey' || name === 'githubToken' || name === 'readKeyHash') saveSecret(name, '');
+  if (name === 'crmToken') { saveSecret('crmToken', ''); saveSecret('crmLocationId', ''); }
   redirect('/seo/settings?saved=1');
 }
 
@@ -160,6 +164,24 @@ export async function addPlanItem(form: FormData) {
   back('/seo/plan');
 }
 
+/** Keyword ideas on the Keywords tab (owner, 9 Oct 2026). */
+export async function researchKeywords(form: FormData) {
+  const user = await requireUser('/seo/keywords (research)', 'seo');
+  const topic = String(form.get('topic') ?? '').trim().slice(0, 120);
+  if (!topic) back('/seo/keywords');
+  try { await research(topic, user.email); } catch (e) { back(`/seo/keywords?topic=${encodeURIComponent(topic)}&error=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
+  back(`/seo/keywords?topic=${encodeURIComponent(topic)}#ideas`);
+}
+
+/** "Add to plan" beside an idea: a 30-day plan line naming the phrase. */
+export async function planIdea(form: FormData) {
+  const user = await requireUser('/seo/keywords (plan idea)', 'seo');
+  const phrase = String(form.get('phrase') ?? '').trim().slice(0, 200);
+  const topic = String(form.get('topic') ?? '').trim().slice(0, 120);
+  if (phrase) store().prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(30, `Write or strengthen a page for "${phrase}"`, user.email, now());
+  back(`/seo/keywords?topic=${encodeURIComponent(topic)}&planned=${encodeURIComponent(phrase)}#ideas`);
+}
+
 export async function donePlanItem(form: FormData) {
   await requireUser('/seo/plan (done)', 'seo');
   store().prepare('UPDATE plan_items SET done_at = ? WHERE id = ?').run(now(), Number(form.get('id')));
@@ -195,6 +217,12 @@ export async function importCsv(form: FormData) {
 }
 
 /** Settings the admin changes on screen, each with a reason (plan, section 9). */
+export async function saveEmailSettings(form: FormData) {
+  const user = await requireUser('/seo/settings (emails)', 'admin');
+  for (const key of ['email.summary', 'email.alert', 'email.monthly']) saveSetting(key, form.get(key) ? 'on' : 'off', user.email, 'Changed on the Settings tab');
+  back('/seo/settings?saved=1');
+}
+
 export async function saveQueueSettings(form: FormData) {
   const user = await requireUser('/seo/settings (queue)', 'admin');
   const reason = String(form.get('reason') ?? '').trim().slice(0, 300) || 'No reason given';
@@ -204,4 +232,35 @@ export async function saveQueueSettings(form: FormData) {
     if (Number.isFinite(v) && v >= min && v <= max) saveSetting(key, String(Math.round(v)), user.email, reason);
   }
   back('/seo/settings?saved=1');
+}
+
+/** "Check my drafts now" on the Content tab: reads the content files again
+ *  (the daily run would otherwise show the morning's copy) and runs the
+ *  pre-publish checks on every post. */
+export async function refreshContent() {
+  await requireUser('/seo/content (check drafts)', 'editor');
+  try {
+    saveSnapshot('content', await collectContent());
+    recordSource('content', 'ok', 'Returned data (checked from the Content tab)');
+  } catch (e) {
+    recordSource('content', 'failing', (e as Error).message.slice(0, 400));
+    back('/seo/content?checked=error');
+  }
+  back('/seo/content?checked=1');
+}
+
+/** Technical health → Indexing: look at the sitemap now (new and changed
+ *  pages are sent), or send every page to both engines on request. */
+export async function watchSitemapNow() {
+  await requireUser('/seo/technical (watch sitemap)', 'seo');
+  try { await watchSitemap('Technical health tab'); } catch (e) { back(`/seo/technical?indexing=${encodeURIComponent((e as Error).message.slice(0, 120))}`); }
+  back('/seo/technical?indexing=watched');
+}
+
+export async function sendAllPages() {
+  const user = await requireUser('/seo/technical (send all pages)', 'admin');
+  const urls = indexingRows().map((r) => r.url);
+  if (!urls.length) { try { await watchSitemap(user.email); } catch { /* reported on the panel */ } }
+  await announce(indexingRows().map((r) => r.url), user.email);
+  back('/seo/technical?indexing=sent');
 }

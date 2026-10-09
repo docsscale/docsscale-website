@@ -2,7 +2,11 @@ import crypto from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { deviceOf, shortIp } from '../../../../lib/seo/auth';
 import { readKeyMatches } from '../../../../lib/seo/config';
+import { notifyAdmins } from '../../../../lib/seo/mail';
 import { autoSummary, findings, moveFinding, noteFinding, selfApprovable } from '../../../../lib/seo/findings';
+import { lastResearch, pastTopics, research } from '../../../../lib/seo/ideas';
+import { announce, indexingLog, indexingRows, watchSitemap } from '../../../../lib/seo/indexing';
+import { kindOf, rankOpen } from '../../../../lib/seo/today';
 import { SOURCES, recentRuns, type SourceName } from '../../../../lib/seo/run';
 import { latestSnapshot, now, sourceRows, store } from '../../../../lib/seo/store';
 
@@ -40,6 +44,10 @@ export async function GET(request: NextRequest) {
   if (what === 'all') return Response.json(Object.fromEntries(names.map((n) => [n, latestSnapshot(n)])));
   if (names.includes(what as SourceName)) return Response.json(latestSnapshot(what) ?? { taken: null, data: null });
   if (what === 'queue') return Response.json({ findings: findings() });
+  if (what === 'indexing') return Response.json({ pages: indexingRows(), log: indexingLog() });
+  // The Today tab's order, with each item's kind, for the weekly run.
+  if (what === 'today') return Response.json({ items: rankOpen(findings("status IN ('Detected', 'Recommended', 'Approved', 'In progress')")).map((f) => ({ ...f, kind: kindOf(f) })) });
+  if (what === 'ideas') { const topic = request.nextUrl.searchParams.get('topic') ?? ''; return Response.json(topic ? (lastResearch(topic) ?? { error: 'No lookup for this topic yet.' }) : { topics: pastTopics(50) }); }
   if (what === 'overview') {
     const db = store();
     return Response.json({
@@ -50,7 +58,7 @@ export async function GET(request: NextRequest) {
       imports: db.prepare('SELECT id, at, by, source, filename, note, rows FROM imports ORDER BY id DESC LIMIT 50').all(),
     });
   }
-  return Response.json({ error: `Unknown "what"; one of: sources, all, queue, overview, ${names.join(', ')}` }, { status: 400 });
+  return Response.json({ error: `Unknown "what"; one of: sources, all, queue, overview, indexing, ${names.join(', ')}` }, { status: 400 });
 }
 
 const BY = 'Claude (weekly run)';
@@ -59,7 +67,9 @@ type Body = { action?: string; text?: string; id?: number; to?: string; reason?:
 /** Writes the weekly run may make. A plain-text body is the Overview
  *  summary; JSON chooses an action: summary, move (In progress, Done,
  *  Recommended, or Approved only to reopen a Done item with a reason), note,
- *  plan, ignore, ai-check. Everything is logged under the run's name. */
+ *  plan, ignore, ai-check, send-pages (tell Bing and Google about every
+ *  page in the sitemap, as the Technical health button does; owner, 9 Oct
+ *  2026: "do what you recommend"). Everything is logged under the run's name. */
 export async function POST(request: NextRequest) {
   const key = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
   if (!key || !readKeyMatches(key)) return new Response('Not found', { status: 404 });
@@ -75,7 +85,10 @@ export async function POST(request: NextRequest) {
   if (action === 'summary') {
     if (!text) return bad('Send the summary as plain text, or JSON {"action":"summary","text":…}.');
     db.prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('overview', now(), BY, text.slice(0, 8000), '');
-    return Response.json({ ok: true, at: now() });
+    // The owner reads it in the inbox too (switch on the Settings tab).
+    const s = autoSummary();
+    const emailed = await notifyAdmins('summary', 'This week in plain language: your SEO summary', [text.slice(0, 8000), '', s.top.length ? 'What matters most:' : '', ...s.top.slice(0, 3).map((f, i) => `${i + 1}. ${f.what}`), '', `${s.openCount} items are open in the fix queue.`].join('\n'));
+    return Response.json({ ok: true, at: now(), emailed });
   }
   if (action === 'move') {
     const to = String(body.to ?? '');
@@ -109,5 +122,15 @@ export async function POST(request: NextRequest) {
     db.prepare('INSERT INTO ai_checks (at, by, assistant, question, cited, detail) VALUES (?, ?, ?, ?, ?, ?)').run(now(), BY, String(body.assistant).slice(0, 60), String(body.question).slice(0, 300), body.cited ? 1 : 0, String(body.detail ?? '').slice(0, 500));
     return Response.json({ ok: true });
   }
-  return bad('Unknown action; one of: summary, move, note, plan, ignore, ai-check.');
+  if (action === 'send-pages') {
+    if (!indexingRows().length) { try { await watchSitemap(BY); } catch (e) { return bad(`The sitemap could not be read: ${(e as Error).message}`); } }
+    const urls = indexingRows().map((r) => r.url);
+    const result = await announce(urls, BY);
+    return Response.json({ ok: true, pages: urls.length, ...result });
+  }
+  if (action === 'research') {
+    if (!text) return bad('research needs text: the topic.');
+    try { return Response.json(await research(text, BY)); } catch (e) { return bad((e as Error).message); }
+  }
+  return bad('Unknown action; one of: summary, move, note, plan, ignore, ai-check, send-pages, research.');
 }

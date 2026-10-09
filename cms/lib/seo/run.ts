@@ -1,12 +1,16 @@
-import { bingKey, googleKey, seoConfig } from './config';
-import { recordFindings } from './findings';
+import { bingKey, crmLocationId, crmToken, googleKey, seoConfig } from './config';
+import { findings, recordFindings } from './findings';
+import { refreshIndexState, watchSitemapIfDue } from './indexing';
+import { notifyAdmins } from './mail';
+import { sendMonthlyIfDue } from './report';
 import { collectAnalytics } from './sources/analytics';
 import { collectBing } from './sources/bing';
 import { collectContent } from './sources/content';
+import { collectCrm } from './sources/crm';
 import { collectPageSpeed } from './sources/pagespeed';
 import { collectSearchConsole } from './sources/search-console';
 import { collectSite, type SiteData } from './sources/site';
-import { latestSnapshot, now, recordSource, saveSnapshot, store } from './store';
+import { latestSnapshot, now, recordSource, saveSnapshot, sourceRows, store } from './store';
 
 // The collector jobs. Hostinger's cron calls /api/seo/run once a day ("daily")
 // and once a week ("weekly"); an admin can also start a run from the screen.
@@ -21,19 +25,21 @@ export const SOURCES = {
   analytics: 'Google Analytics 4',
   bing: 'Bing Webmaster Tools',
   content: 'Content files and edit history (GitHub)',
+  crm: 'The CRM (leads and where they came from; counts only)',
   pagespeed: 'PageSpeed Insights',
 } as const;
 export type SourceName = keyof typeof SOURCES;
 
 const JOBS: Record<Job, SourceName[]> = {
-  daily: ['site', 'search-console', 'analytics', 'bing', 'content'],
+  daily: ['site', 'search-console', 'analytics', 'bing', 'content', 'crm'],
   weekly: ['pagespeed'],
-  all: ['site', 'search-console', 'analytics', 'bing', 'content', 'pagespeed'],
+  all: ['site', 'search-console', 'analytics', 'bing', 'content', 'crm', 'pagespeed'],
 };
 
 function notSetUp(name: SourceName): string | null {
   if ((name === 'search-console' || name === 'analytics') && !googleKey()) return 'The Google key is not set on the server.';
   if (name === 'bing' && !bingKey()) return 'The Bing key is not set on the server.';
+  if (name === 'crm' && !(crmToken() && crmLocationId())) return 'The CRM token and account are not set on the Settings tab.';
   return null;
 }
 
@@ -47,6 +53,7 @@ async function collect(name: SourceName): Promise<unknown> {
     case 'analytics': return collectAnalytics();
     case 'bing': return collectBing();
     case 'content': return collectContent();
+    case 'crm': return collectCrm();
     case 'pagespeed': return collectPageSpeed();
   }
 }
@@ -72,9 +79,17 @@ export function startRun(job: Job, startedBy: string): number | null {
         recordSource(name, 'failing', (e as Error).message.slice(0, 400));
       }
     }
+    // What Google and Bing show for each page, for the Indexing panel.
+    if (job !== 'weekly') { try { await refreshIndexState(); } catch (e) { console.error(`[seo] index state refresh failed: ${(e as Error).message}`); } }
     // After the data, the rule-based findings for the fix queue (plan, section 7).
-    try { recordFindings(); } catch (e) { ok = false; recordSource('findings', 'failing', (e as Error).message.slice(0, 400)); }
+    let added = 0;
+    try { added = recordFindings().added; } catch (e) { ok = false; recordSource('findings', 'failing', (e as Error).message.slice(0, 400)); }
     db.prepare('UPDATE runs SET finished = ?, ok = ? WHERE id = ?').run(now(), ok ? 1 : 0, id);
+    await alertIfNeeded(job, added);
+    if (job !== 'weekly') {
+      try { await nudgeNotIndexed(); } catch (e) { console.error(`[seo] indexing nudge failed: ${(e as Error).message}`); }
+      try { await sendMonthlyIfDue(); } catch (e) { console.error(`[seo] monthly report failed: ${(e as Error).message}`); }
+    }
   })();
   return id;
 }
@@ -84,8 +99,62 @@ export function startRun(job: Job, startedBy: string): number | null {
  *  week. Checked every few minutes while the app runs, and whenever anything
  *  calls /api/seo/run, which is what Hostinger's cron does; a caller can only
  *  make a run happen that was due anyway. */
+/** Only what is new or worse goes to the inbox (owner's rule, 7 Oct 2026):
+ *  a source that stopped answering (PageSpeed's shared quota is not news),
+ *  or a new High-impact finding. One email per run, at most. */
+async function alertIfNeeded(job: Job, added: number) {
+  const since = new Date(Date.now() - 2 * 3600_000).toISOString();
+  // "Stopped answering" means it worked within the last day and a half and
+  // failed in this run; a source that has been failing for days, or was never
+  // set up, is on the Data sources tab, not in the inbox every morning.
+  const wasFine = new Date(Date.now() - 36 * 3600_000).toISOString();
+  const broken = sourceRows().filter((s) => s.status === 'failing' && !(s.name === 'pagespeed' && /429/.test(s.message ?? '')) && (s.last_attempt ?? '') > since && (s.last_success ?? '') > wasFine);
+  const urgent = added ? findings("status = 'Detected' AND impact = 'High' AND created > ?", since) : [];
+  if (!broken.length && !urgent.length) return;
+  const lines = [
+    `The ${job} run of the SEO dashboard found something new.`,
+    '',
+    ...broken.map((s) => `- ${s.name} stopped answering: ${(s.message ?? '').slice(0, 200)}`),
+    ...urgent.map((f) => `- New, high impact: ${f.what}`),
+    '',
+    'Open the fix queue to decide what happens next.',
+  ];
+  await notifyAdmins('alert', `SEO dashboard: ${broken.length ? 'a data source stopped answering' : 'a new high-impact finding'}`, lines.join('\n'));
+}
+
+/** "Still not indexed" (owner, 9 Oct 2026, automation plan item 4): a page
+ *  the queue has shown as out of Google's index for 14 days, and that this
+ *  run saw out again, gets one email naming it and the one step that helps
+ *  (Google offers no free way to request indexing for it from here), then
+ *  again every 28 days while it stays out. Each nudge is in the item's log. */
+export async function nudgeNotIndexed(): Promise<number> {
+  const db = store();
+  const twoWeeks = new Date(Date.now() - 14 * 86400_000).toISOString();
+  const yesterday = new Date(Date.now() - 86400_000).toISOString();
+  const fourWeeks = new Date(Date.now() - 28 * 86400_000).toISOString();
+  const due = findings("rule = 'not-indexed' AND status IN ('Detected', 'Recommended', 'Approved', 'In progress') AND created <= ? AND last_seen >= ?", twoWeeks, yesterday)
+    .filter((f) => !db.prepare("SELECT 1 FROM finding_log WHERE finding = ? AND by = 'indexing nudge' AND at > ?").get(f.id, fourWeeks));
+  if (!due.length) return 0;
+  const inspect = (page: string) => `https://search.google.com/search-console/inspect?resource_id=${encodeURIComponent(seoConfig.gscSite)}&id=${encodeURIComponent(seoConfig.siteUrl + page)}`;
+  const lines = [
+    `${due.length === 1 ? 'One page is' : `${due.length} pages are`} still out of Google's index two weeks after the dashboard first noticed. Google has no free way for us to request indexing on your behalf; it takes one click from you, per page:`,
+    '',
+    ...due.flatMap((f) => [`- ${f.page}: open ${inspect(f.page ?? '/')} and press "Request indexing".`, `  Google said: ${f.evidence.replace(/^.*?inspection on \d{4}-\d\d-\d\d: /, '').slice(0, 160)}`]),
+    '',
+    'Links from other pages of the site help too; the fix queue lists those as separate items.',
+  ];
+  const sent = await notifyAdmins('alert', `SEO dashboard: ${due.length === 1 ? 'a page is' : `${due.length} pages are`} still not in Google after two weeks`, lines.join('\n'));
+  if (sent) for (const f of due) db.prepare('INSERT INTO finding_log (finding, at, by, from_status, to_status, note) VALUES (?, ?, ?, ?, ?, ?)').run(f.id, now(), 'indexing nudge', f.status, f.status, 'Emailed the admins: still not indexed after two weeks, with the Search Console step.');
+  return sent ? due.length : 0;
+}
+
 export function runIfDue(): Job | null {
   const db = store();
+  // The sitemap watch rides the same ten-minute check (lib/seo/indexing.ts).
+  try { watchSitemapIfDue(); } catch (e) { console.error(`[seo] sitemap watch could not start: ${(e as Error).message}`); }
+  // A run the app was restarted under (an install, for instance) never writes
+  // its end; close it so the Data sources tab does not show it running forever.
+  db.prepare('UPDATE runs SET finished = started, ok = 0 WHERE finished IS NULL AND started < ?').run(new Date(Date.now() - 30 * 60_000).toISOString());
   const last = (jobs: string[]) =>
     (db.prepare(`SELECT MAX(started) AS at FROM runs WHERE job IN (${jobs.map(() => '?').join(',')})`).get(...jobs) as { at: string | null }).at;
   const hoursSince = (iso: string | null) => (iso ? (Date.now() - Date.parse(iso)) / 3600_000 : Infinity);
