@@ -82,10 +82,18 @@ export async function research(topic: string, by: string): Promise<Research> {
     const s = seen.get(phrase);
     all.set(phrase, { phrase, bing, google, position: s?.position ?? null, impressions: s?.impressions ?? 0, clicks: s?.clicks ?? 0, mapped: mapped.get(phrase) ?? null });
   };
-  for (const r of b.related) if (r.phrase !== t) add(r.phrase, r.n, false);
+  // Bing's "related" list is a broad match: for "dental marketing" it leads
+  // with insurers and brand names that merely contain "dental". Only phrases
+  // carrying every word of the topic are ideas for it; the rest is counted
+  // in a note so the owner knows it was seen and left out.
+  const words = t.split(' ');
+  const onTopic = (p: string) => words.every((w) => p.includes(w));
+  const offTopic = b.related.filter((r) => r.phrase !== t && !onTopic(r.phrase));
+  for (const r of b.related) if (r.phrase !== t && onTopic(r.phrase)) add(r.phrase, r.n, false);
   for (const p of g.phrases) if (p !== t) add(p, null, true);
   const ideas = [...all.values()].sort((x, y) => (y.bing ?? -1) - (x.bing ?? -1) || Number(y.google) - Number(x.google) || x.phrase.localeCompare(y.phrase));
   const notes = [b.note, g.note].filter((n): n is string => !!n);
+  if (offTopic.length) notes.push(`Bing also listed ${offTopic.length} phrases that only share a word with the topic, such as "${offTopic[0].phrase}"; they are left out.`);
   if (!gsc) notes.push('Search Console has not been read yet, so "we rank" is unknown.');
   const r: Research = { topic: t, at: now(), by, bingTopic: b.topic, ideas, notes };
   store().prepare('INSERT INTO keyword_ideas (topic, at, by, data) VALUES (?, ?, ?, ?)').run(t, r.at, by, JSON.stringify(r));
