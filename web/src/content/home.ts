@@ -82,6 +82,9 @@ export const INTEGRATIONS: [name: string, color: string][] = [
 
 export const HERO = {
   stagePills: ['Attract', 'Capture', 'Convert', 'Retain'],
+  // Small line above the headline, inside the H1, so the page's main heading
+  // names what we are in the words people search for.
+  kicker: 'Healthcare marketing agency',
   headline: 'More patients on autopilot, ',
   headlineAccent: 'from click to chair.',
   intro:

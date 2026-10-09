@@ -16,9 +16,9 @@ import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
 
 export const metadata = pageMetadata({
-  title: 'Healthcare Clinic Marketing Agency | DocsScale',
+  title: 'Healthcare Marketing Agency for Clinics | DocsScale',
   description:
-    "DocsScale runs your clinic's marketing end to end, ads to booked appointment. One team, one system, reported in patients seen, not clicks.",
+    "DocsScale is a healthcare marketing agency that runs your clinic's marketing end to end, ads to booked appointment, reported in patients seen, not clicks.",
   path: '/',
 });
 
