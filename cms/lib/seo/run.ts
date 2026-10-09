@@ -1,4 +1,5 @@
 import { bingKey, googleKey, seoConfig } from './config';
+import { recordFindings } from './findings';
 import { collectAnalytics } from './sources/analytics';
 import { collectBing } from './sources/bing';
 import { collectContent } from './sources/content';
@@ -71,6 +72,8 @@ export function startRun(job: Job, startedBy: string): number | null {
         recordSource(name, 'failing', (e as Error).message.slice(0, 400));
       }
     }
+    // After the data, the rule-based findings for the fix queue (plan, section 7).
+    try { recordFindings(); } catch (e) { ok = false; recordSource('findings', 'failing', (e as Error).message.slice(0, 400)); }
     db.prepare('UPDATE runs SET finished = ?, ok = ? WHERE id = ?').run(now(), ok ? 1 : 0, id);
   })();
   return id;
