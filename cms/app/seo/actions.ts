@@ -7,6 +7,7 @@ import { IS_PRODUCTION, createReadKey, saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
 import { parseCsv } from '../../lib/seo/csv';
 import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
+import { research } from '../../lib/seo/ideas';
 import { announce, indexingRows, watchSitemap } from '../../lib/seo/indexing';
 import { startRun } from '../../lib/seo/run';
 import { collectContent } from '../../lib/seo/sources/content';
@@ -161,6 +162,24 @@ export async function addPlanItem(form: FormData) {
   const text = String(form.get('text') ?? '').trim().slice(0, 500);
   if (text && [30, 60, 90].includes(h)) store().prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(h, text, user.email, now());
   back('/seo/plan');
+}
+
+/** Keyword ideas on the Keywords tab (owner, 9 Oct 2026). */
+export async function researchKeywords(form: FormData) {
+  const user = await requireUser('/seo/keywords (research)', 'seo');
+  const topic = String(form.get('topic') ?? '').trim().slice(0, 120);
+  if (!topic) back('/seo/keywords');
+  try { await research(topic, user.email); } catch (e) { back(`/seo/keywords?topic=${encodeURIComponent(topic)}&error=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
+  back(`/seo/keywords?topic=${encodeURIComponent(topic)}#ideas`);
+}
+
+/** "Add to plan" beside an idea: a 30-day plan line naming the phrase. */
+export async function planIdea(form: FormData) {
+  const user = await requireUser('/seo/keywords (plan idea)', 'seo');
+  const phrase = String(form.get('phrase') ?? '').trim().slice(0, 200);
+  const topic = String(form.get('topic') ?? '').trim().slice(0, 120);
+  if (phrase) store().prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(30, `Write or strengthen a page for "${phrase}"`, user.email, now());
+  back(`/seo/keywords?topic=${encodeURIComponent(topic)}&planned=${encodeURIComponent(phrase)}#ideas`);
 }
 
 export async function donePlanItem(form: FormData) {

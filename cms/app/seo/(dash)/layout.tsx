@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 // Tabs grouped under a few headings in the sidebar
 // (docs/SEO-DASHBOARD-PLAN.md, section 8). Each page checks the role again.
 const TABS: { group: string; items: { href: string; label: string; role: Role; icon: string }[] }[] = [
-  { group: '', items: [{ href: '/seo', label: 'Overview', role: 'editor', icon: 'home' }] },
+  { group: '', items: [{ href: '/seo', label: 'Overview', role: 'editor', icon: 'home' }, { href: '/seo/today', label: 'Today', role: 'seo', icon: 'today' }] },
   {
     group: 'Search',
     items: [

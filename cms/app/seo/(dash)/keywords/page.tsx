@@ -5,7 +5,9 @@ import type { BingData } from '../../../../lib/seo/sources/bing';
 import type { SearchConsoleData } from '../../../../lib/seo/sources/search-console';
 import type { SiteData } from '../../../../lib/seo/sources/site';
 import { latestSnapshot } from '../../../../lib/seo/store';
-import { Badge, Empty, H1, Section, Source, Table, fmt, link, when } from '../../ui';
+import { lastResearch, pastTopics } from '../../../../lib/seo/ideas';
+import { planIdea, researchKeywords } from '../../actions';
+import { Badge, Empty, H1, Section, Source, Table, T, button, fmt, input, link, quietButton, when } from '../../ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,8 +19,11 @@ export const dynamic = 'force-dynamic';
 
 const pathOf = (u: string) => u.replace(/^https?:\/\/[^/]+/, '') || '/';
 
-export default async function Keywords() {
-  await requireUser('/seo/keywords');
+export default async function Keywords({ searchParams }: { searchParams: Promise<{ topic?: string; error?: string; planned?: string }> }) {
+  const user = await requireUser('/seo/keywords');
+  const { topic = '', error, planned } = await searchParams;
+  const ideas = topic ? lastResearch(topic) : null;
+  const past = pastTopics();
   const gsc = latestSnapshot<SearchConsoleData>('search-console');
   const bing = latestSnapshot<BingData>('bing');
   const site = latestSnapshot<SiteData>('site');
@@ -40,6 +45,46 @@ export default async function Keywords() {
   return (
     <>
       <H1 lede={<>One primary keyword per page, from the approved keyword map. &ldquo;Average position&rdquo; is Google&rsquo;s average over 28 days for the exact phrase; daily tracking needs a paid connector, which is off.</>}>Keywords and rankings</H1>
+
+      <Section title="Keyword ideas" note="Type a topic. Bing says how often each related phrase was searched in the last 30 days (Google is usually several times that), Google's own suggestion box adds the phrases it completes the topic to, and Search Console shows where we already stand." style={{ scrollMarginTop: 20 }}>
+        <div id="ideas" />
+        {user.role !== 'editor' && (
+          <form action={researchKeywords} style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginBottom: 10 }}>
+            <input name="topic" defaultValue={topic} required placeholder="A topic, like dental marketing or chiropractor seo" style={{ ...input, flex: '1 1 280px' }} />
+            <button type="submit" style={button}>Find ideas</button>
+          </form>
+        )}
+        {past.length > 0 && (
+          <div className="sx-chips" style={{ marginBottom: 10, alignItems: 'center' }}>
+            <span style={{ color: T.caption, fontSize: 12, marginRight: 4 }}>Looked up before</span>
+            {past.map((t) => <a key={t.topic} href={`/seo/keywords?topic=${encodeURIComponent(t.topic)}#ideas`} className="sx-chip" aria-current={t.topic === topic.toLowerCase() || undefined}>{t.topic}</a>)}
+          </div>
+        )}
+        {error && <p><Badge tone="bad">{error}</Badge></p>}
+        {planned && <p><Badge tone="good">&ldquo;{planned}&rdquo; was added to the 30-day plan.</Badge></p>}
+        {!ideas ? (topic && !error ? <Empty>No lookup saved for this topic yet.</Empty> : null) : (
+          <>
+            <p style={{ fontSize: 14, margin: '0 0 8px' }}>
+              <strong>&ldquo;{ideas.topic}&rdquo;</strong>: {ideas.bingTopic == null ? 'Bing gave no count for the topic itself' : `${fmt(ideas.bingTopic)} Bing searches in 30 days`}; {ideas.ideas.length} related phrases.
+              {ideas.notes.length > 0 && <span style={{ color: T.caption }}> {ideas.notes.join(' ')}</span>}
+            </p>
+            <Table
+              head={['Phrase', 'Bing searches (30 days)', 'Google suggests it', 'We rank (Google)', 'Impressions', 'Mapped to', '']}
+              rows={ideas.ideas.map((i) => [
+                i.phrase,
+                i.bing == null ? '—' : fmt(i.bing),
+                i.google ? <Badge key="g" tone="info">Yes</Badge> : '—',
+                i.position == null ? <Badge key="r" tone="neutral">Not yet</Badge> : <Badge key="r" tone={i.position <= 10 ? 'good' : 'warn'}>Position {fmt(i.position, 1)}</Badge>,
+                i.impressions ? fmt(i.impressions) : '—',
+                i.mapped ?? '—',
+                user.role !== 'editor' ? <form key="p" action={planIdea}><input type="hidden" name="phrase" value={i.phrase} /><input type="hidden" name="topic" value={ideas.topic} /><button type="submit" style={{ ...quietButton, padding: '4px 9px', fontSize: 12 }}>Add to plan</button></form> : '',
+              ])}
+              empty="Neither Bing nor Google returned related phrases for this topic."
+            />
+            <Source>Bing Webmaster keyword research (United States, last 30 days) · Google suggestions · Search Console, last 28 days · looked up {when(ideas.at)} by {ideas.by}</Source>
+          </>
+        )}
+      </Section>
       <Section title="The keyword map and where each phrase stands">
         <Table
           head={['Page', 'Primary keyword', 'Page live', 'Google average position', 'Google impressions', 'Google clicks (phrase)', 'Bing average position', 'Tool position', 'Searches a month (tool)', 'Page clicks, all phrases']}
