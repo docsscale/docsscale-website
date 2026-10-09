@@ -439,6 +439,37 @@ Code: `cms/lib/seo/indexing.ts` (watch, announce, state refresh), tables
 publish workflow's ping stay as they are; the watch catches anything they
 miss.
 
+## 15. Keyword ideas and the Today tab, 9 Oct 2026 (owner: "can we also connect a keyword planner?", "do what you think is best")
+
+The owner asked for keyword research and for a daily view of what to do.
+Both built without a new account or paid tool. The larger plan he agreed
+to (keyword ideas, Today, "what to write next", backlinks and off-page,
+imports that become tasks, a how-to guide) is tracked in this thread; the
+first two are here.
+
+- **Keyword ideas** (Keywords and rankings tab, top): type a topic. Bing
+  Webmaster's keyword research (`GetKeyword`, `GetRelatedKeywords`, United
+  States, last 30 days, the Bing key already on Settings) gives how often
+  the topic and each related phrase were searched on Bing; Google's own
+  suggestion box (`suggestqueries.google.com`) adds the phrases Google
+  completes the topic and four natural variants to. Each phrase is matched
+  with Search Console (position, impressions, clicks) and with the keyword
+  map. "Add to plan" puts a 30-day line on the plan. Lookups are kept
+  (`keyword_ideas` table) and listed as chips. Honest limit, on screen: Bing
+  counts are Bing's, Google's are usually several times that.
+- **Google Keyword Planner itself** needs a Google Ads account with API
+  access (developer token) and shows exact volumes only with ad spend; the
+  owner was told and may ask for it later.
+- **Today** (new tab under Overview, SEO role): every open queue item in one
+  ranked list: approved or in-progress work first, then impact, then the
+  smaller effort, then the older item (`rankOpen` in `cms/lib/seo/today.ts`).
+  Filters: kind (Content, On-page, Technical, Indexing, Links; from the rule),
+  who, status, page. Each item is the same card as the fix queue, with its
+  buttons. Below it, the plan lines that are not queue items, with Done.
+- **Read API:** `?what=today` (the ranked list with kinds), `?what=ideas`
+  (past topics) and `?what=ideas&topic=…`; `POST {"action":"research",
+  "text":"topic"}` runs a lookup, so the weekly run can research topics.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:

@@ -15,6 +15,7 @@ export type NavGroup = { group: string; items: NavItem[] };
 // Simple 24-unit outline icons, drawn by hand (no icon library to keep the app small).
 const ICONS: Record<string, ReactNode> = {
   home: <><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v10h14V10" /></>,
+  today: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="m9 15 2 2 4-4" /></>,
   google: <><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></>,
   bing: <><path d="M4 4h16v16H4z" /><path d="M8 8h8M8 12h5M8 16h8" /></>,
   keywords: <><path d="M4 7h16M4 12h10M4 17h13" /></>,
