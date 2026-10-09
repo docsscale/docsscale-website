@@ -390,4 +390,4 @@ export const SPECIALTIES: Specialty[] = [
 
 export const SPECIALTY_LINKS = SPECIALTIES.map(({ slug, name }) => ({ slug, name }));
 
-export const industryHref = (slug: string) => `/industries/${slug}`;
+export { industryHref } from './industry-href';
