@@ -28,10 +28,31 @@ to cms.docsscale.com and starts Hostinger's build; it runs on every change to
 
 ## The SEO dashboard (`/seo`)
 
-Phase 1 of [docs/SEO-DASHBOARD-PLAN.md](../docs/SEO-DASHBOARD-PLAN.md), in the
-same app: Overview, Google, Bing, Analytics and leads, Content history, Edit
-log, Technical health (site checks, page linter, PageSpeed), Data sources and
-Access log. Code in `lib/seo/` and `app/seo/`.
+Phases 1 and 2 of [docs/SEO-DASHBOARD-PLAN.md](../docs/SEO-DASHBOARD-PLAN.md),
+in the same app. Tabs: Overview; Search: Google, Bing, Keywords and rankings,
+Questions and gaps, AI visibility; Site: Analytics and leads, Content
+inventory, Edit log, Technical health, Links; Actions: Fix queue, 30/60/90
+plan, History and outcomes, Imports; Admin: Data sources, Settings, Access
+log. Code in `lib/seo/` and `app/seo/`.
+
+- **Fix queue** (`lib/seo/findings.ts`): after every daily run the rules in
+  `detect()` turn the snapshots into findings (failing site checks and linter
+  checks, pages not indexed, page-one phrases with no clicks, phrases at
+  positions 11 to 20, two pages on one phrase, lost clicks, orphan pages,
+  keyword-map pages not yet written, Bing crawl issues, stale posts), each
+  with its evidence, impact, effort and who acts. Only the admin approves,
+  saves for later or rejects, unless Settings extends it to the SEO role;
+  the SEO role recommends, notes progress and writes the instruction note.
+  Approve marks an item for the weekly run; nothing publishes from the app.
+  Done items get a check date (28 days, 60 for a new page) and the next run
+  records worked / no effect / hurt / too early from the Search Console
+  snapshots on each side of the change. Thresholds are on the Settings tab,
+  each change logged with its reason.
+- **Overview**: the automatic part (what moved, the top open items, risks,
+  what to ignore) comes from the data; the written summary is typed on the
+  tab or sent by the weekly run (below) and is flagged when older than eight
+  days.
+- **Paid connectors** are listed on Settings as off; nothing is bought.
 
 - **Sign-in:** a one-time email link (owner's decision, 6 Oct 2026), sent with
   the server's `sendmail` from info@docsscale.com. Sessions last 30 days. Every
@@ -63,7 +84,11 @@ Access log. Code in `lib/seo/` and `app/seo/`.
   on the Settings tab (shown once; the app keeps its hash) and puts it in the
   cloud environment's secrets as `SEO_READ_TOKEN`. `GET /api/seo/read?what=
   sources|all|<source>` with `Authorization: Bearer <key>` returns the latest
-  data as JSON; every read is in the Access log. Nothing can be changed this way.
+  data as JSON (`what=queue` and `what=overview` add the fix queue, the plan,
+  the manual AI checks and the imports); every read is in the Access log.
+  The one write the key allows is `POST /api/seo/read` with the weekly
+  summary as plain text in the body, which appears on the Overview as
+  written by "Claude (weekly run)". It cannot touch the queue, keys or people.
   The environment still wins when set: `SEO_DATA_DIR`, `SEO_ADMIN_EMAILS`,
   `SEO_CRON_TOKEN`, `GOOGLE_SERVICE_ACCOUNT_JSON` or
   `GOOGLE_SERVICE_ACCOUNT_FILE`, `BING_API_KEY`, `PAGESPEED_API_KEY`,

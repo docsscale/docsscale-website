@@ -42,6 +42,35 @@ CREATE TABLE IF NOT EXISTS edits (
   branch TEXT NOT NULL, fields TEXT NOT NULL, words_before INTEGER, words_after INTEGER,
   PRIMARY KEY (sha, file)
 );
+-- Phase 2 (docs/SEO-DASHBOARD-PLAN.md, sections 6 to 8): the fix queue, its
+-- status history, the Overview's written note and "what to ignore" list, the
+-- plan, the manual AI-check log and CSV imports.
+CREATE TABLE IF NOT EXISTS findings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, key TEXT NOT NULL UNIQUE, rule TEXT NOT NULL, page TEXT,
+  what TEXT NOT NULL, evidence TEXT NOT NULL, impact TEXT NOT NULL, impact_reason TEXT NOT NULL,
+  effort TEXT NOT NULL, who TEXT NOT NULL, status TEXT NOT NULL, note TEXT NOT NULL DEFAULT '',
+  horizon INTEGER, created TEXT NOT NULL, last_seen TEXT NOT NULL, decided_by TEXT, decided_at TEXT,
+  done_at TEXT, check_date TEXT, outcome TEXT, outcome_detail TEXT
+);
+CREATE TABLE IF NOT EXISTS finding_log (
+  finding INTEGER NOT NULL, at TEXT NOT NULL, by TEXT NOT NULL, from_status TEXT NOT NULL, to_status TEXT NOT NULL, note TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS notes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, kind TEXT NOT NULL, at TEXT NOT NULL, by TEXT NOT NULL, text TEXT NOT NULL, reason TEXT NOT NULL DEFAULT '', removed TEXT
+);
+CREATE TABLE IF NOT EXISTS plan_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, horizon INTEGER NOT NULL, text TEXT NOT NULL, added_by TEXT NOT NULL, added_at TEXT NOT NULL, done_at TEXT
+);
+CREATE TABLE IF NOT EXISTS ai_checks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by TEXT NOT NULL, assistant TEXT NOT NULL, question TEXT NOT NULL, cited INTEGER NOT NULL, detail TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS imports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by TEXT NOT NULL, source TEXT NOT NULL, filename TEXT NOT NULL,
+  note TEXT NOT NULL, rows INTEGER NOT NULL, columns TEXT NOT NULL, data TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY, value TEXT NOT NULL, changed_at TEXT NOT NULL, changed_by TEXT NOT NULL, reason TEXT NOT NULL
+);
 `;
 
 export function store(): DatabaseSync {
@@ -98,4 +127,26 @@ export function recordSource(name: string, status: 'ok' | 'failing' | 'not set u
          message = excluded.message, last_success = COALESCE(excluded.last_success, sources.last_success)`,
     )
     .run(name, t, status === 'ok' ? t : null, status, message);
+}
+
+/** Snapshots of a source taken at or before a moment, newest first; used to
+ *  compare a page before and after a change (History and outcomes). */
+export function snapshotBefore<T>(source: string, iso: string): Snapshot<T> | null {
+  const row = store()
+    .prepare('SELECT id, taken, data FROM snapshots WHERE source = ? AND taken <= ? ORDER BY id DESC LIMIT 1')
+    .get(source, iso) as { id: number; taken: string; data: string } | undefined;
+  return row ? { id: row.id, taken: row.taken, data: JSON.parse(row.data) as T } : null;
+}
+
+/** A setting the admin can change on screen (approvers, thresholds); each
+ *  change is kept with its reason (plan, section 9). */
+export function setting(key: string, fallback: string): string {
+  const row = store().prepare('SELECT value FROM settings WHERE key = ?').get(key) as { value: string } | undefined;
+  return row?.value ?? fallback;
+}
+
+export function saveSetting(key: string, value: string, by: string, reason: string) {
+  store()
+    .prepare('INSERT INTO settings (key, value, changed_at, changed_by, reason) VALUES (?, ?, ?, ?, ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value, changed_at = excluded.changed_at, changed_by = excluded.changed_by, reason = excluded.reason')
+    .run(key, value, now(), by, reason);
 }

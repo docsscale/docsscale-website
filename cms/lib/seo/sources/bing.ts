@@ -15,6 +15,8 @@ export type BingData = {
   pages: { page: string; clicks: number; impressions: number }[];
   crawl: { date: string; crawled: number; errors: number; inIndex: number }[];
   crawlIssues: { url: string; issue: string; httpCode: number | null }[];
+  /** Inbound links per page as Bing counts them (Links tab); null when Bing did not answer. */
+  inbound: { url: string; count: number }[] | null;
 };
 
 type Raw = Record<string, unknown>;
@@ -41,6 +43,14 @@ export async function collectBing(): Promise<BingData> {
   const [traffic, queries, pages, crawl, issues] = await Promise.all([
     call('GetRankAndTrafficStats'), call('GetQueryStats'), call('GetPageStats'), call('GetCrawlStats'), call('GetCrawlIssues'),
   ]);
+  // Inbound link counts come from a different method whose shape Bing has
+  // changed before, so it is read on its own and any failure leaves it null.
+  let inbound: BingData['inbound'] = null;
+  try {
+    const raw = (await getJson<{ d?: unknown }>(`https://ssl.bing.com/webmaster/api.svc/json/GetLinkCounts?siteUrl=${encodeURIComponent(seoConfig.bingSite)}&apikey=${encodeURIComponent(bingKey())}`)).d;
+    const list = Array.isArray(raw) ? raw : Array.isArray((raw as Raw)?.Links) ? ((raw as Raw).Links as Raw[]) : [];
+    inbound = list.map((r) => ({ url: String(r.Url ?? ''), count: Number(r.Count ?? 0) })).filter((r) => r.url);
+  } catch { inbound = null; }
   const cur = [isoDay(daysAgo(29)), isoDay(daysAgo(2))] as const;
   const prev = [isoDay(daysAgo(57)), isoDay(daysAgo(30))] as const;
   const daily = traffic
@@ -82,5 +92,6 @@ export async function collectBing(): Promise<BingData> {
       issue: ISSUES.filter(([bit]) => (Number(r.Issues) & bit) !== 0).map(([, t]) => t).join(', ') || 'Other',
       httpCode: r.HttpCode == null ? null : Number(r.HttpCode),
     })),
+    inbound,
   };
 }

@@ -16,6 +16,10 @@ export type PageLint = {
   description: string;
   words: number;
   internalLinks: number;
+  /** Paths this page links to from its main text (menus and footer left out). */
+  links: string[];
+  /** Every heading on the page, for question coverage. */
+  headings: string[];
   schemaTypes: string[];
   keyword: string | null;
   noindex: boolean;
@@ -67,7 +71,9 @@ export function lintPage(url: string, html: string, siteUrl: string): PageLint {
   );
   const images = main.querySelectorAll('img');
   const noAlt = images.filter((i) => i.getAttribute('alt') === undefined).length;
-  const levels = main.querySelectorAll('h1, h2, h3, h4, h5, h6').map((h) => Number(h.tagName.slice(1)));
+  const headingNodes = main.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  const levels = headingNodes.map((h) => Number(h.tagName.slice(1)));
+  const headings = headingNodes.map((h) => clean(h.textContent)).filter(Boolean);
   const skipped = levels.some((l, i) => i > 0 && l > levels[i - 1] + 1);
   const schema = schemaTypes(root);
   const intro = clean(main.querySelectorAll('p').slice(0, 2).map((p) => p.textContent).join(' '));
@@ -100,6 +106,7 @@ export function lintPage(url: string, html: string, siteUrl: string): PageLint {
 
   return {
     url, path, title, h1: h1s[0] ?? '', description, words, internalLinks: internal.size,
+    links: [...internal].map((h) => (h.endsWith('/') || h.includes('.') ? h : h + '/')), headings,
     schemaTypes: schema.types, keyword, noindex: robots.includes('noindex'), score, checks,
   };
 }

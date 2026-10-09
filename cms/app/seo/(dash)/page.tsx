@@ -1,15 +1,23 @@
-import { requireUser } from '../../../lib/seo/auth';
+import { canSee, requireUser } from '../../../lib/seo/auth';
+import { autoSummary } from '../../../lib/seo/findings';
 import type { AnalyticsData } from '../../../lib/seo/sources/analytics';
 import type { BingData } from '../../../lib/seo/sources/bing';
 import type { SearchConsoleData } from '../../../lib/seo/sources/search-console';
 import type { SiteData } from '../../../lib/seo/sources/site';
-import { firstSnapshot, latestSnapshot, sourceRows } from '../../../lib/seo/store';
-import { Badge, Change, Empty, H1, Section, Source, Tile, day, fmt, link, tiles, when } from '../ui';
+import { firstSnapshot, latestSnapshot, sourceRows, store } from '../../../lib/seo/store';
+import { removeNote, writeNote } from '../actions';
+import { Badge, Change, Empty, H1, Section, Source, T, Tile, button, day, fmt, input, link, tiles, when } from '../ui';
+
+type Note = { id: number; at: string; by: string; text: string; reason: string };
 
 export const dynamic = 'force-dynamic';
 
 export default async function Overview() {
-  await requireUser('/seo');
+  const user = await requireUser('/seo');
+  const summary = autoSummary();
+  const note = store().prepare("SELECT id, at, by, text, reason FROM notes WHERE kind = 'overview' AND removed IS NULL ORDER BY id DESC LIMIT 1").get() as Note | undefined;
+  const noteAge = note ? Math.floor((Date.now() - Date.parse(note.at)) / 86400_000) : null;
+  const maySeo = canSee(user, 'seo');
   const gsc = latestSnapshot<SearchConsoleData>('search-console');
   const ga = latestSnapshot<AnalyticsData>('analytics');
   const bing = latestSnapshot<BingData>('bing');
@@ -73,6 +81,58 @@ export default async function Overview() {
           />
         </div>
       )}
+
+      <Section title="This week in plain language" note={note ? `Written ${when(note.at)} by ${note.by}${noteAge != null && noteAge > 8 ? '. More than eight days old: the figures above are current, this judgement is not.' : ''}` : 'No written summary yet. The figures and findings below are automatic and current; the written judgement comes from the weekly run.'}>
+        {note && noteAge != null && noteAge > 8 && <p><Badge tone="bad">Out of date ({noteAge} days)</Badge></p>}
+        {note ? <div style={{ whiteSpace: 'pre-wrap', fontSize: 15, lineHeight: 1.5 }}>{note.text}</div> : null}
+        {maySeo && (
+          <details style={{ marginTop: 10, fontSize: 13 }}>
+            <summary style={{ cursor: 'pointer', color: T.teal }}>{note ? 'Write a new summary' : 'Write the summary'}</summary>
+            <form action={writeNote} style={{ display: 'grid', gap: 8, marginTop: 8 }}>
+              <input type="hidden" name="kind" value="overview" />
+              <textarea name="text" rows={8} required placeholder="What moved, what matters most, the top three priorities, what to ignore, risks." style={{ ...input, fontSize: 14 }} />
+              <div><button type="submit" style={button}>Save the summary</button></div>
+            </form>
+          </details>
+        )}
+      </Section>
+
+      <Section title="What moved" note={summary.dataAsOf ? `From the data as of ${when(summary.dataAsOf)}; last 28 days against the 28 before.` : undefined}>
+        {summary.moved.length === 0 ? <Empty>No data yet.</Empty> : <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14 }}>{summary.moved.map((m) => <li key={m}>{m}</li>)}</ul>}
+      </Section>
+
+      <Section title="What matters most" note={`The top open items of the fix queue by impact (${summary.openCount} open).`}>
+        {summary.top.length === 0 ? <Empty>Nothing open in the queue.</Empty> : (
+          <ol style={{ margin: 0, paddingLeft: 18, fontSize: 14 }}>
+            {summary.top.map((f) => <li key={f.id}><strong>{f.what}</strong> ({f.impact.toLowerCase()} impact, {f.effort.toLowerCase()} effort; {f.who}). {f.impact_reason}</li>)}
+          </ol>
+        )}
+        <Source><a href="/seo/queue" style={link}>The whole queue</a></Source>
+      </Section>
+
+      <Section title="What to ignore" note="Known noise, kept between weeks, each with why it is noise.">
+        <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14 }}>
+          {summary.auto.map((a) => <li key={a}>{a} <span style={{ color: T.caption }}>(automatic)</span></li>)}
+          {(store().prepare("SELECT id, at, by, text, reason FROM notes WHERE kind = 'ignore' AND removed IS NULL ORDER BY id").all() as Note[]).map((n) => (
+            <li key={n.id}>{n.text}{n.reason ? `: ${n.reason}` : ''} <span style={{ color: T.caption }}>({n.by}, {day(n.at)})</span>
+              {maySeo && <form action={removeNote} style={{ display: 'inline', marginLeft: 6 }}><input type="hidden" name="id" value={n.id} /><button type="submit" style={{ background: 'none', border: 0, color: T.teal, cursor: 'pointer', fontSize: 12, padding: 0 }}>remove</button></form>}
+            </li>
+          ))}
+          {summary.auto.length + summary.ignore.length === 0 && <li>Nothing yet.</li>}
+        </ul>
+        {maySeo && (
+          <form action={writeNote} style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+            <input type="hidden" name="kind" value="ignore" />
+            <input name="text" required placeholder="What to ignore" style={{ ...input, flex: '1 1 200px', fontSize: 13, padding: '6px 8px' }} />
+            <input name="reason" required placeholder="Why it is noise" style={{ ...input, flex: '1 1 200px', fontSize: 13, padding: '6px 8px' }} />
+            <button type="submit" style={{ ...button, padding: '6px 10px', fontSize: 13 }}>Add</button>
+          </form>
+        )}
+      </Section>
+
+      <Section title="Risks">
+        {summary.risks.length === 0 ? <p style={{ margin: 0 }}><Badge tone="good">None detected</Badge></p> : <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14 }}>{summary.risks.map((r) => <li key={r}>{r}</li>)}</ul>}
+      </Section>
 
       {gsc && (
         <Section title="Quick wins in Google" note="Phrases where a better title or a stronger page could earn clicks soon.">
