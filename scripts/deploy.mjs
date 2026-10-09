@@ -140,7 +140,30 @@ if (target === 'staging') {
 }
 const version = `${rollbackOriginal ? 'original site (pre-v1.0)' : git('describe --tags --always --dirty')} (${new Date().toISOString()})`;
 fs.writeFileSync(path.join(release, 'version.txt'), `${target} ${version}\n`);
-const files = listFiles(release);
+let files = listFiles(release);
+// Hostinger's upload service has refused .htaccess since 8 Oct 2026 (403 from
+// one network, a dropped connection from GitHub) while other files go through.
+// When the live site's release has the same rules, there is nothing to send:
+// skip it. A real change to the rules is still sent (and fails loudly if refused).
+if (target === 'production' && !rollbackOriginal) {
+  const live = await fetch('https://docsscale.com/version.txt')
+    .then((r) => (r.ok ? r.text() : ''))
+    .catch(() => '');
+  const liveTag = live.match(/^production (v\d+\.\d+\.\d+) /)?.[1];
+  let same = false;
+  if (liveTag) {
+    try {
+      execSync(`git diff --quiet ${liveTag} HEAD -- server/public_html/.htaccess`, { cwd: root, stdio: 'ignore' });
+      same = true;
+    } catch {
+      // Changed, or the tag is unknown here: send it.
+    }
+  }
+  if (same) {
+    files = files.filter((rel) => rel !== '.htaccess');
+    console.log(`  .htaccess is unchanged since ${liveTag} (live): not sent`);
+  }
+}
 console.log(`Release ${target}: ${files.length} files, ${version}`);
 if (flag('dry-run')) process.exit(0);
 
