@@ -5,6 +5,12 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.8.0] — 2026-10-10
+
+A page for paid ads. Visible to visitors: the new `/services/paid-ads/` page, and links to it from the menu, the footer, `/services/` and the four industry pages.
+
+- **Paid ads service page** (owner's approval, 10 Oct 2026; #121). `/services/paid-ads/` gives a direct answer at the top, what we do in order, the Denver physical therapy case copied word for word from `/results/`, who it suits and who it does not, six questions with answers, and links to the four industry pages. The menu and footer entry "Paid ads (Meta & Google)" now opens it, and the paid advertising card on `/services/` and on each industry page links to it. It carries breadcrumb, organisation, Service and FAQ structured data. It is the first of the service pages in the completion plan.
+
 ## [1.7.1] — 2026-10-10
 
 Six pages name what people search for. Visible to visitors: reworded headings, descriptions and first paragraphs on the home, services and four industry pages. The blog's structured data is behind the scenes.
