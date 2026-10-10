@@ -37,7 +37,9 @@ export function ServicePage({ page: p }: { page: Page }) {
     <>
       <Hero page={p} />
       <Process page={p} />
+      {p.mix && <Mix page={p} mix={p.mix} />}
       <CaseStudy page={p} />
+      {p.rules && <Rules page={p} rules={p.rules} />}
       <Fit page={p} />
       <Faqs page={p} />
       <Industries page={p} />
@@ -685,6 +687,130 @@ function Process({ page: p }: { page: Page }) {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Optional: what a typical month is made of (content/service-pages.ts, mix).
+function Mix({ page: p, mix }: { page: Page; mix: NonNullable<Page['mix']> }) {
+  return (
+    <div data-screen-label="Month" style={section}>
+      <div className="container" style={column}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 760 }}>
+          <h2 style={{ ...sectionH2, textWrap: 'balance' }}>{mix.heading}</h2>
+          <p style={{ margin: 0, fontSize: 17, lineHeight: 1.55, color: T.body }}>{mix.intro}</p>
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,240px),1fr))',
+            gap: 14,
+          }}
+        >
+          {mix.items.map((item) => (
+            <div
+              key={item.title}
+              style={{
+                background: p.accentBg,
+                color: p.accentFg,
+                borderRadius: 28,
+                padding: 'clamp(22px,2.6vw,30px)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+              }}
+            >
+              <span
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 14,
+                  background: white,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Icon name={item.icon} color={p.accentFg} />
+              </span>
+              <h3
+                style={{
+                  margin: 0,
+                  fontWeight: 800,
+                  fontSize: 19,
+                  letterSpacing: '-.02em',
+                  lineHeight: 1.25,
+                }}
+              >
+                {item.title}
+              </h3>
+              <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55 }}>{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Optional: what every piece of work does, and what we never do (content/service-pages.ts, rules).
+function Rules({ page: p, rules }: { page: Page; rules: NonNullable<Page['rules']> }) {
+  const h3 = { margin: 0, fontWeight: 800, fontSize: 22, letterSpacing: '-.02em', lineHeight: 1.2 } as const;
+  const list = (items: string[], ok: boolean, bg: string, fg: string) => (
+    <ul
+      style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 14 }}
+    >
+      {items.map((item) => (
+        <li
+          key={item}
+          style={{ display: 'grid', gridTemplateColumns: '28px minmax(0,1fr)', gap: 12, alignItems: 'start' }}
+        >
+          <span
+            aria-hidden="true"
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 9,
+              background: bg,
+              color: fg,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 800,
+              fontSize: 14,
+            }}
+          >
+            {ok ? '✓' : '✕'}
+          </span>
+          <span style={{ fontSize: 16, lineHeight: 1.5, color: T.body }}>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+  return (
+    <div
+      data-screen-label="Rules"
+      style={{ ...section, background: T.band, marginTop: 'clamp(56px,7vw,96px)' }}
+    >
+      <div className="container" style={column}>
+        <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{rules.heading}</h2>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))',
+            gap: 14,
+          }}
+        >
+          <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <h3 style={h3}>{rules.always.heading}</h3>
+            {list(rules.always.items, true, p.accentBg, p.accentFg)}
+          </div>
+          <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <h3 style={h3}>{rules.never.heading}</h3>
+            {list(rules.never.items, false, T.band, T.body)}
+          </div>
         </div>
       </div>
     </div>

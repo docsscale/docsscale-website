@@ -86,6 +86,14 @@ export type ServicePage = {
   /** The patient's path in four stops, shown as a strip above the steps. */
   processFlow: { label: string; icon: ProcessIcon }[];
   process: { title: string; body: string; icon: ProcessIcon }[];
+  /** Optional: what a typical month is made of, as cards under the steps. */
+  mix?: { heading: string; intro: string; items: { title: string; body: string; icon: ProcessIcon }[] };
+  /** Optional: what every piece of work does, and what we never do, after the case. */
+  rules?: {
+    heading: string;
+    always: { heading: string; items: string[] };
+    never: { heading: string; items: string[] };
+  };
   /** Copied word for word from ResultsCases.tsx; change both together. */
   caseStudy: {
     heading: string;
@@ -469,6 +477,54 @@ export const SERVICE_PAGES: ServicePage[] = [
         body: 'Inquiries from your profile, DMs answered and the bookings that came from them. Not followers, not likes.',
       },
     ],
+    mix: {
+      heading: 'What goes into a month.',
+      intro:
+        'Twelve to sixteen posts, mixed so your profile answers the questions people have before they book. You see every one before it goes out.',
+      items: [
+        {
+          title: 'The treatments you want more of',
+          icon: 'target',
+          body: 'What the visit involves, how long it takes and who it suits, so the people who are ready can book.',
+        },
+        {
+          title: 'Questions your front desk hears',
+          icon: 'reply',
+          body: 'The same few questions come up every week. A short post answers them once, for everyone who is still deciding.',
+        },
+        {
+          title: 'Your team and your rooms',
+          icon: 'camera',
+          body: 'People choose a clinic they feel they know. Your faces, your front desk and your treatment rooms, never stock pictures.',
+        },
+        {
+          title: 'Real visits, with permission',
+          icon: 'star',
+          body: "A patient's story, photo or review, only with their written permission for that use and your sign-off.",
+        },
+      ],
+    },
+    rules: {
+      heading: 'What we post, and what we never post.',
+      always: {
+        heading: 'Every post',
+        items: [
+          'Is written in your voice and approved by you before it goes out.',
+          "Talks about the treatment and the clinic, not the reader's condition.",
+          'Shows results that are typical for your patients, not only the best one.',
+          'Is checked against what Instagram and Facebook allow.',
+        ],
+      },
+      never: {
+        heading: 'We never post',
+        items: [
+          "A patient's photo, story or review without their written permission.",
+          'A promise of a cure or a guaranteed result.',
+          'Medical advice in comments or DMs. Those questions go to your team.',
+          'Stock photos passed off as your clinic.',
+        ],
+      },
+    },
     caseStudy: {
       heading: 'A real Instagram case, in numbers.',
       meta: 'Med spa · Las Vegas, NV',
@@ -516,6 +572,14 @@ export const SERVICE_PAGES: ServicePage[] = [
       {
         q: 'Who answers the comments and DMs?',
         a: 'We do, in your voice, and fast. Booking questions get a time and a link. Anything about a patient’s own health goes to your team, and we never discuss a patient’s care in public comments.',
+      },
+      {
+        q: 'Which platforms do you post on?',
+        a: 'Instagram and Facebook. Each month is planned once and fitted to both, and every comment and DM on both gets an answer.',
+      },
+      {
+        q: 'Who owns the accounts?',
+        a: 'You do. We post from your own Instagram and Facebook accounts, everything is month to month, and if we part ways you keep every account and every post.',
       },
       {
         q: 'How much of our time does it take?',
