@@ -247,6 +247,46 @@ export const STRUCTURED_DATA = {
       },
     },
   ],
+  serviceReactivation: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://docsscale.com/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Services',
+          item: 'https://docsscale.com/services/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: 'Reactivation & recall',
+          item: 'https://docsscale.com/services/patient-reactivation/',
+        },
+      ],
+    },
+    ORGANIZATION,
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'Reactivation & recall',
+      url: 'https://docsscale.com/services/patient-reactivation/',
+      serviceType: 'Patient reactivation and recall for healthcare clinics',
+      provider: { '@id': 'https://docsscale.com/#organization' },
+      areaServed: 'US',
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'Healthcare clinics',
+      },
+    },
+  ],
   industries: [
     {
       '@context': 'https://schema.org',

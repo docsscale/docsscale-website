@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { T } from '@/styles/tokens';
 
 export function ServicesRetain() {
@@ -242,6 +243,12 @@ export function ServicesRetain() {
                 {'within the first month.'}
               </div>
             </div>
+            <Link
+              href="/services/patient-reactivation/"
+              style={{ fontSize: 14, fontWeight: 700, color: T.sageFg }}
+            >
+              How we run reactivation →
+            </Link>
           </div>
           <div
             style={{

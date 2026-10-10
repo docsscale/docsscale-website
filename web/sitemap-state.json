@@ -11,7 +11,7 @@
   },
   "/services/": {
     "lastmod": "2026-10-10",
-    "hash": "933dc7bdf1f211d0",
+    "hash": "2b428ec53f4f527f",
     "priority": "0.9"
   },
   "/industries/": {
@@ -21,17 +21,17 @@
   },
   "/industries/chiropractic/": {
     "lastmod": "2026-10-10",
-    "hash": "fbcb53c8c6abad2f",
+    "hash": "a2a08456313be642",
     "priority": "0.85"
   },
   "/industries/dental/": {
     "lastmod": "2026-10-10",
-    "hash": "9f91a5e173044a5b",
+    "hash": "a082873be6389244",
     "priority": "0.85"
   },
   "/industries/med-spa/": {
     "lastmod": "2026-10-10",
-    "hash": "22957e5a4ce2c7e1",
+    "hash": "273104d115949d0a",
     "priority": "0.85"
   },
   "/industries/physical-therapy/": {
@@ -67,6 +67,11 @@
   "/services/paid-ads/": {
     "lastmod": "2026-10-10",
     "hash": "cdec7fbff7e8aca9",
+    "priority": "0.7"
+  },
+  "/services/patient-reactivation/": {
+    "lastmod": "2026-10-10",
+    "hash": "a41bf74993e12f98",
     "priority": "0.7"
   },
   "/about/": {
