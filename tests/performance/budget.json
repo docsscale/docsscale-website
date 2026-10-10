@@ -12,101 +12,101 @@
     "cls": 0.01,
     "bytesPercent": 3
   },
-  "recorded": "2026-10-07",
+  "recorded": "2026-10-10",
   "baseline": {
     "/": {
-      "score": 94,
-      "lcp": 3018,
+      "score": 93,
+      "lcp": 3086,
       "cls": 0,
       "bytes": 318162
     },
     "/about/": {
       "score": 96,
-      "lcp": 2746,
+      "lcp": 2679,
       "cls": 0,
       "bytes": 307909
     },
     "/book-a-call/": {
       "score": 94,
-      "lcp": 3102,
+      "lcp": 3004,
       "cls": 0,
       "bytes": 329445
     },
     "/free-system/": {
       "score": 93,
-      "lcp": 3229,
+      "lcp": 3236,
       "cls": 0,
       "bytes": 418933
     },
     "/free-system/book-a-call/": {
       "score": 96,
-      "lcp": 2744,
+      "lcp": 2777,
       "cls": 0,
       "bytes": 332274
     },
     "/free-system/thank-you/": {
       "score": 96,
-      "lcp": 2768,
+      "lcp": 2709,
       "cls": 0,
       "bytes": 340500
     },
     "/how-it-works/": {
       "score": 95,
-      "lcp": 2929,
+      "lcp": 2815,
       "cls": 0,
       "bytes": 310517
     },
     "/industries/": {
-      "score": 94,
-      "lcp": 2968,
+      "score": 97,
+      "lcp": 2654,
       "cls": 0,
-      "bytes": 331608
+      "bytes": 333824
     },
     "/industries/chiropractic/": {
-      "score": 96,
-      "lcp": 2784,
+      "score": 95,
+      "lcp": 2817,
       "cls": 0,
-      "bytes": 335834
+      "bytes": 346112
     },
     "/industries/dental/": {
       "score": 95,
-      "lcp": 2930,
+      "lcp": 2854,
       "cls": 0,
-      "bytes": 335973
+      "bytes": 347136
     },
     "/industries/med-spa/": {
-      "score": 95,
-      "lcp": 2788,
+      "score": 94,
+      "lcp": 2966,
       "cls": 0,
-      "bytes": 335856
+      "bytes": 346112
     },
     "/industries/physical-therapy/": {
-      "score": 94,
-      "lcp": 3056,
+      "score": 95,
+      "lcp": 2852,
       "cls": 0,
-      "bytes": 335945
+      "bytes": 346112
     },
     "/privacy/": {
-      "score": 97,
-      "lcp": 2527,
+      "score": 98,
+      "lcp": 2467,
       "cls": 0,
       "bytes": 265910
     },
     "/results/": {
-      "score": 93,
-      "lcp": 3179,
+      "score": 94,
+      "lcp": 3065,
       "cls": 0,
       "bytes": 310132
     },
     "/services/": {
       "score": 94,
-      "lcp": 3076,
+      "lcp": 2961,
       "cls": 0,
-      "bytes": 326141
+      "bytes": 327680
     },
     "/terms/": {
       "score": 98,
-      "lcp": 2441,
+      "lcp": 2317,
       "cls": 0,
       "bytes": 273627
     }
