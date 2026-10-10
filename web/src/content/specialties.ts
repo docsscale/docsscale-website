@@ -103,6 +103,7 @@ export const SPECIALTIES: Specialty[] = [
       },
       {
         title: 'Recall & reactivation',
+        href: '/services/patient-reactivation/',
         body: "Automated outreach for six-month cleanings and patients who've drifted, without discounting the visit.",
       },
     ],
@@ -214,6 +215,7 @@ export const SPECIALTIES: Specialty[] = [
       },
       {
         title: 'Reactivation & recall',
+        href: '/services/patient-reactivation/',
         body: 'Outreach to patients who finished acute care and never got invited back to maintenance visits.',
       },
     ],
@@ -427,6 +429,7 @@ export const SPECIALTIES: Specialty[] = [
       },
       {
         title: 'Reactivation & recall',
+        href: '/services/patient-reactivation/',
         body: "Automated touch-up reminders timed to each treatment, so rebooking doesn't rely on patients remembering.",
       },
     ],

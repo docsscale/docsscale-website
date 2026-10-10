@@ -1,10 +1,10 @@
-// Template for the service pages (/services/paid-ads/ …). All copy comes from
+// Template for the service pages (/services/paid-ads/, /services/patient-reactivation/ …). All copy comes from
 // src/content/service-pages.ts; the accent colour is the service's stage.
 // The hero is static (no word-by-word rise): a new template must paint its
 // main content within the performance target, and the heading is the largest
 // thing on a phone screen.
 import Link from 'next/link';
-import type { ProcessIcon, ServicePage as Page } from '@/content/service-pages';
+import type { HeroGraphic, ProcessIcon, ServicePage as Page } from '@/content/service-pages';
 import { industryHref, SPECIALTIES } from '@/content/specialties';
 import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
 import { T } from '@/styles/tokens';
@@ -52,8 +52,7 @@ export function ServicePage({ page: p }: { page: Page }) {
 // the home page's ad preview. Every name is a placeholder ("Your Clinic"), and
 // the tile says it is an example. On a phone it sits under the heading, so the
 // page's main text still paints first.
-function AdGraphic({ page: p }: { page: Page }) {
-  const g = p.heroGraphic;
+function AdGraphic({ page: p, g }: { page: Page; g: Extract<HeroGraphic, { kind: 'ads' }> }) {
   const small = { fontSize: 11, fontWeight: 700, color: T.caption } as const;
   const adCard = {
     background: white,
@@ -67,6 +66,7 @@ function AdGraphic({ page: p }: { page: Page }) {
     <div
       aria-label={g.ariaLabel}
       role="img"
+      className="service-hero-graphic"
       style={{
         background: p.accentBg,
         borderRadius: 28,
@@ -124,7 +124,10 @@ function AdGraphic({ page: p }: { page: Page }) {
         <div style={{ padding: '0 14px 10px', fontSize: 13, lineHeight: 1.4, color: T.ink }}>
           {g.social.text}
         </div>
-        <div style={{ position: 'relative', height: 'clamp(84px,12vw,112px)', background: T.band }}>
+        <div
+          className="service-ad-photo"
+          style={{ position: 'relative', height: 'clamp(84px,12vw,112px)', background: T.band }}
+        >
           <ResponsiveImage
             src={g.social.photo}
             sizes={g.social.photoSizes}
@@ -192,6 +195,131 @@ function AdGraphic({ page: p }: { page: Page }) {
   );
 }
 
+// The reactivation hero: an example email from the doctor to a past patient,
+// and the visit it rebooks. Placeholder names only, labelled as an example.
+function EmailGraphic({ page: p, g }: { page: Page; g: Extract<HeroGraphic, { kind: 'email' }> }) {
+  const small = { fontSize: 11, fontWeight: 700, color: T.caption } as const;
+  return (
+    <div
+      aria-label={g.ariaLabel}
+      role="img"
+      className="service-hero-graphic"
+      style={{
+        background: p.accentBg,
+        borderRadius: 28,
+        padding: 18,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        minHeight: 'clamp(300px,40vw,360px)',
+        color: T.ink,
+      }}
+    >
+      <div
+        style={{ display: 'flex', justifyContent: 'space-between', gap: 8, ...eyebrow, color: p.accentFg }}
+      >
+        <span>{g.label}</span>
+        <span>Example</span>
+      </div>
+      <div
+        style={{
+          background: white,
+          borderRadius: 16,
+          border: `1px solid ${T.hairline}`,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          flex: 1,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '12px 14px',
+            borderBottom: `1px solid ${T.hairline}`,
+          }}
+        >
+          <span
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 999,
+              background: p.accentBg,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 'none',
+            }}
+          >
+            <Icon name="mail" color={p.accentFg} size={16} />
+          </span>
+          <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+            <span style={{ fontSize: 13, fontWeight: 700 }}>{g.from}</span>
+            <span style={small}>{g.note}</span>
+          </span>
+        </div>
+        <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-.01em', lineHeight: 1.3 }}>
+            {g.subject}
+          </span>
+          <span style={{ fontSize: 13, lineHeight: 1.5, color: T.body }}>{g.body}</span>
+          <span
+            style={{
+              alignSelf: 'flex-start',
+              marginTop: 4,
+              fontSize: 13,
+              fontWeight: 700,
+              color: white,
+              background: T.teal,
+              padding: '8px 14px',
+              borderRadius: 999,
+            }}
+          >
+            {g.cta}
+          </span>
+          <span
+            style={{ marginTop: 6, fontSize: 13, lineHeight: 1.5, color: T.body, whiteSpace: 'pre-line' }}
+          >
+            {g.signOff}
+          </span>
+        </div>
+        {/* Sits at the bottom of the card so the email reads as a real one, and shows
+            the two things every reactivation email carries: why they got it, and a way out. */}
+        <div
+          style={{
+            marginTop: 'auto',
+            padding: '10px 14px',
+            borderTop: `1px solid ${T.hairline}`,
+            fontSize: 11,
+            lineHeight: 1.5,
+            color: T.caption,
+          }}
+        >
+          {g.footer} <span style={{ textDecoration: 'underline' }}>Unsubscribe</span>
+        </div>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          background: white,
+          color: p.accentFg,
+          borderRadius: 14,
+          padding: '10px 14px',
+          fontSize: 13,
+          fontWeight: 700,
+        }}
+      >
+        <Icon name="calendar" color={p.accentFg} size={20} />
+        <span>{g.booked}</span>
+      </div>
+    </div>
+  );
+}
+
 function Hero({ page: p }: { page: Page }) {
   return (
     <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)' }}>
@@ -240,7 +368,11 @@ function Hero({ page: p }: { page: Page }) {
               {p.intro}
             </p>
           </div>
-          <AdGraphic page={p} />
+          {p.heroGraphic.kind === 'ads' ? (
+            <AdGraphic page={p} g={p.heroGraphic} />
+          ) : (
+            <EmailGraphic page={p} g={p.heroGraphic} />
+          )}
         </div>
         <div
           style={{
@@ -309,6 +441,8 @@ const ICON_PATHS: Record<ProcessIcon, string> = {
   search: 'M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM15.5 15.5 20 20',
   calendar:
     'M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 10h16M8 4v4M16 4v4M9 14.5l2 2 4-4',
+  mail: 'M4.5 6h15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 7l8 6 8-6',
+  star: 'm12 4 2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 16.4l-4.8 2.5.9-5.4-3.9-3.8 5.4-.8L12 4Z',
 };
 
 function Icon({ name, color, size = 24 }: { name: ProcessIcon; color: string; size?: number }) {
@@ -684,7 +818,7 @@ function Faqs({ page: p }: { page: Page }) {
 // The four industry pages, each with what this service does for that specialty
 // (the matching card from specialties.ts, so the two never disagree).
 function Industries({ page: p }: { page: Page }) {
-  const match = (title: string) => title.toLowerCase().includes('paid');
+  const match = (title: string) => p.industryMatch.some((word) => title.toLowerCase().includes(word));
   return (
     <div data-screen-label="Industries" style={{ padding: 'clamp(56px,7vw,96px) 0 0' }}>
       <div className="container" style={column}>
@@ -710,7 +844,10 @@ function Industries({ page: p }: { page: Page }) {
           }}
         >
           {SPECIALTIES.map((s) => {
-            const service = s.services.find((x) => match(x.title));
+            // The specialty's matching service card, or else its stage card for
+            // this service's stage (physical therapy has no recall card).
+            const service =
+              s.services.find((x) => match(x.title)) ?? s.stages.find((x) => x.label === p.stage);
             return (
               <Link
                 key={s.slug}

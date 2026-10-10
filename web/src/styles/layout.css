@@ -76,3 +76,19 @@
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 14px;
 }
+
+/* Service page hero (features/services/ServicePage.tsx): between phone and
+   desktop the example graphic would sit in half the row under the heading card,
+   leaving the other half empty, so it takes the full row instead. */
+@media (max-width: 1100px) {
+  .service-hero-graphic {
+    grid-column: 1 / -1;
+  }
+}
+/* ...and once it is that wide, the photo in the example ad gets taller, so the
+   crop keeps the people in it rather than a thin strip. */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .service-ad-photo {
+    height: 220px !important;
+  }
+}

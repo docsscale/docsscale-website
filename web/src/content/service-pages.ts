@@ -11,7 +11,35 @@ import { T } from '@/styles/tokens';
 
 /** Line icons drawn in features/services/ServicePage.tsx. */
 export type ProcessIcon =
-  'target' | 'page' | 'megaphone' | 'reply' | 'refresh' | 'chart' | 'search' | 'calendar';
+  'target' | 'page' | 'megaphone' | 'reply' | 'refresh' | 'chart' | 'search' | 'calendar' | 'mail' | 'star';
+
+/** The example graphic beside the heading (features/services/ServicePage.tsx, HeroGraphic). */
+export type HeroGraphic =
+  | {
+      /** An example search ad and social ad for one treatment. */
+      kind: 'ads';
+      ariaLabel: string;
+      label: string;
+      search: { title: string; text: string };
+      social: { text: string; photo: string; photoSizes: string; url: string; cta: string };
+      booked: string;
+    }
+  | {
+      /** An example email to a past patient. */
+      kind: 'email';
+      ariaLabel: string;
+      label: string;
+      from: string;
+      note: string;
+      subject: string;
+      body: string;
+      cta: string;
+      /** The doctor's sign-off under the button; a line break splits it. */
+      signOff: string;
+      /** Small print at the foot of the email; an "Unsubscribe" link follows it. */
+      footer: string;
+      booked: string;
+    };
 
 export type ServicePage = {
   slug: string;
@@ -27,14 +55,7 @@ export type ServicePage = {
   intro: string;
   accentBg: string;
   accentFg: string;
-  /** The example-ads graphic beside the heading (features/services/ServicePage.tsx, AdGraphic). */
-  heroGraphic: {
-    ariaLabel: string;
-    label: string;
-    search: { title: string; text: string };
-    social: { text: string; photo: string; photoSizes: string; url: string; cta: string };
-    booked: string;
-  };
+  heroGraphic: HeroGraphic;
   /** Services that work alongside this one, with the page or section they link to. */
   worksWith: { label: string; href: string }[];
   processHeading: string;
@@ -63,6 +84,8 @@ export type ServicePage = {
   faqs: { q: string; a: string }[];
   /** Heading above the four industry links; the blurbs come from specialties.ts. */
   industriesHeading: string;
+  /** Words that pick each specialty's matching service card for its blurb. */
+  industryMatch: string[];
   ctaHeading: string;
 };
 
@@ -81,6 +104,7 @@ export const SERVICE_PAGES: ServicePage[] = [
     accentBg: T.peachBg,
     accentFg: T.peachFg,
     heroGraphic: {
+      kind: 'ads',
       ariaLabel:
         'Example: a search ad and a social ad for dental implants from a clinic, both leading to a booked consultation',
       label: 'One treatment, two ads',
@@ -91,7 +115,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       social: {
         text: 'Dental implants, planned in one visit. A free thirty-minute consultation, booked online.',
         photo: PAID_ADS_AD,
-        photoSizes: '(max-width: 760px) calc(100vw - 68px), 394px',
+        photoSizes: '(max-width: 1100px) calc(100vw - 68px), 394px',
         url: 'yourclinic.com/implants',
         cta: 'Book a consultation',
       },
@@ -101,7 +125,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       { label: 'Websites & landing pages', href: '/services#capture' },
       { label: 'Lead follow-up & booking', href: '/services#convert' },
       { label: 'Local SEO & Google Business Profile', href: '/services#attract' },
-      { label: 'Reactivation & recall', href: '/services#retain' },
+      { label: 'Reactivation & recall', href: '/services/patient-reactivation/' },
     ],
     processHeading: 'What we do, in order.',
     processFlow: [
@@ -205,6 +229,144 @@ export const SERVICE_PAGES: ServicePage[] = [
       },
     ],
     industriesHeading: 'Paid ads by specialty.',
+    industryMatch: ['paid'],
     ctaHeading: "Let's look at your ad numbers.",
+  },
+  {
+    slug: 'patient-reactivation',
+    name: 'Reactivation & recall',
+    stage: 'Retain',
+    title: 'Patient Reactivation for Clinics | DocsScale',
+    metaDescription:
+      "Patient reactivation for clinics: past patients invited back by email in the doctor's voice, timed to their care, and reported in rebooked visits.",
+    h1: 'Patient reactivation that brings past patients',
+    h1Accent: 'back to the schedule.',
+    intro:
+      "Patient reactivation means inviting back people who already know your clinic but have not been in for a while. We write to them by email in the doctor's own voice, time each message to their care, ask for a review after a good visit, and report rebooked visits every Monday. No discounts, and no ad spend.",
+    accentBg: T.sageBg,
+    accentFg: T.sageFg,
+    heroGraphic: {
+      kind: 'email',
+      ariaLabel:
+        'Example: an email from a clinic to a past patient, inviting her to book a check-in visit, and the visit she rebooked',
+      label: 'One email, one rebooked visit',
+      from: 'Dr. Your Name · Your Clinic',
+      note: 'Sent 12 months after the last visit',
+      subject: 'It has been a while. Time for a check-in?',
+      body: 'Hi Maria, it has been over a year since your last visit. If you would like to come in, you can pick a time that suits you here.',
+      cta: 'Pick a time',
+      signOff: 'See you soon,\nDr. Your Name',
+      footer: 'You are receiving this because you are a patient of Your Clinic.',
+      booked: 'Rebooked: check-in visit, Thursday 9:00',
+    },
+    worksWith: [
+      { label: 'Lead follow-up & booking', href: '/services#convert' },
+      { label: 'Websites & landing pages', href: '/services#capture' },
+      { label: 'Paid ads (Meta & Google)', href: '/services/paid-ads/' },
+      { label: 'Local SEO & Google Business Profile', href: '/services#attract' },
+    ],
+    processHeading: 'What we do, in order.',
+    processFlow: [
+      { label: 'Find patients not seen in a while', icon: 'search' },
+      { label: 'An email from the doctor', icon: 'mail' },
+      { label: 'Picks a time online', icon: 'calendar' },
+      { label: 'Comes back and leaves a review', icon: 'star' },
+    ],
+    process: [
+      {
+        title: 'Find who has drifted away',
+        icon: 'search',
+        body: 'From your own patient list: people not seen in 12 months or more, and people who stopped partway through a plan of care. Most clinics have years of them, and nobody has asked them back.',
+      },
+      {
+        title: "Write in the doctor's voice",
+        icon: 'mail',
+        body: 'A short, personal note from the doctor, not a newsletter. No discount, and nothing in the message that reveals what the patient was treated for.',
+      },
+      {
+        title: 'Time it to their care',
+        icon: 'calendar',
+        body: 'Recall for patients who are due, such as a six-month cleaning or a touch-up, and a separate invitation for past patients who have been gone a long time. Each list gets its own message.',
+      },
+      {
+        title: 'Make booking one click',
+        icon: 'reply',
+        body: 'Every email links straight to a booking page, and every reply gets an answer within minutes, so a patient who is ready does not have to chase you.',
+      },
+      {
+        title: 'Ask for a review after a good visit',
+        icon: 'star',
+        body: 'Patients who come back and have a good visit get one short request to review you on Google. It builds the reputation new patients check before they book.',
+      },
+      {
+        title: 'Report rebooked visits every Monday',
+        icon: 'chart',
+        body: 'How many were invited, how many booked, how many came in, and how many reviews followed. First results usually come within the first month.',
+      },
+    ],
+    caseStudy: {
+      heading: 'A real reactivation campaign, in numbers.',
+      meta: 'Chiropractic · Tampa, FL',
+      period: 'Aug 2026',
+      stat: '31',
+      statLine: 'dormant patients rebooked in the first month. Zero ad spend.',
+      tags: ['Reactivation', 'Retain only'],
+      built:
+        "A reactivation campaign to 640 patients not seen in 12+ months, written in the doctor's voice, with a review request after every completed visit.",
+      result: '31 rebooked in month one, 19 new Google reviews, zero ad spend.',
+      quote: "Patients we assumed had moved away. They just hadn't been asked.",
+      name: 'Dr. Stephanie Carter',
+      role: 'Owner, chiropractic · Tampa, FL',
+      href: '/results/',
+    },
+    alsoFromResults: {
+      text: 'Also on our results page: a recall campaign for 412 dormant patients was part of the system behind 184 new patients for a Dallas dental practice.',
+      href: '/results/',
+    },
+    fit: {
+      heading: 'Reactivation suits you if',
+      items: [
+        'You have been open a few years and have past patients who have not been back.',
+        'There are gaps in the schedule you would rather fill without paying for ads.',
+        'Someone, your front desk or our follow-up, can answer replies the same day.',
+      ],
+    },
+    notFit: {
+      heading: 'It is the wrong place to start if',
+      items: [
+        'The practice is new and there are few past patients to invite back. Paid ads come first.',
+        'You want a discount blast to everyone on the list. We do not send those.',
+        'Nobody can take the replies and bookings when patients answer.',
+      ],
+    },
+    faqs: [
+      {
+        q: 'What is patient reactivation?',
+        a: 'Inviting back patients who already know your clinic but have not been in for a while, usually 12 months or more, or who stopped partway through care. Recall is the routine part: reminding patients who are due for their next visit, such as a cleaning or a maintenance check. We run both, as separate lists with separate messages.',
+      },
+      {
+        q: 'How many past patients actually come back?',
+        a: "It depends on the list and the specialty. For our Tampa client we sent a reactivation campaign to 640 patients not seen in 12+ months, with a review request after every completed visit. The result: 31 rebooked in month one, 19 new Google reviews, zero ad spend. In the owner's words: “Patients we assumed had moved away. They just hadn't been asked.”",
+      },
+      {
+        q: 'Are we allowed to email past patients?',
+        a: 'In general, a clinic may write to its own patients about their own care, such as a reminder that they are due for a visit. Every email has an unsubscribe link, and none says what the patient was treated for. The rules vary by state and by specialty, so we check the plan with you before anything is sent.',
+      },
+      {
+        q: 'Do we need to offer a discount to get patients back?',
+        a: 'No. We write a personal invitation from the doctor, not a promotion. A discount teaches patients to wait for the next one and lowers what each visit is worth.',
+      },
+      {
+        q: 'How soon do rebooked visits start?',
+        a: 'The lists and the booking link are set up first, then the emails go out. First results usually come within the first month, and recall then keeps running in the background as patients come due.',
+      },
+      {
+        q: 'What do you report?',
+        a: 'Every Monday: how many patients were invited, how many booked, how many came in, and how many reviews followed. Never opens or clicks on their own.',
+      },
+    ],
+    industriesHeading: 'Reactivation by specialty.',
+    industryMatch: ['reactivation', 'recall'],
+    ctaHeading: "Let's look at your past patients.",
   },
 ];
