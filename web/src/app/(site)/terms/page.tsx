@@ -5,6 +5,7 @@ import { LegalPage } from '@/features/legal/LegalPage';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = pageMetadata({
   title: 'Terms of Service | DocsScale',
@@ -22,6 +23,7 @@ export default function TermsPage() {
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <main>
         <LegalPage doc={TERMS} />
+        <RelatedPages page="/terms/" />
       </main>
     </>
   );

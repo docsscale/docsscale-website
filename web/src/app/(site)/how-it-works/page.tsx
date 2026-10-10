@@ -8,6 +8,7 @@ import { SiteMotion } from '@/features/motion/SiteMotion';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = pageMetadata({
   title: 'How DocsScale Works: From Strategy Call to Booked Patients',
@@ -28,6 +29,7 @@ export default function HowItWorksPage() {
         <HowItWorksSteps />
         <HowItWorksPromises />
         <HowItWorksCTA />
+        <RelatedPages page="/how-it-works/" />
       </main>
       <SiteMotion />
     </>

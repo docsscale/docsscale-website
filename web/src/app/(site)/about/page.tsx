@@ -7,6 +7,7 @@ import { SiteMotion } from '@/features/motion/SiteMotion';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = pageMetadata({
   title: 'About DocsScale: We Only Work With Healthcare Clinics',
@@ -26,6 +27,7 @@ export default function AboutPage() {
         <AboutHero />
         <AboutPrinciples />
         <AboutTeam />
+        <RelatedPages page="/about/" />
       </main>
       <SiteMotion />
     </>
