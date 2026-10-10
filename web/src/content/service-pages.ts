@@ -6,7 +6,7 @@
 // copied exactly from /results/, who it suits and who it doesn't, real
 // questions, and links to the industries. Nothing invented: every figure here
 // is one the results page already publishes.
-import { AD_EXAMPLE } from '@/content/images';
+import { PAID_ADS_HERO } from '@/content/images';
 import { T } from '@/styles/tokens';
 
 /** Line icons drawn in features/services/ServicePage.tsx. */
@@ -75,10 +75,10 @@ export const SERVICE_PAGES: ServicePage[] = [
     accentBg: T.peachBg,
     accentFg: T.peachFg,
     heroPhoto: {
-      src: AD_EXAMPLE,
+      src: PAID_ADS_HERO,
       sizes: '(max-width: 760px) calc(100vw - 32px), 430px',
-      alt: 'A dentist showing a smiling patient a tooth shade guide, the kind of treatment a clinic advertises',
-      position: '34% 20%',
+      alt: 'A clinician going through a treatment plan with a patient on a tablet in a clinic waiting area',
+      position: '50% 45%',
     },
     worksWith: [
       { label: 'Websites & landing pages', href: '/services#capture' },
