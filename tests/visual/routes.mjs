@@ -4,6 +4,10 @@ export const ROUTES = [
   { name: "home", path: "/" },
   { name: "services", path: "/services/" },
   { name: "services-paid-ads", path: "/services/paid-ads/" },
+  {
+    name: "services-patient-reactivation",
+    path: "/services/patient-reactivation/",
+  },
   { name: "industries", path: "/industries/" },
   { name: "industries-dental", path: "/industries/dental/" },
   { name: "industries-chiropractic", path: "/industries/chiropractic/" },

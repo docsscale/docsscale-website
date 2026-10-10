@@ -18,6 +18,7 @@ export function generateStaticParams() {
 
 const STRUCTURED_DATA_KEY = {
   'paid-ads': 'servicePaidAds',
+  'patient-reactivation': 'serviceReactivation',
 } as const;
 
 type Props = { params: Promise<{ service: string }> };
