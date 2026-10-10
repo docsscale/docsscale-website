@@ -110,6 +110,12 @@
       "cls": 0,
       "bytes": 337920
     },
+    "/services/patient-reactivation/": {
+      "score": 97,
+      "lcp": 2542,
+      "cls": 0,
+      "bytes": 312320
+    },
     "/terms/": {
       "score": 98,
       "lcp": 2317,
