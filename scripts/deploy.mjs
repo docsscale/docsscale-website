@@ -35,6 +35,7 @@
 import { execSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import net from 'node:net';
 import path from 'node:path';
 
 const REQUIRED_CHECKS = [
@@ -230,6 +231,11 @@ if (deleteList) {
 // .htaccess first on staging so the password is in place before content lands.
 files.sort((a, b) => (a === '.htaccess' ? -1 : b === '.htaccess' ? 1 : a.localeCompare(b)));
 let done = 0;
+// Node gives each of a host's addresses only 250 ms to answer before trying the
+// next, and reports ETIMEDOUT when none does. From GitHub's runners the upload
+// host often takes longer than that (10 Oct 2026: every attempt of the v1.8.1
+// release failed this way within half a second), so allow 5 seconds.
+net.setDefaultAutoSelectFamilyAttemptTimeout(5000);
 // Each file is retried up to 7 times, waiting a little longer each time (network
 // blips happen, e.g. a connect timeout on 28 Sep 2026 stopped a production
 // deploy halfway, and on 10 Oct 2026 the host dropped connections for minutes
