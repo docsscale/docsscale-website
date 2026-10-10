@@ -12,9 +12,13 @@ export const AD_EXAMPLE = '/images/home/ad-example.jpg';
 // About the width of its box: the card's width less padding, at most ~470px.
 export const AD_EXAMPLE_SIZES = '(max-width: 760px) calc(100vw - 86px), 470px';
 
+/** The photo inside the example social ad on /services/paid-ads/ (stock photo; source in incoming/README.md). */
+export const PAID_ADS_AD = '/images/services/paid-ads-ad.jpg';
+
 export const IMAGE_WIDTHS: Record<string, readonly number[]> = {
   '/free-system/images/hero-mockup.jpg': HERO,
   [AD_EXAMPLE]: [400, 600, 800, 1200],
+  [PAID_ADS_AD]: [400, 600, 800, 1200],
   '/free-system/images/funnel-new-patient.jpg': FUNNEL_SHOT,
   '/free-system/images/funnel-service-promo.jpg': FUNNEL_SHOT,
   '/free-system/images/funnel-booking.jpg': FUNNEL_SHOT,

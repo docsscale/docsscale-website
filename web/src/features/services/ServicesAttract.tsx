@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { T } from '@/styles/tokens';
 
 export function ServicesAttract() {
@@ -167,6 +168,9 @@ export function ServicesAttract() {
                 {'2–3 weeks.'}
               </div>
             </div>
+            <Link href="/services/paid-ads/" style={{ fontSize: 14, fontWeight: 700, color: T.peachFg }}>
+              How we run paid ads →
+            </Link>
           </div>
           <div
             data-lift="1"

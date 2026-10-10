@@ -459,6 +459,18 @@ function Services({ specialty: s, lower }: { specialty: Specialty; lower: string
               >
                 {service.body}
               </p>
+              {service.href ? (
+                <Link
+                  href={service.href}
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: T.teal,
+                  }}
+                >
+                  How we run it →
+                </Link>
+              ) : null}
             </div>
           ))}
         </div>
