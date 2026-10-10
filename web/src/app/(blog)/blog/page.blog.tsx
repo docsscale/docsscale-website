@@ -1,9 +1,11 @@
 import { BLOG_INDEX } from '@/content/blog';
 import { SITE } from '@/content/site';
 import { SPECIALTY_LINKS } from '@/content/specialties';
+import { STRUCTURED_DATA } from '@/content/structured-data';
 import { BlogIndex } from '@/features/blog/BlogIndex';
 import { OFFERS } from '@/content/offers';
 import { getPosts, getTopics } from '@/features/blog/posts';
+import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
 import { RelatedPages } from '@/features/site-chrome/RelatedPages';
@@ -26,6 +28,9 @@ export const metadata = {
 export default async function BlogPage() {
   return (
     <>
+      {STRUCTURED_DATA.blog.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <main>
         <BlogIndex posts={await getPosts()} topics={await getTopics()} offers={OFFERS} copy={BLOG_INDEX} />

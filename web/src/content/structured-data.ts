@@ -430,6 +430,27 @@ export const STRUCTURED_DATA = {
     },
     ORGANIZATION,
   ],
+  blog: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://docsscale.com/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Blog',
+          item: 'https://docsscale.com/blog/',
+        },
+      ],
+    },
+    ORGANIZATION,
+  ],
   about: [
     {
       '@context': 'https://schema.org',
