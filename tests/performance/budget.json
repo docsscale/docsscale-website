@@ -110,6 +110,12 @@
       "cls": 0,
       "bytes": 337920
     },
+    "/services/social-media-management/": {
+      "score": 96,
+      "lcp": 2544,
+      "cls": 0,
+      "bytes": 315392
+    },
     "/terms/": {
       "score": 98,
       "lcp": 2317,
