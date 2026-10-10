@@ -6,7 +6,7 @@
 // copied exactly from /results/, who it suits and who it doesn't, real
 // questions, and links to the industries. Nothing invented: every figure here
 // is one the results page already publishes.
-import { PAID_ADS_HERO } from '@/content/images';
+import { AD_EXAMPLE } from '@/content/images';
 import { T } from '@/styles/tokens';
 
 /** Line icons drawn in features/services/ServicePage.tsx. */
@@ -27,8 +27,14 @@ export type ServicePage = {
   intro: string;
   accentBg: string;
   accentFg: string;
-  /** The hero photo (a licensed stock photo; source in incoming/README.md). */
-  heroPhoto: { src: string; sizes: string; alt: string; position: string };
+  /** The example-ads graphic beside the heading (features/services/ServicePage.tsx, AdGraphic). */
+  heroGraphic: {
+    ariaLabel: string;
+    label: string;
+    search: { title: string; text: string };
+    social: { text: string; photo: string; photoSizes: string; url: string; cta: string };
+    booked: string;
+  };
   /** Services that work alongside this one, with the page or section they link to. */
   worksWith: { label: string; href: string }[];
   processHeading: string;
@@ -74,11 +80,22 @@ export const SERVICE_PAGES: ServicePage[] = [
       'DocsScale is a healthcare PPC agency: we run pay-per-click ads on Google, Facebook and Instagram for clinics, one service line at a time. Each campaign sends people to a page built for that treatment, every inquiry is answered within minutes, and your Monday report counts booked appointments and cost per booked visit.',
     accentBg: T.peachBg,
     accentFg: T.peachFg,
-    heroPhoto: {
-      src: PAID_ADS_HERO,
-      sizes: '(max-width: 760px) calc(100vw - 32px), 430px',
-      alt: 'A clinician going through a treatment plan with a patient on a tablet in a clinic waiting area',
-      position: '50% 45%',
+    heroGraphic: {
+      ariaLabel:
+        'Example: a search ad and a social ad for dental implants from a clinic, both leading to a booked consultation',
+      label: 'One treatment, two ads',
+      search: {
+        title: 'Dental implants · Free consultation',
+        text: 'Planned in one visit, with same-week appointments. Book online in a minute.',
+      },
+      social: {
+        text: 'Dental implants, planned in one visit. A free thirty-minute consultation, booked online.',
+        photo: AD_EXAMPLE,
+        photoSizes: '(max-width: 760px) calc(100vw - 68px), 394px',
+        url: 'yourclinic.com/implants',
+        cta: 'Book a consultation',
+      },
+      booked: 'Booked: new patient consultation, Tuesday 10:30',
     },
     worksWith: [
       { label: 'Websites & landing pages', href: '/services#capture' },

@@ -24,7 +24,6 @@ variants() {
 # Keep these widths in sync with web/src/content/images.ts.
 variants free-system/images/hero-mockup.jpg 640 980 1280 1600
 variants images/home/ad-example.jpg 400 600 800 1200
-variants images/services/paid-ads-hero.jpg 400 600 800 1200
 for f in free-system/images/funnel-*.jpg; do
   case "$f" in *-[0-9]*.jpg) continue ;; esac
   variants "$f" 400 800 1200

@@ -46,8 +46,153 @@ export function ServicePage({ page: p }: { page: Page }) {
   );
 }
 
+// The hero graphic: an example search ad and an example social ad for one
+// treatment, and the booked appointment they lead to. Drawn with the site's
+// tokens, no image files apart from the licensed example photo already used as
+// the home page's ad preview. Every name is a placeholder ("Your Clinic"), and
+// the tile says it is an example. On a phone it sits under the heading, so the
+// page's main text still paints first.
+function AdGraphic({ page: p }: { page: Page }) {
+  const g = p.heroGraphic;
+  const small = { fontSize: 11, fontWeight: 700, color: T.caption } as const;
+  const adCard = {
+    background: white,
+    borderRadius: 16,
+    border: `1px solid ${T.hairline}`,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+  } as const;
+  return (
+    <div
+      aria-label={g.ariaLabel}
+      role="img"
+      style={{
+        background: p.accentBg,
+        borderRadius: 28,
+        padding: 18,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        minHeight: 'clamp(300px,40vw,360px)',
+        color: T.ink,
+      }}
+    >
+      <div
+        style={{ display: 'flex', justifyContent: 'space-between', gap: 8, ...eyebrow, color: p.accentFg }}
+      >
+        <span>{g.label}</span>
+        <span>Example</span>
+      </div>
+      {/* Search ad */}
+      <div style={{ ...adCard, padding: '12px 14px', gap: 4 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...small }}>
+          <span
+            style={{
+              width: 18,
+              height: 18,
+              borderRadius: 999,
+              background: T.tealTintBg,
+              color: T.teal,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+            }}
+          >
+            Y
+          </span>
+          <span style={{ color: T.ink }}>Your Clinic</span>
+          <span>·</span>
+          <span>Sponsored</span>
+        </div>
+        <div
+          style={{ fontWeight: 700, fontSize: 15, color: T.teal, letterSpacing: '-.01em', lineHeight: 1.25 }}
+        >
+          {g.search.title}
+        </div>
+        <div style={{ fontSize: 12, color: T.body, lineHeight: 1.4 }}>{g.search.text}</div>
+      </div>
+      {/* Social ad */}
+      <div style={adCard}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px 8px', ...small }}>
+          <span style={{ width: 18, height: 18, borderRadius: 999, background: T.sageBg }} />
+          <span style={{ color: T.ink }}>Your Clinic</span>
+          <span>·</span>
+          <span>Sponsored</span>
+        </div>
+        <div style={{ padding: '0 14px 10px', fontSize: 13, lineHeight: 1.4, color: T.ink }}>
+          {g.social.text}
+        </div>
+        <div style={{ position: 'relative', height: 'clamp(84px,12vw,112px)', background: T.band }}>
+          <ResponsiveImage
+            src={g.social.photo}
+            sizes={g.social.photoSizes}
+            alt=""
+            loading="lazy"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: '34% 20%',
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 14px',
+            borderTop: `1px solid ${T.hairline}`,
+          }}
+        >
+          <span
+            style={{ fontSize: 12, color: T.body, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            {g.social.url}
+          </span>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: p.accentFg,
+              background: p.accentBg,
+              padding: '6px 12px',
+              borderRadius: 999,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {g.social.cta}
+          </span>
+        </div>
+      </div>
+      {/* Where both lead */}
+      <div
+        style={{
+          marginTop: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          background: T.sageBg,
+          color: T.sageFg,
+          borderRadius: 14,
+          padding: '10px 14px',
+          fontSize: 13,
+          fontWeight: 700,
+        }}
+      >
+        <Icon name="calendar" color={T.sageFg} size={20} />
+        <span>{g.booked}</span>
+      </div>
+    </div>
+  );
+}
+
 function Hero({ page: p }: { page: Page }) {
-  const photo = p.heroPhoto;
   return (
     <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)' }}>
       <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -95,32 +240,7 @@ function Hero({ page: p }: { page: Page }) {
               {p.intro}
             </p>
           </div>
-          {/* The photo tile. On a phone it comes after the text, so the heading and
-              intro still paint first and the photo is not the page's main paint. */}
-          <div
-            style={{
-              position: 'relative',
-              minHeight: 'clamp(240px,40vw,360px)',
-              borderRadius: 28,
-              overflow: 'hidden',
-              background: p.accentBg,
-            }}
-          >
-            <ResponsiveImage
-              src={photo.src}
-              sizes={photo.sizes}
-              alt={photo.alt}
-              loading="lazy"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: photo.position,
-              }}
-            />
-          </div>
+          <AdGraphic page={p} />
         </div>
         <div
           style={{
