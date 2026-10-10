@@ -230,9 +230,11 @@ if (deleteList) {
 // .htaccess first on staging so the password is in place before content lands.
 files.sort((a, b) => (a === '.htaccess' ? -1 : b === '.htaccess' ? 1 : a.localeCompare(b)));
 let done = 0;
-// Each file is retried up to 4 times (network blips happen, e.g. a connect
-// timeout on 28 Sep 2026 stopped a production deploy halfway). Uploads only
-// overwrite, so retrying a file, or re-running the whole deploy, is safe.
+// Each file is retried up to 7 times, waiting a little longer each time (network
+// blips happen, e.g. a connect timeout on 28 Sep 2026 stopped a production
+// deploy halfway, and on 10 Oct 2026 the host dropped connections for minutes
+// at a time). Uploads only overwrite, so retrying a file, or re-running the
+// whole deploy, is safe.
 async function upload(rel) {
   const body = fs.readFileSync(path.join(release, rel));
   const dest = `${base}/${rel.split(path.sep).map(encodeURIComponent).join('/')}?override=true`;
@@ -256,9 +258,11 @@ async function uploadWithRetries(rel) {
       await upload(rel);
       break;
     } catch (error) {
-      if (attempt === 4) fail(`${rel}: ${error.message} (after 4 attempts; re-run the deploy to finish)`);
-      console.log(`  retrying ${rel} (${error.message})`);
-      await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
+      // fetch() reports every network error as "fetch failed"; the cause says which.
+      const reason = error.cause ? `${error.message}: ${error.cause.code ?? error.cause.message}` : error.message;
+      if (attempt === 7) fail(`${rel}: ${reason} (after 7 attempts; re-run the deploy to finish)`);
+      console.log(`  retrying ${rel} (${reason})`);
+      await new Promise((resolve) => setTimeout(resolve, 2500 * attempt));
     }
   }
   done++;
