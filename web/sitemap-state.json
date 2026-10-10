@@ -11,7 +11,7 @@
   },
   "/services/": {
     "lastmod": "2026-10-10",
-    "hash": "2b428ec53f4f527f",
+    "hash": "51e878b19daed155",
     "priority": "0.9"
   },
   "/industries/": {
@@ -31,7 +31,7 @@
   },
   "/industries/med-spa/": {
     "lastmod": "2026-10-10",
-    "hash": "273104d115949d0a",
+    "hash": "2832f173405d983d",
     "priority": "0.85"
   },
   "/industries/physical-therapy/": {
@@ -72,6 +72,11 @@
   "/services/patient-reactivation/": {
     "lastmod": "2026-10-10",
     "hash": "a41bf74993e12f98",
+    "priority": "0.7"
+  },
+  "/services/social-media-management/": {
+    "lastmod": "2026-10-10",
+    "hash": "94f64e977c6dffa3",
     "priority": "0.7"
   },
   "/about/": {

@@ -339,6 +339,12 @@ export function ServicesAttract() {
                 {'week one.'}
               </div>
             </div>
+            <Link
+              href="/services/social-media-management/"
+              style={{ fontSize: 14, fontWeight: 700, color: T.peachFg }}
+            >
+              How we run social media →
+            </Link>
           </div>
         </div>
       </div>

@@ -11,7 +11,18 @@ import { T } from '@/styles/tokens';
 
 /** Line icons drawn in features/services/ServicePage.tsx. */
 export type ProcessIcon =
-  'target' | 'page' | 'megaphone' | 'reply' | 'refresh' | 'chart' | 'search' | 'calendar' | 'mail' | 'star';
+  | 'target'
+  | 'page'
+  | 'megaphone'
+  | 'reply'
+  | 'refresh'
+  | 'chart'
+  | 'search'
+  | 'calendar'
+  | 'mail'
+  | 'star'
+  | 'check'
+  | 'camera';
 
 /** The example graphic beside the heading (features/services/ServicePage.tsx, HeroGraphic). */
 export type HeroGraphic =
@@ -38,6 +49,19 @@ export type HeroGraphic =
       signOff: string;
       /** Small print at the foot of the email; an "Unsubscribe" link follows it. */
       footer: string;
+      booked: string;
+    }
+  | {
+      /** An example month of posts awaiting approval, and a direct message answered. */
+      kind: 'calendar';
+      ariaLabel: string;
+      label: string;
+      heading: string;
+      approved: string;
+      posts: { day: string; title: string; format: string }[];
+      dmLabel: string;
+      question: string;
+      answer: string;
       booked: string;
     };
 
@@ -368,5 +392,142 @@ export const SERVICE_PAGES: ServicePage[] = [
     industriesHeading: 'Reactivation by specialty.',
     industryMatch: ['reactivation', 'recall'],
     ctaHeading: "Let's look at your past patients.",
+  },
+  {
+    slug: 'social-media-management',
+    name: 'Social media management',
+    stage: 'Attract',
+    title: 'Healthcare Social Media Marketing Agency | DocsScale',
+    metaDescription:
+      'A healthcare social media marketing agency for clinics: 12–16 posts a month in your voice, approved in ten minutes, every comment and DM answered.',
+    h1: 'Healthcare social media, planned a month ahead and',
+    h1Accent: 'approved in ten minutes.',
+    intro:
+      'DocsScale is a healthcare social media marketing agency: we plan 12 to 16 posts a month in your voice, you approve the whole month in about ten minutes, and every comment and DM gets an answer. Your Monday report counts inquiries from your profile, not followers or likes.',
+    accentBg: T.peachBg,
+    accentFg: T.peachFg,
+    heroGraphic: {
+      kind: 'calendar',
+      ariaLabel:
+        "Example: one week of a clinic's planned social media posts, approved by the doctor, and a direct message answered with a booking",
+      label: 'One week of the plan',
+      heading: "Your Clinic · next month's plan",
+      approved: 'Approved',
+      posts: [
+        { day: 'Mon', title: 'Meet the team: the front desk', format: 'Photo' },
+        { day: 'Wed', title: 'A question patients ask us every week', format: 'Video' },
+        { day: 'Fri', title: 'What happens at a first visit', format: 'Carousel' },
+        { day: 'Sat', title: 'Behind the scenes before opening', format: 'Story' },
+      ],
+      dmLabel: 'Direct message',
+      question: 'Hi! Do you have anything on Friday afternoon?',
+      answer: 'Yes, 2:00 or 3:30. Shall I book one for you?',
+      booked: 'Booked: consultation, Friday 2:00',
+    },
+    worksWith: [
+      { label: 'Paid ads (Meta & Google)', href: '/services/paid-ads/' },
+      { label: 'Lead follow-up & booking', href: '/services#convert' },
+      { label: 'Local SEO & Google Business Profile', href: '/services#attract' },
+      { label: 'Reactivation & recall', href: '/services/patient-reactivation/' },
+    ],
+    processHeading: 'What we do, in order.',
+    processFlow: [
+      { label: 'We plan the month', icon: 'calendar' },
+      { label: 'You approve it in ten minutes', icon: 'check' },
+      { label: 'Posts go out on schedule', icon: 'megaphone' },
+      { label: 'Every comment and DM answered', icon: 'reply' },
+    ],
+    process: [
+      {
+        title: 'Plan the month ahead',
+        icon: 'calendar',
+        body: '12 to 16 posts a month, built around the treatments you want more of and the questions your front desk hears every week. The first calendar is ready in week one.',
+      },
+      {
+        title: 'One approval, about ten minutes',
+        icon: 'check',
+        body: 'You see the whole month in one place and approve it, or tell us what to change. Nothing is posted without your sign-off.',
+      },
+      {
+        title: 'Real visits, only with permission',
+        icon: 'camera',
+        body: 'Your team, your rooms and stories from real visits, never stock pictures passed off as your clinic. A patient appears only with their written permission for that use.',
+      },
+      {
+        title: 'Answer every comment and DM',
+        icon: 'reply',
+        body: 'In your voice, and fast, because people message several clinics at once. Questions about booking get a time and a link. Anything clinical goes to your team, because a DM is no place for medical advice.',
+      },
+      {
+        title: 'Put ad budget behind what works',
+        icon: 'megaphone',
+        body: 'Posting builds trust with people who already follow you. When a treatment is ready to grow, a paid campaign takes it to people who do not follow you yet.',
+      },
+      {
+        title: 'Report inquiries every Monday',
+        icon: 'chart',
+        body: 'Inquiries from your profile, DMs answered and the bookings that came from them. Not followers, not likes.',
+      },
+    ],
+    caseStudy: {
+      heading: 'A real Instagram case, in numbers.',
+      meta: 'Med spa · Las Vegas, NV',
+      period: 'Q1 2026',
+      stat: '62',
+      statLine: 'booked consults from one injectables campaign.',
+      tags: ['Injectables', 'Growth'],
+      built:
+        'An injectables consult funnel, Instagram and Meta campaigns, DM and form replies within minutes, and a reminder sequence with a same-day reschedule for no-shows.',
+      result: '62 booked consults in the quarter, 54 showed, and a 38% treatment acceptance on first visit.',
+      quote: 'Same followers, same budget. The difference was somebody answering at 9 pm.',
+      name: 'Dr. Nicole Ramirez',
+      role: 'Owner, med spa · Las Vegas, NV',
+      href: '/results/',
+    },
+    fit: {
+      heading: 'Social media management suits you if',
+      items: [
+        'Patients look you up on Instagram or Facebook before they book.',
+        'Nobody on your team has time to post every week or answer DMs the same day.',
+        'You want the report in inquiries and bookings, not followers.',
+      ],
+    },
+    notFit: {
+      heading: 'It is the wrong place to start if',
+      items: [
+        'You need booked patients this month. Posting builds trust slowly; paid ads and fast replies come first.',
+        'DMs already go unanswered for a day. Fix the replies before adding more posts.',
+        'You want follower growth for its own sake. We do not report it.',
+      ],
+    },
+    faqs: [
+      {
+        q: 'What does a healthcare social media agency do for a clinic?',
+        a: 'Plans and writes your posts, gets your approval, publishes them on schedule, and answers comments and DMs. We plan 12 to 16 posts a month in your voice, you approve the month in about ten minutes, and we report the inquiries that came from your profile.',
+      },
+      {
+        q: 'Does posting on social media bring new patients by itself?',
+        a: "Rarely on its own. A strong profile helps people trust you, but bookings usually come from ads and from answering fast. Our Las Vegas client had a strong Instagram following and a weak calendar, with DMs answered the next day, if at all. We built an injectables consult funnel, Instagram and Meta campaigns, DM and form replies within minutes, and a reminder sequence with a same-day reschedule for no-shows. The result: 62 booked consults in the quarter, 54 showed, and a 38% treatment acceptance on first visit. In the owner's words: “Same followers, same budget. The difference was somebody answering at 9 pm.”",
+      },
+      {
+        q: 'Can we post patient photos, stories or reviews?',
+        a: "Only with the patient's written permission, signed before you post. HIPAA requires a written authorization to use a patient's story, name, photo or video in marketing. Show results that are typical for your patients, not only your best case, because a “results may vary” line is no longer enough for the Federal Trade Commission. We don't post anything about a patient without your sign-off.",
+      },
+      {
+        q: 'Who answers the comments and DMs?',
+        a: 'We do, in your voice, and fast. Booking questions get a time and a link. Anything about a patient’s own health goes to your team, and we never discuss a patient’s care in public comments.',
+      },
+      {
+        q: 'How much of our time does it take?',
+        a: 'About ten minutes a month to approve the plan, plus photos or short videos from the clinic when you have them. The first calendar is ready in week one.',
+      },
+      {
+        q: 'What do you report?',
+        a: 'Every Monday: inquiries from your profile, DMs answered, and the bookings that came from them. Never followers or likes on their own.',
+      },
+    ],
+    industriesHeading: 'Getting found, by specialty.',
+    industryMatch: ['social'],
+    ctaHeading: "Let's look at your social profiles.",
   },
 ];
