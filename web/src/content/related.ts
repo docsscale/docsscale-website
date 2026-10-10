@@ -74,6 +74,7 @@ export const RELATED_PAGES = {
   '/services/': [PAGE.how, PAGE.industries, PAGE.results, PAGE.call],
   '/industries/': [PAGE.how, PAGE.services, PAGE.results, PAGE.call],
   '/industries/[specialty]/': [PAGE.results, PAGE.services, PAGE.how, PAGE.industries],
+  '/services/[service]/': [PAGE.industries, PAGE.results, PAGE.how, PAGE.call],
   '/results/': [PAGE.industries, PAGE.how, PAGE.services, PAGE.call],
   '/about/': [PAGE.how, PAGE.results, PAGE.industries, PAGE.call],
   '/book-a-call/': [PAGE.how, PAGE.results, PAGE.about, PAGE.industries],

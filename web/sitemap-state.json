@@ -11,7 +11,7 @@
   },
   "/services/": {
     "lastmod": "2026-10-10",
-    "hash": "51b12070391a2dd8",
+    "hash": "933dc7bdf1f211d0",
     "priority": "0.9"
   },
   "/industries/": {
@@ -21,22 +21,22 @@
   },
   "/industries/chiropractic/": {
     "lastmod": "2026-10-10",
-    "hash": "d4b06aa16b915e8f",
+    "hash": "fbcb53c8c6abad2f",
     "priority": "0.85"
   },
   "/industries/dental/": {
     "lastmod": "2026-10-10",
-    "hash": "c2cce9e61637c887",
+    "hash": "9f91a5e173044a5b",
     "priority": "0.85"
   },
   "/industries/med-spa/": {
     "lastmod": "2026-10-10",
-    "hash": "673211c38519f82e",
+    "hash": "22957e5a4ce2c7e1",
     "priority": "0.85"
   },
   "/industries/physical-therapy/": {
     "lastmod": "2026-10-10",
-    "hash": "c75f47dcf29d6d82",
+    "hash": "542578ca20c93513",
     "priority": "0.85"
   },
   "/book-a-call/": {
@@ -62,6 +62,11 @@
   "/blog/google-business-profile-for-dentists/": {
     "lastmod": "2026-10-08",
     "hash": "d0f49a5f5a756fde",
+    "priority": "0.7"
+  },
+  "/services/paid-ads/": {
+    "lastmod": "2026-10-10",
+    "hash": "472f8d39ffe4887e",
     "priority": "0.7"
   },
   "/about/": {

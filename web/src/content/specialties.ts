@@ -15,7 +15,8 @@ export type Specialty = {
   accentFg: string;
   painPoints: { title: string; body: string }[];
   stages: { label: string; title: string; body: string; tags: string[] }[];
-  services: { title: string; body: string }[];
+  /** `href`: the service's own page, once it exists (content/service-href.ts). */
+  services: { title: string; body: string; href?: string }[];
   /** This specialty's case from /results/. Owner-approved, with permission on
    *  file (6 Oct 2026): every string is copied exactly from ResultsCases.tsx,
    *  so change both together. */
@@ -93,6 +94,7 @@ export const SPECIALTIES: Specialty[] = [
     services: [
       {
         title: 'Paid advertising',
+        href: '/services/paid-ads/',
         body: 'Meta and Google campaigns split by treatment, so implant and Invisalign leads get a different message than a routine cleaning search.',
       },
       {
@@ -203,6 +205,7 @@ export const SPECIALTIES: Specialty[] = [
     services: [
       {
         title: 'Paid advertising',
+        href: '/services/paid-ads/',
         body: 'Meta and Google campaigns built around specific pain points, not generic "chiropractic care" messaging.',
       },
       {
@@ -308,6 +311,7 @@ export const SPECIALTIES: Specialty[] = [
     services: [
       {
         title: 'Paid advertising',
+        href: '/services/paid-ads/',
         body: 'Campaigns built around direct-access and specific post-op categories, reported in booked evaluations.',
       },
       {
@@ -414,6 +418,7 @@ export const SPECIALTIES: Specialty[] = [
     services: [
       {
         title: 'Paid advertising',
+        href: '/services/paid-ads/',
         body: 'Instagram and Meta campaigns built around specific treatments, reported in booked consults, not follower growth.',
       },
       {
