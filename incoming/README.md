@@ -41,3 +41,7 @@ what the licence allows. Check this before reusing an image anywhere else.
 The photo is shown as a sample ad: the card is labelled "Ad preview" and the alt
 text calls it an example ad photo. It is not presented as our team or a client.
 
+The same photo is the hero photo of `/services/paid-ads/` (10 Oct 2026, the
+owner's photo pass): a clinic scene beside the heading, with alt text that
+describes the scene. Still not presented as our team or a client.
+

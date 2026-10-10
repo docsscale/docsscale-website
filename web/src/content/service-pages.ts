@@ -6,6 +6,7 @@
 // copied exactly from /results/, who it suits and who it doesn't, real
 // questions, and links to the industries. Nothing invented: every figure here
 // is one the results page already publishes.
+import { AD_EXAMPLE } from '@/content/images';
 import { T } from '@/styles/tokens';
 
 /** Line icons drawn in features/services/ServicePage.tsx. */
@@ -26,6 +27,8 @@ export type ServicePage = {
   intro: string;
   accentBg: string;
   accentFg: string;
+  /** The hero photo (a licensed stock photo; source in incoming/README.md). */
+  heroPhoto: { src: string; sizes: string; alt: string; position: string };
   /** Services that work alongside this one, with the page or section they link to. */
   worksWith: { label: string; href: string }[];
   processHeading: string;
@@ -71,6 +74,12 @@ export const SERVICE_PAGES: ServicePage[] = [
       'DocsScale is a healthcare PPC agency: we run pay-per-click ads on Google, Facebook and Instagram for clinics, one service line at a time. Each campaign sends people to a page built for that treatment, every inquiry is answered within minutes, and your Monday report counts booked appointments and cost per booked visit.',
     accentBg: T.peachBg,
     accentFg: T.peachFg,
+    heroPhoto: {
+      src: AD_EXAMPLE,
+      sizes: '(max-width: 760px) calc(100vw - 32px), 430px',
+      alt: 'A dentist showing a smiling patient a tooth shade guide, the kind of treatment a clinic advertises',
+      position: '34% 20%',
+    },
     worksWith: [
       { label: 'Websites & landing pages', href: '/services#capture' },
       { label: 'Lead follow-up & booking', href: '/services#convert' },

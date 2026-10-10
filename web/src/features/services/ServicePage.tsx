@@ -6,6 +6,7 @@
 import Link from 'next/link';
 import type { ProcessIcon, ServicePage as Page } from '@/content/service-pages';
 import { industryHref, SPECIALTIES } from '@/content/specialties';
+import { ResponsiveImage } from '@/components/ui/ResponsiveImage';
 import { T } from '@/styles/tokens';
 
 const eyebrow = {
@@ -46,90 +47,123 @@ export function ServicePage({ page: p }: { page: Page }) {
 }
 
 function Hero({ page: p }: { page: Page }) {
+  const photo = p.heroPhoto;
   return (
     <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)' }}>
-      <div
-        className="two container"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,320px),1fr))',
-          gap: 14,
-        }}
-      >
+      <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div
+          className="two"
           style={{
-            gridColumn: 'span 2',
-            ...card,
-            padding: 'clamp(28px,4vw,52px)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 24,
-            justifyContent: 'space-between',
-            minHeight: 360,
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,320px),1fr))',
+            gap: 14,
           }}
         >
-          <span style={{ ...eyebrow, color: T.caption }}>
-            {p.stage}
-            {' · '}
-            {p.name}
-          </span>
-          <h1
+          <div
             style={{
-              margin: 0,
-              fontWeight: 800,
-              fontSize: 'clamp(36px,4.6vw,64px)',
-              lineHeight: 1.02,
-              letterSpacing: '-.045em',
-              textWrap: 'balance',
+              gridColumn: 'span 2',
+              ...card,
+              padding: 'clamp(28px,4vw,52px)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 24,
+              justifyContent: 'space-between',
+              minHeight: 360,
             }}
           >
-            {p.h1}{' '}
-            <em className="serif-accent" style={{ color: p.accentFg }}>
-              {p.h1Accent}
-            </em>
-          </h1>
-          <p style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: T.body, maxWidth: 620 }}>{p.intro}</p>
+            <span style={{ ...eyebrow, color: T.caption }}>
+              {p.stage}
+              {' · '}
+              {p.name}
+            </span>
+            <h1
+              style={{
+                margin: 0,
+                fontWeight: 800,
+                fontSize: 'clamp(36px,4.6vw,64px)',
+                lineHeight: 1.02,
+                letterSpacing: '-.045em',
+                textWrap: 'balance',
+              }}
+            >
+              {p.h1}{' '}
+              <em className="serif-accent" style={{ color: p.accentFg }}>
+                {p.h1Accent}
+              </em>
+            </h1>
+            <p style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: T.body, maxWidth: 620 }}>
+              {p.intro}
+            </p>
+          </div>
+          {/* The photo tile. On a phone it comes after the text, so the heading and
+              intro still paint first and the photo is not the page's main paint. */}
+          <div
+            style={{
+              position: 'relative',
+              minHeight: 'clamp(240px,40vw,360px)',
+              borderRadius: 28,
+              overflow: 'hidden',
+              background: p.accentBg,
+            }}
+          >
+            <ResponsiveImage
+              src={photo.src}
+              sizes={photo.sizes}
+              alt={photo.alt}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: photo.position,
+              }}
+            />
+          </div>
         </div>
         <div
           style={{
             background: p.accentBg,
             color: p.accentFg,
             borderRadius: 28,
-            padding: 'clamp(24px,3vw,36px)',
+            padding: 'clamp(18px,2.4vw,24px) clamp(20px,2.4vw,32px)',
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            gap: 16,
+            alignItems: 'center',
+            gap: '12px 20px',
+            flexWrap: 'wrap',
           }}
         >
-          <span style={eyebrow}>Works with</span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {p.worksWith.map((w) => (
-              <Link
-                key={w.label}
-                href={w.href}
-                data-lift="1"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: 12,
-                  padding: '12px 14px',
-                  borderRadius: 12,
-                  background: white,
-                  color: T.ink,
-                  fontWeight: 700,
-                  fontSize: 14,
-                }}
-              >
-                <span>{w.label}</span>
-                <span>→</span>
-              </Link>
-            ))}
-          </div>
+          <span style={{ ...eyebrow, marginRight: 4 }}>Works with</span>
+          {p.worksWith.map((w) => (
+            <Link
+              key={w.label}
+              href={w.href}
+              data-lift="1"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '10px 14px',
+                borderRadius: 999,
+                background: white,
+                color: T.ink,
+                fontWeight: 700,
+                fontSize: 14,
+              }}
+            >
+              <span>{w.label}</span>
+              <span>→</span>
+            </Link>
+          ))}
           <Link
             href="/services"
-            style={{ fontSize: 13, fontWeight: 600, color: p.accentFg, textDecoration: 'underline' }}
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: p.accentFg,
+              textDecoration: 'underline',
+              marginLeft: 'auto',
+            }}
           >
             See all services
           </Link>
