@@ -7,9 +7,10 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [1.8.0] — 2026-10-10
 
-A page for paid ads. Visible to visitors: the new `/services/paid-ads/` page, and links to it from the menu, the footer, `/services/` and the four industry pages.
+Two service pages: paid ads and patient reactivation. Visible to visitors: the new `/services/paid-ads/` and `/services/patient-reactivation/` pages, and links to them from the menu, the footer, `/services/` and the industry pages.
 
 - **Paid ads service page** (owner's approval, 10 Oct 2026; #121). `/services/paid-ads/` gives a direct answer at the top, what we do in order, the Denver physical therapy case copied word for word from `/results/`, who it suits and who it does not, six questions with answers, and links to the four industry pages. The menu and footer entry "Paid ads (Meta & Google)" now opens it, and the paid advertising card on `/services/` and on each industry page links to it. It carries breadcrumb, organisation, Service and FAQ structured data. It is the first of the service pages in the completion plan.
+- **Patient reactivation service page** (owner's approval, 10 Oct 2026; #123). `/services/patient-reactivation/` follows the paid ads page's layout: a direct answer at the top with an example email graphic, the steps in order, the Tampa chiropractic case copied exactly from `/results/`, who it suits and who it does not, six questions, and links to the specialty pages. The menu, the footer, `/services/` and the dental, chiropractic and med spa cards link to it (they previously pointed at the Retain section of `/services/`). On tablets, the graphic at the top of both service pages now takes the full row.
 
 ## [1.7.1] — 2026-10-10
 
