@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
 import { OFFERS } from '@/content/offers';
+import { SITE } from '@/content/site';
 import { SPECIALTY_LINKS } from '@/content/specialties';
+import { ORGANIZATION } from '@/content/structured-data';
 import { BlogIndex } from '@/features/blog/BlogIndex';
 import { getTopics, INCLUDE_DRAFTS } from '@/features/blog/posts';
+import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
 import { RelatedPages } from '@/features/site-chrome/RelatedPages';
@@ -32,8 +35,25 @@ export default async function TopicPage({ params }: Props) {
   const topics = await getTopics();
   const topic = topics.find((item) => item.slug === slug);
   if (!topic) notFound();
+  // Breadcrumbs built from the topic itself, so they can never name a page that is not there.
+  const breadcrumbs = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE.url}/blog/` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: topic.name,
+        item: `${SITE.url}/blog/category/${topic.slug}/`,
+      },
+    ],
+  };
   return (
     <>
+      <JsonLd data={breadcrumbs} />
+      <JsonLd data={ORGANIZATION} />
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <main>
         <BlogIndex
