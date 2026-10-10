@@ -1,4 +1,6 @@
 import { FOCUS_KEYWORDS } from './keywords';
+import { latestImport, type KeywordRow } from './imports';
+import { lostLinks } from './links';
 import type { AnalyticsData } from './sources/analytics';
 import type { BingData } from './sources/bing';
 import type { ContentData } from './sources/content';
@@ -74,7 +76,7 @@ export function detect(): Detected[] {
     }
     // Orphans: pages no other page links to from its main text.
     const inbound = new Map<string, number>();
-    for (const p of site.data.pages) for (const l of p.links) inbound.set(l, (inbound.get(l) ?? 0) + 1);
+    for (const p of site.data.pages) for (const l of p.links ?? []) inbound.set(l, (inbound.get(l) ?? 0) + 1);
     for (const p of site.data.pages) {
       if (['/', '/privacy/', '/terms/'].includes(p.path) || inbound.get(p.path)) continue;
       add({ key: `orphan:${p.path}`, rule: 'orphan', page: p.path, what: `Link to ${p.path} from the text of at least one related page`, evidence: `${stamp}. No page links to it from its main text (menus and the footer are not counted).`, impact: 'Medium', impact_reason: 'Pages with no links from other pages are crawled less and rank worse.', effort: 'Small', who: 'Editor in the CMS' });
@@ -130,6 +132,31 @@ export function detect(): Detected[] {
       if (!last) continue;
       const age = Math.floor((Date.now() - Date.parse(last)) / 86400_000);
       if (age >= t.staleDays) add({ key: `stale:${p.path}`, rule: 'stale', page: p.path, what: `Review and refresh ${p.path}`, evidence: `Content files on GitHub: last updated ${last.slice(0, 10)}, ${age} days ago (threshold ${t.staleDays}).`, impact: 'Low', impact_reason: 'Older guides slowly lose rankings to fresher ones.', effort: 'Medium', who: 'Editor in the CMS' });
+    }
+  }
+  // The newest uploaded keyword export (Ahrefs, Semrush, Ubersuggest, any
+  // tool): phrases just off page one, and rankings that dropped.
+  const kw = latestImport<KeywordRow>('keywords');
+  if (kw) {
+    const stampK = `${kw.meta.source} export of ${kw.meta.at.slice(0, 10)}`;
+    const seen = new Set<string>();
+    for (const r of kw.rows) {
+      const phrase = r.keyword.toLowerCase().trim();
+      if (!phrase || seen.has(phrase) || r.position == null) continue;
+      seen.add(phrase);
+      const page = r.url ? pathOf(r.url) : null;
+      if (r.previous != null && r.position - r.previous >= 5 && r.position <= 50) {
+        add({ key: `export-drop:${phrase}`, rule: 'export-drop', page, what: `Find out why ${page ?? 'we'} dropped for "${phrase}"`, evidence: `${stampK}: position ${r.position}, was ${r.previous}${r.volume ? `, ${r.volume} searches a month` : ''}.`, impact: r.volume != null && r.volume >= 200 ? 'High' : 'Medium', impact_reason: 'A ranking already earned is the cheapest to keep.', effort: 'Small', who: 'You' });
+      } else if (r.position >= 11 && r.position <= 20 && (r.volume == null || r.volume >= 20)) {
+        add({ key: `export-push:${phrase}`, rule: 'export-push', page, what: `Push ${page ?? 'the page'} on to page one for "${phrase}" (more depth, links from other pages)`, evidence: `${stampK}: position ${r.position}${r.volume ? `, ${r.volume} searches a month` : ''}.`, impact: 'Medium', impact_reason: 'Just off page one; a modest improvement can move it on.', effort: 'Medium', who: page ? whoFor(page) : 'Editor in the CMS' });
+      }
+    }
+  }
+  // Backlinks that disappeared between the owner's last two uploads.
+  const lost = lostLinks();
+  if (lost) {
+    for (const l of lost.lost.slice(0, 25)) {
+      add({ key: `lost-link:${l.domain}`, rule: 'lost-link', page: l.target ? pathOf(l.target) : null, what: `Ask ${l.domain} to restore its link${l.target ? ` to ${pathOf(l.target)}` : ''}`, evidence: `Backlink exports: ${l.domain} linked to us ${l.links === 1 ? 'once' : `${l.links} times`} in the ${lost.previous.source} export of ${lost.previous.at.slice(0, 10)} and not in the one of ${lost.newest.at.slice(0, 10)}${l.authority != null ? ` (authority ${l.authority})` : ''}.`, impact: l.authority != null && l.authority >= 30 ? 'High' : 'Medium', impact_reason: 'A link already earned is the cheapest one to keep.', effort: 'Small', who: 'You' });
     }
   }
   return out;

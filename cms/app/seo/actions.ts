@@ -6,9 +6,11 @@ import { createSignInLink, redeemSignInLink, requireUser, signOut } from '../../
 import { IS_PRODUCTION, createReadKey, saveSecret } from '../../lib/seo/config';
 import { sendSignInLink } from '../../lib/seo/mail';
 import { parseCsv } from '../../lib/seo/csv';
-import { approverRole, moveFinding, noteFinding } from '../../lib/seo/findings';
+import { approverRole, moveFinding, noteFinding, recordFindings } from '../../lib/seo/findings';
 import { research } from '../../lib/seo/ideas';
+import { groupKey } from '../../lib/seo/write-next';
 import { announce, indexingRows, watchSitemap } from '../../lib/seo/indexing';
+import { OUTREACH_KINDS, OUTREACH_STATUSES, addOutreach, moveOutreach, type OutreachKind, type OutreachStatus } from '../../lib/seo/links';
 import { startRun } from '../../lib/seo/run';
 import { collectContent } from '../../lib/seo/sources/content';
 import { now, recordSource, saveSetting, saveSnapshot, store } from '../../lib/seo/store';
@@ -182,6 +184,39 @@ export async function planIdea(form: FormData) {
   back(`/seo/keywords?topic=${encodeURIComponent(topic)}&planned=${encodeURIComponent(phrase)}#ideas`);
 }
 
+/** "Add to plan" and "Not for us" on the Content tab's What to write next. */
+export async function planSuggestion(form: FormData) {
+  const user = await requireUser('/seo/content (plan)', 'seo');
+  const phrase = String(form.get('phrase') ?? '').trim().slice(0, 200);
+  const kind = String(form.get('kind') ?? '').trim();
+  if (phrase) store().prepare('INSERT INTO plan_items (horizon, text, added_by, added_at) VALUES (?, ?, ?, ?)').run(30, `Write a ${kind === 'Blog post' ? 'post' : 'page'} for "${phrase}"`, user.email, now());
+  back(`/seo/content?planned=${encodeURIComponent(phrase)}#write-next`);
+}
+
+export async function skipSuggestion(form: FormData) {
+  const user = await requireUser('/seo/content (skip)', 'seo');
+  const phrase = String(form.get('phrase') ?? '').trim().slice(0, 200);
+  const key = groupKey(phrase);
+  if (key) store().prepare('INSERT INTO notes (kind, at, by, text, reason) VALUES (?, ?, ?, ?, ?)').run('skip-topic', now(), user.email, key, phrase);
+  back('/seo/content#write-next');
+}
+
+/** The outreach list on the Links tab (owner, 9 Oct 2026: off-page and backlinks). */
+export async function addOutreachSite(form: FormData) {
+  const user = await requireUser('/seo/links (add site)', 'seo');
+  const site = String(form.get('site') ?? '').trim().slice(0, 120);
+  const kind = String(form.get('kind') ?? 'Other') as OutreachKind;
+  if (site) addOutreach({ site, url: String(form.get('url') ?? '').trim().slice(0, 300), kind: OUTREACH_KINDS.includes(kind) ? kind : 'Other', target: String(form.get('target') ?? '/').trim().slice(0, 200) || '/', note: String(form.get('note') ?? '').trim().slice(0, 300) }, user.email);
+  back('/seo/links#outreach');
+}
+
+export async function moveOutreachSite(form: FormData) {
+  await requireUser('/seo/links (move site)', 'seo');
+  const status = String(form.get('status') ?? '') as OutreachStatus;
+  if (OUTREACH_STATUSES.includes(status)) moveOutreach(Number(form.get('id')), status);
+  back('/seo/links#outreach');
+}
+
 export async function donePlanItem(form: FormData) {
   await requireUser('/seo/plan (done)', 'seo');
   store().prepare('UPDATE plan_items SET done_at = ? WHERE id = ?').run(now(), Number(form.get('id')));
@@ -213,6 +248,8 @@ export async function importCsv(form: FormData) {
   if (!parsed.columns.length) back('/seo/imports?error=csv');
   store().prepare('INSERT INTO imports (at, by, source, filename, note, rows, columns, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
     .run(now(), user.email, source, file.name.slice(0, 120), String(form.get('note') ?? '').trim().slice(0, 500), parsed.rows.length, JSON.stringify(parsed.columns), JSON.stringify(parsed.rows.slice(0, 5000)));
+  // The rules that read uploads run at once, so the queue shows the new tasks today, not after the next daily run.
+  try { recordFindings(); } catch (e) { console.error(`[seo] findings after upload failed: ${(e as Error).message}`); }
   back('/seo/imports?saved=1');
 }
 

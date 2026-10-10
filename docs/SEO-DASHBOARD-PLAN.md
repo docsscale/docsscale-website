@@ -470,6 +470,75 @@ first two are here.
   (past topics) and `?what=ideas&topic=…`; `POST {"action":"research",
   "text":"topic"}` runs a lookup, so the weekly run can research topics.
 
+## 16. What to write next, 9 Oct 2026 (owner: "what blogs should we write based on the research from different sources, keywords, demands")
+
+- **Where:** the top of the Content inventory tab, "What to write next". One
+  ranked list of pages and posts worth writing, strongest first. Each line is
+  one piece of writing (near-duplicate phrases are grouped: "dental marketing
+  ideas" and "best dental marketing ideas" are one line, the others shown as
+  "also covers"), with a Blog post / Service or industry page badge, the
+  reasons with their numbers and sources, "Add to plan" (a 30-day plan line)
+  and "Not for us" (hides that topic for good; kept in `notes` as
+  `skip-topic`).
+- **Sources and scores** (`cms/lib/seo/write-next.ts`, `whatToWriteNext`):
+  the approved keyword map's pages not live yet (first, always); keyword ideas
+  from every lookup (Bing searches a month, Google suggests it, Search Console
+  impressions); questions people searched on Google or Bing that no heading on
+  the site answers; Search Console phrases shown 20 or more times with no page
+  about them (position past 20); the newest uploaded keyword export (volume
+  with no ranking or a ranking past 20). Left out: phrases we already rank in
+  the top 10 for, phrases on the keyword map, phrases a heading already
+  answers, and job, course, sign-in and other-country phrases (counted in the
+  note under the list).
+- **Kept fresh by itself:** the daily run looks up the seed topics (the nine
+  served specialties plus the agency's own services, `SEED_TOPICS`) once a
+  week each (`refreshSeedIdeas`), so the list moves without anyone typing.
+  Uploads and the daily search data feed it the same day.
+- **Read API:** `?what=write-next` (the top 50 with reasons), for the
+  Monday routine's summary.
+
+## 17. Link building and off-page, 9 Oct 2026 (owner: "will need help in off page SEO, backlinking etc")
+
+Without a paid backlink tool, the Links and authority tab now holds the three
+things the dashboard can keep for free (`cms/lib/seo/links.ts`):
+
+- **Link building list** (table `outreach`): sites to be listed on or to ask
+  for a link, each with kind (Directory, Guest post, Partner, Local, Other),
+  the page it should point to, a note and a status (To do, Contacted, Live,
+  Declined) moved along by hand. When the table is empty it is seeded once
+  with the starter list: the three profiles with copy ready in the project
+  files (LinkedIn, Clutch, DesignRush) and six free directories (GoodFirms,
+  UpCity, Crunchbase, Bing Places, Yelp, Better Business Bureau). Google
+  Business Profile stays off the list (owner, 8 Oct 2026).
+- **Links that disappeared:** the owner's newest two backlink exports (any
+  tool, uploaded on Imports) are compared; referring domains in the previous
+  one that are missing from the newest become a `lost-link` finding in the
+  fix queue ("Ask X to restore its link", who: You, High when the tool's
+  authority is 30 or more), kind Links on the Today tab.
+- **Sites linking to a competitor but not to us:** a competitor's backlink
+  export uploaded with the source "Competitor backlinks" (or the word
+  competitor in the note) is never read as ours; its referring domains that
+  are not in our newest export and not on the list are shown strongest
+  first with an "Add to list" button.
+
+## 18. Uploads become tasks, and the How-to-use tab, 9 Oct 2026 (owner: "when I will add reports from Ahrefs, SEMRush, Ubersuggest etc then the tasks will update", "guide me how to properly use dashboard")
+
+- **Uploads become tasks.** The newest keyword export of any tool (Ubersuggest
+  is now in the source list; files are recognised by their columns as before)
+  feeds two new rules in `findings.ts`: `export-push` (position 11 to 20,
+  volume 20 or more or unknown: "Push the page on to page one", On-page on
+  Today) and `export-drop` (a previous-position column and a fall of five or
+  more places while still in the top 50: "Find out why we dropped", who: You,
+  High when the volume is 200 or more). Backlink exports feed `lost-link`
+  (section 17). The rules run the moment a file is uploaded (`importCsv`
+  calls `recordFindings`), so the queue shows the new tasks that day; the
+  daily run refreshes them after.
+- **How to use it** (`/seo/help`, every role): what runs by itself, the
+  owner's week (Monday: Overview and Today; Tuesday: pick one line from What
+  to write next; Thursday: one row of Link building; monthly: upload exports),
+  what each tab is for, and the three rules (nothing invented, nothing
+  publishes here, free first). Kept beside the tabs so it cannot drift.
+
 ## Sources for prices and limits
 
 Checked 6 Oct 2026:

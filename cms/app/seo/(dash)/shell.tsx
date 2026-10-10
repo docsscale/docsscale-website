@@ -19,6 +19,7 @@ const ICONS: Record<string, ReactNode> = {
   google: <><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></>,
   bing: <><path d="M4 4h16v16H4z" /><path d="M8 8h8M8 12h5M8 16h8" /></>,
   keywords: <><path d="M4 7h16M4 12h10M4 17h13" /></>,
+  help: <><circle cx="12" cy="12" r="9" /><path d="M12 8v5M12 16h.01" /></>,
   questions: <><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01" /></>,
   ai: <><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z" /><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" /></>,
   analytics: <><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></>,
