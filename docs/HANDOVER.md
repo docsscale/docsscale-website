@@ -11,9 +11,9 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 
 ## What is live
 
-- **Production: v1.7.0** on https://docsscale.com, deployed 9 Oct 2026:
+- **Production: v1.7.0** on https://docsscale.com, deployed 10 Oct 2026:
   questions owners ask on the chiropractic, physical therapy and med spa
-  pages. Released from GitHub ("Release to production") on the owner's
+  pages, and a "Where to go next" row on every page. Released from GitHub ("Release to production") on the owner's
   go-ahead.
 - Before that: v1.6.0 (9 Oct 2026: "From the blog" on the home page, Blog in
   the footer, the homepage title, dental questions, industry cases), v1.5.0 (8 Oct 2026, the blog and its first post) and v1.4.6

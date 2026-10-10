@@ -4,7 +4,7 @@ Status: **in progress.** Approved in principle on 27 Sep 2026; v1.0 went live on
 
 ## Status tracker
 
-**Last updated: 9 Oct 2026 (production is v1.7.0).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
+**Last updated: 10 Oct 2026 (production is v1.7.0).** Update this table in every release PR. Details of each release are in [CHANGELOG.md](../CHANGELOG.md). Dates are production dates. Owner = who has to act next.
 
 Hours and budget are not tracked in this repository (owner, 6 Oct 2026: that's fine); the only estimates are the build-effort figures in "Phase order" below.
 

@@ -5,11 +5,12 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
-## [1.7.0] — 2026-10-09
+## [1.7.0] — 2026-10-10
 
-Questions owners ask, on the other three industry pages. Visible to visitors: a new questions section on the chiropractic, physical therapy and med spa pages.
+Questions owners ask on the other three industry pages, and a way onward from every page. Visible to visitors: a new questions section on the chiropractic, physical therapy and med spa pages, and a "Where to go next" row near the bottom of every main-site, blog and funnel page.
 
 - **Chiropractic, physical therapy and med spa pages: questions owners ask** (owner's approval of the before/after, 9 Oct 2026; #102). `/industries/chiropractic/`, `/industries/physical-therapy/` and `/industries/med-spa/` each gain a section, "What … owners ask us.", with six questions and answers between the case and the closing box, marked up as a FAQ for search engines. This is the same section the dental page received in 1.6.0; each specialty's questions were researched on their own.
+- **"Where to go next" on every page** (owner's approval of the before/after, 10 Oct 2026; #117). Every main-site, blog and funnel page ends with a short row: a heading and three or four links to related pages, each with one plain line on what the reader will find there. Every page now links to at least three others from its own text, and Industries, How it works, About and the funnel's booking page are no longer reachable only from the menu and footer. Blog posts are left out; they already end with related posts. The words are in `web/src/content/related.ts`.
 
 ## [1.6.0] — 2026-10-09
 
