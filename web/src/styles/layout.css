@@ -37,3 +37,41 @@
   outline: 2px solid #ffffff;
   outline-offset: 3px;
 }
+
+/* Service pages: the "What we do" section. The flow strip is one row of four
+   stops with arrows between them; under 760px the arrows go and the stops sit
+   two to a row. The step cards: three across, two on a tablet, one on a phone. */
+.service-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.service-flow-stop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.service-flow-arrow {
+  flex: none;
+  margin-left: auto;
+}
+@media (max-width: 760px) {
+  .service-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+  }
+  .service-flow-stop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .service-flow-arrow {
+    display: none;
+  }
+}
+.service-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 14px;
+}

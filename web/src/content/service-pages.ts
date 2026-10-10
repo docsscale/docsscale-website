@@ -8,6 +8,10 @@
 // is one the results page already publishes.
 import { T } from '@/styles/tokens';
 
+/** Line icons drawn in features/services/ServicePage.tsx. */
+export type ProcessIcon =
+  'target' | 'page' | 'megaphone' | 'reply' | 'refresh' | 'chart' | 'search' | 'calendar';
+
 export type ServicePage = {
   slug: string;
   /** The service's name as the nav and footer show it (content/site.ts). */
@@ -25,7 +29,9 @@ export type ServicePage = {
   /** Services that work alongside this one, with the page or section they link to. */
   worksWith: { label: string; href: string }[];
   processHeading: string;
-  process: { title: string; body: string }[];
+  /** The patient's path in four stops, shown as a strip above the steps. */
+  processFlow: { label: string; icon: ProcessIcon }[];
+  process: { title: string; body: string; icon: ProcessIcon }[];
   /** Copied word for word from ResultsCases.tsx; change both together. */
   caseStudy: {
     heading: string;
@@ -72,29 +78,41 @@ export const SERVICE_PAGES: ServicePage[] = [
       { label: 'Reactivation & recall', href: '/services#retain' },
     ],
     processHeading: 'What we do, in order.',
+    processFlow: [
+      { label: 'Someone searches or scrolls', icon: 'search' },
+      { label: 'Lands on the treatment page', icon: 'page' },
+      { label: 'Gets a reply within minutes', icon: 'reply' },
+      { label: 'Books the appointment', icon: 'calendar' },
+    ],
     process: [
       {
         title: 'Pick one service line',
+        icon: 'target',
         body: 'Implants, clear aligners, injectables, post-op rehab: the treatment that pays for the marketing. One campaign per service line, never one campaign for the whole practice.',
       },
       {
         title: 'Build the page the ad lands on',
+        icon: 'page',
         body: 'A page for that treatment with two or three screening questions, so your front desk calls people who can book, not everyone who clicked.',
       },
       {
         title: 'Launch Google and Meta campaigns in your own accounts',
+        icon: 'megaphone',
         body: 'Google reaches people already searching, for example “dental implants near me”. Facebook and Instagram reach people who are not searching yet, which suits elective treatments. The accounts are yours and stay yours.',
       },
       {
         title: 'Answer every inquiry within minutes',
+        icon: 'reply',
         body: 'An ad lead that waits until the next business day usually books somewhere else. Every form and every missed call gets a reply in minutes, before the ad budget is wasted.',
       },
       {
         title: 'Refresh the creative every month',
+        icon: 'refresh',
         body: 'New copy and images each month so the campaign does not go stale, and a check against what each platform allows: no ad that hints at a reader’s condition.',
       },
       {
         title: 'Report what matters every Monday',
+        icon: 'chart',
         body: 'Booked appointments and cost per booked visit, by campaign. Never clicks. Campaigns are usually live within two to three weeks.',
       },
     ],
