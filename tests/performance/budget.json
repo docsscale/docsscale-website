@@ -104,6 +104,12 @@
       "cls": 0,
       "bytes": 327680
     },
+    "/services/paid-ads/": {
+      "score": 97,
+      "lcp": 2519,
+      "cls": 0,
+      "bytes": 337920
+    },
     "/terms/": {
       "score": 98,
       "lcp": 2317,
