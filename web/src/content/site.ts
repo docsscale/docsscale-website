@@ -17,6 +17,15 @@ export const SITE = {
  *  No phone number or street address: DocsScale has neither publicly. */
 export const CONTACT_LINES = ['Houston, Texas, US', 'info@docsscale.com'] as const;
 
+/** DocsScale's own profiles (owner, 10 Oct 2026). Shown as icons in the footer
+ *  and listed as `sameAs` in the Organization structured data. */
+export const SOCIAL_LINKS = [
+  { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61593485777166' },
+  { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/docsscale/' },
+  { key: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/docsscale/home/' },
+  { key: 'clutch', label: 'Clutch', href: 'https://clutch.co/profile/docsscale' },
+] as const;
+
 /** Top navigation. `key` matches the `active` prop pages pass to <Nav>.
  *  `menu` items open a dropdown (Services, Industries) instead of linking directly. */
 export const NAV_LINKS = [

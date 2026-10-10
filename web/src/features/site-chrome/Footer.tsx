@@ -3,6 +3,7 @@ import { CONTACT_LINES, FOOTER_COLUMNS, FOOTER_LEGAL_LINKS, SITE } from '@/conte
 import { industryHref, SPECIALTY_LINKS } from '@/content/specialties';
 import { CookieSettingsLink } from '@/features/analytics/CookieSettingsLink';
 import { BrandLogo } from './BrandLogo';
+import { SocialIcons } from './SocialIcons';
 
 // Footer links keep the footer's light text colour instead of the global teal link colour.
 const linkStyle = { color: 'rgba(250,249,246,.8)' } as const;
@@ -47,6 +48,7 @@ export function Footer() {
               <BrandLogo variant="light" height={30} rowHeight={27} lazy />
             </div>
             <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, maxWidth: 300 }}>{SITE.tagline}</p>
+            <SocialIcons />
           </div>
           {COLUMNS.map((column) => (
             <div key={column.heading} style={columnStyle}>
