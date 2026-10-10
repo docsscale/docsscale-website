@@ -6,6 +6,7 @@ import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { SpecialtyPage } from '@/features/services/SpecialtyPage';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 // One static page per industry: /industries/dental/, /industries/chiropractic/ …
 // (the old /services/<slug>/ URLs 301 here; see server/public_html/.htaccess)
@@ -60,6 +61,7 @@ export default async function SpecialtyRoute({ params }: Props) {
       <Nav active="industries" specialties={SPECIALTY_LINKS} />
       <main>
         <SpecialtyPage specialty={specialty} />
+        <RelatedPages page="/industries/[specialty]/" />
       </main>
       <SiteMotion />
     </>

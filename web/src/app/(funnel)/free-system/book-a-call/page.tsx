@@ -6,6 +6,7 @@ import { FunnelFooter } from '@/features/funnel/FunnelFooter';
 import { FunnelHeader } from '@/features/funnel/FunnelHeader';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
+import { FunnelRelated } from '@/features/funnel/FunnelRelated';
 
 export const metadata = pageMetadata({
   title: 'Book a Free 30-Minute Strategy Call — DocsScale',
@@ -31,6 +32,7 @@ export default function FunnelBookACallPage() {
       <FunnelHeader />
       <main>
         <BookingSwitch booking={<BookingView />} confirmation={<BookedConfirmation />} />
+        <FunnelRelated page="/free-system/book-a-call/" />
       </main>
       <FunnelFooter />
     </>

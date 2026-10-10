@@ -1,62 +1,62 @@
 {
   "/": {
-    "lastmod": "2026-10-09",
-    "hash": "3f69bc63cbbb27d6",
+    "lastmod": "2026-10-10",
+    "hash": "addff29d558edb4a",
     "priority": "1.0"
   },
   "/results/": {
-    "lastmod": "2026-09-28",
-    "hash": "bea3687142cd013a",
+    "lastmod": "2026-10-10",
+    "hash": "db821c3f4e5352db",
     "priority": "0.9"
   },
   "/services/": {
-    "lastmod": "2026-10-07",
-    "hash": "1ee1ca1163cd40f4",
+    "lastmod": "2026-10-10",
+    "hash": "dbff0cffcca4d6d0",
     "priority": "0.9"
   },
   "/industries/": {
-    "lastmod": "2026-09-30",
-    "hash": "cdbe292d6152adb6",
+    "lastmod": "2026-10-10",
+    "hash": "5ee4f97cecf4c42c",
     "priority": "0.85"
   },
   "/industries/chiropractic/": {
-    "lastmod": "2026-10-09",
-    "hash": "47109d4c0d5c18c0",
+    "lastmod": "2026-10-10",
+    "hash": "dee8155ca6ef8b98",
     "priority": "0.85"
   },
   "/industries/dental/": {
-    "lastmod": "2026-10-09",
-    "hash": "a0733b263eb94fbf",
+    "lastmod": "2026-10-10",
+    "hash": "ff12d2a531884e59",
     "priority": "0.85"
   },
   "/industries/med-spa/": {
-    "lastmod": "2026-10-09",
-    "hash": "a872e600a26673fd",
+    "lastmod": "2026-10-10",
+    "hash": "7a4c6abb7b40961c",
     "priority": "0.85"
   },
   "/industries/physical-therapy/": {
-    "lastmod": "2026-10-09",
-    "hash": "bee71390f5a7657c",
+    "lastmod": "2026-10-10",
+    "hash": "3ae413ddcea9481c",
     "priority": "0.85"
   },
   "/book-a-call/": {
-    "lastmod": "2026-10-05",
-    "hash": "2a672085965661a2",
+    "lastmod": "2026-10-10",
+    "hash": "ba86f26b8a510085",
     "priority": "0.8"
   },
   "/free-system/": {
-    "lastmod": "2026-10-06",
-    "hash": "c00fb9d52d5ea27e",
+    "lastmod": "2026-10-10",
+    "hash": "b40a820a6412fb3f",
     "priority": "0.8"
   },
   "/how-it-works/": {
-    "lastmod": "2026-09-26",
-    "hash": "e3cc203d7c5f49eb",
+    "lastmod": "2026-10-10",
+    "hash": "78afe624a7c35375",
     "priority": "0.8"
   },
   "/blog/": {
-    "lastmod": "2026-10-08",
-    "hash": "4120ec7d0f64de0c",
+    "lastmod": "2026-10-10",
+    "hash": "2260a44d00a7d1eb",
     "priority": "0.7"
   },
   "/blog/google-business-profile-for-dentists/": {
@@ -65,23 +65,23 @@
     "priority": "0.7"
   },
   "/about/": {
-    "lastmod": "2026-09-28",
-    "hash": "af04db271095ae46",
+    "lastmod": "2026-10-10",
+    "hash": "5004ab699bcbc3ed",
     "priority": "0.6"
   },
   "/free-system/book-a-call/": {
-    "lastmod": "2026-10-06",
-    "hash": "c5a71fb59d67c56f",
+    "lastmod": "2026-10-10",
+    "hash": "1bd70cca8113738c",
     "priority": "0.5"
   },
   "/privacy/": {
-    "lastmod": "2026-10-05",
-    "hash": "3b47604cbbf02c33",
+    "lastmod": "2026-10-10",
+    "hash": "19e053186a81ded9",
     "priority": "0.3"
   },
   "/terms/": {
-    "lastmod": "2026-09-26",
-    "hash": "ff2260b67f13ff81",
+    "lastmod": "2026-10-10",
+    "hash": "c88254916956a533",
     "priority": "0.3"
   }
 }

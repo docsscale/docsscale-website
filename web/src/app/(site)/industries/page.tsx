@@ -6,6 +6,7 @@ import { SiteMotion } from '@/features/motion/SiteMotion';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = pageMetadata({
   title: INDUSTRIES_PAGE.title,
@@ -22,6 +23,7 @@ export default function IndustriesRoute() {
       <Nav active="industries" specialties={SPECIALTY_LINKS} />
       <main>
         <IndustriesPage />
+        <RelatedPages page="/industries/" />
       </main>
       <SiteMotion />
     </>
