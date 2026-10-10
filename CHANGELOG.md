@@ -5,6 +5,13 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.7.1] — 2026-10-10
+
+Six pages name what people search for. Visible to visitors: reworded headings, descriptions and first paragraphs on the home, services and four industry pages. The blog's structured data is behind the scenes.
+
+- **Each page names its search phrase** (owner's approval of the before/after, 10 Oct 2026; #119). The home, services, dental, chiropractic, physical therapy and med spa pages each use the phrase people search for that page ("healthcare marketing agency", "healthcare marketing services", "dental marketing agency", "chiropractor marketing agency", "physical therapy marketing", "med spa marketing agency") once in the heading, the page description and the first paragraph. The rest of each page is unchanged.
+- **Blog pages carry structured data** (#118, an invisible fix from the SEO dashboard's queue). The blog index gains the same breadcrumb and organisation data as the other main-site pages, and each topic page names itself as the last crumb. Nothing a visitor sees changes.
+
 ## [1.7.0] — 2026-10-10
 
 Questions owners ask on the other three industry pages, and a way onward from every page. Visible to visitors: a new questions section on the chiropractic, physical therapy and med spa pages, and a "Where to go next" row near the bottom of every main-site, blog and funnel page.
