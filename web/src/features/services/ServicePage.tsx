@@ -136,7 +136,7 @@ function AdGraphic({ page: p }: { page: Page }) {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              objectPosition: '34% 20%',
+              objectPosition: '50% 35%',
             }}
           />
         </div>

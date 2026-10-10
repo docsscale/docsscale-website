@@ -6,7 +6,7 @@
 // copied exactly from /results/, who it suits and who it doesn't, real
 // questions, and links to the industries. Nothing invented: every figure here
 // is one the results page already publishes.
-import { AD_EXAMPLE } from '@/content/images';
+import { PAID_ADS_AD } from '@/content/images';
 import { T } from '@/styles/tokens';
 
 /** Line icons drawn in features/services/ServicePage.tsx. */
@@ -90,7 +90,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       },
       social: {
         text: 'Dental implants, planned in one visit. A free thirty-minute consultation, booked online.',
-        photo: AD_EXAMPLE,
+        photo: PAID_ADS_AD,
         photoSizes: '(max-width: 760px) calc(100vw - 68px), 394px',
         url: 'yourclinic.com/implants',
         cta: 'Book a consultation',
