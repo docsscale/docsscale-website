@@ -185,7 +185,7 @@ export function Nav({ active, specialties }: Props) {
             {services.map((service) => (
               <Link
                 key={service.name}
-                href={serviceHref(stage)}
+                href={serviceHref(stage, service.name)}
                 onClick={closeAll}
                 className="nav-link"
                 style={{ display: 'block', padding: '9px 12px', borderRadius: 10 }}
@@ -539,7 +539,11 @@ export function Nav({ active, specialties }: Props) {
                               {label}
                             </div>
                             {services.map((service) => (
-                              <MobileSubLink key={service.name} href={serviceHref(stage)} onClick={closeAll}>
+                              <MobileSubLink
+                                key={service.name}
+                                href={serviceHref(stage, service.name)}
+                                onClick={closeAll}
+                              >
                                 {service.name}
                               </MobileSubLink>
                             ))}

@@ -23,6 +23,7 @@ the optimised versions are.
 | `funnel-gallery/` | `new-patient.png`, `service-promo.png`, `booking.png`, `application.png`, `reactivation.png`, `review.png` | Top of each funnel's landing page, in that order: Get New Patients · Fill Your Best Service Line · Kill the Phone Tag · Only Talk to the Right Patients · Win Back Dormant Patients · Build Your Google Reputation | **1800 × 1200** | 3:2 landscape. Cards show the **top strip** (about 1.8:1); the enlarged view shows the whole image. Capture a 1440-px-wide browser window and crop the top to 3:2. |
 | `home-hero/` | `hero.jpg` | Homepage photo box (currently "Clinic photo: real team, real rooms"). A real photo of your team at work, or a dashboard on a screen | **1200 × 2000** | Tall portrait on desktop (about 0.55:1), nearly square on phones: keep the subject in the middle third |
 | `home-ad-creative/` | `ad.jpg` or `ad.png` | Homepage "Ad preview" card photo. **Filled 6 Oct 2026 with a stock photo** (see "Sources and licences" below). A real ad you ran for a clinic (with the clinic's permission) can replace it later | **1600 × 1000** | Landscape, about 1.3–1.7:1: centre the key message |
+| Picture inside the example social ad on `/services/paid-ads/` (`web/public/images/services/paid-ads-ad*`) | `paid-ads-ad/pexels-anna-shvets-3845983.jpg`, added 10 Oct 2026 | Pexels, photo by Anna Shvets, https://www.pexels.com/photo/3845983/ | Pexels licence: free for commercial use, no permission or credit needed | No |
 | `about-founder/` | `founder.jpg` | About page founder photo (Abdul Samad), real, in the office | **1200 × 1600** | Portrait 3:4, face in the upper third |
 | `team/` | `abdul-samad.jpg`, `ahmed-mustafa.jpg`, `mohsin.jpg`, `omar.jpg`, `owais.jpg`, `ali.jpg` | Team cards: head and shoulders, same background and lighting for everyone if possible | **1000 × 1000** | Square, face centred slightly above the middle |
 
@@ -40,4 +41,7 @@ what the licence allows. Check this before reusing an image anywhere else.
 
 The photo is shown as a sample ad: the card is labelled "Ad preview" and the alt
 text calls it an example ad photo. It is not presented as our team or a client.
+
+The paid ads page's example social ad uses the Anna Shvets photo above as its
+picture, inside a graphic labelled as an example.
 

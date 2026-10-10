@@ -207,6 +207,46 @@ export const STRUCTURED_DATA = {
       },
     },
   ],
+  servicePaidAds: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://docsscale.com/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Services',
+          item: 'https://docsscale.com/services/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: 'Paid ads (Meta & Google)',
+          item: 'https://docsscale.com/services/paid-ads/',
+        },
+      ],
+    },
+    ORGANIZATION,
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'Paid ads (Meta & Google)',
+      url: 'https://docsscale.com/services/paid-ads/',
+      serviceType: 'Pay-per-click advertising for healthcare clinics',
+      provider: { '@id': 'https://docsscale.com/#organization' },
+      areaServed: 'US',
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'Healthcare clinics',
+      },
+    },
+  ],
   industries: [
     {
       '@context': 'https://schema.org',

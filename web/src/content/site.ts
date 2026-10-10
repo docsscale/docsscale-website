@@ -1,5 +1,6 @@
 // Site-wide facts and navigation. Edit here, not in components: the nav, footer,
 // forms and structured data all read from this file.
+import { serviceHref } from './service-href';
 
 export const SITE = {
   name: 'DocsScale',
@@ -26,8 +27,9 @@ export const NAV_LINKS = [
   { key: 'about', label: 'About', href: '/about' },
 ] as const;
 
-/** The seven services (confirmed 28 Sep 2026), by stage. Until each has its own
- *  page (with the SEO work, 5C), they link to their stage's section on /services. */
+/** The seven services (confirmed 28 Sep 2026), by stage. A service with its own
+ *  page links there (content/service-href.ts); the rest link to their stage's
+ *  section on /services until theirs is written. */
 export const SERVICE_STAGES = [
   {
     stage: 'attract',
@@ -60,7 +62,7 @@ export const SERVICE_STAGES = [
   },
 ] as const;
 
-export const serviceHref = (stage: string) => `/services#${stage}`;
+export { serviceHref };
 
 export type NavKey = (typeof NAV_LINKS)[number]['key'] | 'home' | 'call';
 
@@ -69,7 +71,7 @@ export const FOOTER_COLUMNS = [
   {
     heading: 'Services',
     links: SERVICE_STAGES.flatMap(({ stage, services }) =>
-      services.map(({ name }) => ({ label: name, href: serviceHref(stage) })),
+      services.map(({ name }) => ({ label: name, href: serviceHref(stage, name) })),
     ),
   },
   {
