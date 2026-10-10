@@ -110,6 +110,7 @@ function Hero({ page: p }: { page: Page }) {
               src={photo.src}
               sizes={photo.sizes}
               alt={photo.alt}
+              loading="lazy"
               style={{
                 position: 'absolute',
                 inset: 0,
