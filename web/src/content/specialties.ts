@@ -43,11 +43,11 @@ export const SPECIALTIES: Specialty[] = [
     name: 'Dental',
     title: 'Dental Marketing Agency | DocsScale',
     metaDescription:
-      'Dental marketing built for booked chairs, not just inbox leads: implant and Invisalign campaigns, local SEO, and recall for overdue patients.',
-    h1: 'Dental marketing that turns searches into',
+      'The dental marketing agency built for booked chairs, not just inbox leads: implant and Invisalign campaigns, local SEO, and recall for overdue patients.',
+    h1: 'The dental marketing agency that turns searches into',
     h1Accent: 'booked exams.',
     intro:
-      'Referrals only take a practice so far. DocsScale runs the paid ads, local SEO, and follow-up that keep your chairs full, especially for the high-value treatments that pay for the marketing.',
+      'Referrals only take a practice so far. DocsScale is a dental marketing agency that runs the paid ads, local SEO, and follow-up that keep your chairs full, especially for the high-value treatments that pay for the marketing.',
     accentBg: T.peachBg,
     accentFg: T.peachFg,
     painPoints: [
@@ -151,13 +151,13 @@ export const SPECIALTIES: Specialty[] = [
   {
     slug: 'chiropractic',
     name: 'Chiropractic',
-    title: 'Chiropractic Marketing Agency | DocsScale',
+    title: 'Chiropractor Marketing Agency | DocsScale',
     metaDescription:
-      'Chiropractic marketing built for same-week bookings: pain-driven ad campaigns, missed-call text-back, and recall for maintenance-care patients.',
-    h1: 'Chiropractic marketing built for',
+      'The chiropractor marketing agency built for same-week bookings: pain-driven ad campaigns, missed-call text-back, and recall for maintenance-care patients.',
+    h1: 'The chiropractor marketing agency built for',
     h1Accent: 'same-week bookings.',
     intro:
-      'Someone searching for a chiropractor today wants an appointment this week, not a newsletter. DocsScale gets you in front of them and answers before they call the next practice.',
+      'Someone searching for a chiropractor today wants an appointment this week, not a newsletter. DocsScale is the chiropractor marketing agency that gets you in front of them and answers before they call the next practice.',
     accentBg: T.tealTintBg,
     accentFg: T.tealTintFg,
     painPoints: [
@@ -262,7 +262,7 @@ export const SPECIALTIES: Specialty[] = [
     h1: 'Physical therapy marketing that protects',
     h1Accent: 'every referral.',
     intro:
-      'A referral that waits a day for a callback is a referral that goes somewhere else. DocsScale builds the fast follow-up and direct-access campaigns that keep your schedule full.',
+      'A referral that waits a day for a callback is a referral that goes somewhere else. Our physical therapy marketing builds the fast follow-up and direct-access campaigns that keep your schedule full.',
     accentBg: T.sageBg,
     accentFg: T.sageFg,
     painPoints: [
@@ -364,11 +364,11 @@ export const SPECIALTIES: Specialty[] = [
     name: 'Med Spa',
     title: 'Med Spa Marketing Agency | DocsScale',
     metaDescription:
-      'Med spa marketing that turns followers into booked consults: Instagram and Meta injectables campaigns, fast DM replies, and touch-up recall.',
-    h1: 'Med spa marketing that turns followers into',
+      'The med spa marketing agency that turns followers into booked consults: Instagram and Meta injectables campaigns, fast DM replies, and touch-up recall.',
+    h1: 'The med spa marketing agency that turns followers into',
     h1Accent: 'booked consults.',
     intro:
-      'A strong following with a weak calendar is a marketing problem, not a content problem. DocsScale gets consult requests answered before they DM the med spa two doors down.',
+      'A strong following with a weak calendar is a marketing problem, not a content problem. DocsScale is the med spa marketing agency that gets consult requests answered before they DM the med spa two doors down.',
     accentBg: T.lavenderBg,
     accentFg: T.lavenderFg,
     painPoints: [

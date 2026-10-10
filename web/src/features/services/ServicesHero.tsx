@@ -53,7 +53,7 @@ export function ServicesHero() {
               textWrap: 'balance',
             }}
           >
-            {'Eight services. One team accountable for '}
+            {'Healthcare marketing services. One team accountable for '}
             <em
               className="serif-accent"
               style={{
@@ -72,8 +72,9 @@ export function ServicesHero() {
               maxWidth: 560,
             }}
           >
-            Every service below belongs to one of four stages. Take the whole system, or start with the stage
-            that&apos;s leaking most. Either way, we report in booked appointments and patients who showed.
+            Our healthcare marketing services fall into four stages. Take the whole system, or start with the
+            stage that&apos;s leaking most. Either way, we report in booked appointments and patients who
+            showed.
           </p>
         </div>
         <div
