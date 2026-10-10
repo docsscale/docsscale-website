@@ -6,6 +6,7 @@ import { OFFERS } from '@/content/offers';
 import { getPosts, getTopics } from '@/features/blog/posts';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = {
   ...pageMetadata({
@@ -28,6 +29,7 @@ export default async function BlogPage() {
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <main>
         <BlogIndex posts={await getPosts()} topics={await getTopics()} offers={OFFERS} copy={BLOG_INDEX} />
+        <RelatedPages page="/blog/" />
       </main>
     </>
   );

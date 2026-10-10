@@ -14,6 +14,7 @@ import { FunnelProblem } from '@/features/funnel/FunnelProblem';
 import { FunnelProof } from '@/features/funnel/FunnelProof';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
+import { FunnelRelated } from '@/features/funnel/FunnelRelated';
 
 export const metadata = pageMetadata({
   title: 'Free Click-to-Chair System for Healthcare Clinics — DocsScale',
@@ -48,6 +49,7 @@ export default function FreeSystemPage() {
         <FunnelProof />
         <FunnelObjections />
         <FunnelFormSection />
+        <FunnelRelated page="/free-system/" />
       </main>
       <FunnelFooter />
     </>

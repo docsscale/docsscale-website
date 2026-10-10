@@ -6,6 +6,7 @@ import { SiteMotion } from '@/features/motion/SiteMotion';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = pageMetadata({
   title: 'Book a Free Strategy Call | DocsScale',
@@ -24,6 +25,7 @@ export default function BookACallPage() {
       <main>
         <BookACallHero />
         <BookACallCover />
+        <RelatedPages page="/book-a-call/" />
       </main>
       <SiteMotion />
     </>

@@ -11,6 +11,7 @@ import { ServicesHero } from '@/features/services/ServicesHero';
 import { ServicesRetain } from '@/features/services/ServicesRetain';
 import { ServicesSpecialtyLinks } from '@/features/services/ServicesSpecialtyLinks';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = pageMetadata({
   title: 'Healthcare Marketing Services for Clinics | DocsScale',
@@ -34,6 +35,7 @@ export default function ServicesPage() {
         <ServicesConvert />
         <ServicesRetain />
         <ServicesCTA />
+        <RelatedPages page="/services/" />
       </main>
       <SiteMotion />
     </>

@@ -5,6 +5,7 @@ import { BlogIndex } from '@/features/blog/BlogIndex';
 import { getTopics, INCLUDE_DRAFTS } from '@/features/blog/posts';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 // One page per topic that has at least three posts (next.config.ts decides
 // whether this file is part of the build at all).
@@ -42,6 +43,7 @@ export default async function TopicPage({ params }: Props) {
           offers={OFFERS}
           copy={{ heading: topic.name, intro: topic.description, title: '', description: '' }}
         />
+        <RelatedPages page="/blog/" />
       </main>
     </>
   );

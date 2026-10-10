@@ -5,6 +5,7 @@ import { LegalPage } from '@/features/legal/LegalPage';
 import { JsonLd } from '@/features/seo/JsonLd';
 import { pageMetadata } from '@/features/seo/metadata';
 import { Nav } from '@/features/site-chrome/Nav';
+import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 
 export const metadata = pageMetadata({
   title: 'Privacy Policy | DocsScale',
@@ -22,6 +23,7 @@ export default function PrivacyPage() {
       <Nav active="home" specialties={SPECIALTY_LINKS} />
       <main>
         <LegalPage doc={PRIVACY} />
+        <RelatedPages page="/privacy/" />
       </main>
     </>
   );
