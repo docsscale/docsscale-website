@@ -88,7 +88,7 @@ export const HERO = {
   headline: 'More patients on autopilot, ',
   headlineAccent: 'from click to chair.',
   intro:
-    'The marketing agency for healthcare clinics that want one team on the whole patient journey, and one number that matters: booked appointments.',
+    'DocsScale is the healthcare marketing agency for clinics that want one team on the whole patient journey, and one number that matters: booked appointments.',
   cta: { label: 'Book a strategy call', href: '/book-a-call' },
   attract: { label: 'This week · Attract', suffix: 'new patient inquiries for ' },
   convert: {

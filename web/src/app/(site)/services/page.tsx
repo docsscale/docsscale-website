@@ -16,7 +16,7 @@ import { RelatedPages } from '@/features/site-chrome/RelatedPages';
 export const metadata = pageMetadata({
   title: 'Healthcare Marketing Services for Clinics | DocsScale',
   description:
-    'Eight services, four stages, one team. See exactly what DocsScale does to get your clinic more booked, showed-up patients.',
+    'Healthcare marketing services for clinics, in four stages, from one team. See exactly what DocsScale does to get your clinic more booked, showed-up patients.',
   path: '/services/',
 });
 
