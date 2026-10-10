@@ -5,7 +5,11 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
-- Footer: icons linking to DocsScale's Facebook, Instagram, LinkedIn and Clutch profiles, under the tagline on every page with the main footer. They open in a new tab, and the four profiles are listed in the site's structured data (`sameAs`). Owner approved the before/after on 10 Oct 2026.
+## [1.8.1] — 2026-10-10
+
+Footer social icons. Visible to visitors: four small icons in the footer of every page (the free system funnel keeps its own footer).
+
+- Footer: icons linking to DocsScale's Facebook, Instagram, LinkedIn and Clutch profiles, under the tagline on every page with the main footer. They open in a new tab, and the four profiles are listed in the site's structured data (`sameAs`). Owner approved the before/after on 10 Oct 2026. (#124)
 
 ## [1.8.0] — 2026-10-10
 
