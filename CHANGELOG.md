@@ -5,6 +5,8 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+- Footer: icons linking to DocsScale's Facebook, Instagram, LinkedIn and Clutch profiles, under the tagline on every page with the main footer. They open in a new tab, and the four profiles are listed in the site's structured data (`sameAs`). Owner approved the before/after on 10 Oct 2026.
+
 ## [1.8.0] — 2026-10-10
 
 Two service pages: paid ads and patient reactivation. Visible to visitors: the new `/services/paid-ads/` and `/services/patient-reactivation/` pages, and links to them from the menu, the footer, `/services/` and the industry pages.
