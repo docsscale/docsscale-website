@@ -1,6 +1,6 @@
 // schema.org structured data per page. The Organization block repeats on every
 // page; it is defined once and the Service blocks point to it by @id.
-import { SERVICE_STAGES, SITE } from './site';
+import { SERVICE_STAGES, SITE, SOCIAL_LINKS } from './site';
 import { SERVED_SPECIALTIES, sentenceCase, specialtyList } from './served-specialties';
 
 export const ORGANIZATION = {
@@ -14,6 +14,7 @@ export const ORGANIZATION = {
   logo: 'https://docsscale.com/android-chrome-512x512.png',
   email: 'info@docsscale.com',
   foundingDate: SITE.founded,
+  sameAs: SOCIAL_LINKS.map((link) => link.href),
   description:
     'Marketing agency for healthcare clinics. More patients on autopilot, from the first click to the booked appointment: ads, SEO, websites, funnels, follow-up and recall.',
   address: {

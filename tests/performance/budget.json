@@ -110,6 +110,12 @@
       "cls": 0,
       "bytes": 337920
     },
+    "/services/patient-reactivation/": {
+      "score": 97,
+      "lcp": 2542,
+      "cls": 0,
+      "bytes": 312320
+    },
     "/services/social-media-management/": {
       "score": 96,
       "lcp": 2544,

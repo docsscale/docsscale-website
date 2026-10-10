@@ -11,7 +11,9 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 
 ## What is live
 
-- **Production: v1.7.1** on https://docsscale.com, deployed 10 Oct 2026:
+- **Production: v1.8.1** on https://docsscale.com, deployed 10 Oct 2026:
+  footer icons linking to the Facebook, Instagram, LinkedIn and Clutch
+  profiles. Before it, v1.8.0 (10 Oct 2026): the paid ads and patient reactivation service pages. Before it, v1.7.1:
   each of six pages names its search phrase in its heading, description and
   first paragraph; blog structured data. Before it, v1.7.0 (10 Oct 2026):
   questions owners ask on the chiropractic, physical therapy and med spa
