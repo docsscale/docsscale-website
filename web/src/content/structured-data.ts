@@ -288,6 +288,46 @@ export const STRUCTURED_DATA = {
       },
     },
   ],
+  serviceSocial: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://docsscale.com/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Services',
+          item: 'https://docsscale.com/services/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: 'Social media management',
+          item: 'https://docsscale.com/services/social-media-management/',
+        },
+      ],
+    },
+    ORGANIZATION,
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'Social media management',
+      url: 'https://docsscale.com/services/social-media-management/',
+      serviceType: 'Social media marketing for healthcare clinics',
+      provider: { '@id': 'https://docsscale.com/#organization' },
+      areaServed: 'US',
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'Healthcare clinics',
+      },
+    },
+  ],
   industries: [
     {
       '@context': 'https://schema.org',

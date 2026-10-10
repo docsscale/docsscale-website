@@ -37,7 +37,9 @@ export function ServicePage({ page: p }: { page: Page }) {
     <>
       <Hero page={p} />
       <Process page={p} />
+      {p.mix && <Mix page={p} mix={p.mix} />}
       <CaseStudy page={p} />
+      {p.rules && <Rules page={p} rules={p.rules} />}
       <Fit page={p} />
       <Faqs page={p} />
       <Industries page={p} />
@@ -320,6 +322,133 @@ function EmailGraphic({ page: p, g }: { page: Page; g: Extract<HeroGraphic, { ki
   );
 }
 
+// The social media hero graphic: one week of an example month's plan, marked
+// approved, and a direct message answered with a booking. Drawn with the site's
+// tokens; every name is a placeholder and the tile says it is an example.
+function CalendarGraphic({ page: p, g }: { page: Page; g: Extract<HeroGraphic, { kind: 'calendar' }> }) {
+  const panel = {
+    background: white,
+    borderRadius: 16,
+    border: `1px solid ${T.hairline}`,
+    overflow: 'hidden',
+  } as const;
+  const bubble = {
+    fontSize: 13,
+    lineHeight: 1.45,
+    padding: '8px 12px',
+    borderRadius: 14,
+    maxWidth: '85%',
+  } as const;
+  return (
+    <div
+      aria-label={g.ariaLabel}
+      role="img"
+      className="service-hero-graphic"
+      style={{
+        background: p.accentBg,
+        borderRadius: 28,
+        padding: 18,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        minHeight: 'clamp(300px,40vw,360px)',
+        color: T.ink,
+      }}
+    >
+      <div
+        style={{ display: 'flex', justifyContent: 'space-between', gap: 8, ...eyebrow, color: p.accentFg }}
+      >
+        <span>{g.label}</span>
+        <span>Example</span>
+      </div>
+      <div style={panel}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 8,
+            padding: '10px 14px',
+            borderBottom: `1px solid ${T.hairline}`,
+          }}
+        >
+          <span style={{ fontSize: 13, fontWeight: 700 }}>{g.heading}</span>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              fontSize: 11,
+              fontWeight: 700,
+              color: T.sageFg,
+              background: T.sageBg,
+              padding: '4px 10px 4px 6px',
+              borderRadius: 999,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <Icon name="check" color={T.sageFg} size={14} />
+            {g.approved}
+          </span>
+        </div>
+        {g.posts.map((post, i) => (
+          <div
+            key={post.title}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '38px 1fr auto',
+              alignItems: 'center',
+              gap: 10,
+              padding: '8px 14px',
+              borderTop: i ? `1px solid ${T.hairline}` : 'none',
+              fontSize: 13,
+            }}
+          >
+            <span style={{ fontSize: 11, fontWeight: 700, color: T.caption }}>{post.day}</span>
+            <span style={{ lineHeight: 1.35 }}>{post.title}</span>
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                color: p.accentFg,
+                background: p.accentBg,
+                padding: '3px 8px',
+                borderRadius: 999,
+              }}
+            >
+              {post.format}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div style={{ ...panel, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: T.caption }}>{g.dmLabel}</span>
+        <span style={{ ...bubble, alignSelf: 'flex-start', background: T.band, color: T.ink }}>
+          {g.question}
+        </span>
+        <span style={{ ...bubble, alignSelf: 'flex-end', background: T.teal, color: white }}>{g.answer}</span>
+      </div>
+      <div
+        style={{
+          marginTop: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          background: white,
+          color: T.sageFg,
+          borderRadius: 14,
+          padding: '10px 14px',
+          fontSize: 13,
+          fontWeight: 700,
+        }}
+      >
+        <Icon name="calendar" color={T.sageFg} size={20} />
+        <span>{g.booked}</span>
+      </div>
+    </div>
+  );
+}
+
 function Hero({ page: p }: { page: Page }) {
   return (
     <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)' }}>
@@ -370,8 +499,10 @@ function Hero({ page: p }: { page: Page }) {
           </div>
           {p.heroGraphic.kind === 'ads' ? (
             <AdGraphic page={p} g={p.heroGraphic} />
-          ) : (
+          ) : p.heroGraphic.kind === 'email' ? (
             <EmailGraphic page={p} g={p.heroGraphic} />
+          ) : (
+            <CalendarGraphic page={p} g={p.heroGraphic} />
           )}
         </div>
         <div
@@ -443,6 +574,9 @@ const ICON_PATHS: Record<ProcessIcon, string> = {
     'M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 10h16M8 4v4M16 4v4M9 14.5l2 2 4-4',
   mail: 'M4.5 6h15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 7l8 6 8-6',
   star: 'm12 4 2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 16.4l-4.8 2.5.9-5.4-3.9-3.8 5.4-.8L12 4Z',
+  check: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM8 12.5l2.7 2.7L16 9.8',
+  camera:
+    'M4 8.5A1.5 1.5 0 0 1 5.5 7h2.3l1.7-2h5l1.7 2h2.3A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5v-9ZM12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z',
 };
 
 function Icon({ name, color, size = 24 }: { name: ProcessIcon; color: string; size?: number }) {
@@ -553,6 +687,130 @@ function Process({ page: p }: { page: Page }) {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Optional: what a typical month is made of (content/service-pages.ts, mix).
+function Mix({ page: p, mix }: { page: Page; mix: NonNullable<Page['mix']> }) {
+  return (
+    <div data-screen-label="Month" style={section}>
+      <div className="container" style={column}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 760 }}>
+          <h2 style={{ ...sectionH2, textWrap: 'balance' }}>{mix.heading}</h2>
+          <p style={{ margin: 0, fontSize: 17, lineHeight: 1.55, color: T.body }}>{mix.intro}</p>
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,240px),1fr))',
+            gap: 14,
+          }}
+        >
+          {mix.items.map((item) => (
+            <div
+              key={item.title}
+              style={{
+                background: p.accentBg,
+                color: p.accentFg,
+                borderRadius: 28,
+                padding: 'clamp(22px,2.6vw,30px)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+              }}
+            >
+              <span
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 14,
+                  background: white,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Icon name={item.icon} color={p.accentFg} />
+              </span>
+              <h3
+                style={{
+                  margin: 0,
+                  fontWeight: 800,
+                  fontSize: 19,
+                  letterSpacing: '-.02em',
+                  lineHeight: 1.25,
+                }}
+              >
+                {item.title}
+              </h3>
+              <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55 }}>{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Optional: what every piece of work does, and what we never do (content/service-pages.ts, rules).
+function Rules({ page: p, rules }: { page: Page; rules: NonNullable<Page['rules']> }) {
+  const h3 = { margin: 0, fontWeight: 800, fontSize: 22, letterSpacing: '-.02em', lineHeight: 1.2 } as const;
+  const list = (items: string[], ok: boolean, bg: string, fg: string) => (
+    <ul
+      style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 14 }}
+    >
+      {items.map((item) => (
+        <li
+          key={item}
+          style={{ display: 'grid', gridTemplateColumns: '28px minmax(0,1fr)', gap: 12, alignItems: 'start' }}
+        >
+          <span
+            aria-hidden="true"
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 9,
+              background: bg,
+              color: fg,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 800,
+              fontSize: 14,
+            }}
+          >
+            {ok ? '✓' : '✕'}
+          </span>
+          <span style={{ fontSize: 16, lineHeight: 1.5, color: T.body }}>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+  return (
+    <div
+      data-screen-label="Rules"
+      style={{ ...section, background: T.band, marginTop: 'clamp(56px,7vw,96px)' }}
+    >
+      <div className="container" style={column}>
+        <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{rules.heading}</h2>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))',
+            gap: 14,
+          }}
+        >
+          <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <h3 style={h3}>{rules.always.heading}</h3>
+            {list(rules.always.items, true, p.accentBg, p.accentFg)}
+          </div>
+          <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <h3 style={h3}>{rules.never.heading}</h3>
+            {list(rules.never.items, false, T.band, T.body)}
+          </div>
         </div>
       </div>
     </div>
