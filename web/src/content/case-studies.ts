@@ -58,9 +58,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     published: '2026-10-11',
     title: 'Chiropractic Marketing Case Study: Sumter, SC | DocsScale',
     metaDescription:
-      'How one marketing system, from lead generation to follow-up, grew a Sumter, SC chiropractic practice: more new patients, then referrals and walk-ins on top.',
-    h1: 'How one marketing system grew a Sumter chiropractic practice,',
-    h1Accent: 'from the first lead to the follow-up.',
+      'Chiropractic marketing case study: one system from lead generation to follow-up took a Sumter, SC practice from three slow months to steady new patients, referrals and walk-ins.',
+    h1: 'Three slow months. Then a Sumter chiropractic practice that',
+    h1Accent: 'keeps filling itself.',
     intro:
       'A chiropractic marketing case study from Sumter, South Carolina. We run the complete patient journey for Central Clinic of Chiropractic, from lead generation to follow-up. The first three months were slow. Then the new patients kept coming, and referrals and walk-ins grew on top.',
     accentBg: STAGE_COLORS.retain.bg,
