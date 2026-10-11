@@ -6,6 +6,7 @@
 const SERVICE_PAGE_HREFS: Record<string, string> = {
   'Paid ads (Meta & Google)': '/services/paid-ads/',
   'Reactivation & recall': '/services/patient-reactivation/',
+  'Social media management': '/services/social-media-management/',
 };
 
 export const serviceHref = (stage: string, name?: string) =>
