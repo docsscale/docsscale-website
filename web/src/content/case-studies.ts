@@ -172,7 +172,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       ],
     },
     quote: {
-      text: 'The first few months were slow, I\u2019ll be honest. Then it picked up and never stopped. New patients come in from the ads, every message gets answered right away, and nobody at the front desk has to chase anyone. We\u2019re one of the top clinics in Sumter now.',
+      text: 'DocsScale runs our ads, our messages and our follow-ups. We just see the patients. Easy to work with, and they get it done.',
       name: 'Dr. Jordan Reizer, D.C.',
       role: 'Central Clinic of Chiropractic, Sumter, SC',
     },

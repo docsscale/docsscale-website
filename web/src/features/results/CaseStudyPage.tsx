@@ -498,6 +498,8 @@ function Quote({ cs }: { cs: Case }) {
             padding: 'clamp(28px,4vw,52px)',
             display: 'flex',
             flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
             gap: 20,
           }}
         >
@@ -508,13 +510,13 @@ function Quote({ cs }: { cs: Case }) {
               fontSize: 'clamp(20px,2.2vw,30px)',
               lineHeight: 1.35,
               letterSpacing: '-.02em',
-              maxWidth: 900,
+              maxWidth: 760,
               textWrap: 'balance',
             }}
           >
             {`“${cs.quote.text}”`}
           </blockquote>
-          <figcaption style={{ display: 'flex', flexDirection: 'column' }}>
+          <figcaption style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <span style={{ fontSize: 15, fontWeight: 700 }}>{cs.quote.name}</span>
             <span style={{ fontSize: 13, opacity: 0.85 }}>{cs.quote.role}</span>
           </figcaption>
