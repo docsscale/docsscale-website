@@ -68,7 +68,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     h1: '30+ new patients a month,',
     h1Accent: 'on autopilot.',
     intro:
-      'Meta and Google ads bring people in. One system answers them in seconds, books them, follows up, and brings them back. Running for Central Clinic of Chiropractic in Sumter, South Carolina since January 2026.',
+      'A chiropractic marketing case study from Sumter, South Carolina. Meta and Google ads bring people in. One system answers them in seconds, books them, follows up, and brings them back. Running for Central Clinic of Chiropractic since January 2026.',
     accentBg: STAGE_COLORS.retain.bg,
     accentFg: STAGE_COLORS.retain.fg,
     stats: [
