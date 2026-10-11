@@ -62,7 +62,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     city: 'Sumter, SC',
     specialty: 'Chiropractic',
     published: '2026-10-11',
-    title: 'Chiropractic Case Study: 30+ New Patients a Month | DocsScale',
+    title: 'Chiropractic Case Study: 30+ Patients a Month | DocsScale',
     metaDescription:
       'Chiropractic marketing case study: Meta and Google ads plus one automated patient journey bring a Sumter, SC clinic 30+ qualified new patients a month.',
     h1: '30+ qualified new patients a month,',
