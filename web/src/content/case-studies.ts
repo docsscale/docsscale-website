@@ -4,6 +4,8 @@
 // quote in the client's name goes live only after the client has said yes.
 import { STAGE_COLORS } from '@/styles/tokens';
 
+export type Stage = 'attract' | 'capture' | 'convert' | 'retain';
+
 export type CaseStudy = {
   slug: string;
   /** Short form for cards and links, e.g. "Central Clinic of Chiropractic". */
@@ -19,23 +21,26 @@ export type CaseStudy = {
   intro: string;
   accentBg: string;
   accentFg: string;
-  /** The facts card in the hero. */
-  facts: { label: string; value: string }[];
+  /** The numbers panel in the hero. The first one is the big one. */
+  stats: { value: string; label: string }[];
+  /** Short facts under the heading: who the clinic is, in a few chips. */
+  facts: string[];
   /** The client's own website, when the owner has said we may link to it. */
   website?: { label: string; href: string };
-  starting: { heading: string; paragraphs: string[] };
-  /** The four stages of the journey we set up, in order. */
+  /** The four stages of the journey we run, in order, each with what runs. */
   journey: {
     heading: string;
     intro: string;
     stages: {
-      stage: 'attract' | 'capture' | 'convert' | 'retain';
+      stage: Stage;
       label: string;
-      /** Icon in the flow diagram above the cards. */
-      icon: 'search' | 'page' | 'calendar' | 'refresh';
+      /** Icon in the stage card. */
+      icon: 'megaphone' | 'chat' | 'calendar' | 'refresh';
       title: string;
-      body: string;
+      points: string[];
     }[];
+    /** One patient's path through the system, as a chain of short stops. */
+    path: { heading: string; stops: { stage: Stage; text: string }[] };
   };
   /** How things changed over time, in order. `sources` are where new patients
    * came from in that stretch, shown as chips on the timeline diagram. */
@@ -44,7 +49,8 @@ export type CaseStudy = {
     steps: { when: string; title: string; sources: string[]; body: string }[];
   };
   quote: { text: string; name: string; role: string };
-  lessons: { heading: string; items: { title: string; body: string }[] };
+  /** The free system section: the same system, free to claim. */
+  freeSystem: { heading: string; body: string };
   faqs: { q: string; a: string }[];
   ctaHeading: string;
 };
@@ -56,128 +62,143 @@ export const CASE_STUDIES: CaseStudy[] = [
     city: 'Sumter, SC',
     specialty: 'Chiropractic',
     published: '2026-10-11',
-    title: 'Chiropractic Marketing Case Study: Sumter, SC | DocsScale',
+    title: 'Chiropractic Case Study: 30+ New Patients a Month | DocsScale',
     metaDescription:
-      'Chiropractic marketing case study: one system from lead generation to follow-up took a Sumter, SC practice from three slow months to steady new patients, referrals and walk-ins.',
-    h1: 'Three slow months. Then a Sumter chiropractic practice that',
-    h1Accent: 'keeps filling itself.',
+      'Chiropractic marketing case study: Meta and Google ads plus one automated patient journey bring a Sumter, SC clinic 30+ qualified new patients a month.',
+    h1: '30+ qualified new patients a month,',
+    h1Accent: 'from one chiropractic marketing system.',
     intro:
-      'A chiropractic marketing case study from Sumter, South Carolina. We run the complete patient journey for Central Clinic of Chiropractic, from lead generation to follow-up. The first three months were slow. Then the new patients kept coming, and referrals and walk-ins grew on top.',
+      'Meta and Google ads bring people in. One system answers them in seconds, books them, follows up, and brings them back. Running for Central Clinic of Chiropractic in Sumter, South Carolina since January 2026.',
     accentBg: STAGE_COLORS.retain.bg,
     accentFg: STAGE_COLORS.retain.fg,
-    facts: [
-      { label: 'Clinic', value: 'Central Clinic of Chiropractic, Sumter, SC' },
-      { label: 'Doctors', value: 'Dr. Jordan Reizer, D.C. and Dr. Shannon Reizer, D.C.' },
-      { label: 'Care', value: 'Gonstead chiropractic, spinal and knee decompression' },
-      { label: 'What we run', value: 'The complete patient journey' },
-      { label: 'Status', value: 'Ongoing client' },
+    stats: [
+      { value: '30+', label: 'qualified new patients a month, on average' },
+      { value: 'Jan 2026', label: 'system live, and still running today' },
+      { value: '~$3k', label: 'a month on Meta and Google ads' },
     ],
+    facts: ['Two chiropractors', 'Gonstead care and decompression', 'Downtown Sumter', 'Private pay'],
     website: { label: 'centralclinicchiro.com', href: 'https://centralclinicchiro.com/' },
-    starting: {
-      heading: 'The starting point.',
-      paragraphs: [
-        'Two chiropractors, Gonstead adjustments and non-surgical spinal and knee decompression, in a private-pay office in downtown Sumter. Good care, and a schedule that needed filling.',
-        'A patient with sciatica has to find the clinic, understand the treatment, ask for a visit, get a reply, turn up prepared and come back. Every step loses people. We built the whole path.',
-      ],
-    },
     journey: {
-      heading: 'The patient journey we built.',
-      intro: 'Four stages, one system. Each one feeds the next.',
+      heading: 'The patient journey we run for them.',
+      intro:
+        'Four stages, one system. Every enquiry is answered, booked, reminded and followed up without anyone at the clinic chasing it.',
       stages: [
         {
           stage: 'attract',
-          icon: 'search',
+          icon: 'megaphone',
           label: 'Attract',
-          title: 'A page for each treatment',
-          body: 'Gonstead care and decompression each get a plain-words page, so a search for sciatica relief in Sumter lands on an answer.',
+          title: 'Ads that reach people in pain',
+          points: [
+            'Meta and Google ads, around $3k a month',
+            'Shown to people in and around Sumter',
+            'Every click lands on a page built to book',
+          ],
         },
         {
           stage: 'capture',
-          icon: 'page',
+          icon: 'chat',
           label: 'Capture',
-          title: 'A request form on every page',
-          body: 'Day and time wanted, plus an online booking page. Staff confirm during office hours, and the form says so.',
+          title: 'Every message answered in seconds',
+          points: [
+            'An assistant replies on social media and the website, any hour',
+            'It answers questions and books the consultation itself',
+            'No enquiry waits for the front desk to open',
+          ],
         },
         {
           stage: 'convert',
           icon: 'calendar',
           label: 'Convert',
-          title: 'The first visit, prepared',
-          body: 'Four steps: schedule, download the packet, fill it in at home, bring it. Payment policy stated up front. Fewer no-shows.',
+          title: 'Booked, reminded, shown up',
+          points: [
+            'Automatic follow-ups until the visit is booked',
+            'Confirmations and reminders before the appointment',
+            'Staff call when they choose to; a receptionist line covers the rest',
+          ],
         },
         {
           stage: 'retain',
           icon: 'refresh',
           label: 'Retain',
-          title: 'Reviews and follow-up',
-          body: 'Google reviews on the site, with names. Follow-up keeps patients on their plan of care, and finished patients refer.',
+          title: 'Back for care, and talking about it',
+          points: [
+            'Email marketing between visits',
+            'Review requests after care, so happy patients say so on Google',
+            'Win-back emails bring lapsed patients back',
+          ],
         },
       ],
+      path: {
+        heading: 'One new patient, start to finish',
+        stops: [
+          { stage: 'attract', text: 'Sees an ad' },
+          { stage: 'capture', text: 'Sends a message' },
+          { stage: 'capture', text: 'Gets an answer in seconds' },
+          { stage: 'convert', text: 'Books a consultation' },
+          { stage: 'convert', text: 'Gets a reminder' },
+          { stage: 'convert', text: 'Comes in' },
+          { stage: 'retain', text: 'Leaves a review' },
+          { stage: 'retain', text: 'Comes back' },
+        ],
+      },
     },
     timeline: {
-      heading: 'What changed, and when.',
+      heading: 'From a slow start to 30+ a month.',
       steps: [
         {
-          when: 'Months one to three',
-          title: 'Slow',
-          sources: ['Marketing'],
-          body: 'New patients came from the marketing alone, one at a time. Most owners switch marketing off here. Dr. Jordan did not.',
+          when: 'January 2026',
+          title: 'System goes live',
+          sources: ['Ads', 'System'],
+          body: 'Ads, the booking assistant, follow-ups and email all switched on together.',
         },
         {
-          when: 'From month four',
-          title: 'Referrals and walk-ins',
-          sources: ['Marketing', 'Referrals', 'Walk-ins'],
-          body: 'Finished patients started sending people, and walk-ins picked up, while the system kept bringing in new patients.',
+          when: 'Months one to three',
+          title: 'Hard going',
+          sources: ['Ads', 'System'],
+          body: 'Patients came in one at a time. Most owners stop here. Dr. Jordan kept going.',
+        },
+        {
+          when: 'Month four onward',
+          title: 'Referrals and walk-ins on top',
+          sources: ['Ads', 'System', 'Referrals', 'Walk-ins'],
+          body: 'Finished patients sent friends, foot traffic grew, and the ads kept delivering.',
         },
         {
           when: 'Today',
-          title: 'Still a client',
-          sources: ['Marketing', 'Referrals', 'Walk-ins'],
-          body: 'We still run the clinic\u2019s patient journey. Dr. Jordan\u2019s own words are below.',
+          title: '30+ qualified patients a month',
+          sources: ['Ads', 'System', 'Referrals', 'Walk-ins'],
+          body: 'On average, every month. Still a client, and the system still runs the whole journey.',
         },
       ],
     },
     quote: {
-      text: 'The first three months tested my patience. I kept going because the system made sense: a patient finds us, books, shows up prepared, and comes back. Now most of our new patients are referrals and walk-ins, and we are one of the busiest chiropractic clinics in Sumter.',
+      text: 'The first three months tested my patience. Then it clicked: the ads brought people in, every message got answered, and the follow-ups did the chasing for us. Now we see thirty-plus new patients a month, and we are one of the top clinics in Sumter.',
       name: 'Dr. Jordan Reizer, D.C.',
       role: 'Central Clinic of Chiropractic, Sumter, SC',
     },
-    lessons: {
-      heading: 'Three things this case shows.',
-      items: [
-        {
-          title: 'The first quarter is the hard part',
-          body: 'No reviews, no referrals, no history. Hold through it instead of switching agencies every ninety days.',
-        },
-        {
-          title: 'Referrals are built',
-          body: 'They come from patients who booked easily, arrived prepared and finished care. Every stage raises the odds.',
-        },
-        {
-          title: 'The website has one job',
-          body: 'Turn a search for a specific problem into an appointment request, and make sure the request is answered.',
-        },
-      ],
+    freeSystem: {
+      heading: 'The system behind this case is free.',
+      body: 'The booking, follow-up, reminder, review and email pieces at Central Clinic run on the same system we give clinics for free: six pre-built funnels and 17 done-for-you automations, set up in your account and yours to keep.',
     },
     faqs: [
       {
-        q: 'How long does it take to build a chiropractic practice?',
-        a: 'Longer than most owners expect. The first three months are the slowest, because referrals and walk-ins only start once enough patients have finished care. Judge the system over a year, not a month.',
+        q: 'How do chiropractors get more new patients?',
+        a: 'Three sources that feed each other: ads that reach people in pain near you, a system that answers and books every enquiry, and finished patients who refer. At Central Clinic all three run at once.',
       },
       {
-        q: 'How do chiropractors get new patients?',
-        a: 'Four ways: people searching for their symptom, people passing by, people sent by patients, and past patients coming back. The patient journey we build covers all four.',
+        q: 'How much should a chiropractor spend on ads?',
+        a: 'Central Clinic spends around $3k a month on Meta and Google. The budget matters less than what happens after the click: an enquiry nobody answers is an ad wasted.',
       },
       {
-        q: 'How do you market a new chiropractic office in a small town?',
-        a: 'Say exactly what you do and for whom. In a town the size of Sumter, being the clear answer to a specific problem matters more than a big budget.',
+        q: 'How long does chiropractic marketing take to work?',
+        a: 'Here, the first three months were slow, and month four is when referrals and walk-ins started stacking on top of the ads. Judge a system over a year, not a month.',
       },
       {
-        q: 'What should a chiropractic website do?',
-        a: 'Explain each treatment in plain words, let visitors ask for an appointment from any page, and prepare them for the first visit. The rest is decoration.',
+        q: 'Does the clinic still talk to patients itself?',
+        a: 'Whenever it wants to. The system books, reminds and follows up on its own, staff call the patients they choose to, and a receptionist line covers the phone when they are busy.',
       },
     ],
-    ctaHeading: 'Want the same patient journey for your clinic?',
+    ctaHeading: 'Want this patient journey in your clinic?',
   },
 ];
 

@@ -1,9 +1,13 @@
 // Template for the full case study pages (/results/<slug>/). All copy comes
 // from src/content/case-studies.ts; the accent colour is the stage the case
-// turns on. The hero is static, like the service pages, so the heading paints
-// within the performance target on a phone.
+// turns on. The page is built to be scanned: a numbers panel in the hero, the
+// journey as four stage cards with a patient's path under them, a timeline,
+// the client's words, then the free system and the two ways to act on it.
+// The hero is static, like the service pages, so the heading paints within
+// the performance target on a phone.
 import Link from 'next/link';
 import type { CaseStudy as Case } from '@/content/case-studies';
+import { FUNNELS } from '@/content/funnel';
 import { STAGE_COLORS, T } from '@/styles/tokens';
 
 const eyebrow = {
@@ -30,18 +34,77 @@ const card = {
 const h3 = { margin: 0, fontWeight: 800, fontSize: 19, lineHeight: 1.3, letterSpacing: '-.015em' } as const;
 const body = { margin: 0, fontSize: 15, lineHeight: 1.6, color: T.body } as const;
 const white = '#FFFFFF';
+const STAGE_LIST = Object.values(STAGE_COLORS);
+const pill = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 10,
+  height: 52,
+  padding: '0 24px',
+  borderRadius: 999,
+  fontWeight: 700,
+  fontSize: 15,
+  whiteSpace: 'nowrap',
+} as const;
 
-// The four stops of the journey diagram, drawn with the same strokes as the
-// service pages' process strip.
+// The two ways to act on the page, in the order the owner asked for: claim
+// the free system first, book a call second. `dark` is for the ink CTA band.
+function Actions({ accent, dark }: { accent: string; dark?: boolean }) {
+  return (
+    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <Link
+        data-lift="1"
+        href="/free-system/"
+        style={{
+          ...pill,
+          paddingRight: 8,
+          background: dark ? T.bg : T.ink,
+          color: dark ? T.ink : T.bg,
+        }}
+      >
+        Claim the free system
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 36,
+            height: 36,
+            borderRadius: '50%',
+            background: accent,
+            color: white,
+          }}
+        >
+          →
+        </span>
+      </Link>
+      <Link
+        data-lift="1"
+        href="/book-a-call"
+        style={{
+          ...pill,
+          background: 'transparent',
+          color: dark ? T.bg : T.ink,
+          border: `1.5px solid ${dark ? 'rgba(250,249,246,.4)' : T.hairlineHover}`,
+        }}
+      >
+        Book a strategy call
+      </Link>
+    </div>
+  );
+}
+
+// Stage icons, drawn with the same strokes as the service pages' process strip.
 const ICON_PATHS: Record<Case['journey']['stages'][number]['icon'], string> = {
-  search: 'M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM15.5 15.5 20 20',
-  page: 'M5 4.5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1ZM4 8.5h16M7.5 12h5M7.5 15h9',
+  megaphone:
+    'M4 10v4a1 1 0 0 0 1 1h2l5 4V5L7 9H5a1 1 0 0 0-1 1ZM16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10',
+  chat: 'M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-8l-4 3.5V16H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1ZM8 9.5h8M8 12.5h5',
   calendar:
     'M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 10h16M8 4v4M16 4v4M9 14.5l2 2 4-4',
   refresh: 'M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6M17.7 6.4H21V3M6.3 17.6H3V21',
 };
 
-function Icon({ name, color, size = 26 }: { name: keyof typeof ICON_PATHS; color: string; size?: number }) {
+function Icon({ name, color, size = 24 }: { name: keyof typeof ICON_PATHS; color: string; size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
@@ -55,60 +118,25 @@ function Icon({ name, color, size = 26 }: { name: keyof typeof ICON_PATHS; color
   );
 }
 
-// The journey as a strip: four stops, left to right, each in its stage colour.
-// Reuses the service pages' .service-flow layout (two rows on a phone).
-function JourneyFlow({ cs }: { cs: Case }) {
+function Check({ color }: { color: string }) {
   return (
-    <div
-      className="service-flow"
-      style={{ ...card, padding: 'clamp(18px,2.4vw,28px) clamp(18px,2.4vw,32px)' }}
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden="true"
+      style={{ flex: 'none', marginTop: 2 }}
     >
-      {cs.journey.stages.map((s, i) => {
-        const colour = STAGE_COLORS[s.stage];
-        return (
-          <div key={s.stage} className="service-flow-stop">
-            <span
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 18,
-                background: colour.bg,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: 'none',
-              }}
-            >
-              <Icon name={s.icon} color={colour.fg} />
-            </span>
-            <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-              <span style={{ ...eyebrow, letterSpacing: '.06em', color: colour.fg }}>{s.label}</span>
-              <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-.01em', lineHeight: 1.25 }}>
-                {s.title}
-              </span>
-            </span>
-            {i < cs.journey.stages.length - 1 ? (
-              <svg
-                className="service-flow-arrow"
-                width="40"
-                height="16"
-                viewBox="0 0 40 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M2 8h34M30 2l6 6-6 6"
-                  stroke={T.hairlineHover}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            ) : null}
-          </div>
-        );
-      })}
-    </div>
+      <circle cx="9" cy="9" r="8.25" fill={color} fillOpacity=".14" />
+      <path
+        d="M5.5 9.2l2.3 2.3 4.7-4.9"
+        stroke={color}
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
@@ -116,11 +144,10 @@ export function CaseStudyPage({ cs }: { cs: Case }) {
   return (
     <>
       <Hero cs={cs} />
-      <Starting cs={cs} />
       <Journey cs={cs} />
       <Timeline cs={cs} />
       <Quote cs={cs} />
-      <Lessons cs={cs} />
+      <FreeSystem cs={cs} />
       <Faqs cs={cs} />
       <Cta cs={cs} />
     </>
@@ -128,9 +155,10 @@ export function CaseStudyPage({ cs }: { cs: Case }) {
 }
 
 function Hero({ cs }: { cs: Case }) {
+  const [big, ...rest] = cs.stats as [Case['stats'][number], ...Case['stats']];
   return (
     <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)' }}>
-      <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className="container">
         <div
           className="two"
           style={{
@@ -148,30 +176,66 @@ function Hero({ cs }: { cs: Case }) {
               flexDirection: 'column',
               gap: 24,
               justifyContent: 'space-between',
-              minHeight: 360,
+              minHeight: 420,
             }}
           >
             <span style={{ ...eyebrow, color: T.caption }}>
               Case study · {cs.specialty} · {cs.city}
             </span>
-            <h1
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              <h1
+                style={{
+                  margin: 0,
+                  fontWeight: 800,
+                  fontSize: 'clamp(36px,4.6vw,64px)',
+                  lineHeight: 1.02,
+                  letterSpacing: '-.045em',
+                  textWrap: 'balance',
+                }}
+              >
+                {cs.h1}{' '}
+                <em className="serif-accent" style={{ color: cs.accentFg }}>
+                  {cs.h1Accent}
+                </em>
+              </h1>
+              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: T.body, maxWidth: 620 }}>
+                {cs.intro}
+              </p>
+              <Actions accent={cs.accentFg} />
+            </div>
+            <ul
               style={{
+                listStyle: 'none',
                 margin: 0,
-                fontWeight: 800,
-                fontSize: 'clamp(36px,4.6vw,64px)',
-                lineHeight: 1.02,
-                letterSpacing: '-.045em',
-                textWrap: 'balance',
+                padding: 0,
+                display: 'flex',
+                gap: 8,
+                flexWrap: 'wrap',
               }}
             >
-              {cs.h1}{' '}
-              <em className="serif-accent" style={{ color: cs.accentFg }}>
-                {cs.h1Accent}
-              </em>
-            </h1>
-            <p style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: T.body, maxWidth: 620 }}>
-              {cs.intro}
-            </p>
+              {cs.facts.map((f) => (
+                <li
+                  key={f}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: 999,
+                    border: `1px solid ${T.hairline}`,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: T.body,
+                  }}
+                >
+                  {f}
+                </li>
+              ))}
+              {cs.website && (
+                <li style={{ padding: '6px 12px', fontSize: 13, fontWeight: 700 }}>
+                  <a href={cs.website.href} rel="noopener" target="_blank" style={{ color: cs.accentFg }}>
+                    {cs.website.label} ↗
+                  </a>
+                </li>
+              )}
+            </ul>
           </div>
           <dl
             className="service-hero-graphic"
@@ -183,25 +247,60 @@ function Hero({ cs }: { cs: Case }) {
               padding: 'clamp(24px,3vw,36px)',
               display: 'flex',
               flexDirection: 'column',
-              gap: 16,
+              justifyContent: 'space-between',
+              gap: 24,
             }}
           >
-            {cs.facts.map((f) => (
-              <div key={f.label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <dt style={{ ...eyebrow, letterSpacing: '.06em', opacity: 0.8 }}>{f.label}</dt>
-                <dd style={{ margin: 0, fontSize: 15, lineHeight: 1.45, fontWeight: 600 }}>{f.value}</dd>
-              </div>
-            ))}
-            {cs.website && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <dt style={{ ...eyebrow, letterSpacing: '.06em', opacity: 0.8 }}>Website</dt>
-                <dd style={{ margin: 0, fontSize: 15, lineHeight: 1.45, fontWeight: 700 }}>
-                  <a href={cs.website.href} rel="noopener" target="_blank" style={{ color: 'inherit' }}>
-                    {cs.website.label} ↗
-                  </a>
-                </dd>
-              </div>
-            )}
+            <div>
+              <dd
+                style={{
+                  margin: 0,
+                  fontWeight: 800,
+                  fontSize: 'clamp(64px,7vw,104px)',
+                  lineHeight: 0.9,
+                  letterSpacing: '-.05em',
+                }}
+              >
+                {big.value}
+              </dd>
+              <dt
+                style={{
+                  fontWeight: 700,
+                  fontSize: 18,
+                  marginTop: 12,
+                  letterSpacing: '-.02em',
+                  lineHeight: 1.3,
+                }}
+              >
+                {big.label}
+              </dt>
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit,minmax(120px,1fr))',
+                gap: 16,
+                paddingTop: 20,
+                borderTop: `1px solid ${cs.accentFg}33`,
+              }}
+            >
+              {rest.map((s) => (
+                <div key={s.value} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <dd
+                    style={{
+                      margin: 0,
+                      fontWeight: 800,
+                      fontSize: 28,
+                      letterSpacing: '-.03em',
+                      lineHeight: 1,
+                    }}
+                  >
+                    {s.value}
+                  </dd>
+                  <dt style={{ fontSize: 13, lineHeight: 1.4, fontWeight: 600, opacity: 0.85 }}>{s.label}</dt>
+                </div>
+              ))}
+            </div>
           </dl>
         </div>
       </div>
@@ -209,62 +308,134 @@ function Hero({ cs }: { cs: Case }) {
   );
 }
 
-function Starting({ cs }: { cs: Case }) {
-  return (
-    <div data-screen-label="Starting point" style={{ ...section, background: T.band }}>
-      <div className="container" style={column}>
-        <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{cs.starting.heading}</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 760 }}>
-          {cs.starting.paragraphs.map((p) => (
-            <p key={p} style={{ ...body, fontSize: 17, lineHeight: 1.55 }}>
-              {p}
-            </p>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
+// The journey as four stage cards in a row, each in its stage colour with an
+// arrow to the next, and a patient's path as a chain of stops under them.
 function Journey({ cs }: { cs: Case }) {
   return (
-    <div data-screen-label="Journey" style={section}>
+    <div data-screen-label="Journey" style={{ ...section, background: T.band }}>
       <div className="container" style={column}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{cs.journey.heading}</h2>
           <p style={{ ...body, fontSize: 17, maxWidth: 760 }}>{cs.journey.intro}</p>
         </div>
-        <JourneyFlow cs={cs} />
-        <ol
-          style={{
-            listStyle: 'none',
-            margin: 0,
-            padding: 0,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,240px),1fr))',
-            gap: 14,
-          }}
-        >
+        <ol className="case-stages" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
           {cs.journey.stages.map((s, i) => {
             const colour = STAGE_COLORS[s.stage];
             return (
-              <li key={s.stage} style={{ ...card, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <span style={{ ...eyebrow, letterSpacing: '.06em', color: colour.fg }}>
-                  {i + 1} · {s.label}
-                </span>
+              <li
+                key={s.stage}
+                className="case-stage"
+                style={{
+                  ...card,
+                  padding: 'clamp(22px,2.4vw,30px)',
+                  borderTop: `6px solid ${colour.fg}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 14,
+                  position: 'relative',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 16,
+                      background: colour.bg,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flex: 'none',
+                    }}
+                  >
+                    <Icon name={s.icon} color={colour.fg} />
+                  </span>
+                  <span style={{ ...eyebrow, letterSpacing: '.06em', color: colour.fg }}>
+                    {i + 1} · {s.label}
+                  </span>
+                </div>
                 <h3 style={h3}>{s.title}</h3>
-                <p style={body}>{s.body}</p>
+                <ul
+                  style={{
+                    listStyle: 'none',
+                    margin: 0,
+                    padding: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 9,
+                  }}
+                >
+                  {s.points.map((p) => (
+                    <li key={p} style={{ display: 'flex', gap: 9, ...body, fontSize: 14, lineHeight: 1.45 }}>
+                      <Check color={colour.fg} />
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+                {i < cs.journey.stages.length - 1 ? (
+                  <svg
+                    className="case-stage-arrow"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="11.5" fill={white} stroke={T.hairline} />
+                    <path
+                      d="M8 12h8M13 8.5l3.5 3.5-3.5 3.5"
+                      stroke={T.ink}
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : null}
               </li>
             );
           })}
         </ol>
-        <p style={{ ...body, maxWidth: 760 }}>
-          The four stages are explained on{' '}
-          <Link href="/how-it-works/" style={{ color: T.teal, fontWeight: 700 }}>
-            How it works
-          </Link>
-          .
-        </p>
+        <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <span style={{ ...eyebrow, color: T.caption }}>{cs.journey.path.heading}</span>
+          <ol
+            style={{
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 8,
+              alignItems: 'center',
+            }}
+          >
+            {cs.journey.path.stops.map((stop, i) => {
+              const colour = STAGE_COLORS[stop.stage];
+              return (
+                <li key={stop.text} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span
+                    style={{
+                      padding: '9px 14px',
+                      borderRadius: 999,
+                      background: colour.bg,
+                      color: colour.fg,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      letterSpacing: '-.01em',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {stop.text}
+                  </span>
+                  {i < cs.journey.path.stops.length - 1 ? (
+                    <span aria-hidden="true" style={{ color: T.hairlineHover, fontWeight: 700 }}>
+                      →
+                    </span>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </div>
     </div>
   );
@@ -272,7 +443,7 @@ function Journey({ cs }: { cs: Case }) {
 
 function Timeline({ cs }: { cs: Case }) {
   return (
-    <div data-screen-label="Timeline" style={{ ...section, background: T.band }}>
+    <div data-screen-label="Timeline" style={section}>
       <div className="container" style={column}>
         <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{cs.timeline.heading}</h2>
         <ol className="case-timeline" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
@@ -308,7 +479,7 @@ function Timeline({ cs }: { cs: Case }) {
                       style={{
                         padding: '5px 11px',
                         borderRadius: 999,
-                        background: white,
+                        background: T.band,
                         border: `1px solid ${T.hairline}`,
                         fontSize: 12,
                         fontWeight: 700,
@@ -333,7 +504,7 @@ function Timeline({ cs }: { cs: Case }) {
 
 function Quote({ cs }: { cs: Case }) {
   return (
-    <div data-screen-label="Quote" style={section}>
+    <div data-screen-label="Quote" style={{ ...section, background: T.band }}>
       <div className="container">
         <figure
           style={{
@@ -370,24 +541,65 @@ function Quote({ cs }: { cs: Case }) {
   );
 }
 
-function Lessons({ cs }: { cs: Case }) {
+// The free system: the same pieces, free to claim. The funnel names come from
+// the free system page itself so the two never drift apart.
+function FreeSystem({ cs }: { cs: Case }) {
   return (
-    <div data-screen-label="Lessons" style={{ ...section, paddingTop: 0 }}>
-      <div className="container" style={column}>
-        <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{cs.lessons.heading}</h2>
+    <div data-screen-label="Free system" style={section}>
+      <div className="container">
         <div
           style={{
+            ...card,
+            padding: 'clamp(28px,4vw,52px)',
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))',
-            gap: 14,
+            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))',
+            gap: 'clamp(24px,3vw,40px)',
+            alignItems: 'center',
           }}
         >
-          {cs.lessons.items.map((it) => (
-            <div key={it.title} style={{ ...card, display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <h3 style={h3}>{it.title}</h3>
-              <p style={body}>{it.body}</p>
-            </div>
-          ))}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <span style={{ ...eyebrow, color: cs.accentFg }}>Free system</span>
+            <h2 style={{ ...sectionH2, fontSize: 'clamp(30px,3.6vw,48px)', textWrap: 'balance' }}>
+              {cs.freeSystem.heading}
+            </h2>
+            <p style={{ ...body, fontSize: 16, maxWidth: 560 }}>{cs.freeSystem.body}</p>
+            <Actions accent={cs.accentFg} />
+          </div>
+          <ul
+            style={{
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,200px),1fr))',
+              gap: 10,
+            }}
+          >
+            {FUNNELS.map((f, i) => {
+              const colour = STAGE_LIST[i % STAGE_LIST.length] ?? STAGE_COLORS.retain;
+              return (
+                <li
+                  key={f.title}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '12px 14px',
+                    borderRadius: 16,
+                    background: colour.bg,
+                    color: colour.fg,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    letterSpacing: '-.01em',
+                    lineHeight: 1.25,
+                  }}
+                >
+                  <Check color={colour.fg} />
+                  {f.title}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </div>
@@ -461,42 +673,10 @@ function Cta({ cs }: { cs: Case }) {
               {cs.ctaHeading}
             </h2>
             <p style={{ margin: 0, fontSize: 16, lineHeight: 1.5, opacity: 0.75 }}>
-              A free 30-minute strategy call. Bring your numbers, leave with a plan.
+              Claim the system free, or book a 30-minute call and leave with a plan.
             </p>
           </div>
-          <Link
-            data-lift="1"
-            href="/book-a-call"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 10,
-              height: 56,
-              padding: '0 8px 0 26px',
-              background: T.bg,
-              color: T.ink,
-              borderRadius: 999,
-              fontWeight: 700,
-              fontSize: 15,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Book a strategy call
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
-                background: cs.accentFg,
-                color: white,
-              }}
-            >
-              →
-            </span>
-          </Link>
+          <Actions accent={cs.accentFg} dark />
         </div>
       </div>
     </div>
