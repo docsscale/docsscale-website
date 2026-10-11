@@ -172,7 +172,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       ],
     },
     quote: {
-      text: 'The first three months tested my patience. Then it clicked: the ads brought people in, every message got answered, and the follow-ups did the chasing for us. Now we see thirty-plus new patients a month, and we are one of the top clinics in Sumter.',
+      text: 'The first few months were slow, I\u2019ll be honest. Then it picked up and never stopped. New patients come in from the ads, every message gets answered right away, and nobody at the front desk has to chase anyone. We\u2019re one of the top clinics in Sumter now.',
       name: 'Dr. Jordan Reizer, D.C.',
       role: 'Central Clinic of Chiropractic, Sumter, SC',
     },
