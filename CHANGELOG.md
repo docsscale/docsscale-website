@@ -5,6 +5,12 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.9.0] — 2026-10-11
+
+Social media management service page. Visible to visitors: the new `/services/social-media-management/` page, and links to it from the menu, the footer, `/services/` and the med spa page.
+
+- **Social media management service page** (owner's approval of the before/after, 11 Oct 2026; #125). `/services/social-media-management/` follows the paid ads and reactivation pages' layout: a direct answer at the top with a drawn example of one week of a month's plan marked approved and a direct message answered with a booking, our monthly plan-and-approve process in six steps, what goes into a month and what we never post, the Las Vegas med spa case copied exactly from `/results/`, who it suits and who it does not, and eight questions. The menu and footer entry "Social media management", the social media card on `/services/` and the med spa page's card now open it (they previously pointed at the Attract section of `/services/`). It carries breadcrumb, organisation, Service and FAQ structured data, and its speed is recorded as its own baseline, as the other two service pages' were.
+
 ## [1.8.1] — 2026-10-10
 
 Footer social icons. Visible to visitors: four small icons in the footer of every page (the free system funnel keeps its own footer).
