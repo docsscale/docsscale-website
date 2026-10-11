@@ -22,6 +22,10 @@ export const ROUTES = [
   { name: "industries-med-spa", path: "/industries/med-spa/" },
   { name: "how-it-works", path: "/how-it-works/" },
   { name: "results", path: "/results/" },
+  {
+    name: "results-central-clinic-of-chiropractic",
+    path: "/results/central-clinic-of-chiropractic/",
+  },
   { name: "about", path: "/about/" },
   { name: "book-a-call", path: "/book-a-call/" },
   { name: "privacy", path: "/privacy/" },

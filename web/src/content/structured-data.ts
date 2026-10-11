@@ -2,6 +2,7 @@
 // page; it is defined once and the Service blocks point to it by @id.
 import { SERVICE_STAGES, SITE, SOCIAL_LINKS } from './site';
 import { SERVED_SPECIALTIES, sentenceCase, specialtyList } from './served-specialties';
+import type { CaseStudy } from './case-studies';
 
 export const ORGANIZATION = {
   '@context': 'https://schema.org',
@@ -529,6 +530,37 @@ export const STRUCTURED_DATA = {
       ],
     },
     ORGANIZATION,
+  ],
+  // One full case study page (/results/<slug>/): breadcrumb and an Article
+  // about the client, written by the organisation.
+  caseStudy: (cs: CaseStudy) => [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://docsscale.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Results', item: 'https://docsscale.com/results/' },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: cs.clinic,
+          item: `https://docsscale.com/results/${cs.slug}/`,
+        },
+      ],
+    },
+    ORGANIZATION,
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: `${cs.h1} ${cs.h1Accent}`,
+      description: cs.metaDescription,
+      url: `https://docsscale.com/results/${cs.slug}/`,
+      datePublished: cs.published,
+      dateModified: cs.published,
+      author: { '@id': 'https://docsscale.com/#organization' },
+      publisher: { '@id': 'https://docsscale.com/#organization' },
+      about: { '@type': 'MedicalBusiness', name: cs.clinic, address: cs.city, url: cs.website?.href },
+    },
   ],
   results: [
     {
