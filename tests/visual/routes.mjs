@@ -8,6 +8,10 @@ export const ROUTES = [
     name: "services-patient-reactivation",
     path: "/services/patient-reactivation/",
   },
+  {
+    name: "services-social-media-management",
+    path: "/services/social-media-management/",
+  },
   { name: "industries", path: "/industries/" },
   { name: "industries-dental", path: "/industries/dental/" },
   { name: "industries-chiropractic", path: "/industries/chiropractic/" },

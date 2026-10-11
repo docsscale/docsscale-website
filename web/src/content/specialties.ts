@@ -425,6 +425,7 @@ export const SPECIALTIES: Specialty[] = [
       },
       {
         title: 'Social media management',
+        href: '/services/social-media-management/',
         body: 'Consistent posting in your voice, planned ahead, with comments and DMs answered as part of the system, not an afterthought.',
       },
       {
