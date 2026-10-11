@@ -31,6 +31,87 @@ const h3 = { margin: 0, fontWeight: 800, fontSize: 19, lineHeight: 1.3, letterSp
 const body = { margin: 0, fontSize: 15, lineHeight: 1.6, color: T.body } as const;
 const white = '#FFFFFF';
 
+// The four stops of the journey diagram, drawn with the same strokes as the
+// service pages' process strip.
+const ICON_PATHS: Record<Case['journey']['stages'][number]['icon'], string> = {
+  search: 'M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM15.5 15.5 20 20',
+  page: 'M5 4.5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1ZM4 8.5h16M7.5 12h5M7.5 15h9',
+  calendar:
+    'M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM4 10h16M8 4v4M16 4v4M9 14.5l2 2 4-4',
+  refresh: 'M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6M17.7 6.4H21V3M6.3 17.6H3V21',
+};
+
+function Icon({ name, color, size = 26 }: { name: keyof typeof ICON_PATHS; color: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d={ICON_PATHS[name]}
+        stroke={color}
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// The journey as a strip: four stops, left to right, each in its stage colour.
+// Reuses the service pages' .service-flow layout (two rows on a phone).
+function JourneyFlow({ cs }: { cs: Case }) {
+  return (
+    <div
+      className="service-flow"
+      style={{ ...card, padding: 'clamp(18px,2.4vw,28px) clamp(18px,2.4vw,32px)' }}
+    >
+      {cs.journey.stages.map((s, i) => {
+        const colour = STAGE_COLORS[s.stage];
+        return (
+          <div key={s.stage} className="service-flow-stop">
+            <span
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 18,
+                background: colour.bg,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 'none',
+              }}
+            >
+              <Icon name={s.icon} color={colour.fg} />
+            </span>
+            <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+              <span style={{ ...eyebrow, letterSpacing: '.06em', color: colour.fg }}>{s.label}</span>
+              <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-.01em', lineHeight: 1.25 }}>
+                {s.title}
+              </span>
+            </span>
+            {i < cs.journey.stages.length - 1 ? (
+              <svg
+                className="service-flow-arrow"
+                width="40"
+                height="16"
+                viewBox="0 0 40 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 8h34M30 2l6 6-6 6"
+                  stroke={T.hairlineHover}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function CaseStudyPage({ cs }: { cs: Case }) {
   return (
     <>
@@ -153,6 +234,7 @@ function Journey({ cs }: { cs: Case }) {
           <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{cs.journey.heading}</h2>
           <p style={{ ...body, fontSize: 17, maxWidth: 760 }}>{cs.journey.intro}</p>
         </div>
+        <JourneyFlow cs={cs} />
         <ol
           style={{
             listStyle: 'none',
@@ -166,17 +248,8 @@ function Journey({ cs }: { cs: Case }) {
           {cs.journey.stages.map((s, i) => {
             const colour = STAGE_COLORS[s.stage];
             return (
-              <li key={s.stage} style={{ ...card, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <span
-                  style={{
-                    ...eyebrow,
-                    alignSelf: 'flex-start',
-                    padding: '6px 12px',
-                    borderRadius: 999,
-                    background: colour.bg,
-                    color: colour.fg,
-                  }}
-                >
+              <li key={s.stage} style={{ ...card, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <span style={{ ...eyebrow, letterSpacing: '.06em', color: colour.fg }}>
                   {i + 1} · {s.label}
                 </span>
                 <h3 style={h3}>{s.title}</h3>
@@ -202,27 +275,57 @@ function Timeline({ cs }: { cs: Case }) {
     <div data-screen-label="Timeline" style={{ ...section, background: T.band }}>
       <div className="container" style={column}>
         <h2 style={{ ...sectionH2, maxWidth: 760, textWrap: 'balance' }}>{cs.timeline.heading}</h2>
-        <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
+        <ol className="case-timeline" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
           {cs.timeline.steps.map((s, i) => (
-            <li
-              key={s.when}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,220px),1fr))',
-                gap: '10px 40px',
-                padding: '24px 0',
-                borderTop: `1px solid ${T.hairlineHover}`,
-                borderBottom: i === cs.timeline.steps.length - 1 ? `1px solid ${T.hairlineHover}` : undefined,
-              }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <li key={s.when} style={{ display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    width: 18,
+                    height: 18,
+                    borderRadius: '50%',
+                    background: cs.accentFg,
+                    border: `4px solid ${cs.accentBg}`,
+                    flex: 'none',
+                  }}
+                />
+                {i < cs.timeline.steps.length - 1 ? (
+                  <span
+                    className="case-timeline-line"
+                    aria-hidden="true"
+                    style={{ flex: 1, height: 2, background: T.hairlineHover, borderRadius: 1 }}
+                  />
+                ) : null}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingRight: 24 }}>
                 <span style={{ ...eyebrow, color: cs.accentFg }}>{s.when}</span>
                 <h3 style={h3}>{s.title}</h3>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '4px 0' }}>
+                  {s.sources.map((src) => (
+                    <span
+                      key={src}
+                      style={{
+                        padding: '5px 11px',
+                        borderRadius: 999,
+                        background: white,
+                        border: `1px solid ${T.hairline}`,
+                        fontSize: 12,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {src}
+                    </span>
+                  ))}
+                </div>
+                <p style={body}>{s.body}</p>
               </div>
-              <p style={{ ...body, gridColumn: 'span 2' }}>{s.body}</p>
             </li>
           ))}
         </ol>
+        <p style={{ ...body, fontSize: 13, color: T.caption, maxWidth: 760 }}>
+          The chips show where new patients came from in each stretch, as the owner described it.
+        </p>
       </div>
     </div>
   );

@@ -92,3 +92,20 @@
     height: 220px !important;
   }
 }
+
+/* The case study timeline: three stops on one line, each with a line to the
+   next; on a phone they stack and the connecting lines go. */
+.case-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 760px) {
+  .case-timeline {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .case-timeline-line {
+    display: none;
+  }
+}

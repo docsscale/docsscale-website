@@ -31,12 +31,18 @@ export type CaseStudy = {
     stages: {
       stage: 'attract' | 'capture' | 'convert' | 'retain';
       label: string;
+      /** Icon in the flow diagram above the cards. */
+      icon: 'search' | 'page' | 'calendar' | 'refresh';
       title: string;
       body: string;
     }[];
   };
-  /** How things changed over time, in order. */
-  timeline: { heading: string; steps: { when: string; title: string; body: string }[] };
+  /** How things changed over time, in order. `sources` are where new patients
+   * came from in that stretch, shown as chips on the timeline diagram. */
+  timeline: {
+    heading: string;
+    steps: { when: string; title: string; sources: string[]; body: string }[];
+  };
   quote: { text: string; name: string; role: string };
   lessons: { heading: string; items: { title: string; body: string }[] };
   faqs: { q: string; a: string }[];
@@ -80,24 +86,28 @@ export const CASE_STUDIES: CaseStudy[] = [
       stages: [
         {
           stage: 'attract',
+          icon: 'search',
           label: 'Attract',
           title: 'A page for each treatment',
           body: 'Gonstead care and decompression each get a plain-words page, so a search for sciatica relief in Sumter lands on an answer.',
         },
         {
           stage: 'capture',
+          icon: 'page',
           label: 'Capture',
           title: 'A request form on every page',
           body: 'Day and time wanted, plus an online booking page. Staff confirm during office hours, and the form says so.',
         },
         {
           stage: 'convert',
+          icon: 'calendar',
           label: 'Convert',
           title: 'The first visit, prepared',
           body: 'Four steps: schedule, download the packet, fill it in at home, bring it. Payment policy stated up front. Fewer no-shows.',
         },
         {
           stage: 'retain',
+          icon: 'refresh',
           label: 'Retain',
           title: 'Reviews and follow-up',
           body: 'Google reviews on the site, with names. Follow-up keeps patients on their plan of care, and finished patients refer.',
@@ -110,16 +120,19 @@ export const CASE_STUDIES: CaseStudy[] = [
         {
           when: 'Months one to three',
           title: 'Slow',
+          sources: ['Marketing'],
           body: 'New patients came from the marketing alone, one at a time. Most owners switch marketing off here. Dr. Jordan did not.',
         },
         {
           when: 'From month four',
           title: 'Referrals and walk-ins',
+          sources: ['Marketing', 'Referrals', 'Walk-ins'],
           body: 'Finished patients started sending people, and walk-ins picked up, while the system kept bringing in new patients.',
         },
         {
           when: 'Today',
           title: 'Still a client',
+          sources: ['Marketing', 'Referrals', 'Walk-ins'],
           body: 'We still run the clinic\u2019s patient journey. Dr. Jordan\u2019s own words are below.',
         },
       ],
