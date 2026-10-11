@@ -65,8 +65,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: 'Chiropractic Case Study: 30+ Patients a Month | DocsScale',
     metaDescription:
       'Chiropractic marketing case study: Meta and Google ads plus one automated patient journey bring a Sumter, SC clinic 30+ qualified new patients a month.',
-    h1: '30+ qualified new patients a month,',
-    h1Accent: 'from one chiropractic marketing system.',
+    h1: '30+ new patients a month,',
+    h1Accent: 'on autopilot.',
     intro:
       'Meta and Google ads bring people in. One system answers them in seconds, books them, follows up, and brings them back. Running for Central Clinic of Chiropractic in Sumter, South Carolina since January 2026.',
     accentBg: STAGE_COLORS.retain.bg,

@@ -155,7 +155,6 @@ export function CaseStudyPage({ cs }: { cs: Case }) {
 }
 
 function Hero({ cs }: { cs: Case }) {
-  const [big, ...rest] = cs.stats as [Case['stats'][number], ...Case['stats']];
   return (
     <div id="top" data-screen-label="Hero" style={{ padding: 'clamp(28px,4vw,56px) 0 clamp(40px,5vw,64px)' }}>
       <div className="container">
@@ -176,7 +175,6 @@ function Hero({ cs }: { cs: Case }) {
               flexDirection: 'column',
               gap: 24,
               justifyContent: 'space-between',
-              minHeight: 420,
             }}
           >
             <span style={{ ...eyebrow, color: T.caption }}>
@@ -248,59 +246,44 @@ function Hero({ cs }: { cs: Case }) {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              gap: 24,
+              gap: 18,
             }}
           >
-            <div>
-              <dd
+            {cs.stats.map((s, i) => (
+              <div
+                key={s.value}
                 style={{
-                  margin: 0,
-                  fontWeight: 800,
-                  fontSize: 'clamp(64px,7vw,104px)',
-                  lineHeight: 0.9,
-                  letterSpacing: '-.05em',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 6,
+                  paddingTop: i ? 18 : 0,
+                  borderTop: i ? `1px solid ${cs.accentFg}33` : undefined,
                 }}
               >
-                {big.value}
-              </dd>
-              <dt
-                style={{
-                  fontWeight: 700,
-                  fontSize: 18,
-                  marginTop: 12,
-                  letterSpacing: '-.02em',
-                  lineHeight: 1.3,
-                }}
-              >
-                {big.label}
-              </dt>
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit,minmax(120px,1fr))',
-                gap: 16,
-                paddingTop: 20,
-                borderTop: `1px solid ${cs.accentFg}33`,
-              }}
-            >
-              {rest.map((s) => (
-                <div key={s.value} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <dd
-                    style={{
-                      margin: 0,
-                      fontWeight: 800,
-                      fontSize: 28,
-                      letterSpacing: '-.03em',
-                      lineHeight: 1,
-                    }}
-                  >
-                    {s.value}
-                  </dd>
-                  <dt style={{ fontSize: 13, lineHeight: 1.4, fontWeight: 600, opacity: 0.85 }}>{s.label}</dt>
-                </div>
-              ))}
-            </div>
+                <dd
+                  style={{
+                    margin: 0,
+                    fontWeight: 800,
+                    fontSize: i ? 'clamp(28px,2.6vw,36px)' : 'clamp(56px,6vw,88px)',
+                    lineHeight: 0.95,
+                    letterSpacing: i ? '-.03em' : '-.05em',
+                  }}
+                >
+                  {s.value}
+                </dd>
+                <dt
+                  style={{
+                    fontSize: i ? 14 : 17,
+                    lineHeight: 1.35,
+                    fontWeight: i ? 600 : 700,
+                    letterSpacing: '-.01em',
+                    opacity: i ? 0.85 : 1,
+                  }}
+                >
+                  {s.label}
+                </dt>
+              </div>
+            ))}
           </dl>
         </div>
       </div>
