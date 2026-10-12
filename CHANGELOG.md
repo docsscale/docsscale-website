@@ -5,6 +5,12 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.10.1] — 2026-10-12
+
+The social media page's heading names its search phrase. Visible to visitors: the main heading on `/services/social-media-management/`.
+
+- **Social media page heading** (owner's approval of the before/after, 12 Oct 2026; #134). The heading becomes "Healthcare social media marketing agency. A month of posts, approved in ten minutes." (was "Healthcare social media, planned a month ahead and approved in ten minutes."), so the phrase people search for is in the heading as well as the title, description and first paragraph. The rest of the page is unchanged.
+
 ## [1.10.0] — 2026-10-12
 
 The first full case study. Visible to visitors: the new `/results/central-clinic-of-chiropractic/` page, and a "The full stories" row on `/results/` that links to it.
