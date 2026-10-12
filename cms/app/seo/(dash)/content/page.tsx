@@ -98,7 +98,7 @@ export default async function ContentHistory({ searchParams }: { searchParams: P
       </Section>
       <Section
         title="Before you publish"
-        note="The same checks the live pages get, run on each post that is not live yet, from what the editing screen last saved. Fix them in the editor and press Check my drafts now; a post with every check passing goes live without turning up in the fix queue."
+        note="The same checks the live pages get, plus our writing standards (a real DocsScale example, sources for every number, answer first, no filler), run on each post that is not live yet, from what the editing screen last saved. Fix them in the editor and press Check my drafts now; a post with every check passing goes live without turning up in the fix queue."
       >
         {drafts.length === 0 ? <Empty>No drafts or unpublished posts. Posts set to Published and live are checked on the live site instead.</Empty> : (
           <div style={{ display: 'grid', gap: 10 }}>
