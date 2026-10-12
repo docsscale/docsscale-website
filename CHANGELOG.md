@@ -5,6 +5,12 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.10.0] — 2026-10-12
+
+The first full case study. Visible to visitors: the new `/results/central-clinic-of-chiropractic/` page, and a "The full stories" row on `/results/` that links to it.
+
+- **Central Clinic of Chiropractic case study** (owner's approval of the page, 12 Oct 2026; the clinic approved its quote; #130). `/results/central-clinic-of-chiropractic/` tells the story of a two-chiropractor clinic in Sumter, South Carolina, from the owner's own account: Meta and Google ads, one system that answers enquiries, books, reminds and follows up, and email marketing with review requests and win-back emails, live since January 2026, with 30+ qualified new patients a month on average. It shows the patient journey in four stages, the slow first three months and what changed after, a quote from the clinic, a pointer to the free system it is built on, and questions with answers. It carries breadcrumb and article structured data. `/results/` gains a "The full stories" row that links to it. New case studies are an entry in `web/src/content/case-studies.ts`.
+
 ## [1.9.0] — 2026-10-11
 
 Social media management service page. Visible to visitors: the new `/services/social-media-management/` page, and links to it from the menu, the footer, `/services/` and the med spa page.
