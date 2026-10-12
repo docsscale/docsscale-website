@@ -408,8 +408,8 @@ export const SERVICE_PAGES: ServicePage[] = [
     title: 'Healthcare Social Media Marketing Agency | DocsScale',
     metaDescription:
       'A healthcare social media marketing agency for clinics: 12–16 posts a month in your voice, approved in ten minutes, every comment and DM answered.',
-    h1: 'Healthcare social media, planned a month ahead and',
-    h1Accent: 'approved in ten minutes.',
+    h1: 'Healthcare social media marketing agency.',
+    h1Accent: 'A month of posts, approved in ten minutes.',
     intro:
       'DocsScale is a healthcare social media marketing agency: we plan 12 to 16 posts a month in your voice, you approve the whole month in about ten minutes, and every comment and DM gets an answer. Your Monday report counts inquiries from your profile, not followers or likes.',
     accentBg: T.peachBg,
