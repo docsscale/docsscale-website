@@ -166,7 +166,7 @@ Docs (`docs/`):
 | `SESSION-HANDOFF.md` | Where everything stands right now |
 | `HANDOVER.md` | Accounts, access, email authentication, monitoring, owner to-dos |
 | `../CHANGELOG.md` | Every release, in plain language |
-| `COMPLETION-PLAN.md` | **The working plan** (approved 6 Oct 2026): order of work, tracker, decisions. `SEO-DASHBOARD-PLAN.md` is its SEO command center part; `seo/` holds the keyword map and the owner's SEO operating document |
+| `COMPLETION-PLAN.md` | **The working plan** (approved 6 Oct 2026): order of work, tracker, decisions. `SEO-DASHBOARD-PLAN.md` is its SEO command center part; `seo/` holds the keyword map, the owner's SEO operating document and `BLOG-WRITING.md`, the guide every blog draft follows |
 | `PHASE5-PLAN.md` | The growth plan, with the **status tracker** at the top (update it in every release PR) |
 | `TRACKING.md` | GA4 events, consent, UTM standard, Clarity, attribution |
 | `SERVER.md` | Lead handler, CRM fields, backups, failure email, cron |
