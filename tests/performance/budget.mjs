@@ -4,11 +4,15 @@
 //   node tests/performance/budget.mjs                    test every page
 //   node tests/performance/budget.mjs --record <file>    rewrite the "today" record from a results file
 //
-// Two rules (docs/COMPLETION-PLAN.md, section 5, item 11; limits in budget.json):
+// Three rules (docs/COMPLETION-PLAN.md, section 5, item 11; limits in budget.json):
 // - A page listed under "baseline" is held to "no worse than today": its
 //   recorded numbers plus the allowance.
-// - Any other page is new and must meet "target". So a new template (blog,
-//   service pages) is held to the target simply by not being in the record.
+// - A blog page (/blog/ and every post under it) must meet "blog": the same as
+//   "target" with a looser paint time, because every post opens with a cover
+//   photo and the owner publishes posts from the editor without a developer
+//   (owner's decision, 12 Oct 2026).
+// - Any other page is new and must meet "target". So a new template (service
+//   pages) is held to the target simply by not being in the record.
 //
 // The record is machine-dependent: take it from a CI run (the "performance-results"
 // file the job uploads), never from a laptop. Re-recording loosens or tightens
@@ -82,7 +86,8 @@ for (const page of builtPages().sort()) {
   pages.push({ page, ...got, runs });
 
   const today = budget.baseline[page];
-  const { allowance, target } = budget;
+  const { allowance, target, blog } = budget;
+  const isBlog = page.startsWith('/blog/');
   const limit = today
     ? {
         score: today.score - allowance.score,
@@ -90,8 +95,10 @@ for (const page of builtPages().sort()) {
         cls: Math.round((today.cls + allowance.cls) * 1000) / 1000,
         bytes: Math.round(today.bytes * (1 + allowance.bytesPercent / 100)),
       }
-    : target;
-  const rule = today ? 'no worse than today' : 'target for new pages';
+    : isBlog
+      ? blog
+      : target;
+  const rule = today ? 'no worse than today' : isBlog ? 'target for blog pages' : 'target for new pages';
   const kb = (n) => `${Math.round(n / 1024)} KB`;
   const over = [];
   if (got.score < limit.score) over.push(`score ${got.score}, must be at least ${limit.score}`);

@@ -408,7 +408,12 @@ first CI runs showed:
   templates. A blog template that shares today's header, fonts and scripts
   will sit on that line and fail some runs. Either the shared part gets
   lighter for the new templates, or the target is adjusted; decide with the
-  blog design.
+  blog design. **Decided 12 Oct 2026 (owner):** blog pages (`/blog/` and
+  every post) get their own target of 3 seconds, the same score and layout
+  shift limits as other new pages. The first two posts with cover photos
+  measured 2.6–2.7 seconds and the owner publishes posts from the editor
+  without a developer, so a 2.5-second line would stop publishing for a
+  tenth of a second that no visitor notices.
 - All pages are tested on every push (the job takes about five and a half minutes for 16 pages). When
   the blog grows, narrow it to the changed pages and the key pages, as the
   plan says.
