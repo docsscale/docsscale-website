@@ -6,6 +6,12 @@
     "cls": 0.005,
     "bytes": null
   },
+  "blog": {
+    "score": 90,
+    "lcp": 3000,
+    "cls": 0.005,
+    "bytes": null
+  },
   "allowance": {
     "score": 6,
     "lcpPercent": 15,
