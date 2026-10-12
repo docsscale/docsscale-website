@@ -11,7 +11,8 @@ Read [../CLAUDE.md](../CLAUDE.md) first: it holds the rules. Then this file.
 
 ## What is live
 
-- **Production: v1.10.0** on https://docsscale.com, deployed 12 Oct 2026:
+- **Production: v1.10.1** on https://docsscale.com, deployed 12 Oct 2026:
+  the social media page's heading names its search phrase. Before it, v1.10.0 (12 Oct 2026):
   the Central Clinic of Chiropractic case study. Before it, v1.9.0 (11 Oct 2026):
   the social media management service page. Before it, v1.8.1 (10 Oct 2026):
   footer icons linking to the Facebook, Instagram, LinkedIn and Clutch
