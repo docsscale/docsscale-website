@@ -5,8 +5,8 @@
     "priority": "1.0"
   },
   "/results/": {
-    "lastmod": "2026-10-10",
-    "hash": "db821c3f4e5352db",
+    "lastmod": "2026-10-11",
+    "hash": "afdc62dc83c9a58c",
     "priority": "0.9"
   },
   "/services/": {
@@ -62,6 +62,11 @@
   "/blog/google-business-profile-for-dentists/": {
     "lastmod": "2026-10-08",
     "hash": "d0f49a5f5a756fde",
+    "priority": "0.7"
+  },
+  "/results/central-clinic-of-chiropractic/": {
+    "lastmod": "2026-10-11",
+    "hash": "e8a312506d75a3d0",
     "priority": "0.7"
   },
   "/services/paid-ads/": {
