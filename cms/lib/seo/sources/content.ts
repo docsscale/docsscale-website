@@ -1,6 +1,7 @@
 import { githubToken, seoConfig } from '../config';
 import { getJson } from '../http';
 import type { Check } from '../lint';
+import { FOCUS_KEYWORDS } from '../keywords';
 import { lintPost } from '../post-lint';
 import { store } from '../store';
 
@@ -86,6 +87,31 @@ const nested = (fields: Map<string, string>, key: string, sub: string) => {
   return rest.join(' ').trim();
 };
 
+/** The items of a list field (takeaways, faqs), each as its text with the
+ *  YAML quoting and folding taken out; `sub` picks one field of an object item. */
+export function listItems(fields: Map<string, string>, key: string, sub?: string): string[] {
+  const lines = (fields.get(key) ?? '').split('\n').slice(1);
+  const items: string[][] = [];
+  for (const l of lines) {
+    if (/^\s*- /.test(l)) items.push([l.replace(/^\s*- /, '  ')]);
+    else if (items.length) items[items.length - 1].push(l);
+  }
+  const value = (block: string[], name?: string) => {
+    const at = name ? block.findIndex((l) => new RegExp(`^\\s+${name}:`).test(l)) : 0;
+    if (at < 0) return '';
+    const head = name ? block[at].replace(/^[^:]+:\s*/, '').trim() : block[0].trim();
+    const indent = /^\s*/.exec(block[at])![0].length;
+    const rest: string[] = [];
+    for (const l of block.slice(at + 1)) {
+      if (l.trim() && /^\s*/.exec(l)![0].length <= indent) break;
+      rest.push(l.trim());
+    }
+    const text = head && !/^[>|]-?$/.test(head) ? [head, ...rest].join(' ') : rest.join(' ');
+    return text.trim().replace(/^['"]|['"]$/g, '').replace(/''/g, "'");
+  };
+  return items.map((b) => value(b, sub));
+}
+
 /** Words a reader sees: Markdoc tags, markup and links' addresses left out. */
 export const countWords = (body: string) =>
   body
@@ -95,12 +121,16 @@ export const countWords = (body: string) =>
     .split(/\s+/)
     .filter((w) => /\w/.test(w)).length;
 
-export function postFromFile(slug: string, text: string, live: boolean): PostRow {
+export function postFromFile(slug: string, text: string, live: boolean, taken: { path: string; keyword: string }[] = []): PostRow {
   const { fields, body } = splitFile(text);
   const keyword = nested(fields, 'seo', 'focusKeyword');
+  const questions = listItems(fields, 'faqs', 'question');
+  const answers = listItems(fields, 'faqs', 'answer');
   const lint = lintPost({
     title: scalar(fields, 'title'), summary: scalar(fields, 'summary'), seoTitle: nested(fields, 'seo', 'title'), seoDescription: nested(fields, 'seo', 'description'),
     keyword, body, hasCover: Boolean(scalar(fields, 'cover')), coverAlt: scalar(fields, 'coverAlt'),
+    takeaways: listItems(fields, 'takeaways'), faqs: questions.map((question, i) => ({ question, answer: answers[i] ?? '' })),
+    onlyDocsScale: scalar(fields, 'onlyDocsScale'), taken: taken.filter((t) => t.path !== `/blog/${slug}/`),
   });
   return {
     slug,
@@ -174,18 +204,23 @@ async function collectEdits(): Promise<{ added: number; pending: boolean; error:
 
 /** Every post, from the live branch and the working copy (a live post wins). */
 export async function collectPosts(): Promise<PostRow[]> {
-  const posts = new Map<string, PostRow>();
+  const files = new Map<string, { text: string; live: boolean }>();
   for (const branch of BRANCHES) {
     const tree = await gh<{ tree: { path: string; type: string }[] }>(`/git/trees/${encodeURIComponent(branch)}?recursive=1`);
-    const files = tree.tree.filter((t) => /^content\/posts\/[^/]+\/index\.mdoc$/.test(t.path)).map((t) => t.path);
-    for (const file of files) {
+    const paths = tree.tree.filter((t) => /^content\/posts\/[^/]+\/index\.mdoc$/.test(t.path)).map((t) => t.path);
+    for (const file of paths) {
       const slug = file.split('/')[2];
-      if (posts.get(slug)?.live) continue; // main is read first; its live copy wins over the working copy
+      if (files.get(slug)?.live) continue; // main is read first; its live copy wins over the working copy
       const text = await raw(branch, file);
-      if (text) posts.set(slug, postFromFile(slug, text, branch === 'main' && /^status:\s*published\s*$/m.test(text)));
+      if (text) files.set(slug, { text, live: branch === 'main' && /^status:\s*published\s*$/m.test(text) });
     }
   }
-  return [...posts.values()];
+  // Read every file first, so each post is checked against the focus keywords of the others and of the keyword map.
+  const taken = [
+    ...Object.entries(FOCUS_KEYWORDS).map(([path, keyword]) => ({ path, keyword })),
+    ...[...files].map(([slug, f]) => ({ path: `/blog/${slug}/`, keyword: nested(splitFile(f.text).fields, 'seo', 'focusKeyword') })).filter((t) => t.keyword),
+  ];
+  return [...files].map(([slug, f]) => postFromFile(slug, f.text, f.live, taken));
 }
 
 export async function collectContent(): Promise<ContentData> {
