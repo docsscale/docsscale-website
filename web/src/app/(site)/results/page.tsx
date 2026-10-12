@@ -2,6 +2,7 @@ import { SPECIALTY_LINKS } from '@/content/specialties';
 import { STRUCTURED_DATA } from '@/content/structured-data';
 import { ResultsHero } from '@/features/results/ResultsHero';
 import { ResultsCases } from '@/features/results/ResultsCases';
+import { ResultsFullCases } from '@/features/results/ResultsFullCases';
 import { ResultsCTA } from '@/features/results/ResultsCTA';
 import { SiteMotion } from '@/features/motion/SiteMotion';
 import { JsonLd } from '@/features/seo/JsonLd';
@@ -26,6 +27,7 @@ export default function ResultsPage() {
       <main>
         <ResultsHero />
         <ResultsCases />
+        <ResultsFullCases />
         <ResultsCTA />
         <RelatedPages page="/results/" />
       </main>
