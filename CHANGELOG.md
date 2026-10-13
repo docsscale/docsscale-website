@@ -5,6 +5,10 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.10.2] — 2026-10-13
+
+A footer link to the Free System. Visible to visitors: one "Free system" line in the footer's Company column on every page with the main footer.
+
 - **Footer: "Free system" link** (owner's choice, 13 Oct 2026). A "Free system" line in the footer's Company column, between Results and About, on every page with the main footer. Until now no main-site page linked to `/free-system/`, only two blog posts and the case study, and Google reported the page as unknown; a link from every page tells search engines it matters. The visual baseline is re-recorded.
 
 ## [1.10.1] — 2026-10-12
