@@ -128,6 +128,19 @@ export function watchSitemapIfDue(): boolean {
   return true;
 }
 
+/** One UrlInfo call. Bing allows only a handful a minute, and the pause between
+ *  pages was not enough on its own (13 Oct 2026: seven pages a day still came
+ *  back "ThrottleHost"), so a throttled call waits half a minute and asks once more. */
+async function askBing(url: string): Promise<{ d?: Record<string, unknown> }> {
+  try {
+    return await getJson<{ d?: Record<string, unknown> }>(url);
+  } catch (e) {
+    if (!(e as Error).message.includes('ThrottleHost')) throw e;
+    await new Promise((resolve) => setTimeout(resolve, 30_000));
+    return getJson<{ d?: Record<string, unknown> }>(url);
+  }
+}
+
 /** After the daily run: what Google and Bing now show for each page. Google
  *  comes from the URL inspection already in the Search Console snapshot;
  *  Bing from UrlInfo, one call per page (a handful of pages, once a day). */
@@ -149,7 +162,7 @@ export async function refreshIndexState(): Promise<void> {
     first = false;
     try {
       const url = `https://ssl.bing.com/webmaster/api.svc/json/GetUrlInfo?siteUrl=${encodeURIComponent(seoConfig.bingSite)}&url=${encodeURIComponent(r.url)}&apikey=${encodeURIComponent(bingKey())}`;
-      const d = (await getJson<{ d?: Record<string, unknown> }>(url)).d ?? {};
+      const d = (await askBing(url)).d ?? {};
       const ms = Number(/\/Date\((-?\d+)/.exec(String(d.LastCrawledDate ?? ''))?.[1]);
       const crawl = Number.isFinite(ms) && ms > 0 ? new Date(ms).toISOString() : null;
       const http = d.HttpStatus != null ? Number(d.HttpStatus) : null;
