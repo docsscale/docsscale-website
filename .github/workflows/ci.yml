@@ -41,7 +41,12 @@ jobs:
       - run: npm run build
       # The sitemap is generated from the built pages; a page's date moves only
       # when its own copy changes. Fails if the committed files are out of date.
+      # Not on pull requests into the editing screen's branch (owner, 13 Oct
+      # 2026): a live post re-saved there is out of date on purpose until the
+      # owner publishes it, and the publish workflow regenerates the sitemap on
+      # main at that moment; the sitemap files cannot be changed on that branch.
       - run: npm run sitemap:check
+        if: github.base_ref != 'content/working'
       # Brand rules, titles and descriptions, headings, alt text, links,
       # structured data, sitemap coverage; warns on short or near-duplicate pages.
       - run: npm run check:site
