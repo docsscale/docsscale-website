@@ -88,6 +88,9 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: 'How it works', href: '/how-it-works' },
       { label: 'Results', href: '/results' },
+      // Owner's choice (13 Oct 2026): the funnel's only link from the main
+      // site, so search engines find it from every page.
+      { label: 'Free system', href: '/free-system' },
       { label: 'About', href: '/about' },
       { label: 'Blog', href: '/blog' },
       { label: 'FAQ', href: '/#faq' },
