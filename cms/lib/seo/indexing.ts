@@ -141,7 +141,12 @@ export async function refreshIndexState(): Promise<void> {
     }
   }
   if (!bingKey() || !latestSnapshot<BingData>('bing')) return;
+  let first = true;
   for (const r of indexingRows()) {
+    // Bing throttles a burst of UrlInfo calls ("ThrottleHost"), so leave a
+    // pause between pages; a throttled page keeps its last good answer.
+    if (!first) await new Promise((resolve) => setTimeout(resolve, 1500));
+    first = false;
     try {
       const url = `https://ssl.bing.com/webmaster/api.svc/json/GetUrlInfo?siteUrl=${encodeURIComponent(seoConfig.bingSite)}&url=${encodeURIComponent(r.url)}&apikey=${encodeURIComponent(bingKey())}`;
       const d = (await getJson<{ d?: Record<string, unknown> }>(url)).d ?? {};
@@ -150,7 +155,9 @@ export async function refreshIndexState(): Promise<void> {
       const http = d.HttpStatus != null ? Number(d.HttpStatus) : null;
       db.prepare('UPDATE indexing SET bing_crawl = ?, bing_status = ?, bing_checked = ? WHERE page = ?').run(crawl, crawl ? `crawled${http ? `, HTTP ${http}` : ''}` : 'not crawled yet', t, r.page);
     } catch (e) {
-      db.prepare('UPDATE indexing SET bing_status = ?, bing_checked = ? WHERE page = ?').run(`Bing did not answer: ${(e as Error).message.slice(0, 120)}`, t, r.page);
+      const message = (e as Error).message;
+      if (message.includes('ThrottleHost')) continue; // asked too fast: keep yesterday's answer
+      db.prepare('UPDATE indexing SET bing_status = ?, bing_checked = ? WHERE page = ?').run(`Bing did not answer: ${message.slice(0, 120)}`, t, r.page);
     }
   }
 }
