@@ -6,12 +6,27 @@
 # only posts set to "published", and only when that was done in the editing
 # screen by an approver (repository variable CONTENT_APPROVERS). Every check
 # runs before anything is copied; if one fails, the live site is not touched.
+#
+# The owner's word counts too (owner, 15 Oct 2026): run this workflow by hand
+# with a post's folder name and a link to where the owner said "publish it",
+# and that post goes live as it is in the working copy. Only people who can
+# already change the website's code can start a workflow, so this opens
+# nothing to a stolen editing-screen sign-in.
 name: Publish content
 
 on:
   push:
     branches: [content/working]
   workflow_dispatch:
+    inputs:
+      post:
+        description: "Post to publish on the owner's word: its folder name under content/posts (leave empty to only re-check the editing screen's saves)"
+        required: false
+        type: string
+      owners_word:
+        description: "Link to the message where the owner said to publish it"
+        required: false
+        type: string
 
 permissions:
   contents: write # commits the published post to main
@@ -31,6 +46,8 @@ jobs:
       GITHUB_TOKEN: ${{ github.token }}
       CONTENT_APPROVERS: ${{ vars.CONTENT_APPROVERS }}
       HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+      OWNER_PUBLISH_POST: ${{ inputs.post }}
+      OWNER_PUBLISH_WORD: ${{ inputs.owners_word }}
     steps:
       - uses: actions/checkout@v7
         with: { ref: main, fetch-depth: 0 }
@@ -40,7 +57,7 @@ jobs:
         run: |
           node scripts/publish-content.mjs --apply | tee decision.txt
           echo "posts=$(grep '^PUBLISH=' decision.txt | cut -d= -f2)" >> "$GITHUB_OUTPUT"
-          echo "approver=$(grep '^APPROVED_BY=' decision.txt | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+          echo "approval=$(grep '^APPROVAL=' decision.txt | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
           rm decision.txt
       - if: steps.decide.outputs.posts != ''
         uses: actions/setup-node@v7
@@ -57,11 +74,13 @@ jobs:
           npm run check:site
       - name: Record the publish in the live copy
         if: steps.decide.outputs.posts != ''
+        env:
+          APPROVAL: ${{ steps.decide.outputs.approval }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content web/public/uploads web/public/sitemap.xml web/sitemap-state.json
-          git commit -m "Publish: ${{ steps.decide.outputs.posts }}" -m "Approved in the editing screen by ${{ steps.decide.outputs.approver }}."
+          git commit -m "Publish: ${{ steps.decide.outputs.posts }}" -m "$APPROVAL"
           git push origin HEAD:main
       - name: Get upload credentials for the live site
         if: steps.decide.outputs.posts != ''

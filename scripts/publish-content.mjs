@@ -13,11 +13,17 @@
 //    and GitHub confirms the save really came from that service.
 // 3. Drafts and "ready for review" posts stay where they are. Taking a live
 //    post down is not done here: it needs a redirect, so it is a developer's job.
+// 4. The owner's word counts too (owner, 15 Oct 2026): when the workflow is
+//    started by hand with a post's folder name and a link to where the owner
+//    said "publish it", that one post goes live as it is in the working copy,
+//    with its status set to "published" and today's date. Rule 1 still holds,
+//    so this route can no more ship code than the editing screen can.
 // Categories and team members follow the posts that use them.
 //
 // Approvers: the repository variable CONTENT_APPROVERS (email addresses,
 // comma-separated), kept outside the editing screen on purpose.
 import { execFileSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const apply = process.argv.includes('--apply');
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
@@ -25,6 +31,10 @@ const MAIN = 'origin/main';
 const WORKING = 'origin/content/working';
 const CONTENT = /^(content\/|web\/public\/uploads\/)/;
 const SIGN_IN_SERVICE = 'keystatic-cloud[bot]';
+
+// Rule 4: set by the workflow from its "post" and "owners_word" inputs.
+const onOwnersWord = (process.env.OWNER_PUBLISH_POST ?? '').trim();
+const ownersWord = (process.env.OWNER_PUBLISH_WORD ?? '').trim();
 
 const approvers = (process.env.CONTENT_APPROVERS ?? '')
   .split(',')
@@ -52,6 +62,10 @@ const outside = git('diff', '--name-only', base, WORKING)
   .filter((file) => file && !CONTENT.test(file));
 if (outside.length) stop(`the working copy changes files that are not content: ${outside.join(', ')}`);
 
+if (onOwnersWord && !/^[a-z0-9-]+$/.test(onOwnersWord)) stop(`"${onOwnersWord}" is not a post folder name.`);
+if (onOwnersWord && !/^https:\/\/\S+$/.test(ownersWord))
+  stop(`publishing "${onOwnersWord}" on the owner's word needs a link to where he said so.`);
+
 // 2. Which posts are published in the working copy and not yet identical on main?
 const slugs = [...new Set(list(WORKING, 'content/posts').map((file) => file.split('/')[2]))];
 const publish = [];
@@ -60,13 +74,20 @@ for (const slug of slugs) {
   const file = `content/posts/${slug}/index.mdoc`;
   const working = show(WORKING, file);
   const live = show(MAIN, file);
+  const folders = [`content/posts/${slug}`, `web/public/uploads/posts/${slug}`];
+  const changed = Boolean(git('diff', '--name-only', MAIN, WORKING, '--', ...folders));
+  if (slug === onOwnersWord) {
+    // Rule 4: the owner said so. Published as it is now, whatever its status.
+    if (!changed && statusOf(live) === 'published') stop(`${slug} is already live as it is.`);
+    publish.push({ slug, folders, approver: `the owner (${ownersWord})`, setStatus: statusOf(working) !== 'published' });
+    continue;
+  }
   if (statusOf(working) !== 'published') {
     if (statusOf(live) === 'published')
       waiting.push(`${slug}: live, but no longer "published" in the working copy. Not taken down here; ask the developer.`);
     continue;
   }
-  const folders = [`content/posts/${slug}`, `web/public/uploads/posts/${slug}`];
-  if (!git('diff', '--name-only', MAIN, WORKING, '--', ...folders)) continue; // already live as it is
+  if (!changed) continue; // already live as it is
 
   // Who made the save that last touched it?
   const commit = git('log', '-1', '--format=%H', WORKING, '--', ...folders);
@@ -98,6 +119,9 @@ async function cameFromSignInService(sha) {
   return data.commit?.verification?.verified === true && data.author?.login === SIGN_IN_SERVICE;
 }
 
+if (onOwnersWord && !publish.some((p) => p.slug === onOwnersWord))
+  stop(`there is no post called "${onOwnersWord}" in the working copy.`);
+
 for (const line of waiting) console.log(`not published  ${line}`);
 for (const { slug, approver } of publish) console.log(`to publish     ${slug} (approved by ${approver})`);
 if (!publish.length) {
@@ -108,9 +132,27 @@ if (!apply) process.exit(0);
 
 // 3. Copy the approved posts, and the categories and team members beside them,
 //    into this checkout (of main). The caller builds, checks and commits.
-for (const { folders } of publish)
+for (const { slug, folders, setStatus } of publish) {
   for (const folder of folders) if (list(WORKING, folder).length) git('checkout', WORKING, '--', folder);
+  if (setStatus) {
+    // Rule 4: the owner's word makes it published, dated today.
+    const file = `content/posts/${slug}/index.mdoc`;
+    const today = new Date().toISOString().slice(0, 10);
+    const text = readFileSync(file, 'utf8')
+      .replace(/^status: \w+$/m, 'status: published')
+      .replace(/^published: .*$/m, `published: ${today}`);
+    writeFileSync(file, text);
+  }
+}
 for (const folder of ['content/categories', 'content/team'])
   if (list(WORKING, folder).length) git('checkout', WORKING, '--', folder);
 console.log(`PUBLISH=${publish.map((p) => p.slug).join(',')}`);
-console.log(`APPROVED_BY=${[...new Set(publish.map((p) => p.approver))].join(',')}`);
+const byEditor = [...new Set(publish.filter((p) => p.slug !== onOwnersWord).map((p) => p.approver))];
+console.log(
+  `APPROVAL=${[
+    byEditor.length ? `Approved in the editing screen by ${byEditor.join(', ')}.` : '',
+    publish.some((p) => p.slug === onOwnersWord) ? `${onOwnersWord} published on the owner's word: ${ownersWord}` : '',
+  ]
+    .filter(Boolean)
+    .join(' ')}`,
+);
