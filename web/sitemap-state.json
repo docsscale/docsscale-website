@@ -1,7 +1,7 @@
 {
   "/": {
-    "lastmod": "2026-10-12",
-    "hash": "52e2c808ea8f6d4d",
+    "lastmod": "2026-10-19",
+    "hash": "20d7ca247ccc40c5",
     "priority": "1.0"
   },
   "/results/": {
@@ -55,18 +55,23 @@
     "priority": "0.8"
   },
   "/blog/": {
-    "lastmod": "2026-10-12",
-    "hash": "28ce6d125d82fc3d",
+    "lastmod": "2026-10-19",
+    "hash": "6c21b1dc5e820b6c",
     "priority": "0.7"
   },
   "/blog/google-business-profile-for-dentists/": {
-    "lastmod": "2026-10-15",
-    "hash": "c1fa0dd9811bd708",
+    "lastmod": "2026-10-19",
+    "hash": "b035fee228eaadd1",
     "priority": "0.7"
   },
   "/blog/med-spa-marketing/": {
-    "lastmod": "2026-10-12",
-    "hash": "9abf0cf362742bb5",
+    "lastmod": "2026-10-19",
+    "hash": "be55999b6f8c2fc7",
+    "priority": "0.7"
+  },
+  "/blog/what-is-healthcare-marketing/": {
+    "lastmod": "2026-10-19",
+    "hash": "342d7134a8fd1026",
     "priority": "0.7"
   },
   "/results/central-clinic-of-chiropractic/": {
