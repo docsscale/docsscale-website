@@ -5,6 +5,12 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.10.3] — 2026-10-19
+
+A link to the social media page from two service pages. Visible to visitors: one more chip in the "Works with" box on `/services/paid-ads/` and `/services/patient-reactivation/`.
+
+- **"Social media management" in the "Works with" box** (owner's approval of the before/after, 19 Oct 2026; #159). The paid ads and patient reactivation pages each gain a "Social media management" chip linking to `/services/social-media-management/`, which until now was linked from page content only on `/services/` and the med spa page, and which Google reports as not yet indexed. The chip wraps onto a second row as the others do on tablet and phone. The visual baseline is re-recorded.
+
 ## [1.10.2] — 2026-10-13
 
 A footer link to the Free System. Visible to visitors: one "Free system" line in the footer's Company column on every page with the main footer.
