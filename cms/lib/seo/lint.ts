@@ -78,7 +78,10 @@ export function lintPage(url: string, html: string, siteUrl: string, postKeyword
   const headings = headingNodes.map((h) => clean(h.textContent)).filter(Boolean);
   const skipped = levels.some((l, i) => i > 0 && l > levels[i - 1] + 1);
   const schema = schemaTypes(root);
-  const intro = clean(main.querySelectorAll('p').slice(0, 2).map((p) => p.textContent).join(' '));
+  // The opening paragraphs of the text itself. On a blog post the hero's
+  // summary and the cover caption come first in <main>, so read the <article>.
+  const body = main.querySelector('article') ?? main;
+  const intro = clean(body.querySelectorAll('p').slice(0, 2).map((p) => p.textContent).join(' '));
 
   const checks: Check[] = [
     { id: 'title', label: 'Has a page title', weight: 10, pass: title.length > 0, detail: title || 'No title' },
