@@ -48,6 +48,14 @@ If you are unsure whether something needs the owner's sign-off, stop and ask.
   the rules above without exception. The developer never uses this route to
   ship code or copy. To stop it, delete the repository variable
   `CONTENT_PUBLISHING`.
+- **The owner's word in the project counts as his Publish** (owner, 15 and
+  19 Oct 2026: "you will publish if I tell you", then "yes and publish").
+  When the owner says in a project thread to publish a named post, the
+  developer starts the "Publish content" workflow by hand with that post's
+  folder name and the link to his message, and the post goes live as it is
+  in the working copy, dated that day. Same checks and same limits as his
+  own Publish: the post and its pictures only, never code or other pages.
+  Without his message naming the post, nothing is started.
 - No new paid service, account or infrastructure without asking. Don't create
   accounts or enter passwords; the owner does that.
 - **DNS:** show the exact change first; never change a record unasked.

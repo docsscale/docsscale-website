@@ -601,6 +601,10 @@ is kept outside the CMS, in the repository's settings, for the same reason.
 
 Notes:
 
+- Since 19 Oct 2026 the owner's word in the project counts as his Publish:
+  the developer starts the publish workflow by hand with the post's folder
+  name and the link to the owner's message, and that post goes live as it is
+  in the working copy (rule 4 in `scripts/publish-content.mjs`, PR #152).
 - The screenshot comparison is not run against content changes; it exists to
   catch unintended visual changes from code. The baseline is re-recorded after
   a content publish.
