@@ -160,6 +160,11 @@ it.**
      publish must be watched**: none had run when this was written. If one
      goes wrong, delete the repository variable `CONTENT_PUBLISHING` and
      release by hand (RELEASE.md).
+   - **Publishing on the owner's word (19 Oct 2026, PR #152):** the same
+     workflow can be started by hand (Actions → Publish content → Run
+     workflow) with a post's folder name and the link to the owner's message
+     saying to publish it. That post goes live as it is in the working copy,
+     set to "published" with that day's date; every other check is unchanged.
    - How it was built (7 Oct, then switched off until the above):
      the publish workflow
      (`.github/workflows/publish.yml`, rules in `scripts/publish-content.mjs`).
