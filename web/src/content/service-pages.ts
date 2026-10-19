@@ -158,6 +158,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       { label: 'Lead follow-up & booking', href: '/services#convert' },
       { label: 'Local SEO & Google Business Profile', href: '/services#attract' },
       { label: 'Reactivation & recall', href: '/services/patient-reactivation/' },
+      { label: 'Social media management', href: '/services/social-media-management/' },
     ],
     processHeading: 'What we do, in order.',
     processFlow: [
@@ -296,6 +297,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       { label: 'Websites & landing pages', href: '/services#capture' },
       { label: 'Paid ads (Meta & Google)', href: '/services/paid-ads/' },
       { label: 'Local SEO & Google Business Profile', href: '/services#attract' },
+      { label: 'Social media management', href: '/services/social-media-management/' },
     ],
     processHeading: 'What we do, in order.',
     processFlow: [
