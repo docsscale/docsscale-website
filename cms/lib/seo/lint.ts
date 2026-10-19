@@ -79,8 +79,15 @@ export function lintPage(url: string, html: string, siteUrl: string, postKeyword
   const skipped = levels.some((l, i) => i > 0 && l > levels[i - 1] + 1);
   const schema = schemaTypes(root);
   // The opening paragraphs of the text itself. On a blog post the hero's
-  // summary and the cover caption come first in <main>, so read the <article>.
-  const body = main.querySelector('article') ?? main;
+  // summary and the cover caption come first in <main>, so read the <article>
+  // that holds the post. Post cards are <article> too (home, blog index,
+  // related posts), so only an article that holds most of the page's
+  // paragraphs counts as the body; otherwise the page has none and <main> is
+  // read as before.
+  const paragraphs = main.querySelectorAll('p');
+  const articles = main.querySelectorAll('article').map((a) => ({ a, count: a.querySelectorAll('p').length }));
+  const largest = articles.sort((x, y) => y.count - x.count)[0];
+  const body = largest && largest.count * 2 > paragraphs.length ? largest.a : main;
   const intro = clean(body.querySelectorAll('p').slice(0, 2).map((p) => p.textContent).join(' '));
 
   const checks: Check[] = [
