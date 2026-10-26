@@ -1,7 +1,7 @@
 {
   "/": {
-    "lastmod": "2026-10-19",
-    "hash": "20d7ca247ccc40c5",
+    "lastmod": "2026-10-26",
+    "hash": "48f523ee4d0e4528",
     "priority": "1.0"
   },
   "/results/": {
@@ -25,13 +25,13 @@
     "priority": "0.85"
   },
   "/industries/dental/": {
-    "lastmod": "2026-10-10",
-    "hash": "a082873be6389244",
+    "lastmod": "2026-10-26",
+    "hash": "dd4438c9632f0c23",
     "priority": "0.85"
   },
   "/industries/med-spa/": {
-    "lastmod": "2026-10-10",
-    "hash": "2832f173405d983d",
+    "lastmod": "2026-10-26",
+    "hash": "8ae025afeab194f0",
     "priority": "0.85"
   },
   "/industries/physical-therapy/": {
@@ -55,8 +55,8 @@
     "priority": "0.8"
   },
   "/blog/": {
-    "lastmod": "2026-10-19",
-    "hash": "6c21b1dc5e820b6c",
+    "lastmod": "2026-10-26",
+    "hash": "41267584cd505488",
     "priority": "0.7"
   },
   "/blog/google-business-profile-for-dentists/": {
