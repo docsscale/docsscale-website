@@ -53,7 +53,10 @@ export function ServicePage({ page: p }: { page: Page }) {
 // tokens, no image files apart from the licensed example photo already used as
 // the home page's ad preview. Every name is a placeholder ("Your Clinic"), and
 // the tile says it is an example. On a phone it sits under the heading, so the
-// page's main text still paints first.
+// page's main text still paints first. minWidth 0: without it the grid column
+// grows to fit the social ad's footer (the address beside the button, which
+// cannot wrap), so on a phone the hero was 12 px wider than the screen and the
+// page scrolled sideways; the address now shortens with an ellipsis instead.
 function AdGraphic({ page: p, g }: { page: Page; g: Extract<HeroGraphic, { kind: 'ads' }> }) {
   const small = { fontSize: 11, fontWeight: 700, color: T.caption } as const;
   const adCard = {
@@ -77,6 +80,7 @@ function AdGraphic({ page: p, g }: { page: Page; g: Extract<HeroGraphic, { kind:
         flexDirection: 'column',
         gap: 10,
         minHeight: 'clamp(300px,40vw,360px)',
+        minWidth: 0,
         color: T.ink,
       }}
     >
