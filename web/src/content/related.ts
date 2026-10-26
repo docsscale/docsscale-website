@@ -69,7 +69,9 @@ export const RELATED_HEADING = 'Where to go next';
 
 /** The links for each page, in display order. The page itself is never listed. */
 export const RELATED_PAGES = {
-  '/': [PAGE.how, PAGE.industries, PAGE.results, PAGE.about],
+  // Home and the blog index are the pages Google crawls most, so their rows
+  // carry the pages it has not crawled yet (Services, the Free System).
+  '/': [PAGE.services, PAGE.industries, PAGE.results, PAGE.freeSystem],
   '/how-it-works/': [PAGE.services, PAGE.industries, PAGE.results, PAGE.call],
   '/services/': [PAGE.how, PAGE.industries, PAGE.results, PAGE.call],
   '/industries/': [PAGE.how, PAGE.services, PAGE.results, PAGE.call],
@@ -79,7 +81,7 @@ export const RELATED_PAGES = {
   '/results/[case]/': [PAGE.results, PAGE.how, PAGE.industries, PAGE.call],
   '/about/': [PAGE.how, PAGE.results, PAGE.industries, PAGE.call],
   '/book-a-call/': [PAGE.how, PAGE.results, PAGE.about, PAGE.industries],
-  '/blog/': [PAGE.how, PAGE.industries, PAGE.results, PAGE.call],
+  '/blog/': [PAGE.services, PAGE.industries, PAGE.results, PAGE.call],
   '/privacy/': [PAGE.terms, PAGE.about, PAGE.how, PAGE.call],
   '/terms/': [PAGE.privacy, PAGE.about, PAGE.how, PAGE.call],
   '/free-system/': [PAGE.freeSystemCall, PAGE.how, PAGE.results, PAGE.industries],
