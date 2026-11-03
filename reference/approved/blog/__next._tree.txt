@@ -1,3 +1,6 @@
 :HL["/_next/static/chunks/0gs3y8t8grgb1.css","style"]
 :HL["/fonts/plus-jakarta-sans-latin.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"(blog)","param":null,"prefetchHints":4096,"slots":{"children":{"name":"blog","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"6bHbM8k30svQKhwgmJOlC"}
+3:[["children",{"s":"__PAGE__","h":160}]]
+2:[["children",{"s":"blog","h":64,"c":"$Q3"}]]
+1:[["children",{"s":"(blog)","c":"$Q2"}]]
+0:{"b":"cf1yAJ9By237L24ApxPYM","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
