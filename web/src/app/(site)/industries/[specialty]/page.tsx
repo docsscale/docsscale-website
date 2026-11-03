@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { SPECIALTIES, SPECIALTY_LINKS } from '@/content/specialties';
+import { relatedForSpecialty } from '@/content/related';
 import { STRUCTURED_DATA } from '@/content/structured-data';
 import { SiteMotion } from '@/features/motion/SiteMotion';
 import { JsonLd } from '@/features/seo/JsonLd';
@@ -61,7 +62,7 @@ export default async function SpecialtyRoute({ params }: Props) {
       <Nav active="industries" specialties={SPECIALTY_LINKS} />
       <main>
         <SpecialtyPage specialty={specialty} />
-        <RelatedPages page="/industries/[specialty]/" />
+        <RelatedPages page="/industries/[specialty]/" links={relatedForSpecialty(specialty.slug)} />
       </main>
       <SiteMotion />
     </>
