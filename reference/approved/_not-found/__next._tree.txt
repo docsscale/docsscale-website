@@ -2,4 +2,4 @@
 :HL["/fonts/plus-jakarta-sans-latin.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":64,"c":"$Q2"}]]
-0:{"b":"cf1yAJ9By237L24ApxPYM","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"55N0WQKH17209kA7Xo6tP","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
