@@ -5,6 +5,13 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+## [1.11.0] — 2026-11-03
+
+"Where to go next" rows point Google at the pages it has not crawled, and the paid ads page fits a phone screen. Visible to visitors: the row of cards at the bottom of the home page, the blog index and the dental and med spa pages; the paid ads hero on phones.
+
+- **"Where to go next" rows** (owner's approval of the before/after, 3 Nov 2026; #167). On the home page the row now holds Services, Industries, Results and the Free System (was How it works, Industries, Results, About); on the blog index Services replaces How it works. On the dental and med spa pages the specialty's published guide (the Google Business Profile post and the med spa marketing post) replaces the Industries card. The home page and blog index are the pages Google crawls most, and until now neither linked to `/services/` or `/free-system/` from page content, only from the menus and footer. The Free System page title is shortened to "Free Click-to-Chair System for Clinics — DocsScale" for search results. The visual baseline is re-recorded.
+- **Paid ads page fits a phone screen** (owner's approval of the before/after, 3 Nov 2026; #168). On a phone `/services/paid-ads/` was 12 px wider than the screen, so the page scrolled sideways and the right edge of the heading card and the example ads was cut off. The hero now stays inside the screen and the example ad's address shortens with an ellipsis beside its button. Desktop and tablet are unchanged. The visual baseline is re-recorded.
+
 ## [1.10.3] — 2026-10-19
 
 A link to the social media page from two service pages. Visible to visitors: one more chip in the "Works with" box on `/services/paid-ads/` and `/services/patient-reactivation/`.

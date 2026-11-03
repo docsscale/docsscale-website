@@ -69,7 +69,9 @@ export const RELATED_HEADING = 'Where to go next';
 
 /** The links for each page, in display order. The page itself is never listed. */
 export const RELATED_PAGES = {
-  '/': [PAGE.how, PAGE.industries, PAGE.results, PAGE.about],
+  // Home and the blog index are the pages Google crawls most, so their rows
+  // carry the pages it has not crawled yet (Services, the Free System).
+  '/': [PAGE.services, PAGE.industries, PAGE.results, PAGE.freeSystem],
   '/how-it-works/': [PAGE.services, PAGE.industries, PAGE.results, PAGE.call],
   '/services/': [PAGE.how, PAGE.industries, PAGE.results, PAGE.call],
   '/industries/': [PAGE.how, PAGE.services, PAGE.results, PAGE.call],
@@ -79,7 +81,7 @@ export const RELATED_PAGES = {
   '/results/[case]/': [PAGE.results, PAGE.how, PAGE.industries, PAGE.call],
   '/about/': [PAGE.how, PAGE.results, PAGE.industries, PAGE.call],
   '/book-a-call/': [PAGE.how, PAGE.results, PAGE.about, PAGE.industries],
-  '/blog/': [PAGE.how, PAGE.industries, PAGE.results, PAGE.call],
+  '/blog/': [PAGE.services, PAGE.industries, PAGE.results, PAGE.call],
   '/privacy/': [PAGE.terms, PAGE.about, PAGE.how, PAGE.call],
   '/terms/': [PAGE.privacy, PAGE.about, PAGE.how, PAGE.call],
   '/free-system/': [PAGE.freeSystemCall, PAGE.how, PAGE.results, PAGE.industries],
@@ -87,3 +89,29 @@ export const RELATED_PAGES = {
 } satisfies Record<string, RelatedLink[]>;
 
 export type RelatedPageKey = keyof typeof RELATED_PAGES;
+
+/**
+ * Industry pages: the published guide for that specialty takes the first
+ * card, so the post gets a link from the page it supports and the reader
+ * gets the practical guide next. Specialties with no published guide yet
+ * keep the standard row.
+ */
+const SPECIALTY_GUIDES: Record<string, RelatedLink> = {
+  dental: {
+    label: 'Google Business Profile for dentists',
+    blurb: 'What to fix first on the profile, how to get and answer reviews safely, and a monthly check.',
+    href: '/blog/google-business-profile-for-dentists/',
+  },
+  'med-spa': {
+    label: 'Med spa marketing that books consults',
+    blurb:
+      'Why followers do not become consults, and what one Las Vegas med spa changed to book 62 in a quarter.',
+    href: '/blog/med-spa-marketing/',
+  },
+};
+
+export function relatedForSpecialty(slug: string): RelatedLink[] {
+  const guide = SPECIALTY_GUIDES[slug];
+  const standard = RELATED_PAGES['/industries/[specialty]/'];
+  return guide ? [guide, ...standard.slice(0, 3)] : standard;
+}

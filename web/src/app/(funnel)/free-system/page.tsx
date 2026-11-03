@@ -17,7 +17,7 @@ import { pageMetadata } from '@/features/seo/metadata';
 import { FunnelRelated } from '@/features/funnel/FunnelRelated';
 
 export const metadata = pageMetadata({
-  title: 'Free Click-to-Chair System for Healthcare Clinics — DocsScale',
+  title: 'Free Click-to-Chair System for Clinics — DocsScale',
   description:
     'Get the free Click-to-Chair System: 6 funnels, 17 automations and a full patient CRM that take a patient from first click to booked visit. Yours to keep.',
   path: '/free-system/',
