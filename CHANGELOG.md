@@ -5,6 +5,8 @@ major = a redesign or URL-structure change, minor = new pages or features, patch
 
 ## [Unreleased]
 
+- **Paid ads page fits a phone screen** (owner's approval of the before/after, 3 Nov 2026; #168). On a phone `/services/paid-ads/` was 12 px wider than the screen, so the page scrolled sideways and the right edge of the heading card and the example ads was cut off. The hero now stays inside the screen and the example ad's address shortens with an ellipsis beside its button. Desktop and tablet are unchanged. The visual baseline is re-recorded.
+
 ## [1.10.3] — 2026-10-19
 
 A link to the social media page from two service pages. Visible to visitors: one more chip in the "Works with" box on `/services/paid-ads/` and `/services/patient-reactivation/`.
